@@ -1,0 +1,192 @@
+.Section Úloha 3: Formulace jako ILP
+  label: ch-ukazkovy-uloha-3-formulace-jako-ilp
+
+
+.Exercise:
+  title: 'Úloha 3: Formulace jako ILP [6 bodů]'
+  label: ut-3
+
+  Fakulta plánuje zkouškové období. Je dána množina zkoušek $Z$, množina termínů $T = \{1, \dots, m\}$,
+  kapacita $c \in \N$ (v jednom termínu se mohou konat nejvýše $c$ zkoušek) a množina
+  "konfliktních dvojic".notion $K \subseteq \binom{Z}{2}$: zkoušky $\{z, z'\} \in K$ mají společného studenta, a proto se
+  nesmějí konat ve stejném termínu.
+
+
+  Každá zkouška se musí konat v právě jednom termínu. Cílem je
+  "minimalizovat počet použitých termínů".notion (termín je použitý, koná-li se v něm aspoň jedna zkouška).
+
+
+  Formulujte úlohu jako celočíselný lineární program. Uveďte proměnné a jejich význam, všechna
+  omezení (u každé skupiny omezení napište, co zajišťuje), účelovou funkci a velikost programu (počet
+  proměnných a omezení vzhledem k $|Z|$, $m$ a $|K|$).
+
+
+.Solution:
+
+  "Proměnné".notion (všechny binární):
+
+  .itemize:
+
+    .item:
+
+      $x_{z,t}\in\{0,1\}$ pro $z\in Z$, $t\in T$: $x_{z,t}=1$, právě když se zkouška $z$ koná v termínu $t$;
+
+    .item:
+
+      $y_t\in\{0,1\}$ pro $t\in T$: $y_t=1$ znamená „termín $t$ je použitý“ (v optimu přesně tehdy, když se
+      v něm koná aspoň jedna zkouška, viz níže).
+
+
+  "Účelová funkce a omezení:".notion
+
+  .align:
+
+    \min\ & \sum_{t\in T} y_t \\
+    \text{(1)}\quad & \sum_{t\in T} x_{z,t} = 1 && \forall z\in Z \\
+    \text{(2)}\quad & \sum_{z\in Z} x_{z,t} \le c && \forall t\in T \\
+    \text{(3)}\quad & x_{z,t} + x_{z',t} \le 1 && \forall \{z,z'\}\in K,\ \forall t\in T \\
+    \text{(4)}\quad & x_{z,t} \le y_t && \forall z\in Z,\ \forall t\in T \\
+    \text{(5)}\quad & x_{z,t},\, y_t \in \{0,1\} && \forall z\in Z,\ \forall t\in T
+
+
+  "Co která skupina zajišťuje.".notion
+
+  .description:
+
+    .ditem:
+      bullet: '(1)'
+
+      každá zkouška se koná v právě jednom termínu (vybereme právě jednu z $m$ možností);
+
+    .ditem:
+      bullet: '(2)'
+
+      kapacita: v termínu $t$ je nejvýše $c$ zkoušek;
+
+    .ditem:
+      bullet: '(3)'
+
+      konflikty: dvě zkoušky se společným studentem nejsou v témž termínu (nanejvýš jedna z nich je v $t$);
+
+    .ditem:
+      bullet: '(4)'
+
+      propojení: koná-li se v $t$ nějaká zkouška, musí být $y_t=1$, tj. termín se započítá;
+
+    .ditem:
+      bullet: '(5)'
+
+      celočíselnost (binárnost) proměnných.
+
+
+  "Proč je program správný.".notion Platná rozvrhová přiřazení $f\colon Z\to T$ (kapacita a konflikty
+  splněny) odpovídají přesně vektorům $x$ splňujícím (1)–(3) a (5): $x_{z,t}=1\iff f(z)=t$. Omezení (4)
+  vynutí $y_t=1$ pro každý použitý termín; pro nepoužitý termín smí být $y_t$ nula i jedna, ale minimalizace
+  zvolí nulu. Optimum programu je tedy přesně nejmenší počet použitých termínů a z optimálního $x$ přečteme
+  rozvrh. Nemá-li úloha žádný platný rozvrh (např. $|Z|>c\,m$), je program nepřípustný.
+
+
+  "Sloučení (2) a (4).".notion Kapacitu a propojení lze zapsat jedním omezením
+
+  .equation:
+
+    \text{(2')}\quad \sum_{z\in Z} x_{z,t} \le c\cdot y_t \qquad \forall t\in T .
+
+  Při $y_t=0$ se v termínu $t$ nekoná nic, při $y_t=1$ je to obyčejná kapacita. Program (1), (2'), (3), (5)
+  má stejné celočíselné optimum a o $|Z|\cdot m$ omezení méně. "(Nad rámec přednášky:)".emphasize pro řešič se
+  často ponechá (2') i (4) současně – optimum se nezmění a LP relaxace je těsnější.
+
+
+  "Velikost programu.".notion
+
+  .itemize:
+
+    .item:
+
+      proměnné: $|Z|\cdot m$ proměnných $x_{z,t}$ a $m$ proměnných $y_t$, celkem $m(|Z|+1)$;
+
+    .item:
+
+      omezení: (1) $|Z|$, (2) $m$, (3) $|K|\cdot m$, (4) $|Z|\cdot m$, celkem $|Z|+m+m|K|+m|Z|$; ve sloučené
+      variantě $|Z|+m+m|K|$. K tomu podmínky oboru (5) pro každou proměnnou ($0\le x_{z,t}\le 1$ a
+      celočíselnost).
+
+  Obojí je polynomiální, $O(m(|Z|+|K|))$. Např. pro $|Z|=4$, $m=3$, $|K|=3$ je to $15$ proměnných a
+  $4+3+9+12=28$ omezení (sloučeně $16$).
+
+
+  .centered:
+
+    !tikz:
+      filename: 18c-formulace-ilp-01
+      options: 'scale=1.25,every node/.style={transform shape}'
+
+      % Z={z1..z4}, m=3, c=2, K={z1z2,z2z3,z3z4}; optimum 2: f=(1,2,1,2), y=(1,1,0)
+      \tikzset{cc/.style={cell,anchor=center,font=\small}}
+      \foreach \i/\c in {1/acc!30,2/defc!18,3/acc!30,4/defc!18}
+        \node[v,fill=\c,minimum size=6mm,font=\scriptsize] (z\i) at (0.2,{-(\i-1)*0.75}) {$z_\i$};
+      \foreach \a/\b in {1/2,2/3,3/4} \draw[draw=rej!80,dashed,thick] (z\a.west) to[bend right=70] (z\b.west);
+      \node[font=\scriptsize,rej,anchor=east,align=right] at (-0.55,-1.125) {konflikty\\ $K$};
+      \node[font=\scriptsize] at (2.3,1.15) {termín $t$};
+      \foreach \t in {1,2,3} \node[font=\scriptsize] at ({1.5+(\t-1)*0.8},0.65) {$\t$};
+      \foreach \i/\r in {1/{1,0,0},2/{0,1,0},3/{1,0,0},4/{0,1,0}} {
+        \foreach \x [count=\t] in \r {
+          \ifnum\x=1
+            \ifnum\t=1 \node[cc,fill=acc!30] at ({1.5+(\t-1)*0.8},{-(\i-1)*0.75}) {$1$};
+            \else \node[cc,fill=defc!18] at ({1.5+(\t-1)*0.8},{-(\i-1)*0.75}) {$1$}; \fi
+          \else \node[cc,text=black!60] at ({1.5+(\t-1)*0.8},{-(\i-1)*0.75}) {$0$}; \fi}
+        \node[font=\small,anchor=west] at (3.6,{-(\i-1)*0.75}) {$=1$};}
+      \node[font=\scriptsize,anchor=west] at (3.6,0.65) {(1) $\sum_t x_{z,t}$};
+      \node[font=\small,anchor=east] at (1.0,-3.15) {$\sum_z x_{z,t}$};
+      \foreach \v [count=\t] in {2,2,0} \node[font=\small] at ({1.5+(\t-1)*0.8},-3.15) {$\v$};
+      \node[font=\scriptsize,anchor=west] at (3.6,-3.15) {(2) $\le c=2$};
+      \node[font=\small,anchor=east] at (1.0,-3.9) {$y_t$};
+      \foreach \v/\f [count=\t] in {1/acc!30,1/defc!18,0/white} \node[cc,fill=\f] at ({1.5+(\t-1)*0.8},-3.9) {$\v$};
+      \node[font=\scriptsize,anchor=west] at (3.6,-3.9) {(4) $y_t\ge x_{z,t}$; \ $\sum_t y_t=2$};
+      \draw[black!40] (1.0,-2.7)--(3.5,-2.7);
+
+  Instance s $|Z|=4$, $m=3$, $|K|=3$ "(nad rámec zadání)".emphasize: konflikty tvoří cestu $z_1z_2z_3z_4$
+  a kapacita je $c=2$. Optimální řešení programu (ověřeno hrubou silou přes všech $2^{15}$ binárních vektorů) má
+  hodnotu $2$: zkoušky $z_1,z_3$ v termínu 1, $z_2,z_4$ v termínu 2. "Všimni si:".emphasize každý řádek matice
+  $x$ má právě jednu jedničku (1), sousedé v grafu konfliktů nemají jedničku ve stejném sloupci (3), sloupcové
+  součty nepřekročí $c$ (2) a $y_t$ je $1$ právě nad neprázdnými sloupci (4) – nepoužitý termín 3 má $y_3=0$.
+
+
+  "Rozšíření: lámání symetrie".notion "(nad rámec zadání)".emphasize. Termíny jsou v tomto modelu
+  zaměnitelné, takže každý rozvrh má mnoho kopií lišících se jen přečíslováním termínů. Omezení
+  $y_1\ge y_2\ge\dots\ge y_m$ („použij nejdřív první termíny“) optimum nezmění a řešiči ušetří práci.
+  Zadání ho nepožaduje.
+
+
+.Remark:
+  title: 'Co se boduje / na co si dát pozor'
+
+  Zadání výslovně vyjmenovává, co má odpověď obsahovat: "proměnné a jejich význam".emphasize,
+  "všechna omezení".emphasize s komentářem u každé skupiny, "účelovou funkci".emphasize a
+  "velikost programu".emphasize. Doporučujeme odpověď členit přesně podle tohoto výčtu.
+
+  .itemize:
+
+    .item:
+
+      Nejčastěji chybí propojení $x$ a $y$ (omezení (4) nebo (2')). Bez něj optimum vyjde $0$ (je-li vůbec nějaký
+      rozvrh): všechna $y_t=0$ a účelová funkce nic nepočítá.
+
+    .item:
+
+      Nelineární zápisy nejsou ILP: $y_t=\max_z x_{z,t}$, $x_{z,t}\cdot x_{z',t}=0$ nebo „$y_t=1$, pokud…“
+      je třeba přepsat na lineární nerovnice jako výše.
+
+    .item:
+
+      U (1) musí být rovnost, ne $\ge 1$ (zkouška v právě jednom termínu). Konflikt (3) platí pro "každý".emphasize
+      termín $t$ – proto $m|K|$ omezení, ne $|K|$.
+
+    .item:
+
+      Velikost uveď jako vzorec v $|Z|$, $m$, $|K|$, ne jen slovy „polynomiální“.
+
+  Teorie: definice ILP (.reference:prob-ilp) a modelovací vzory v kapitole .reference:ch-cisla – zde se
+  potkává „volba jedné z několika možností“ (.reference:red-ilpcol) s indikátorem použití.
+  Stejnou úlohu bez kapacity a bez minimalizace jako barvení grafu konfliktů ukazuje
+  .reference:red-rozvrh. Praktické modelování a řešiče: kapitola .reference:ch-resice-ilp.

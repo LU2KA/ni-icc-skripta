@@ -1,0 +1,511 @@
+.Section Generalized Geography je PSPACE-úplná (proseminář 6)
+  label: sec-geografie
+
+
+.Subsection Slovní fotbal s městy
+  label: ch-pspace-slovni-fotbal-s-mesty
+
+
+Hráči Alice a Bob střídavě říkají česká města; každé musí začínat písmenem, kterým končí předchozí, žádné město se
+nesmí opakovat a kdo nemůže pokračovat, prohrál. "Hra jako graf:".notion vrcholy = města, hrana $u\to v$, když $v$
+začíná posledním písmenem $u$; hráči posouvají žeton po hranách do dosud nenavštíveného vrcholu.
+
+
+.Figure:
+  label: ch-pspace-fig-slovni-fotbal
+
+  !tikz:
+    filename: 13c-geografie-01
+    options: 'x=1cm,y=1cm'
+
+    \mesta{l}{0cm}
+    \mesta{p}{7.2cm}
+    \draw[gA] (lR)--(lK); \draw[gB] (lK)--(lN);
+    \node[font=\scriptsize,align=center,anchor=north] at (2.4,-1.75) {Alice $\to$ Kolín, Bob $\to$ Náchod;\\ z Náchoda nic (Děčín ve hře není)\\ $\Rightarrow$ Alice prohrála};
+    \draw[gA] (pR)--(pKH); \draw[gB] (pKH)--(pA); \draw[gA] (pA)--(pS); \draw[gB] (pS)--(pK); \draw[gA] (pK)--(pN);
+    \node[font=\scriptsize,align=center,anchor=north] at (9.6,-1.75) {Alice $\to$ Kutná Hora, Bob $\to$ Aš,\\ Alice $\to$ Šumperk, Bob $\to$ Kolín, Alice $\to$ Náchod;\\ Bob nemůže $\Rightarrow$ Alice vyhrála};
+
+  .caption:
+
+    Start v Rakovníku, první tah má Alice (modře, Bob červeně).
+    Krátká cesta prohrává.
+
+
+.Concept:
+  title: 'Poučení'
+
+  Šumperk vede do Kolína i do Kutné Hory – ale které z nich jsou ještě volné, závisí na
+  "celé dosavadní partii".emphasize. Právě tahle „paměť“ hry (zákaz opakování) je zdrojem těžkosti.
+
+
+.Definition:
+  title: 'Problém $\prob{Generalized Geography}$ (GG)'
+  label: prob-gg
+
+  "Vstup:".notion orientovaný graf $G=(V,E)$ a startovní vrchol $s$.
+
+
+  "Hra:".notion žeton stojí v $s$ ($s$ je navštívený). Alice a Bob se střídají, začíná Alice. Tah = posun žetonu
+  po hraně do "nenavštíveného".emphasize vrcholu. Kdo nemůže táhnout, prohrál.
+
+
+  "Otázka:".notion má Alice vítěznou strategii?
+
+
+Partie trvá nejvýše $|V|-1$ tahů (každý tah navštíví nový vrchol). Vítězná strategie = odpověď na každý možný
+tah soupeře; zapsaná jako strom může mít exponenciální velikost.
+
+
+.Subsection $\prob{GG}\in\PSPACE$
+  label: ch-pspace-gg-v-pspace
+
+
+.Algorithm:
+  title: '$\mathrm{Win}(v)$: vyhraje hráč na tahu ve $v$?'
+
+  !pseudocode:
+
+    \FORALL{hranu $(v,u)$ s $u\notin\mathrm{Nav}$}
+      \STATE $\mathrm{Nav}\leftarrow\mathrm{Nav}\cup\{u\}$; $r\leftarrow\mathrm{Win}(u)$; $\mathrm{Nav}\leftarrow\mathrm{Nav}\setminus\{u\}$
+      \IF{\textbf{not} $r$}
+        \RETURN TRUE
+      \ENDIF
+    \ENDFOR
+    \RETURN FALSE
+
+  Odpověď: $\mathrm{Win}(s)$ s $\mathrm{Nav}=\{s\}$.
+
+
+"Korektnost:".notion hráč na tahu vyhraje $\iff$ má tah do pozice, v níž soupeř (teď na tahu) prohraje. Hráč bez tahu:
+smyčka neproběhne ani jednou $\Rightarrow$ FALSE, tedy prohrál.
+"Prostor:".notion každé rekurzivní volání navštíví nový vrchol $\Rightarrow$ hloubka $\le|V|$; každá úroveň si
+pamatuje vrchol a rozpracovanou hranu, $O(\log n)$ bitů; množina $\mathrm{Nav}$ je jeden bitový vektor sdílený všemi
+úrovněmi, $O(n)$. Celkem $O(n\log n)$ – polynomiální. Čas je exponenciální (prochází se celý strom hry), ale prostor
+se po návratu z rekurze znovu použije.
+
+
+.Subsection $\prob{TQBF}\redp\prob{GG}$
+  label: ch-pspace-tqbf-gg
+
+
+.Remark:
+  title: 'Redukce: $\prob{TQBF}$ $\redp$ $\prob{Generalized Geography}$'
+  label: red-gg
+
+  $\exists x_1\forall x_2\cdots\exists x_k\,\psi$ ($\psi$ v KNF) $\;\longmapsto\;$ $(G_\Psi,\ t_1)$
+
+
+"Výchozí problém jako hra.".notion TQBF ve tvaru $\exists x_1\,\forall x_2\,\exists x_3\cdots\exists x_k\,\psi$,
+kde $\psi$ je v KNF: hráč $\exists$ volí hodnoty lichých proměnných, hráč $\forall$ sudých, popořadě; $\exists$
+vyhraje, je-li $\psi$ na konci splněna. "Bez újmy na obecnosti".notion se kvantifikátory střídají a začínají i končí
+$\exists$ (tedy $k$ je liché) – jinak doplníme fiktivní proměnné, které se v $\psi$ nevyskytují, např.
+$\forall a\,\forall b\,\psi\leadsto\exists d_1\,\forall a\,\exists d_2\,\forall b\,\exists d_3\,\psi$.
+"Plán:".notion Alice bude v GG hrát za $\exists$, Bob za $\forall$.
+
+
+"Gadget proměnné: diamant.".notion Pro každou proměnnou $x_i$ čtyři vrcholy: horní $t_i$, levý ($T$), pravý ($F$)
+a dolní $b_i$; hrany $t_i\to T$, $t_i\to F$, $T\to b_i$, $F\to b_i$. Hráč na tahu v $t_i$ volí levou nebo pravou
+stranu = hodnotu $x_i$; ze strany vede jediná hrana do $b_i$, tah je vynucený.
+"Po průchodu je navštívená právě jedna strana".notion (při $x_i=T$ levá, při $x_i=F$ pravá); ta druhá zůstane volná.
+
+
+"Řetěz diamantů.".notion Diamanty spojíme hranami $b_i\to t_{i+1}$; za posledním je vrchol $c$. Žeton startuje
+v $t_1$. Každý diamant zabere 3 tahy, takže volba se střídá sama:
+
+.table:
+  columns: 'llllll'
+
+  .row:
+    head: true
+
+    tah
+
+    kdo
+
+    volba?
+
+    tah
+
+    kdo
+
+    volba?
+
+  .row:
+
+    $t_1\to$ strana
+
+    Alice
+
+    volí $x_1$
+
+    strana $\to b_2$
+
+    Alice
+
+    vynucený
+
+  .row:
+
+    strana $\to b_1$
+
+    Bob
+
+    vynucený
+
+    $b_2\to t_3$
+
+    Bob
+
+    vynucený
+
+  .row:
+
+    $b_1\to t_2$
+
+    Alice
+
+    vynucený
+
+    $t_3\to$ strana
+
+    Alice
+
+    volí $x_3$
+
+  .row:
+
+    $t_2\to$ strana
+
+    Bob
+
+    volí $x_2$
+
+    …
+
+    ~
+
+    ~
+
+  .row:
+
+    ~
+
+    ~
+
+    ~
+
+    $b_k\to c$
+
+    Alice
+
+    vynucený ($k$ liché)
+
+Alice volí liché proměnné, Bob sudé – přesně jako $\exists$ a $\forall$.
+
+
+"Gadget klauzule.".notion Z $c$ vedou hrany do vrcholů klauzulí $c_1,\dots,c_m$. Je-li literál $x_i$ v klauzuli
+$C_j$, přidáme hranu $c_j\to$ "pravý ($F$)".notion vrchol diamantu $x_i$; je-li v $C_j$ literál $\lnot x_i$, hranu
+$c_j\to$ "levý ($T$)".notion vrchol. Konec partie:
+
+.enumerate:
+
+  .item:
+
+    Bob v $c$ zvolí klauzuli $c_j$ (tvrdí: „tahle je nesplněná“).
+
+  .item:
+
+    Alice z $c_j$ zvolí literál, tj. táhne do příslušné strany diamantu – jen je-li nenavštívená.
+
+  .item:
+
+    Ze strany vede jen hrana do $b_i$, který je navštívený $\Rightarrow$ Bob prohrál.
+
+Shrnuto: "Alice může z $c_j$ táhnout $\iff$ klauzule $C_j$ obsahuje pravdivý literál.".notion
+
+
+.Figure:
+  label: ch-pspace-fig-konstrukce-gg
+
+  !tikz:
+    filename: 13c-geografie-02
+    options: 'x=1cm,y=1cm'
+
+    \diamant{x}{0}{0}
+    \diamant{y}{0}{-2.4}
+    \diamant{z}{0}{-4.8}
+    \draw[ge] (xb)--(yt); \draw[ge] (yb)--(zt);
+    \node[gc] (c) at (0,-7.1) {$c$};
+    \draw[ge] (zb)--(c);
+    \node[gc] (c1) at (3.0,-6.2) {$c_1$};
+    \node[gc] (c2) at (3.0,-7.9) {$c_2$};
+    \draw[ge] (c)--(c1); \draw[ge] (c)--(c2);
+    \node[font=\scriptsize,anchor=east] at (-1.0,-0.7) {$x$};
+    \node[font=\scriptsize,anchor=east] at (-1.0,-3.1) {$y$};
+    \node[font=\scriptsize,anchor=east] at (-1.0,-5.5) {$z$};
+    % hrany klauzuli
+    \draw[ge,draw=intc!80!black] (c1) to[out=90,in=0] (xF);
+    \draw[ge,draw=intc!80!black] (c1) to[out=110,in=0] (yF);
+    \draw[ge,draw=intc!80!black] (c2) to[out=140,in=-30] (yT);
+    \draw[ge,draw=intc!80!black] (c2) to[out=160,in=-20] (zF);
+    % partie
+    \draw[pA] (xt)--(xT); \draw[pB] (xT)--(xb); \draw[pA] (xb)--(yt);
+    \draw[pB] (yt)--(yT); \draw[pA] (yT)--(yb); \draw[pB] (yb)--(zt);
+    \draw[pA] (zt)--(zT); \draw[pB] (zT)--(zb); \draw[pA] (zb)--(c);
+    \draw[pB] (c)--(c2); \draw[pA] (c2) to[out=160,in=-20] (zF);
+    \node[font=\scriptsize,align=left,anchor=west] at (4.2,-2.4) {%
+      $\exists x\,\forall y\,\exists z\,(x\lor y)\land(\lnot y\lor z)$\\[3pt]
+      $C_1=(x\lor y)$: hrany $c_1\to x_F$, $c_1\to y_F$\\
+      $C_2=(\lnot y\lor z)$: hrany $c_2\to y_T$, $c_2\to z_F$\\[4pt]
+      \textbf{Partie} (\textcolor{defc}{Alice}, \textcolor{rej}{Bob}):\\
+      Alice volí $x=T$, Bob $y=T$, Alice $z=T$.\\
+      Bob zvolí $C_2$ ($\lnot y$ je nepravdivý).\\
+      Alice táhne $c_2\to z_F$ (volný, protože $z=T$).\\
+      Bob ze $z_F$ může jen do $b_3$ -- navštívený.\\
+      \textbf{Bob prohrál.}\\[4pt]
+      Formule je pravdivá ($x=z=T$ splní obě\\ klauzule pro každé $y$), Alice vyhrává.};
+
+  .caption:
+
+    Celá konstrukce pro $\exists x\,\forall y\,\exists z\,(x\lor y)\land(\lnot y\lor z)$ s jednou partií.
+
+
+.Exercise:
+  title: 'Cvičení – ke konstrukci (proseminář 6)'
+  label: ch-pspace-cviceni-ke-konstrukci
+
+  (1) Proč klauzuli volí Bob a literál Alice? Co by se stalo naopak?
+  (2) Proč hrana pro literál $x_i$ vede do strany $F$, a ne do strany $T$?
+
+
+.Solution:
+
+  (1) Bob hraje za $\forall$ a chce ukázat nesplněnou klauzuli – „pro všechny klauzule“ je jeho výzva. Alice hraje za
+  $\exists$ a ukazuje „existuje pravdivý literál“. (Naopak by Alice vybírala klauzuli, kterou má splněnou – stačila
+  by jedna splněná klauzule, nikoli všechny.)
+  (2) Alice smí táhnout jen do nenavštíveného vrcholu. Strana $F$ je volná právě tehdy, když cesta prošla stranou $T$,
+  tedy když $x_i=T$ – hrana do $F$ je tak použitelná přesně pro pravdivý literál $x_i$.
+
+
+.Theorem:
+  title: 'Schaefer 1978'
+  label: thm-ggpspace
+
+  $\prob{Generalized Geography}$ je $\PSPACE$-úplná.
+
+
+.Proof:
+
+  $\prob{GG}\in\PSPACE$ jsme ukázali. "Pozorování:".notion až do vrcholu $c$ může hráč volit jen v horních vrcholech
+  $t_i$, všechny ostatní tahy jsou vynucené; partie tedy odpovídá postupnému ohodnocení $x_1,\dots,x_k$.
+
+
+  "($\Rightarrow$) Pravdivá formule $\Rightarrow$ Alice vyhrává.".notion Hráč $\exists$ má vítěznou strategii. Alice
+  v $t_i$ pro liché $i$ volí stranu podle ní (na tahy Boba reaguje jako $\exists$ na volby $\forall$). Výsledné
+  ohodnocení splňuje $\psi$, takže klauzule $C_j$, kterou Bob zvolí, obsahuje pravdivý literál $\ell$. Strana diamantu,
+  kam vede hrana z $c_j$ pro $\ell$, je nenavštívená $\Rightarrow$ Alice do ní táhne; z ní vede jen hrana do
+  navštíveného $b_i$ $\Rightarrow$ Bob nemůže táhnout a prohrál.
+
+
+  "($\Leftarrow$) Nepravdivá formule $\Rightarrow$ Bob vyhrává.".notion Hráč $\forall$ má vítěznou strategii; Bob podle
+  ní volí v $t_i$ pro sudé $i$. Výsledné ohodnocení $\psi$ nesplňuje $\Rightarrow$ existuje klauzule $C_j$ bez
+  pravdivého literálu a Bob v $c$ táhne do $c_j$. Každá hrana z $c_j$ vede do strany, kterou cesta prošla (literál je
+  nepravdivý) $\Rightarrow$ Alice nemůže táhnout a prohrála.
+
+
+  "Velikost:".notion $4k$ vrcholů diamantů, vrchol $c$ a $m$ vrcholů klauzulí; hran $O(k+m)$ plus jedna za každý výskyt
+  literálu. Redukce je polynomiální.
+
+
+.Exercise:
+  title: 'Cvičení – kde jsme použili zákaz opakování? (proseminář 6)'
+  label: ch-pspace-cviceni-zakaz-opakovani
+
+  Kdyby žeton směl do navštíveného vrcholu znovu, kde by se důkaz rozbil?
+
+
+.Solution:
+
+  "Konec partie:".notion Alice by z $c_j$ mohla táhnout kamkoli, i do strany nepravdivého literálu – klauzule by
+  „splnila“ každá. "Délka hry:".notion partie by mohla trvat libovolně dlouho; rekurze z důkazu $\prob{GG}\in\PSPACE$
+  by nemusela skončit. Zákaz opakování tedy dělá obojí: "kóduje ohodnocení do grafu".emphasize a
+  "drží hru polynomiálně dlouhou".emphasize.
+
+
+.Subsection Neorientovaná geografie: překvapivě snadná
+  label: ch-pspace-neorientovana-geografie
+
+
+Stejná hra na "neorientovaném".emphasize grafu $G$ se startem $s$.
+
+
+.Theorem:
+  label: thm-ugg
+
+  Alice vyhraje $\iff$ vrchol $s$ je pokrytý "každým".emphasize největším párováním grafu $G$.
+
+
+.Figure:
+  label: ch-pspace-fig-neorientovana-geografie
+
+  !tikz:
+    filename: 13c-geografie-03
+    options: 'x=1cm,y=1cm'
+
+    \node[v,fill=hl] (s) at (0,0) {$s$};
+    \node[v] (a) at (1.4,0.8) {$a$}; \node[v] (b) at (1.4,-0.8) {$b$};
+    \node[v] (c) at (2.9,1.4) {$c$}; \node[v] (d) at (2.9,0.2) {$d$};
+    \draw[e] (s)--(b) (a)--(c) (a)--(d);
+    \draw[esel] (s)--(a) (c)--(d);
+    \node[font=\scriptsize,align=left,anchor=west] at (3.8,0.4) {%
+      \textcolor{acc!80!black}{\textbf{---}} největší párování $M=\{sa,cd\}$, $\nu(G)=2$\\
+      $G-s$: trojúhelník $a,c,d$ + izolovaný $b$, $\nu(G-s)=1$\\
+      $\Rightarrow$ $s$ je v každém největším párování, vyhraje Alice\\[3pt]
+      Alice $\to a$ (partner $s$); Bob $\to c$ nebo $d$;\\ Alice $\to$ partner ($d$ resp.\ $c$); Bob nemá kam.};
+    \draw[e] (c)--(d);
+    \draw[esel] (c)--(d);
+
+  .caption:
+
+    Alice táhne po hranách největšího párování. (Vlastní příklad; na slajdu je obdobný.)
+
+
+.Proof:
+
+  "($\Leftarrow$) Alice táhne po párování.".notion Nechť $s$ je v každém největším párování; vezmeme jedno, $M$.
+  Strategie Alice: stojí-li žeton ve $v$, táhni do partnera $M(v)$. "Invariant:".emphasize když je Alice na tahu ve $v$, je $v$
+  spárovaný a $M(v)$ je volný. Na začátku platí ($s$ je spárovaný, nic jiného není navštívené). Navštívené vrcholy tvoří
+  cestu $s=x_0,x_1,\dots,x_{2j}$, kde hrany $x_0x_1,x_2x_3,\dots$ jsou z $M$, a Bob právě táhl do $x_{2j}$.
+
+  .itemize:
+
+    .item:
+
+      Kdyby $x_{2j}$ nebyl spárovaný, je $x_0\dots x_{2j}$ střídavá cesta sudé délky. Výměnou hran $M$ na ní dostaneme
+
+      .equation:
+
+        M'=\bigl(M\setminus\{x_{2i}x_{2i+1}\mid 0\le i<j\}\bigr)\cup\{x_{2i-1}x_{2i}\mid 0<i\le j\},
+
+      stejně velké párování, které nepokrývá $s$ – spor.
+
+    .item:
+
+      Partner $x_{2j}$ je volný: navštívené $x_0,\dots,x_{2j-1}$ jsou spárované mezi sebou.
+
+  Alice tedy vždy může táhnout, a protože je hra konečná, prohraje Bob.
+
+
+  "($\Rightarrow$) Bob táhne po párování.".notion Nechť existuje největší párování $M$, které $s$ nepokrývá. Strategie Boba:
+  stojí-li žeton ve $v$, táhni do $M(v)$. "Invariant:".emphasize když je Bob na tahu ve $v$, je $v$ spárovaný a $M(v)$ volný.
+  Navštívené: $s=x_0,x_1,\dots,x_{2j+1}$ s hranami $x_1x_2,x_3x_4,\dots\in M$; Alice právě táhla do $x_{2j+1}$.
+
+  .itemize:
+
+    .item:
+
+      Kdyby $x_{2j+1}$ nebyl spárovaný, byla by cesta $x_0\dots x_{2j+1}$ "zlepšující".emphasize (oba konce volné) –
+      výměnou hran podél ní bychom párování zvětšili, $M$ by nebylo největší. Spor.
+
+    .item:
+
+      Partner je volný: navštívené $x_1,\dots,x_{2j}$ jsou spárované mezi sebou a $s$ není spárovaný vůbec.
+
+  Bob tedy vždy může táhnout $\Rightarrow$ prohraje Alice. (Příklad: cesta $s-a-b$, $M=\{ab\}$ nepokrývá $s$: Alice $\to a$,
+  Bob $\to b$, Alice nemá kam.)
+
+
+.Corollary:
+  title: 'Neorientovaná geografie je v $\PP$'
+  label: cor-uggp
+
+  Označme $\nu(H)$ velikost největšího párování grafu $H$. Vrchol $s$ je v každém největším párování
+  $\iff\nu(G-s)<\nu(G)$ (párování grafu $G-s$ jsou přesně párování $G$, která nepokrývají $s$). Největší párování najdeme
+  v polynomiálním čase (Edmondsův algoritmus), stačí dvakrát spočítat $\nu$ a porovnat.
+
+
+.Concept:
+  title: 'Intuice'
+
+  Orientovaná verze je $\PSPACE$-úplná, neorientovaná je v $\PP$ – stejný vzor jako nejkratší vs. nejdelší cesta
+  nebo 2-SAT vs. 3-SAT: malá změna pravidel, propast ve složitosti.
+
+
+.Table:
+  label: ch-pspace-tab-varianty-geografie
+
+  .table:
+    columns: 'llll'
+
+    .row:
+      head: true
+
+      Graf
+
+      neopakují se
+
+      Složitost
+
+      Zdroj
+
+    .row:
+
+      orientovaný
+
+      vrcholy
+
+      $\PSPACE$-úplná
+
+      Schaefer 1978
+
+    .row:
+
+      orientovaný
+
+      hrany
+
+      $\PSPACE$-úplná
+
+      Schaefer 1978
+
+    .row:
+
+      neorientovaný
+
+      vrcholy
+
+      v $\PP$ (párování)
+
+      Fraenkel a kol. 1993
+
+    .row:
+
+      neorientovaný
+
+      hrany
+
+      $\PSPACE$-úplná
+
+      Fraenkel a kol. 1993
+
+    .row:
+
+      rovinný bipartitní, stupeň $\le3$
+
+      vrcholy
+
+      $\PSPACE$-úplná
+
+      Lichtenstein, Sipser 1980
+
+  .caption:
+
+    Varianty geografie. "Go:".notion Lichtenstein a Sipser použili rovinnou geografii a z jejích vrcholů a hran
+    postavili pozice na desce Go $\Rightarrow$ Go (s omezenou délkou partie) je $\PSPACE$-těžké.
+
+
+.Remark:
+  title: 'Poznámka'
+
+  Geografie je pro hry tím, čím je 3-SAT pro $\NP$: pohodlný výchozí problém pro redukce. Hra dvou hráčů s polynomiálně
+  dlouhou partií je typický kandidát na $\PSPACE$-úplnost; výchozím problémem bývá $\prob{TQBF}$ nebo přímo $\prob{GG}$.

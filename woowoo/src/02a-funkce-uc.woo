@@ -1,0 +1,75 @@
+.Section Nepočitatelná funkce $\prob{UC}$ – diagonalizace
+  label: ch-vycisl-nepocitatelna-funkce-uc
+  pdf_string: 'Nepočitatelná funkce UC – diagonalizace'
+
+
+.Definition:
+  title: 'Funkce $\prob{UC}$'
+  label: def-uc
+
+  Pro $\alpha\in\{0,1\}^*$ definujeme
+
+  .equation:
+
+    \mathrm{UC}(\alpha)=\begin{cases}
+    0 & \text{pokud $\alpha$ je zápisem nějakého DTS $M_\alpha$ a platí $M_\alpha(\alpha)=1$},\\
+    1 & \text{jinak (tj. $\alpha$ není zápis DTS, nebo se $M_\alpha$ na $\alpha$ zacyklí, nebo $M_\alpha(\alpha)\neq 1$).}
+    \end{cases}
+
+
+.Theorem:
+  title: '$\prob{UC}$ není počitatelná'
+  label: thm-ucnc
+
+  Neexistuje TS, který by počítal funkci $\prob{UC}$.
+
+
+.Figure:
+  label: fig-diag
+
+  !tikz:
+    filename: 02a-funkce-uc-01
+
+    \matrix (t) [matrix of nodes,nodes in empty cells,nodes={minimum width=11mm,minimum height=7mm,anchor=center,font=\small},
+       column 1/.style={nodes={font=\small\bfseries}},row 1/.style={nodes={font=\small\bfseries}}]
+    {
+            & $\enc{M_1}$ & $\enc{M_2}$ & $\enc{M_3}$ & $\enc{M_4}$ & $\cdots$ \\
+      $M_1$ & 0 & 1 & 1 & 0 & $\cdots$ \\
+      $M_2$ & 1 & 1 & 0 & 1 & $\cdots$ \\
+      $M_3$ & 0 & 0 & 1 & 1 & $\cdots$ \\
+      $M_4$ & 1 & 0 & 0 & 0 & $\cdots$ \\
+      $\vdots$ & $\vdots$ & $\vdots$ & $\vdots$ & $\vdots$ & $\ddots$ \\
+      \textcolor{rej}{UC} & \textcolor{rej}{1} & \textcolor{rej}{0} & \textcolor{rej}{0} & \textcolor{rej}{1} & \textcolor{rej}{$\cdots$}\\
+    };
+    \begin{scope}[on background layer]
+      \foreach \i/\j in {2/2,3/3,4/4,5/5} {\fill[hl] (t-\i-\j.north west) rectangle (t-\i-\j.south east);}
+      \fill[rej!8] (t-7-1.north west) rectangle (t-7-6.south east);
+    \end{scope}
+    \draw[thick] (t-1-1.south west) -- (t-1-6.south east);
+    \draw[thick] (t-1-1.north east) -- (t-6-1.south east);
+    \draw[intc,very thick,->] (t-2-2.north west) -- (t-5-5.south east);
+    \node[font=\small,anchor=west,align=left] at ($(t-3-6.east)+(0.4,0)$) {diagonála:\\ $0,1,1,0,\dots$};
+    \node[font=\small,anchor=west,align=left,rej] at ($(t-7-6.east)+(0.4,0)$) {negace diagonály:\\ $1,0,0,1,\dots$};
+
+  .caption:
+
+    Diagonalizace. Řádek $i$ = výstupy stroje $M_i$ na kódech všech strojů.
+    $\prob{UC}$ se od řádku $M_i$ liší v $i$-tém sloupci, proto není žádným řádkem tabulky.
+
+
+.Proof:
+
+  Seřaďme všechny TS do posloupnosti $M_1,M_2,\dots$ (jsou to řetězce, lze je uspořádat).
+  Kdyby nějaký stroj $M_i$ počítal $\prob{UC}$, pak na vstupu $\enc{M_i}$:
+
+  .itemize:
+
+    .item:
+
+      je-li $M_i(\enc{M_i})=1$, pak z definice $\mathrm{UC}(\enc{M_i})=0\neq M_i(\enc{M_i})$;
+
+    .item:
+
+      je-li $M_i(\enc{M_i})\neq 1$ (nebo cyklí), pak $\mathrm{UC}(\enc{M_i})=1\neq M_i(\enc{M_i})$.
+
+  V obou případech $M_i$ na vstupu $\enc{M_i}$ počítá něco jiného než $\prob{UC}$. Spor.

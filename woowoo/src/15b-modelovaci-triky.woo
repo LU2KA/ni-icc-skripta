@@ -1,0 +1,577 @@
+.Section Modelovací triky
+  label: ch-resice-ilp-modelovaci-triky
+
+
+ILP umí jen lineární nerovnice. Zadání ale mluví o implikacích („vezmu-li stan, vezmu i spacák“), o pevných
+poplatcích („seřízení linky stojí 3000 Kč, ať vyrobím kolik chci“) nebo o maximu („nejdéle běžící stroj“). Tento
+oddíl ukazuje, jak se takové věci přepíší lineárně; na konci je přehledná tabulka všech triků, které používá
+přednáška a cvičení 8.
+
+
+.Subsection Logika s binárními proměnnými
+  label: ch-resice-ilp-logika-s-binarnimi-promennymi
+
+
+"Binární proměnné jsou výroky.".notion $a=1$ čteme „$a$ platí“ (předmět $a$ beru), $a=0$ „$a$ neplatí“. Přednáška
+to ukazuje na batohu s dodatečnými podmínkami:
+
+
+.table:
+  columns: 'lll'
+
+  .row:
+    head: true
+
+    slovy
+
+    logika
+
+    nerovnice
+
+  .row:
+
+    „Vezmu-li stan, vezmu i spacák.“
+
+    $a\Rightarrow b$
+
+    $a\le b$
+
+  .row:
+
+    „Nejvýš jeden z foťáků.“
+
+    nejvýš jedna
+
+    $\sum_i a_i\le 1$
+
+  .row:
+
+    „Alespoň jedna svačina.“
+
+    $a\lor b$
+
+    $a+b\ge 1$
+
+  .row:
+
+    „Nevezmu-li stan, vezmu deku.“
+
+    $\lnot a\Rightarrow d$
+
+    $1-a\le d$
+
+
+"Proč to funguje.".notion Binární proměnné mají jen čtyři kombinace, takže stačí ověřit, kterou z nich nerovnice
+zakazuje. $a\le b$ zakazuje jen $a=1,b=0$ – přesně jediný případ, kdy je implikace $a\Rightarrow b$ nepravdivá.
+$a+b\ge1$ zakazuje jen $a=b=0$, tedy přesně případ, kdy je $a\lor b$ nepravdivé. Negaci zapíšeme jako $1-a$,
+takže $\lnot a\Rightarrow d$ je „$1-a\le d$“. Stejně vzniká omezení „právě jedna“: $\sum_i a_i=1$ (každý zákazník
+obsloužen, každý vrchol má jednu barvu).
+
+
+.Example:
+  title: 'Batoh s logickou podmínkou'
+  label: ch-resice-ilp-ex-batoh-logika
+
+  Batoh ze slajdu ($w=(2,3,4)$, $c=(3,4,5)$, $W=6$) s dodatečnou podmínkou „předměty 1 a 3 nesmí jet spolu“.
+
+  .enumerate:
+
+    .item:
+
+      Slovy: „nejvýš jeden z předmětů 1, 3“ $\Rightarrow$ nerovnice $x_1+x_3\le 1$.
+
+    .item:
+
+      Dosavadní optimum $(1,0,1)$ ji porušuje ($2>1$), model ho tedy správně vyloučí.
+
+    .item:
+
+      Zbylá přípustná řešení s nejvyšší cenou: $(1,1,0)$ s váhou 5 a cenou 7. Nové optimum je 7.
+
+  Kdyby podmínka zněla „vezmu-li předmět 3, vezmu i předmět 1“ ($x_3\le x_1$), optimum $(1,0,1)$ s cenou 8 by zůstalo.
+
+
+"Součin binárních proměnných.".notion $ab=a\land b$ "není lineární".emphasize. Nahradí ho nová binární proměnná $c$
+se třemi nerovnicemi
+
+.equation:
+
+  c\le a,\qquad c\le b,\qquad c\ge a+b-1 .
+
+Ověření tabulkou (všechny čtyři kombinace $a,b$; sloupec $c$ je jediná hodnota, kterou nerovnice dovolí):
+
+
+.table:
+  columns: 'cccc'
+
+  .row:
+    head: true
+
+    $a$
+
+    $b$
+
+    $c$
+
+    $ab$
+
+  .row:
+
+    0
+
+    0
+
+    0
+
+    0
+
+  .row:
+
+    0
+
+    1
+
+    0
+
+    0
+
+  .row:
+
+    1
+
+    0
+
+    0
+
+    0
+
+  .row:
+
+    1
+
+    1
+
+    1
+
+    1
+
+
+První dvě nerovnice dovolí $c=1$ jen při $a=b=1$; třetí při $a=b=1$ vynutí $c\ge1$. Výraz $ab$ pak v modelu
+všude nahradíme proměnnou $c$.
+
+
+"Stejným způsobem: „$a\ne b$“ (XOR).".notion Ve cvičení 8.4 potřebujeme proměnnou $y=1$ právě tehdy, když je hrana
+v řezu, tj. konce $a,b$ jsou na různých stranách. Pravdivostní tabulka XOR zakazuje $y=1$ při $a=b$ a vyžaduje
+$y=1$ při $a\ne b$:
+
+.align:
+
+  &y\le a+b,\qquad y\le 2-a-b &&\text{(nedovolí $y=1$ při $a=b$)},\\
+  &y\ge a-b,\qquad y\ge b-a &&\text{(vynutí $y=1$ při $a\ne b$)}.
+
+Při maximalizaci počtu hran v řezu stačí první dvojice (řešič sám tlačí $y$ nahoru), při minimalizaci druhá.
+Podrobně v řešení úlohy .reference:cv-8-4.
+
+
+.Subsection Big-M: podmíněná nerovnice
+  label: ch-resice-ilp-big-m-podminena-nerovnice
+
+
+Chceme, aby nerovnice $f(x)\le b$ platila "jen když".emphasize je binární přepínač $y$ zapnutý:
+$y=1\Rightarrow f(x)\le b$. Zapíšeme
+
+.equation:
+
+  f(x)\ \le\ b+M\,(1-y),\qquad y\in\{0,1\},
+
+kde "big-M".notion je "horní odhad".emphasize na $f(x)-b$ přes všechna $x$, která připadají v úvahu.
+
+.itemize:
+
+  .item:
+
+    $y=1$: dostaneme $f(x)\le b$ – podmínka "platí".emphasize.
+
+  .item:
+
+    $y=0$: dostaneme $f(x)\le b+M$ – to je splněno vždy (právě proto musí být $M$ horní odhad), podmínka je
+    "vypnutá".emphasize.
+
+
+.Figure:
+  label: ch-resice-ilp-fig-big-m
+
+  !tikz:
+    filename: 15b-modelovaci-triky-01
+    options: 'x=1cm,y=1.4cm'
+
+    \draw[osa] (0,0)--(5.4,0) node[right,font=\scriptsize]{$f(x)$};
+    \draw[osa] (0,0)--(0,1.5) node[above,font=\scriptsize]{$y$};
+    \node[font=\scriptsize,left] at (0,0) {0};
+    \node[font=\scriptsize,left] at (0,1) {1};
+    \draw[gr,dashed] (1.6,0)--(1.6,1);
+    \node[font=\scriptsize,below] at (1.6,0) {$b$};
+    \node[font=\scriptsize,below] at (4.6,0) {$b+M$};
+    \draw[defc,line width=2pt] (0,1)--(1.6,1);
+    \draw[defc,line width=2pt] (0,0)--(4.6,0);
+    \node[font=\scriptsize,anchor=west,align=left] at (2.0,1.0) {$y=1$: jen $f(x)\le b$};
+    \node[font=\scriptsize,anchor=south,align=center] at (3.3,0.08) {$y=0$: celý rozsah};
+
+  .caption:
+
+    Přípustné dvojice $(f(x),y)$ (modře). Pro $y=0$ smí $f(x)$ vzít cokoli až do $b+M$, tedy celý rozsah, který
+    v úloze může nastat; pro $y=1$ jen hodnoty do $b$.
+
+
+"Častý tvar: vypínač.".notion $y=0\Rightarrow x=0$ pro $0\le x\le M$ se zapíše jako $x\le My$. Při $y=0$ je $x\le0$,
+tedy $x=0$; při $y=1$ je $x\le M$, což platí vždy. Typické použití jsou "fixní náklady".notion: „nevyrábíš, dokud
+nezaplatíš“.
+
+
+.Example:
+  title: 'Fixní náklady na seřízení linky'
+  label: ch-resice-ilp-ex-fixni-naklady
+
+  Linka vyrobí za měsíc nejvýš 100 kusů ($0\le x\le100$). Vyrábí-li se vůbec, stojí seřízení 3000 Kč bez ohledu na
+  množství.
+
+  .enumerate:
+
+    .item:
+
+      Proměnné: $x\ge0$ počet kusů, $y\in\{0,1\}$ … seřizuje se?
+
+    .item:
+
+      Omezení $x\le 100\,y$, tedy big-M s $M=100$ (nejmenší možné, protože víc než 100 kusů linka stejně nevyrobí).
+
+    .item:
+
+      Do účelové funkce přidáme $3000\,y$.
+
+    .item:
+
+      Kontrola: $x=40,y=0$ porušuje $40\le0$ – výroba bez seřízení je zakázaná. $x=0,y=1$ je přípustné, ale stojí
+      3000 Kč zbytečně, takže při minimalizaci nákladů nikdy není optimální.
+
+  Celý model plánování výroby je v úloze .reference:cv-8-5.
+
+
+.Warning:
+  title: 'Big-M implikuje jen jedním směrem'
+
+  $x\le My$ říká „$x>0\Rightarrow y=1$“, ne „$y=1\Rightarrow x>0$“. Opačný směr (zaplatit seřízení a nic nevyrobit)
+  model dovolí; vylučuje ho až účelová funkce, protože takové řešení je dražší. Když by účelová funkce tlačila
+  opačně (třeba odměna za „otevřený“ sklad), musel by do modelu přijít i druhý směr.
+
+
+.Subsection Maximum, absolutní hodnota, „buď, anebo“
+  label: ch-resice-ilp-maximum-absolutni-hodnota-bud-anebo
+
+
+"Minimalizace maxima".notion (rozložení úloh na stroje, nejdelší zátěž). $x_{ij}\in\{0,1\}$ říká, že úloha $j$
+s délkou $p_j$ běží na stroji $i$. Chceme minimalizovat zátěž nejvytíženějšího stroje, tedy $\max_i\sum_j p_jx_{ij}$.
+Maximum nahradíme novou proměnnou $t$, která ho shora omezuje:
+
+.equation:
+
+  \min\ t\qquad\text{při}\qquad t\ \ge\ \sum_j p_j\,x_{ij}\quad\forall\text{ stroj } i .
+
+V optimu je $t$ rovno největší zátěži: menší být nemůže (porušilo by nerovnici toho stroje) a větší nebude, protože
+minimalizujeme.
+
+
+.Example:
+  title: 'Dva stroje, tři úlohy'
+  label: ch-resice-ilp-ex-min-max
+
+  Délky $p=(3,4,5)$, stroje $1,2$. Proměnné $x_{ij}\in\{0,1\}$ a $t$; omezení $x_{1j}+x_{2j}=1$ pro každou úlohu $j$
+  (úloha běží právě na jednom stroji), $t\ge 3x_{11}+4x_{12}+5x_{13}$, $t\ge 3x_{21}+4x_{22}+5x_{23}$; cíl $\min t$.
+  Ze čtyř rozdělení úloh na dva stroje (až na prohození strojů) vychází nejlépe $\{3,4\}$ a $\{5\}$ se zátěžemi
+  7 a 5; optimum $t=7$. Celková délka je 12, takže lépe než 6 to nejde nikdy; tady ani 6 nejde, protože
+  žádná podmnožina $\{3,4,5\}$ nedává součet 6.
+
+
+.Figure:
+  label: ch-resice-ilp-fig-min-max
+
+  !tikz:
+    filename: 15b-modelovaci-triky-03
+    options: 'x=0.36cm,y=0.75cm'
+
+    \newcommand{\chQjb}[4]{\fill[#4!25,draw=#4!80!black] (#1,#2) rectangle ++(#3,0.5); \node[font=\scriptsize] at ({#1+#3/2},{#2+0.25}) {#3};}
+    \foreach \X/\Y/\t in {0/2.3/7, 18/2.3/8, 0/0/9, 18/0/12} {
+      \node[font=\scriptsize,anchor=east] at (\X-0.3,\Y+0.95) {stroj 1};
+      \node[font=\scriptsize,anchor=east] at (\X-0.3,\Y+0.25) {stroj 2};
+      \draw[black!40] (\X,\Y-0.1)--(\X,\Y+1.3);
+      \draw[warnc,dashed,thick] (\X+\t,\Y-0.1)--(\X+\t,\Y+1.3) node[above,font=\scriptsize,text=warnc]{$t=\t$};}
+    \chQjb{0}{3}{3}{defc} \chQjb{3}{3}{4}{exc} \chQjb{0}{2.3}{5}{intc}
+    \chQjb{18}{3}{3}{defc} \chQjb{21}{3}{5}{intc} \chQjb{18}{2.3}{4}{exc}
+    \chQjb{0}{0.7}{4}{exc} \chQjb{4}{0.7}{5}{intc} \chQjb{0}{0}{3}{defc}
+    \chQjb{18}{0.7}{3}{defc} \chQjb{21}{0.7}{4}{exc} \chQjb{25}{0.7}{5}{intc}
+    \draw[defc,thick,rounded corners=3pt] (-4.6,2.05) rectangle (9.2,4.25);
+    \node[defc,font=\scriptsize,anchor=west] at (9.4,3.15) {optimum};
+
+  .caption:
+
+    Všechna čtyři rozdělení úloh s délkami $3,4,5$ na dva stroje (až na prohození strojů). Červená čára je nejmenší
+    $t$, které splní obě nerovnice $t\ge\text{zátěž stroje}$ – tedy zátěž vytíženějšího stroje. "Všimni si:".emphasize
+    minimalizace $t$ vybere rozdělení vlevo nahoře s $t=7$.
+
+
+"Absolutní hodnota v minimalizaci.".notion $\min|v|$ $\to$ $\min u$ při $u\ge v$, $u\ge-v$. Obě nerovnice dohromady
+říkají $u\ge|v|$ a minimalizace stlačí $u$ přesně na $|v|$. Použijeme v úloze .reference:cv-8-4.
+
+
+"Buď, anebo".notion (úlohy $A$, $B$ na jednom stroji, začátky $s_A,s_B$, délky $p_A,p_B$). Úlohy se nesmí překrývat:
+buď $A$ skončí před začátkem $B$, nebo naopak. To je "disjunkce".emphasize dvou nerovnic, a tu lineárně zapsat
+nejde. Binární $z$ vybírá pořadí a big-M vypne tu nerovnici, která neplatí:
+
+.align:
+
+  s_A+p_A &\le s_B+M z\\
+  s_B+p_B &\le s_A+M(1-z) .
+
+Při $z=0$ platí první nerovnice ($A$ před $B$) a druhá je vypnutá; při $z=1$ naopak. Za $M$ stačí
+"(nad rámec přednášky)".emphasize délka plánovacího horizontu $H$, pokud všechny úlohy musí skončit do $H$: pak je
+$s_A+p_A-s_B\le H$.
+
+
+.Figure:
+  label: ch-resice-ilp-fig-bud-anebo
+
+  !tikz:
+    filename: 15b-modelovaci-triky-02
+    options: 'x=0.9cm,y=0.9cm'
+
+    \node[font=\scriptsize,anchor=east] at (0,1) {$z=0$};
+    \node[job,fill=defc!12,draw=defc,minimum width=1.8cm] at (0.2,1) {$A$};
+    \node[job,fill=warnc!12,draw=warnc,minimum width=2.7cm] at (2.6,1) {$B$};
+    \node[font=\scriptsize,anchor=east] at (0,0) {$z=1$};
+    \node[job,fill=warnc!12,draw=warnc,minimum width=2.7cm] at (0.2,0) {$B$};
+    \node[job,fill=defc!12,draw=defc,minimum width=1.8cm] at (3.6,0) {$A$};
+    \draw[osa] (0.2,-0.7)--(6.4,-0.7) node[right,font=\scriptsize]{čas};
+
+  .caption:
+
+    Binární proměnná $z$ volí, která z úloh $A$, $B$ jde na stroji první.
+
+
+Proč bez $z$ lineárně zapsat nejde, ukazuje obr. .reference:ch-resice-ilp-fig-bud-anebo-geometrie.
+
+
+.Figure:
+  label: ch-resice-ilp-fig-bud-anebo-geometrie
+
+  !tikz:
+    filename: 15b-modelovaci-triky-04
+    options: 'x=0.8cm,y=0.8cm'
+
+    \fill[defc!15] (0,2)--(0,7)--(5,7)--cycle;
+    \fill[warnc!15] (3,0)--(8,0)--(8,5)--cycle;
+    \fill[pattern=north east lines,pattern color=black!25] (0,0)--(3,0)--(8,5)--(8,7)--(5,7)--(0,2)--cycle;
+    \draw[defc,thick] (0,2)--(5,7);
+    \draw[warnc,thick] (3,0)--(8,5);
+    \draw[black!50] (0,0) rectangle (8,7);
+    \draw[osa] (0,0)--(8.8,0) node[right,font=\footnotesize]{$s_A$};
+    \draw[osa] (0,0)--(0,7.8) node[above,font=\footnotesize]{$s_B$};
+    \foreach \v in {2,4,6,8} \node[font=\scriptsize,below] at (\v,0) {\v};
+    \foreach \v in {2,4,6} \node[font=\scriptsize,left] at (0,\v) {\v};
+    \node[defc!80!black,font=\footnotesize,align=center] at (1.5,6.3) {$z=0$: $A$ před $B$};
+    \node[warnc!80!black,font=\footnotesize,align=center] at (7.0,1.9) {$z=1$:\\ $B$ před $A$};
+    \node[font=\footnotesize,fill=white,inner sep=1.5pt] at (5.6,5.0) {překryv};
+    \draw[black!70,dashed,thick] (1,5)--(6,1);
+    \node[ilpopt] at (1,5) {}; \node[font=\scriptsize,anchor=west] at (1.15,5) {$(1,5)$};
+    \node[lpopt] at (6,1) {}; \node[font=\scriptsize,anchor=north] at (6,0.85) {$(6,1)$};
+    \node[font=\small] at (3.5,3) {$\times$}; \node[font=\scriptsize,anchor=south west,fill=white,inner sep=1pt] at (3.6,3.1) {$(3{,}5;\,3)$};
+    \node[defc,font=\scriptsize,anchor=south,rotate=45] at (3.6,5.6) {$s_B=s_A+p_A$};
+    \node[warnc,font=\scriptsize,anchor=south,rotate=45,fill=white,inner sep=1pt] at (3.9,0.9) {$s_A=s_B+p_B$};
+
+  .caption:
+
+    Přípustné začátky $(s_A,s_B)$ pro zvolená čísla $p_A=2$, $p_B=3$ a horizont $H=10$ "(nad rámec přednášky)".emphasize.
+    Modře rozvrhy s $A$ před $B$, červeně s $B$ před $A$, šrafovaný pás mezi nimi jsou rozvrhy s překryvem.
+    "Všimni si:".emphasize množina není konvexní – rozvrhy $(1,5)$ a $(6,1)$ jsou přípustné, střed úsečky mezi nimi
+    $(3{,}5;\,3)$ ne. Množina popsaná lineárními nerovnicemi je vždy konvexní, takže tuto žádné nerovnice
+    v $s_A,s_B$ nepopíšou; proto přidáváme binární $z$.
+
+
+.Subsection Přehled modelovacích triků
+  label: ch-resice-ilp-prehled-modelovacich-triku
+
+
+Všechny triky z přednášky a z cvičení 8 na jednom místě. $a,b,c,y,z$ jsou binární, $x$ celočíselné nebo reálné.
+Sloupec „kde“ odkazuje na místo, kde trik v kapitole použijeme.
+
+
+.table:
+  columns: 'p{3.6cm}p{5.6cm}p{4.2cm}'
+
+  .row:
+    head: true
+
+    chceme
+
+    zápis v ILP
+
+    kde
+
+  .row:
+
+    vybrat ano/ne
+
+    $x_i\in\{0,1\}$
+
+    batoh, VC, pairingy
+
+  .row:
+
+    kolik kusů / lidí / tyčí
+
+    $x\in\mathbb Z_{\ge0}$
+
+    cvičení 8.1, 8.2
+
+  .row:
+
+    nejvýš / aspoň / právě $k$ z množiny
+
+    $\sum_i a_i\le k$, $\ \ge k$, $\ =k$
+
+    foťáky; každý zákazník obsloužen; barva vrcholu
+
+  .row:
+
+    $a\Rightarrow b$
+
+    $a\le b$
+
+    stan a spacák; $x_{ij}\le y_j$
+
+  .row:
+
+    $a\lor b$
+
+    $a+b\ge1$
+
+    svačina; klauzule (kap. 11)
+
+  .row:
+
+    $\lnot a\Rightarrow d$
+
+    $1-a\le d$
+
+    stan a deka
+
+  .row:
+
+    $c=a\land b$ (součin $ab$)
+
+    $c\le a$, $c\le b$, $c\ge a+b-1$
+
+    linearizace součinu
+
+  .row:
+
+    $y=a\oplus b$ (různé strany)
+
+    $y\le a+b$, $y\le 2-a-b$; $y\ge a-b$, $y\ge b-a$
+
+    cvičení 8.4
+
+  .row:
+
+    $y=1\Rightarrow f(x)\le b$
+
+    $f(x)\le b+M(1-y)$, $M\ge\max(f(x)-b)$
+
+    buď–anebo
+
+  .row:
+
+    $y=0\Rightarrow x=0$ (vypínač)
+
+    $x\le My$, $0\le x\le M$
+
+    fixní náklady, cvičení 8.5
+
+  .row:
+
+    kapacita jen u otevřeného zdroje
+
+    $\sum_i a_ix_{ij}\le K\,y_j$
+
+    slabá formulace skladů, cvičení 8.2
+
+  .row:
+
+    fixní náklady
+
+    $+\,f\cdot y$ v účelu a vypínač
+
+    sklady, cvičení 8.5
+
+  .row:
+
+    minimalizovat maximum
+
+    $\min t$, $t\ge \text{výraz}_i$ pro všechna $i$
+
+    rozvrh na strojích, cvičení 8.3
+
+  .row:
+
+    minimalizovat $|v|$
+
+    $\min u$, $u\ge v$, $u\ge-v$
+
+    cvičení 8.4
+
+  .row:
+
+    buď $A$ před $B$, nebo naopak
+
+    $s_A+p_A\le s_B+Mz$, $s_B+p_B\le s_A+M(1-z)$
+
+    rozvrh na jednom stroji
+
+  .row:
+
+    exponenciálně mnoho podmínek
+
+    vypsat jen porušené (separace)
+
+    TSP, oddíl .reference:ch-resice-ilp-rezy-a-separace
+
+
+.Warning:
+  title: 'Typické chyby'
+
+  .itemize:
+
+    .item:
+
+      "Součin proměnných v modelu.".notion $x_{uc}\cdot x_{vc}=0$ nebo $y\cdot x\le b$ není lineární. Součin binárních
+      proměnných linearizuj novou proměnnou, součin binární a spojité proměnné big-M.
+
+    .item:
+
+      "Malé $M$.".notion Je-li $M$ menší než skutečný rozsah $f(x)-b$, „vypnutá“ nerovnice ve skutečnosti platí dál
+      a odřízne správná řešení. Model pak tiše vrátí horší optimum.
+
+    .item:
+
+      "Zbytečně velké $M$.".notion Model je správný, ale LP relaxace je slabá a řešič pracuje déle (oddíl
+      .reference:ch-resice-ilp-sila-formulace). Volíme co nejtěsnější $M$.
+
+    .item:
+
+      "Min-max ve špatném směru.".notion Trik $t\ge\text{výraz}_i$ funguje jen pro $\min\max$ (a symetricky $\max\min$
+      s $t\le\text{výraz}_i$). Při $\max t$ s $t\ge\text{výraz}_i$ by $t$ rostlo do nekonečna – maximum maxim tímto
+      trikem zapsat nejde.
+
+    .item:
+
+      "Ostrá nerovnost.".notion ILP zná jen $\le$, $\ge$, $=$. Pro celá čísla "(nad rámec přednášky)".emphasize
+      platí $a<b\iff a\le b-1$; pro reálné proměnné ostrou nerovnost zapsat nejde.

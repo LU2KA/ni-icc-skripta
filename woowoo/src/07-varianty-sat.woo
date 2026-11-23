@@ -1,0 +1,16 @@
+.Chapter Varianty problému SAT
+  label: ch-sat
+
+
+Zdroje: přednáška 3, přednáška 4.
+
+
+.Concept:
+  title: 'Proč to děláme'
+
+  Z Cook–Levinovy věty (kapitola .reference:ch-cook) víme, že $\prob{SAT}$ je NP-úplný, a další NP-úplné
+  problémy z něj chceme stavět redukcemi. K tomu se hodí zdrojový problém s co nejpevnější strukturou:
+  v $\prob{3-SAT}$ má každá klauzule přesně 3 literály, $\prob{NAE-3-SAT}$ navíc zakazuje i „samé jedničky“
+  a hodí se pro redukce na problémy, kde se prvky „rozdělují do dvou skupin“. Kapitola proto ukazuje redukce
+  $\prob{SAT}\redp\prob{3-SAT}$, $\prob{3-SAT}\redp\prob{NAE-3-SAT}$ a nakonec i na pozitivní
+  $\prob{NAE-3-SAT}$ bez negací – všechny tyto varianty zůstávají NP-úplné.

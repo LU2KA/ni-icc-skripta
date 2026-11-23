@@ -1,0 +1,9 @@
+build/
+.build/
+templates/
+woowoo/
+.venv/
+site/
+__pycache__/
+*.pyc
+.DS_Store

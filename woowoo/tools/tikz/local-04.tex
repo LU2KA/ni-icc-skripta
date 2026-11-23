@@ -1,0 +1,25 @@
+% --- pomocna makra teto kapitoly (prefix chNP) ---
+\tikzset{
+  chNPc/.style={circle,draw=black!70,fill=defc!8,thick,minimum size=5mm,inner sep=0pt,font=\scriptsize},
+  chNPacc/.style={rectangle,rounded corners=2pt,draw=acc,fill=acc!15,thick,font=\scriptsize\bfseries,
+     text=acc!60!black,inner sep=2pt,minimum height=5mm},
+  chNPrej/.style={rectangle,rounded corners=2pt,draw=rej,fill=rej!10,thick,font=\scriptsize\bfseries,
+     text=rej,inner sep=2pt,minimum height=5mm},
+  chNPstuck/.style={rectangle,rounded corners=2pt,draw=gr,fill=black!5,thick,font=\scriptsize,
+     text=black!60,inner sep=2pt,minimum height=5mm},
+  chNPe/.style={->,thick,draw=black!60},
+  chNPg/.style={->,line width=1.8pt,draw=acc!80!black},
+}
+% graf z proseminare 2: hrany A-B, A-C, A-D, B-C, B-E, C-D, C-E
+% \chNPgraph{styl A}{styl B}{styl C}{styl D}{styl E}
+\newcommand{\chNPgraph}[5]{%
+  \node[#1] (A) at (0,1.2) {A};
+  \node[#2] (B) at (1.2,1.2) {B};
+  \node[#3] (C) at (1.2,0) {C};
+  \node[#4] (D) at (0,0) {D};
+  \node[#5] (E) at (2.3,0.6) {E};}
+% --- ulohy navic (04z) ---
+\tikzset{
+  chNPconf/.style={rectangle,rounded corners=2pt,draw=black!60,fill=defc!8,thick,font=\scriptsize,
+     inner sep=2pt,minimum height=5mm,minimum width=12mm},
+}

@@ -1,0 +1,38 @@
+
+
+.Section Shrnutí kapitoly
+  label: ch-prostor-shrnuti
+
+
+.Remark:
+  title: 'Co si odnést'
+
+  .itemize:
+
+    .item:
+
+      Prostorové třídy $\DSPACE$, $\NSPACE$, $\PSPACE$, $\LL$, $\NL$; prostorová hierarchie. „Prostor lze recyklovat,
+      čas nikoliv.“
+
+    .item:
+
+      $\PP\subseteq\NP\subseteq\PSPACE\subseteq\EXP$: certifikáty zkoušíme po jednom se smazáním; graf konfigurací
+      má jen $2^{O(S(n))}$ vrcholů.
+
+    .item:
+
+      "Savitch:".notion $\NSPACE(S)\subseteq\DSPACE(S^2)$ přes $\mathrm{REACH}(C_A,C_B,t)$ s půlením $t$ a
+      recyklací paměti; $\PSPACE=\NPSPACE$.
+
+    .item:
+
+      $\LL\subseteq\NL\subseteq\PP$; $\prob{ST-REACH}$ je $\NL$-úplný; "Immerman–Szelepcsényi:".notion $\NL=\coNL$.
+
+    .item:
+
+      $\coNP$ = doplňky jazyků z $\NP$ ($\prob{UNSAT}$, $\prob{TAUT}$); $\NP\overset{?}{=}\coNP$ je otevřené.
+
+    .item:
+
+      "2-SAT:".notion implikační graf, splnitelná $\iff$ $x$ a $\lnot x$ v různých SCC; lineární čas, a dokonce
+      $\prob{2-SAT}\in\NL$.

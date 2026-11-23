@@ -1,0 +1,15 @@
+.Chapter Redukce a NP-úplnost
+  label: ch-redukce
+
+
+Zdroje: přednáška 3.
+
+
+.Concept:
+  title: 'Proč to děláme'
+
+  Z kapitoly .reference:ch-np známe třídy $\PP$ (problémy, které umíme efektivně vyřešit) a $\NP$ (problémy, jejichž
+  navržené řešení umíme efektivně ověřit). Většina přirozených problémů leží v $\NP$, neznáme pro ně polynomiální
+  algoritmus – a zároveň neumíme dokázat, že žádný neexistuje. Kapitola proto zavádí polynomiální redukci, kterou
+  dokážeme aspoň to, že je problém relativně těžký (alespoň tak těžký jako jiný problém), a definuje NP-těžkost
+  a NP-úplnost, tedy problémy vůbec nejtěžší v celé třídě $\NP$.

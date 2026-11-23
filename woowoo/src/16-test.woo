@@ -1,0 +1,21 @@
+.Chapter Zápočtový test a jak číst skripta
+  label: ch-test
+
+
+Zdroje: stránka předmětu „Hodnocení“, oficiální ukázkový průběžný test, přehled přednášek a cvičení na stránkách
+předmětu; úvod „Jak číst tato skripta“ z LaTeXové verze skript.
+
+
+.Concept:
+  title: 'Proč to děláme'
+
+  Skripta jsou řazená podle témat, ne podle týdnů, a zápočtový test se ptá na čtyři pevné typy úloh, které jsou
+  rozeseté po celé knize. Tato příloha je vstupní branou pro přípravu na test. Nejdřív vysvětlí, jak skripta číst
+  (co znamenají barevné rámečky a kde je která přednáška), pak shrne, co přesně je na testu, a nakonec pro každý
+  ze čtyř typů úloh dá postup na papíře s typickými chybami. Procvičovací úlohy jsou v příloze .reference:ch-typove,
+  vyřešený ukázkový test v příloze .reference:ch-ukazkovy.
+
+
+Doporučené pořadí přípravy: přečti oddíl .reference:ch-test-co-je-na-testu (co se bude psát), pak u každého typu úlohy
+postup v oddílu .reference:ch-test-postupy-na-papire, potom projdi vyřešený ukázkový test (příloha .reference:ch-ukazkovy)
+a nakonec si sám, bez nahlížení do řešení, zkus úlohy z přílohy .reference:ch-typove.

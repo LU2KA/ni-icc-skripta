@@ -1,0 +1,44 @@
+.Section Shrnutí kapitoly
+  label: ch-resice-sat-shrnuti-kapitoly
+
+
+.Remark:
+  title: 'Co si odnést'
+
+  .enumerate:
+
+    .item:
+
+      "Snadnost SATu je ve struktuře.".notion $\prob{2-SAT}$ (implikační graf + SCC, $O(n+m)$), $\prob{Horn-SAT}$ (unit
+      propagation, $O(|\varphi|)$) a $\prob{XOR-SAT}$ (Gaussova eliminace nad $\mathrm{GF}(2)$, $O(n^3)$) jsou v $\PP$ –
+      díky grafu, propagaci a lineární algebře. Schaefer: každé $\prob{SAT}(\Gamma)$ je buď v $\PP$, nebo NP-úplný –
+      nic mezi tím. Smíchání dvou snadných tříd bývá zase těžké "(nad rámec přednášky)".emphasize.
+
+    .item:
+
+      "Exponenciální v teorii, rutina v praxi.".notion I nejlepší známé algoritmy potřebují v nejhorším případě (téměř)
+      exponenciální čas. DPLL = backtracking + unit propagation. CDCL se z každého konfliktu naučí klauzuli
+      (rezoluce po trailu do 1UIP) a skočí zpět na úroveň, kde chyba vznikla; restarty, VSIDS a watched literals
+      ho dělají rychlým. Slepá skvrna je symetrie – pomůže ji rozbít přidanými klauzulemi.
+
+    .item:
+
+      "Do SAT redukujeme, abychom řešili.".notion $X\redp\prob{SAT}$ je hotový řešič pro $X$, o těžkosti $X$ neříká nic
+      (do $\prob{SAT}$u se redukuje i dosažitelnost). Recept: proměnné s významem, bloky alespoň jedna / nejvýše jedna /
+      právě jedna / nejvýše $k$, korektnost oběma směry, velikost. Polynomiální $\neq$ malé.
+
+    .item:
+
+      "Hlídat velikost.".notion Roznásobení obecné formule do CNF může dát $2^n$ klauzulí; Tseitinova transformace dá
+      ekvisplnitelnou 3-CNF s $O(m)$ klauzulemi (nové proměnné za hradla, klauzule hradla = jeho pravdivostní tabulka,
+      nezapomenout výstup). „Nejvýše jedna“ jde v $O(n)$, „nejvýše $k$“ v $O(nk)$ sekvenčním čítačem. Na aritmetiku,
+      pole a řetězce je lepší SMT (DPLL(T), např. Z3).
+
+    .item:
+
+      "Řešič v praxi.".notion Vstup DIMACS ("p cnf".code proměnné klauzule, klauzule = řádek čísel zakončený
+      "0".code, záporné číslo = negace), výstup "s SATISFIABLE".code / "s UNSATISFIABLE".code a model v řádcích
+      "v".code, návratový kód 10/20. SAT ověříme sami (model je certifikát), UNSAT pomocí důkazu DRAT a
+      "drat-trim".code. Enkódování rozhoduje: vynechání zbytečných klauzulí a rozbití symetrie zrychlí řešení o řády.
+      Schurova čísla: $S(3)=13$ za milisekundy, $S(4)=44$ za sekundy, $S(5)=160$ jako výpočet na superpočítači – a
+      $S(6)$ zatím nikdo nezná.

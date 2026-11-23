@@ -1,0 +1,177 @@
+.Section Kdy přestane stačit čistý SAT: SMT
+  label: ch-resice-sat-smt
+
+
+.Subsection Hranice SATu
+  label: ch-resice-sat-hranice-satu
+
+
+$\prob{SAT}$ je univerzální (do něj se redukuje celé $\NP$), ale ne vždy efektivní. Potíž dělají problémy
+s čísly a strukturami:
+
+.table:
+  columns: 'lp{4.2cm}p{6.3cm}'
+
+  .row:
+    head: true
+
+    oblast
+
+    příklad omezení
+
+    proč ne SAT
+
+  .row:
+
+    aritmetika
+
+    $x+y\le10$, $x\cdot y=24$
+
+    neomezená čísla; násobení má malé enkódování, ale pro CDCL je těžké
+
+  .row:
+
+    nelineární $\mathbb{Z}$
+
+    $x^2+y^2=z^2$
+
+    nelineární aritmetika nad $\mathbb{Z}$ je nerozhodnutelná (Hilbertův 10. problém, oddíl .reference:ch-vycisl-hilbertuv-10-problem)
+
+  .row:
+
+    pole
+
+    $a[i]=v$, $a[i]\ge0$
+
+    každý prvek jako proměnná – obrovské
+
+  .row:
+
+    řetězce
+
+    $s\cdot t=\text{„hello“}$
+
+    délka není předem známa
+
+
+.Remark:
+  title: 'Hranice SATu'
+
+  Problémy s aritmetikou, pamětí nebo nekonečnými doménami se do $\prob{SAT}$u enkódují špatně nebo vůbec.
+
+
+.Subsection SMT = SAT + rozhodovací procedury teorií
+  label: ch-resice-sat-smt-dpll-t
+
+
+.Definition:
+  title: 'SMT a architektura DPLL(T)'
+  label: ch-resice-sat-def-smt
+
+  "SMT".notion (Satisfiability Modulo Theories) spojuje SAT řešič se specializovanými "řešiči teorií".emphasize
+  (aritmetika, pole, …). Architektura "DPLL(T)".notion pracuje ve čtyřech krocích:
+
+  .enumerate:
+
+    .item:
+
+      "Abstrakce:".notion atomy teorie nahradíme Booleovskými proměnnými, $\varphi\to\varphi^B$.
+
+    .item:
+
+      "SAT řešič:".notion najde ohodnocení abstrakce $\varphi^B$.
+
+    .item:
+
+      "Řešič teorie:".notion ověří, zda jsou pravdivé atomy konzistentní v teorii.
+
+    .item:
+
+      "Konflikt:".notion teorie řekne „ne“ $\to$ SAT řešič se poučí (dostane klauzuli) a hledá dál.
+
+
+  "Líný přístup:".notion teorie se "neenkóduje".emphasize předem, ptáme se jí za běhu.
+
+
+.Figure:
+  label: ch-resice-sat-fig-dpll-t
+
+  !tikz:
+    filename: 14e-smt-01
+    options: 'x=1cm,y=1cm,node distance=8mm'
+
+    \node[blokd,text width=30mm] (abs) {Abstrakce\\ $\varphi\to\varphi^B$};
+    \node[blokd,text width=30mm,below=of abs] (sat) {SAT řešič\\ (CDCL)};
+    \node[blokd,text width=42mm,below=of sat] (th) {Řešič teorie\\ (aritmetika, pole, \dots)};
+    \draw[flow] (abs)--(sat);
+    \draw[flow,defc] (sat)--node[left,font=\scriptsize,defc]{ohodnocení}(th);
+    \draw[->,thick,rej] (th.east) to[out=0,in=0,looseness=1.6] node[right,font=\scriptsize,rej]{konflikt} (sat.east);
+
+  .caption:
+
+    Schéma DPLL(T): SAT řešič navrhuje, řešič teorie kontroluje a při konfliktu vrací poučení.
+
+
+.Subsection Z3 v praxi
+  label: ch-resice-sat-z3
+
+
+Z3 je SMT řešič od Microsoft Research. Vstup ve formátu SMT-LIB (příklad z přednášky):
+
+!codeblock:
+  language: text
+
+  (declare-const x Int)
+  (declare-const y Int)
+  (assert (<= (+ x y) 10))
+  (assert (> x 5))
+  (assert (> y 5))
+  (check-sat)
+
+Výsledek: "unsat".code, protože $x>5\land y>5\Rightarrow x+y>10$.
+
+
+.Example:
+  title: 'DPLL(T) krok za krokem'
+  label: ch-resice-sat-ex-dpll-t
+
+  "(nad rámec přednášky – ilustrace kroků 1–4 na příkladu výše)".emphasize
+
+  .enumerate:
+
+    .item:
+
+      Abstrakce: $p_1\equiv(x+y\le10)$, $p_2\equiv(x>5)$, $p_3\equiv(y>5)$; $\varphi^B=p_1\land p_2\land p_3$.
+
+    .item:
+
+      SAT řešič: jediné ohodnocení $p_1=p_2=p_3=1$.
+
+    .item:
+
+      Řešič teorie (celá čísla): $x\ge6$, $y\ge6$ dává $x+y\ge12>10$ – nekonzistentní.
+
+    .item:
+
+      Konflikt: SAT řešič dostane klauzuli $(\lnot p_1\lor\lnot p_2\lor\lnot p_3)$. Formule
+      $\varphi^B\land(\lnot p_1\lor\lnot p_2\lor\lnot p_3)$ je nesplnitelná $\Rightarrow$ odpověď "unsat".code.
+
+
+"Kde se SMT používá:".notion verifikace softwaru (Microsoft – Z3, AWS – s2n), verifikace hardwaru (Intel, ARM),
+plánování (NASA, logistika), bezpečnost (analýza malwaru, exploitů), cloud (AWS Zelkova – přístupová práva IAM).
+
+
+.Warning:
+  title: 'Typické chyby'
+
+  .itemize:
+
+    .item:
+
+      Čekat, že SMT rozhodne cokoli: nelineární aritmetika nad $\mathbb{Z}$ je nerozhodnutelná, žádný řešič ji
+      obecně nerozhodne.
+
+    .item:
+
+      Myslet si, že SMT teorii předem převede do SAT – naopak, DPLL(T) je "líný".emphasize: teorie se ptá až za běhu
+      a SAT řešič dostává jen poučení z konfliktů.

@@ -1,0 +1,21 @@
+% Makra obrazku kapitoly 1 (Problemy a Turinguv stroj) -- opsano z ../skripta/kapitoly/01-problemy-a-ts.tex
+% --- TSP graf (pouzit vicekrat) ---
+\newcommand{\tspnodes}{%
+  \node[v] (A) at (90:1.9) {A};
+  \node[v] (B) at (18:1.9) {B};
+  \node[v] (C) at (-54:1.9) {C};
+  \node[v] (D) at (-126:1.9) {D};
+  \node[v] (E) at (162:1.9) {E};}
+\newcommand{\tspe}[4]{\draw[#4] (#1) -- node[wt,pos=0.5]{#3} (#2);}
+% --- doplneno: obrazek "budik" (sniz. binarniho citace), 01e ---
+\tikzset{
+  chTSbit/.style={cell,minimum width=6mm,minimum height=6mm,anchor=center},
+  chTSbith/.style={chTSbit,fill=hl},
+}
+% \chTSctr{y}{hodnota}{bity (seznam 4 bitu)}{pocet zmenenych nejnizsich bitu}
+\newcommand{\chTSctr}[4]{%
+  \node[font=\small,anchor=east] at (-0.45,#1) {$#2$};
+  \foreach \b [count=\i] in {#3} {%
+    \ifnum\i>\numexpr4-#4\relax \node[chTSbith] at ({(\i-1)*0.6},#1) {\b};%
+    \else \node[chTSbit] at ({(\i-1)*0.6},#1) {\b};\fi}
+  \ifnum#4>0 \node[font=\small,anchor=west] at (2.6,#1) {$#4$};\fi}

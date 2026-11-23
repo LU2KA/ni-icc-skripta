@@ -1,0 +1,54 @@
+.Section Vertex Cover a IS: doplněk množiny
+  label: ch-is-vertex-cover
+
+
+.Definition:
+  title: 'Problém $\prob{Vertex Cover}$ (VC, vrcholové pokrytí)'
+  label: prob-vc
+
+  "Vstup:".notion neorientovaný graf $G=(V,E)$ a číslo $c$.
+
+
+  "Otázka:".notion existuje $C\subseteq V$, $|C|\le c$, taková, že každá hrana má alespoň jeden konec v $C$?
+
+
+.Lemma:
+  title: 'Identita IS a VC'
+  label: lem-isvc
+
+  $S\subseteq V$ je nezávislá množina $\iff$ $V\setminus S$ je vrcholové pokrytí.
+
+
+.Proof:
+
+  $S$ je nezávislá $\iff$ žádná hrana nemá oba konce v $S$ $\iff$ každá hrana má aspoň jeden konec v $V\setminus S$.
+
+
+.Figure:
+  label: fig-is-doplnek-mnoziny
+
+  !tikz:
+    filename: 08c-vertex-cover-01
+
+    \foreach \n/\a/\s in {a/90/vsel,b/30/vbad,c/-30/vsel,d/-90/vbad,e/-150/vsel,f/150/vbad} {\node[\s] (\n) at (\a:1.3) {$\n$};}
+    \draw[e] (a)--(b)--(c)--(d)--(e)--(f)--(a) (b)--(e);
+    \node[font=\small,acc!70!black,anchor=west] at (2.0,0.4) {$S=\{a,c,e\}$ nezávislá};
+    \node[font=\small,rej,anchor=west] at (2.0,-0.3) {$V\setminus S=\{b,d,f\}$ pokrytí};
+
+  .caption:
+
+    Každá hrana má aspoň jeden červený konec $\iff$ žádná hrana nemá oba konce zelené.
+
+
+.Remark:
+  title: 'Redukce: $\prob{IS} \redp \prob{VC}$'
+  label: red-vc
+
+  $(G,k)$ $\;\longmapsto\;$ $(G,\ c=|V|-k)$
+
+
+.Corollary:
+  title: '$\prob{IS}\redp\prob{VC}$'
+  label: cor-isredvc
+
+  Instance $(G,k)$ IS se zobrazí na instanci $(G,\ c=|V|-k)$ VC ve stejném grafu.

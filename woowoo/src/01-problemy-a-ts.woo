@@ -1,0 +1,17 @@
+.Chapter Problémy a Turingův stroj
+  label: ch-ts
+
+
+Zdroje: přednáška 1, proseminář 1, cvičení 1.
+
+
+.Concept:
+  title: 'Proč to děláme'
+
+  Výpočetní složitost se neptá, jak problémy řešit, ale kde leží fundamentální limity: jaký je nejlepší
+  možný algoritmus, zda existuje nějaké efektivní řešení a zda lze problém vůbec algoritmicky vyřešit.
+  Abychom mohli matematicky dokázat, že něco rychleji (nebo vůbec) nejde, musíme umět mluvit o libovolném
+  programu v libovolném jazyce na libovolném hardware. Potřebujeme proto matematickou abstrakci počítače,
+  která je univerzální a maximálně jednoduchá – Turingův stroj – a jednotný způsob, jak se ptát –
+  rozhodovací problémy a formální jazyky. Tato kapitola je první, na nic nenavazuje; připravuje nástroje
+  pro první otázku kurzu: lze vůbec každý problém algoritmicky vyřešit?

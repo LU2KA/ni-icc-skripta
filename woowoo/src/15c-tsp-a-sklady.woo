@@ -1,0 +1,356 @@
+.Section Dva větší modely: obchodní cestující a sklady
+  label: ch-resice-ilp-tsp-a-sklady
+
+
+Dva modely z přednášky, na kterých je vidět, co se při modelování může pokazit. U obchodního cestujícího vypadá
+první model rozumně, a přesto je špatně; oprava je správná, ale obrovská. U skladů je model malý a čistý; do
+oddílu .reference:ch-resice-ilp-sila-formulace si z něj odneseme, že i správný model může být „slabý“.
+
+
+.Subsection Obchodní cestující: první pokus
+  label: ch-resice-ilp-obchodni-cestujici-prvni-pokus
+
+
+"Zadání.".notion Cestující chce objet všechna města, každé navštívit právě jednou a vrátit se domů; známe vzdálenosti
+$c_e$ mezi městy. Jaká trasa je nejkratší? (Problém $\prob{TSP}$, definice .reference:prob-tsp v kapitole .reference:ch-ts.)
+Města jsou vrcholy úplného grafu $G=(V,E)$, silnice jsou hrany.
+
+
+Podle čtyř kroků:
+
+.enumerate:
+
+  .item:
+
+    "Proměnné:".notion $x_e\in\{0,1\}$ … jede po silnici $e$?
+
+  .item:
+
+    "Podmínka:".notion do každého města přijede a zase odjede, tj. z hran u vrcholu $v$ jsou vybrané právě dvě:
+    $\displaystyle\sum_{e\ni v}x_e=2$ pro každý vrchol $v$.
+
+  .item:
+
+    "Cíl:".notion $\displaystyle\min\sum_e c_e x_e$.
+
+  .item:
+
+    "Kontrola:".notion trasa (obrázek níže vlevo) podmínky splňuje. Jenže "dvě oddělené kružnice".emphasize
+    (uprostřed) je splňují také – každý vrchol má stupeň 2. Model zatím nestačí: připouští řešení, která trasou
+    nejsou.
+
+
+.Subsection Zákaz podcyklů
+  label: ch-resice-ilp-zakaz-podcyklu
+
+
+Chceme vyjádřit: trasa nesmí zůstat uvnitř žádné části měst – každou množinu $S$ musí opustit a zase se vrátit.
+Označme $\delta(S)$ množinu hran mezi $S$ a zbytkem grafu – "řez".emphasize grafu. Přidáme
+
+.equation:
+
+  \sum_{e\in\delta(S)}x_e\ \ge\ 2\qquad\forall\,\emptyset\ne S\subsetneq V .
+
+
+.Figure:
+  label: ch-resice-ilp-fig-tsp-podcykly
+
+  !tikz:
+    filename: 15c-tsp-a-sklady-01
+    options: 'x=1.05cm,y=1.05cm'
+
+    \foreach \i in {0,...,5} \node[vs] (h\i) at ({60*\i}:1.1) {};
+    \foreach \i/\j in {0/1,1/2,2/3,3/4,4/5,5/0} \draw[defc,thick] (h\i)--(h\j);
+    \node[font=\footnotesize] at (0,-1.6) {trasa \textcolor{acc}{$\checkmark$}};
+    \begin{scope}[xshift=3.4cm]
+      \node[vs] (a1) at (0,0.9) {}; \node[vs] (a2) at (-0.55,0.15) {}; \node[vs] (a3) at (0.55,0.15) {};
+      \node[vs] (b1) at (0,-0.15) {}; \node[vs] (b2) at (-0.55,-0.9) {}; \node[vs] (b3) at (0.55,-0.9) {};
+      \draw[warnc,thick] (a1)--(a2)--(a3)--(a1) (b1)--(b2)--(b3)--(b1);
+      \node[font=\footnotesize] at (0,-1.6) {dvě kružnice \textcolor{rej}{$\times$}};
+    \end{scope}
+    \begin{scope}[xshift=7.6cm]
+      \node[vs] (c1) at (-0.8,0.5) {}; \node[vs] (c2) at (-1.35,-0.35) {}; \node[vs] (c3) at (-0.25,-0.35) {};
+      \node[vs] (d1) at (1.1,0.5) {}; \node[vs] (d2) at (0.55,-0.35) {}; \node[vs] (d3) at (1.65,-0.35) {};
+      \draw[warnc,thick] (c1)--(c2)--(c3)--(c1) (d1)--(d2)--(d3)--(d1);
+      \draw[rej,dashed,rounded corners=4pt] (-1.75,-0.75) rectangle (0.15,0.95);
+      \node[rej,font=\footnotesize] at (-0.8,1.2) {$S$};
+      \node[font=\footnotesize,align=center] at (0.15,-1.6) {stupně 2 $\checkmark$, $\sum_{\delta(S)}x_e=0<2$};
+    \end{scope}
+
+  .caption:
+
+    Vlevo trasa, uprostřed dvě kružnice – obě splňují „stupeň 2 v každém vrcholu“. Vpravo množina $S$, kterou
+    dvě kružnice porušují: přes její řez nevede žádná vybraná hrana.
+
+
+"Proč je model teď správný.".notion Řešení se stupni 2 je vždy sjednocení disjunktních kružnic. Je-li kružnic víc,
+vezmeme za $S$ vrcholy jedné z nich: přes řez nevede žádná vybraná hrana, $0<2$, nerovnice je porušená. Je-li
+kružnice jediná přes všechna města (trasa), každá neprázdná vlastní $S$ ji rozdělí na úseky uvnitř a vně a kružnice
+přejde mezi nimi aspoň dvakrát. "Řešení modelu jsou přesně trasy".notion.
+
+
+.Warning:
+  title: 'Správný model, který nejde ani vypsat'
+
+  Podmínek je zhruba $2^n$ (jedna pro každou množinu $S$). Pro $n=50$ měst je to $2^{50}\approx1{,}1\cdot10^{15}$
+  nerovnic – víc, než se vejde do paměti. Řešení není model zmenšit, ale nerovnice "nevypisovat předem".emphasize
+  a přidávat jen ty, které aktuální řešení porušuje (separace, oddíl .reference:ch-resice-ilp-rezy-a-separace).
+
+
+.Subsection Umístění skladů (facility location)
+  label: ch-resice-ilp-umisteni-skladu
+
+
+"Úloha.".notion Firma zvažuje sklady v lokalitách $A$, $B$, $C$ a chce obsloužit 3 zákazníky (klidně každého z více
+skladů). Kapacita skladů je "neomezená".emphasize. Cíl: minimální součet fixních a dopravních nákladů.
+
+.itemize:
+
+  .item:
+
+    "fixní náklady".notion otevření skladů $f=(120,180,120)$,
+
+  .item:
+
+    "poptávka".notion zákazníků $d=(30,40,50)$,
+
+  .item:
+
+    "doprava".notion $c_{ij}$ za jednotku od skladu $j$ k zákazníkovi $i$:
+
+
+.table:
+  columns: 'cccc'
+
+  .row:
+    head: true
+
+    ~
+
+    $A$
+
+    $B$
+
+    $C$
+
+  .row:
+
+    zák. 1
+
+    1
+
+    5
+
+    9
+
+  .row:
+
+    zák. 2
+
+    5
+
+    1
+
+    5
+
+  .row:
+
+    zák. 3
+
+    9
+
+    5
+
+    1
+
+
+.Figure:
+  label: ch-resice-ilp-fig-sklady
+
+  !tikz:
+    filename: 15c-tsp-a-sklady-02
+    options: 'x=1.9cm,y=1.9cm'
+
+    \foreach \j/\n/\f in {0/A/120,1/B/180,2/C/120} {
+      \node[draw=defc,fill=defc!10,thick,minimum size=6mm,font=\small] (s\n) at (\j,1) {$\n$};
+      \node[font=\footnotesize,above] at (\j,1.2) {$f=\f$};}
+    \foreach \i/\d in {1/30,2/40,3/50} {
+      \node[v,fill=intc!15] (z\i) at (\i-1,0) {\i};
+      \node[font=\footnotesize,below] at (\i-1,-0.22) {$d=\d$};}
+    \draw[e] (sA)--(z1) (sB)--(z2) (sC)--(z3);
+    \draw[efaint,dashed,draw=black!45] (sA)--(z2) (sB)--(z1) (sB)--(z3) (sC)--(z2);
+    \node[font=\footnotesize,anchor=west] at (2.45,0.55) {plná čára: cena 1};
+    \node[font=\footnotesize,anchor=west] at (2.45,0.3) {čárkovaně: cena 5};
+    \node[font=\footnotesize,anchor=west] at (2.45,0.05) {(cena 9 nekreslena)};
+
+  .caption:
+
+    Instance umístění skladů. Každý zákazník má „svůj“ sklad s dopravou za 1 Kč za jednotku.
+
+
+"Otázka: jaká jsou rozhodnutí?".notion Jsou dvě různá: "který sklad otevřít".emphasize (ano/ne) a
+"kolik komu odkud dodat".emphasize (podíl). Proto dva druhy proměnných.
+
+.enumerate:
+
+  .item:
+
+    "Rozhodnutí $\to$ proměnné:".notion
+
+    .itemize:
+
+      .item:
+
+        $y_j\in\{0,1\}$ … otevřít sklad $j$? ($j\in\{A,B,C\}$)
+
+      .item:
+
+        $0\le x_{ij}\le 1$ … podíl poptávky zákazníka $i$ dodaný ze skladu $j$ (reálná proměnná – model je MIP).
+
+  .item:
+
+    "Podmínky:".notion
+
+    .itemize:
+
+      .item:
+
+        $\sum_j x_{ij}=1$ pro každého zákazníka $i$ – každý zákazník je obsloužen celý;
+
+      .item:
+
+        $x_{ij}\le y_j$ pro každé $i,j$ – zavřený sklad nikomu nedodává.
+
+  .item:
+
+    "Cíl:".notion
+
+    .equation:
+
+      \min\ \underbrace{\sum_j f_j\,y_j}_{\text{fixní}}\ +\ \underbrace{\sum_{i,j} c_{ij}\,d_i\,x_{ij}}_{\text{dopravní}} .
+
+  .item:
+
+    "Kontrola:".notion jednotky – $c_{ij}$ je Kč za jednotku, $d_ix_{ij}$ počet jednotek, součin Kč. Velikost:
+    3 + 9 = 12 proměnných, 3 + 9 = 12 omezení.
+
+
+.Remark:
+  title: 'Pozor na $x_{ij}\le y_j$'
+
+  Je to "jedna nerovnice pro každou dvojici".notion $(i,j)$: otevřený sklad smí obsloužit všechny zákazníky. Je to
+  vypínač $x\le My$ z oddílu .reference:ch-resice-ilp-modelovaci-triky s $M=1$, protože $x_{ij}\le1$.
+
+
+"Optimum.".notion Pro pevně zvolené otevřené sklady je nejlepší poslat každého zákazníka celého do nejlevnějšího
+otevřeného skladu. Stačí tedy projít 7 neprázdných množin otevřených skladů:
+
+
+.table:
+  columns: 'lrrr'
+
+  .row:
+    head: true
+
+    otevřené
+
+    fixní
+
+    dopravní
+
+    celkem
+
+  .row:
+
+    $A$
+
+    120
+
+    $30+200+450=680$
+
+    800
+
+  .row:
+
+    $B$
+
+    180
+
+    $150+40+250=440$
+
+    620
+
+  .row:
+
+    $C$
+
+    120
+
+    $270+200+50=520$
+
+    640
+
+  .row:
+
+    $A,B$
+
+    300
+
+    $30+40+250=320$
+
+    620
+
+  .row:
+
+    $A,C$
+
+    240
+
+    $30+200+50=280$
+
+    "520".notion
+
+  .row:
+
+    $B,C$
+
+    300
+
+    $150+40+50=240$
+
+    540
+
+  .row:
+
+    $A,B,C$
+
+    420
+
+    $30+40+50=120$
+
+    540
+
+
+Optimum je "520".notion: otevřít $A$ a $C$, zákazník 1 jde do $A$, zákazník 3 do $C$, zákazník 2 do kteréhokoli
+z nich (doprava $5\cdot40=200$). Tutéž hodnotu dává řešič na modelu výše (ověřeno skriptem).
+
+
+.Warning:
+  title: 'Typické chyby'
+
+  .itemize:
+
+    .item:
+
+      "Model bez kontroly na protipříkladu.".notion U TSP vypadal model se stupni hotový. Dobrá kontrola je zkusit
+      najít „podvodné“ řešení, které podmínky splní a zadání ne (dvě kružnice).
+
+    .item:
+
+      "Jedna proměnná na dvě rozhodnutí.".notion U skladů nestačí jen $x_{ij}$: fixní náklad se platí za otevření,
+      ne za dodávku, a bez $y_j$ ho nemáme jak započítat.
+
+    .item:
+
+      "Vazba jen jedním směrem.".notion $x_{ij}\le y_j$ nebrání otevřít sklad, který nic nedodává; to vylučuje až
+      minimalizace nákladů (otevření stojí $f_j>0$).

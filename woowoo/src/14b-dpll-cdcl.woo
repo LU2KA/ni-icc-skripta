@@ -1,0 +1,603 @@
+.Section Jak fungují SAT řešiče: DPLL a CDCL
+  label: ch-resice-sat-jak-funguji-sat-resice
+
+
+Všechny známé algoritmy pro $\prob{SAT}$ jsou v nejhorším případě (téměř) exponenciální. V praxi ale řešiče
+zvládají obrovské instance – verifikace hardwaru a softwaru, plánování, kryptoanalýza. Jádrem všech moderních
+řešičů jsou dva algoritmy: "DPLL".notion a jeho vylepšení "CDCL".notion. Řešičů je spousta a každý rok soutěží
+v SAT Competition; příkladem je Kissat (Armin Biere), který si vyzkoušíme v oddílu .reference:ch-resice-sat-sat-resic-v-praxi.
+
+
+.Figure:
+  label: ch-resice-sat-fig-historie
+
+  !tikz:
+    filename: 14b-dpll-cdcl-01
+    options: 'x=1cm,y=1cm'
+
+    \draw[->,thick,black!70] (-0.3,0)--(14.3,0);
+    \foreach \x/\n/\r in {0/DPLL/1962,2.3/GRASP/1996,4.6/Chaff/2001,6.9/MiniSat/2003,9.2/Glucose/2009,11.5/CaDiCaL/2017,13.6/Kissat/2020} {
+      \fill[defc] (\x,0) circle (2.2pt);
+      \node[font=\small\bfseries,above=3pt] at (\x,0) {\n};
+      \node[font=\scriptsize,below=3pt] at (\x,0) {\r};
+    }
+    \draw[decorate,decoration={brace,amplitude=5pt,mirror},thick,intc] (2.0,-0.65)--(13.9,-0.65) node[midway,below=6pt,font=\small,intc] {CDCL};
+
+  .caption:
+
+    Vývoj SAT řešičů: od DPLL (1962) k řešičům založeným na CDCL (od GRASP, 1996).
+
+
+.Subsection DPLL: backtracking + unit propagation
+  label: ch-resice-sat-dpll
+
+
+.Definition:
+  title: 'DPLL (Davis–Putnam–Logemann–Loveland, 1962)'
+  label: ch-resice-sat-def-dpll
+
+  Rekurzivní prohledávání ohodnocení se dvěma pravidly:
+
+  .description:
+
+    .ditem:
+      bullet: 'Unit propagation:'
+
+      klauzule má jediný nepřiřazený literál $\ell$ a ostatní její literály jsou nepravdivé $\Rightarrow$
+      nutně $\ell=1$. Šíříme, dokud jde.
+
+    .ditem:
+      bullet: 'Větvení + konflikt:'
+
+      nic nešíříme $\Rightarrow$ vybereme nepřiřazenou proměnnou $x$ a zkusíme jednu hodnotu, pak druhou.
+      Konflikt (klauzule se všemi literály nepravdivými) $\Rightarrow$ "backtrack".emphasize – návrat k poslednímu
+      rozhodnutí, které má ještě nevyzkoušenou hodnotu.
+
+
+.Algorithm:
+  title: 'DPLL($\varphi$, $\tau$)'
+  label: ch-resice-sat-alg-dpll
+
+  !pseudocode:
+
+    \STATE proveď unit propagation (rozšiřuje $\tau$)
+    \IF{některá klauzule má všechny literály nepravdivé}
+      \RETURN NESPLNITELNÁ \COMMENT{konflikt}
+    \ENDIF
+    \IF{všechny klauzule jsou splněné}
+      \RETURN $\tau$
+    \ENDIF
+    \STATE vyber nepřiřazenou proměnnou $x$
+    \FORALL{$v\in\{1,0\}$}
+      \IF{DPLL($\varphi$, $\tau\cup\{x=v\}$) vrátí model}
+        \RETURN ten model
+      \ENDIF
+    \ENDFOR
+    \RETURN NESPLNITELNÁ
+
+
+Přednáška u pravidla větvení píše „zkusíme 0, pak 1“, obrázek přechodu DPLL $\to$ CDCL ale větví nejdřív
+hodnotou 1. Pořadí hodnot (i pořadí proměnných) je volba heuristiky – na korektnosti nic nemění.
+
+
+.Example:
+  title: 'Běh DPLL'
+  label: ch-resice-sat-ex-dpll
+
+  Klauzule (stejné jako v příkladu CDCL níže):
+  $c_1=(\lnot a\lor b)$, $c_2=(\lnot b\lor\lnot c\lor d)$, $c_3=(\lnot d\lor e)$, $c_4=(\lnot a\lor\lnot d\lor\lnot e)$,
+  $c_5=(\lnot a\lor c\lor h)$, $c_6=(\lnot a\lor c\lor\lnot h)$; proměnná $g$ se vyskytuje jen v jiných klauzulích
+  (nemá s konfliktem nic společného). Větvíme v pořadí $a,g,c$, nejdřív hodnotou 1.
+
+  .table:
+    columns: 'clll'
+
+    .row:
+      head: true
+
+      krok
+
+      rozhodnutí
+
+      unit propagation
+
+      výsledek
+
+    .row:
+
+      1
+
+      $a=1$
+
+      $c_1$: $b=1$
+
+      –
+
+    .row:
+
+      2
+
+      $a=1,\ g=1$
+
+      –
+
+      –
+
+    .row:
+
+      3
+
+      $a=1,\ g=1,\ c=1$
+
+      $c_2$: $d=1$; $c_3$: $e=1$
+
+      $c_4$ konflikt $\Rightarrow$ zkus $c=0$
+
+    .row:
+
+      4
+
+      $a=1,\ g=1,\ c=0$
+
+      $c_5$: $h=1$
+
+      $c_6$ konflikt $\Rightarrow$ zpět, zkus $g=0$
+
+    .row:
+
+      5
+
+      $a=1,\ g=0,\ c=1$
+
+      $b=1$, $d=1$, $e=1$
+
+      $c_4$ konflikt (totéž znovu)
+
+    .row:
+
+      6
+
+      $a=1,\ g=0,\ c=0$
+
+      $b=1$, $h=1$
+
+      $c_6$ konflikt $\Rightarrow$ zpět, zkus $a=0$
+
+    .row:
+
+      7
+
+      $a=0$
+
+      –
+
+      $c_1,c_4,c_5,c_6$ splněny (obsahují $\lnot a$)
+
+
+  Ve větvi $a=0$ zbývají jen $c_2,c_3$; další rozhodnutí (např. $g=1$, $c=1$, $b=1$ vynutí $d=1$, $e=1$)
+  najdou model $a=0$, $b=c=d=e=g=h=1$ (ověřeno skriptem). Kroky 5–6 jsou "přesná kopie".emphasize kroků 3–4:
+  hodnota $g$ s konfliktem nesouvisí, ale DPLL to neví.
+
+
+.Figure:
+  label: ch-resice-sat-fig-dpll-strom
+
+  !tikz:
+    filename: 14b-dpll-cdcl-06
+    options: 'x=1cm,y=1cm'
+
+    \node[dn] (a) at (0,0) {$a$};
+    \node[dn] (g) at (-2.4,-1.5) {$g$};
+    \node[dok] (ok) at (2.6,-1.5) {$\checkmark$};
+    \node[dn] (cl) at (-4.1,-3.0) {$c$};
+    \node[dn] (cr) at (-0.7,-3.0) {$c$};
+    \node[dconf] (x3) at (-5.0,-4.5) {$\bot$};
+    \node[dconf] (x4) at (-3.2,-4.5) {$\bot$};
+    \node[dconf] (x5) at (-1.6,-4.5) {$\bot$};
+    \node[dconf] (x6) at (0.2,-4.5) {$\bot$};
+    \draw[e] (a)--node[dlab,above left]{$1$:\ $b{:=}1$ ($c_1$)}(g);
+    \draw[e] (a)--node[dlab,above right]{$0$}(ok);
+    \draw[e] (g)--node[dlab,above left]{$1$}(cl);
+    \draw[e] (g)--node[dlab,above right]{$0$}(cr);
+    \foreach \p/\x/\v in {cl/x3/1,cl/x4/0,cr/x5/1,cr/x6/0} {
+      \ifnum\v=1 \draw[e] (\p)--node[dlab,left]{$1$}(\x); \else \draw[e] (\p)--node[dlab,right]{$0$}(\x); \fi
+    }
+    \foreach \x/\k/\t in {x3/3/{$d,e{:=}1$\\ spor $c_4$},x4/4/{$h{:=}1$\\ spor $c_6$},x5/5/{$d,e{:=}1$\\ spor $c_4$},x6/6/{$h{:=}1$\\ spor $c_6$}} {
+      \node[font=\footnotesize,align=center,below=1pt of \x] {\textbf{krok \k}\\ \t};
+    }
+    \node[font=\footnotesize,align=center,below=1pt of ok] {\textbf{krok 7}\\ $c_1,c_4,c_5,c_6$ splněny,\\ dál model $a{=}0$,\\ $b{=}c{=}d{=}e{=}g{=}h{=}1$};
+    \draw[decorate,decoration={brace,amplitude=5pt,mirror},thick,rej] (-2.25,-6.15)--(0.65,-6.15) node[midway,below=6pt,font=\footnotesize,rej,align=center] {přesná kopie kroků 3–4\\ (hodnota $g$ nehraje roli)};
+
+  .caption:
+
+    Strom prohledávání DPLL pro příklad .reference:ch-resice-sat-ex-dpll (hrana = rozhodnutí, u listů propagace
+    a porušená klauzule; čísla kroků odpovídají tabulce). "Všimni si:".emphasize pod $g=0$ se opakují tytéž dva
+    konflikty jako pod $g=1$ – teprve návrat až k $a$ pomůže.
+
+
+.Concept:
+  title: 'Proč samotné DPLL nestačí'
+
+  Backtracking "zapomene".emphasize, proč větev selhala – a stejnou chybu udělá znovu (kroky 5–6 výše).
+
+
+.Subsection Od DPLL k CDCL
+  label: ch-resice-sat-od-dpll-k-cdcl
+
+
+"CDCL".notion = Conflict-Driven Clause Learning (Marques-Silva & Sakallah, 1996). Proti DPLL dělá dvě věci jinak:
+
+.itemize:
+
+  .item:
+
+    z konfliktu "odvodí klauzuli".emphasize (naučí se ji), takže příště stejnou chybu nezopakuje;
+
+  .item:
+
+    "skočí zpět".emphasize rovnou na úroveň, kde chyba vznikla ("backjumping".emphasize), a rozhodnutí, která s konfliktem
+    nesouvisí (zde $g$), přeskočí.
+
+
+.Figure:
+  label: ch-resice-sat-fig-dpll-vs-cdcl
+
+  !tikz:
+    filename: 14b-dpll-cdcl-02
+    options: 'x=1cm,y=1cm'
+
+    \begin{scope}
+      \node[font=\small\bfseries] at (0,1.0) {DPLL: chronologický návrat};
+      \node[dn] (a) at (0,0) {$a$};
+      \node[dn] (g) at (0,-1.3) {$g$};
+      \node[dn] (c1) at (-1.4,-2.6) {$c$};
+      \node[dn] (c2) at (1.4,-2.6) {$c$};
+      \node[dconf] (x1) at (-2.1,-3.9) {$\bot$};
+      \node[dconf] (x2) at (-0.7,-3.9) {$\bot$};
+      \node[dconf] (x3) at (0.7,-3.9) {$\bot$};
+      \node[dconf] (x4) at (2.1,-3.9) {$\bot$};
+      \draw[e] (a)--node[dlab,left]{1}(g);
+      \draw[e] (g)--node[dlab,above left]{1}(c1);
+      \draw[e] (g)--node[dlab,above right]{0}(c2);
+      \draw[e] (c1)--node[dlab,left]{1}(x1); \draw[e] (c1)--node[dlab,right]{0}(x2);
+      \draw[e] (c2)--node[dlab,left]{1}(x3); \draw[e] (c2)--node[dlab,right]{0}(x4);
+      \draw[decorate,decoration={brace,amplitude=4pt,mirror},thick,rej] (0.4,-4.35)--(2.4,-4.35) node[midway,below=4pt,font=\scriptsize,rej] {totéž znovu};
+    \end{scope}
+    \begin{scope}[xshift=6.3cm]
+      \node[font=\small\bfseries] at (0.8,1.0) {CDCL: učení a skok zpět};
+      \node[dn] (a) at (0,0) {$a$};
+      \node[dn] (g) at (0,-1.3) {$g$};
+      \node[dn] (c) at (0,-2.6) {$c$};
+      \node[dconf] (x) at (0,-3.9) {$\bot$};
+      \draw[e] (a)--node[dlab,left]{1}(g);
+      \draw[e] (g)--node[dlab,left]{1}(c);
+      \draw[e] (c)--node[dlab,left]{1}(x);
+      \node[blokd,font=\scriptsize,align=center] (lv) at (2.4,-1.0) {úroveň 1:\\ $d:=0,\ c:=0$\\ (propagace)};
+      \draw[->,thick,rej,dashed] (x.east) to[out=0,in=-90] node[pos=0.35,right,font=\scriptsize,rej] {naučí $(\lnot a\lor\lnot d)$} (lv.south);
+      \draw[->,thick,acc] (lv.north) to[out=90,in=0] (a.east);
+    \end{scope}
+
+  .caption:
+
+    Vlevo DPLL: vrací se vždy o úroveň výš, i když $g$ s konfliktem nesouvisí, a nic si nepamatuje – oba podstromy
+    pod $g$ selžou stejně. Vpravo CDCL: z prvního konfliktu odvodí klauzuli a skočí rovnou na úroveň $a$; $g$ přeskočí.
+
+
+.Subsection CDCL: konflikt v implikačním grafu
+  label: ch-resice-sat-cdcl-konflikt
+
+
+Zápis $x@k$ znamená „$x$ přiřazeno na rozhodovací úrovni $k$“. Úroveň se zvýší s každým rozhodnutím; vše, co
+unit propagation vynutí, dostane úroveň posledního rozhodnutí. Posloupnost přiřazení v pořadí, jak vznikala, je
+"trail".notion.
+
+
+.Definition:
+  title: 'Implikační graf CDCL'
+  label: ch-resice-sat-def-implikacni-graf-cdcl
+
+  Vrcholy jsou přiřazení ($a@1$, $b@1$, …) a konflikt $\bot$; hrana $u\to v$ s popiskem $c_i$ znamená „přiřazení $v$
+  vynutila klauzule $c_i$ (mimo jiné kvůli $u$)“. Rozhodnutí nemají předchůdce.
+
+
+.Example:
+  title: 'Průběh CDCL do prvního konfliktu'
+  label: ch-resice-sat-ex-cdcl
+
+  Klauzule $c_1,\dots,c_6$ z příkladu .reference:ch-resice-sat-ex-dpll, větvíme opět $a,g,c$ hodnotou 1:
+
+  .table:
+    columns: 'cll'
+
+    .row:
+      head: true
+
+      úroveň
+
+      rozhodnutí
+
+      propagace
+
+    .row:
+
+      1
+
+      $a=1$
+
+      $c_1$: $b=1$
+
+    .row:
+
+      2
+
+      $g=1$
+
+      –
+
+    .row:
+
+      3
+
+      $c=1$
+
+      $c_2$: $d=1$; $c_3$: $e=1$; $c_4$: "konflikt".notion
+
+
+.Figure:
+  label: ch-resice-sat-fig-cdcl-graf
+
+  !tikz:
+    filename: 14b-dpll-cdcl-03
+    options: 'x=1cm,y=1cm'
+
+    \node[litD] (a) at (0,2.4) {$a@1$};
+    \node[lit] (b) at (1.9,2.4) {$b@1$};
+    \node[litF] (g) at (0,1.2) {$g@2$};
+    \node[litD] (c) at (0,0) {$c@3$};
+    \node[lit,draw=intc!90!black,fill=intc!18,very thick] (d) at (1.9,0) {$d@3$};
+    \node[lit] (e) at (3.8,0) {$e@3$};
+    \node[litX] (x) at (5.4,1.2) {$\bot$};
+    \draw[imp] (a)--node[below,font=\scriptsize]{$c_1$}(b);
+    \draw[imp] (b)--node[right,font=\scriptsize]{$c_2$}(d);
+    \draw[imp] (c)--node[below,font=\scriptsize]{$c_2$}(d);
+    \draw[imp] (d)--node[below,font=\scriptsize,pos=0.72]{$c_3$}(e);
+    \draw[imp] (a) to[out=35,in=100] node[above,font=\scriptsize,pos=0.75]{$c_4$}(x);
+    \draw[imp] (d)--(x);
+    \draw[imp] (e)--node[below right,font=\scriptsize]{$c_4$}(x);
+    \draw[very thick,dashed,rej] (2.75,3.3)--(2.75,-0.8) node[below,font=\scriptsize] {řez 1UIP};
+
+  .caption:
+
+    Implikační graf v okamžiku konfliktu (žlutě rozhodnutí; $g$ s konfliktem nesouvisí). Hrany přes čárkovaný
+    řez 1UIP vedou z $a$ a $d$ – odtud naučená klauzule $(\lnot a\lor\lnot d)$.
+
+
+.Subsection CDCL: analýza konfliktu a skok zpět
+  label: ch-resice-sat-cdcl-analyza
+
+
+"Rezoluce".notion "(nad rámec přednášky – připomenutí)".emphasize: z klauzulí $(A\lor x)$ a $(B\lor\lnot x)$ odvodíme
+$(A\lor B)$; každé ohodnocení splňující obě splňuje i rezolventu. Přednáška ji značí $\oplus$.
+
+
+.Procedure:
+  title: 'Analýza konfliktu (1UIP)'
+  label: ch-resice-sat-proc-1uip
+
+  Začni klauzulí, která je v konfliktu. Dokud obsahuje "víc než jeden".emphasize literál z poslední (konfliktní)
+  úrovně, rezolvuj ji s klauzulí, která vynutila naposledy přiřazený z těchto literálů (jdeme po trailu pozpátku).
+  Výsledek se naučíme. Odpovídá řezu implikačním grafem těsně za "prvním UIP".notion (unique implication point) –
+  vrcholem poslední úrovně, přes který vedou všechny cesty od jejího rozhodnutí ke konfliktu (zde $d@3$).
+
+
+.Example:
+  title: 'Analýza konfliktu, skok zpět a druhý konflikt'
+  label: ch-resice-sat-ex-cdcl-analyza
+
+  .table:
+    columns: 'lll'
+
+    .row:
+      head: true
+
+      klauzule
+
+      literály z úrovně 3
+
+      krok
+
+    .row:
+
+      $c_4=(\lnot a\lor\lnot d\lor\lnot e)$
+
+      $\lnot d,\ \lnot e$
+
+      dva $\Rightarrow$ rezolvuj podle $e$ (vynutila ho $c_3$)
+
+    .row:
+
+      $c_4\oplus c_3=(\lnot a\lor\lnot d)$
+
+      jen $\lnot d$
+
+      stop: "naučíme $(\lnot a\lor\lnot d)$".notion
+
+
+  "Skok zpět na úroveň 1".notion (úroveň 2 s $g$ přeskočíme). Tam je naučená klauzule jednotková ($a=1$), takže
+  propagace pokračuje:
+
+  .equation:
+
+    d:=0 \xrightarrow{\;c_2\;} c:=0 \xrightarrow{\;c_5\;} h:=1 \xrightarrow{\;c_6\;} \bot
+    \quad\rightsquigarrow\quad \text{naučíme } (\lnot a),\quad a:=0.
+
+  Druhý konflikt nastal na úrovni 1 bez dalšího rozhodnutí, takže 1UIP je samo rozhodnutí $a$. Rezoluce
+  "(nad rámec přednášky – slajd uvádí jen výsledek)".emphasize: $c_6\oplus c_5=(\lnot a\lor c)$, $\oplus\,c_2=(\lnot a\lor\lnot b\lor d)$,
+  $\oplus\,(\lnot a\lor\lnot d)=(\lnot a\lor\lnot b)$, $\oplus\,c_1=(\lnot a)$. Jednotková klauzule $(\lnot a)$ platí
+  na úrovni 0, tedy natrvalo: $a:=0$, a odtud řešič najde model jako v kroku 7 příkladu DPLL.
+
+
+.Figure:
+  label: ch-resice-sat-fig-cdcl-graf2
+
+  !tikz:
+    filename: 14b-dpll-cdcl-07
+    options: 'x=1cm,y=1cm'
+
+    \node[litD] (a) at (0,1.2) {$a@1$};
+    \node[lit] (b) at (2.0,2.4) {$b@1$};
+    \node[lit,minimum size=9.5mm] (d) at (2.0,0) {$\lnot d@1$};
+    \node[lit,minimum size=9.5mm] (c) at (4.0,1.2) {$\lnot c@1$};
+    \node[lit] (h) at (6.0,2.4) {$h@1$};
+    \node[litX] (x) at (7.6,1.2) {$\bot$};
+    \draw[imp] (a)--node[above left,font=\scriptsize]{$c_1$}(b);
+    \draw[->,very thick,intc] (a)--(d);
+    \node[font=\scriptsize,intc,align=center,below=1pt of d] {naučená\\ $(\lnot a\lor\lnot d)$};
+    \draw[imp] (b)--node[above right,font=\scriptsize]{$c_2$}(c);
+    \draw[imp] (d)--node[below right,font=\scriptsize]{$c_2$}(c);
+    \draw[imp] (c)--node[above left,font=\scriptsize]{$c_5$}(h);
+    \draw[imp] (a) to[out=75,in=150] node[above,font=\scriptsize,pos=0.55]{$c_5$}(h);
+    \draw[imp] (h)--node[above right,font=\scriptsize]{$c_6$}(x);
+    \draw[imp] (c)--node[below,font=\scriptsize]{$c_6$}(x);
+    \draw[imp] (a) to[out=-80,in=-115,looseness=1.25] node[below,font=\scriptsize,pos=0.6]{$c_6$}(x);
+    \draw[very thick,dashed,rej] (1.0,3.9)--(1.0,-2.1) node[below,font=\scriptsize] {řez 1UIP: UIP je samo $a$};
+
+  .caption:
+
+    Implikační graf druhého konfliktu: po skoku zpět je vše na úrovni 1 a $\lnot d$ vynutila naučená klauzule.
+    "Všimni si:".emphasize z rozhodnutí $a$ vede hrana ($c_6$) přímo do $\bot$, takže na všech cestách od $a$ ke
+    konfliktu neleží žádný jiný vrchol – 1UIP je $a$ samo, přes řez vedou jen hrany z $a$ a naučíme $(\lnot a)$.
+
+
+Naučená klauzule je rezolventa původních, tedy jejich "důsledek".emphasize: splnitelnost se nezmění, prostor
+k prohledání se zmenší. (Skriptem ověřeno, že $(\lnot a\lor\lnot d)$ i $(\lnot a)$ z $c_1,\dots,c_6$ plynou.)
+
+
+.Subsection CDCL za běhu: heuristiky a restarty
+  label: ch-resice-sat-heuristiky-a-restarty
+
+
+Co dělá moderní řešič rychlým:
+
+.description:
+
+  .ditem:
+    bullet: 'VSIDS:'
+
+    větví proměnné z nedávných konfliktů.
+
+  .ditem:
+    bullet: 'Watched literals:'
+
+    klauzule sleduje jen 2 literály (unit propagation se tak nemusí dívat na celou klauzuli při každém přiřazení).
+
+  .ditem:
+    bullet: 'Restarty:'
+
+    občas zapomene rozhodnutí a začne znovu.
+
+  .ditem:
+    bullet: 'Preprocessing:'
+
+    před startem zjednoduší formuli.
+
+
+.centered:
+
+  !tikz:
+    filename: 14b-dpll-cdcl-04
+    options: 'x=1cm,y=1cm'
+
+    \draw[->,thick,black!70] (0,0)--(8.2,0);
+    \foreach \x/\t in {0/start,2.6/konflikt,5.2/konflikt,7.8/konec} {\fill[black!70] (\x,0) circle (2pt); \node[font=\scriptsize,below=3pt] at (\x,0) {\t};}
+    \draw[->,thick,dashed,rej] (2.6,0.1) to[out=110,in=70] node[above,font=\scriptsize]{restart} (0.1,0.15);
+    \draw[->,thick,dashed,rej] (5.2,0.1) to[out=110,in=70] (0.2,0.15);
+    \node[note] at (4,-0.9) {časová osa běhu s restarty: naučené klauzule si řešič nese dál};
+
+
+.Remark:
+  title: 'Klíčová myšlenka'
+
+  Restarty nejsou prohra – naučené klauzule zůstávají.
+
+
+.Subsection Symetrie: slepá skvrna CDCL
+  label: ch-resice-sat-symetrie
+
+
+Mnoho instancí je "symetrických".notion: holubník, barvení (permutace barev), rozvrhy. CDCL symetrii nevidí:
+tutéž slepou uličku projde znovu pro "každou".emphasize symetrickou kopii.
+
+
+.Figure:
+  label: ch-resice-sat-fig-symetrie
+
+  !tikz:
+    filename: 14b-dpll-cdcl-05
+    options: 'x=1cm,y=1cm'
+
+    \foreach \s/\pa/\pb in {0/1/2,6/2/1} {
+      \begin{scope}[xshift=\s cm]
+        \node[font=\scriptsize] at (0.5,0.45) {A}; \node[font=\scriptsize] at (1.1,0.45) {B};
+        \foreach \r/\t in {1/{holub 1},2/{holub 2},3/{holub 3}} {
+          \node[font=\scriptsize,anchor=east] at (0.15,-\r*0.6+0.3) {\t};
+          \draw[black!45,fill=white] (0.2,-\r*0.6) rectangle (0.8,-\r*0.6+0.6);
+          \draw[black!45,fill=white] (0.8,-\r*0.6) rectangle (1.4,-\r*0.6+0.6);
+        }
+        \fill[rej!25] (0.2,-1.8) rectangle (1.4,-1.2);
+        \draw[black!45] (0.2,-1.8) rectangle (0.8,-1.2) (0.8,-1.8) rectangle (1.4,-1.2);
+        \node[font=\small\bfseries] at ({0.5+(\pa-1)*0.6},-0.3) {1};
+        \node[font=\small\bfseries] at ({0.5+(\pb-1)*0.6},-0.9) {1};
+        \node[rej,font=\small] at (1.75,-1.5) {$\bot$};
+      \end{scope}
+    }
+    \draw[<->,thick,acc] (2.4,-0.6)--(5.0,-0.6) node[midway,above,font=\scriptsize,align=center,acc] {prohoď\\ díry A$\leftrightarrow$B};
+
+  .caption:
+
+    Tři holubi do dvou děr: když holub 1 sedí v A a holub 2 v B, holub 3 nemá kam ($\bot$). Prohozením děr
+    vznikne „jiná“ větev, kterou ale CDCL musí vyvrátit znovu.
+
+
+.Concept:
+  title: 'Rozbití symetrie (preprocessing)'
+
+  .enumerate:
+
+    .item:
+
+      Symetrie formule = "automorfismy grafu".notion klauzulí a literálů.
+
+    .item:
+
+      Přidáme klauzule: z každé třídy symetrických ohodnocení zůstane "jeden zástupce".notion.
+
+  Nástroje: Shatter, BreakID, Satsuma (2024); pak běžný řešič. Ruční rozbití symetrie barev uvidíme na
+  Schurově problému (oddíl .reference:ch-resice-sat-sat-resic-v-praxi).
+
+
+.Warning:
+  title: 'Typické chyby'
+
+  .itemize:
+
+    .item:
+
+      „Jednotková klauzule“ v unit propagation není jen klauzule délky 1: je to klauzule,
+      v níž jsou "všechny literály kromě jednoho".emphasize už nepravdivé a ten jeden je nepřiřazený.
+
+    .item:
+
+      Naučená klauzule "nemění".emphasize množinu řešení – je to důsledek původních klauzulí (rezolventa). Kdo
+      „učí“ klauzuli, která z formule neplyne, může zahodit řešení.
+
+    .item:
+
+      Analýzu konfliktu ukončit příliš brzy nebo pozdě: stop je, když v klauzuli zbývá "přesně jeden".emphasize
+      literál z konfliktní úrovně (1UIP). U nás $(\lnot a\lor\lnot d)$, ne $c_4$ (dva literály z úrovně 3) ani
+      $(\lnot a\lor\lnot c)$ (rezolvováno až k samotným rozhodnutím).
+
+    .item:
+
+      Skákat zpět jen o jednu úroveň jako DPLL. CDCL skočí na úroveň, kde se naučená klauzule stane jednotkovou
+      – "(nad rámec přednášky)".emphasize obecně na druhou nejvyšší úroveň mezi jejími literály (zde úroveň 1 literálu $\lnot a$).

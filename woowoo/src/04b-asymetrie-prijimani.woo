@@ -1,0 +1,147 @@
+.Section Asymetrie přijímání
+  label: ch-np-asymetrie-prijimani
+
+
+.Definition:
+  title: 'Přijetí a zamítnutí slova NDTS'
+  label: def-ndts-acc
+
+  .itemize:
+
+    .item:
+
+      Slovo $x$ je "přijato".notion, pokud "existuje alespoň jeden".notion výpočet (cesta od
+      kořene k listu), který skončí ve stavu $\qA$.
+
+    .item:
+
+      Slovo $x$ je "zamítnuto".notion, pokud "žádná".notion větev nekončí v $\qA$ (všechny
+      končí v $\qR$ nebo se zaseknou).
+
+
+.Figure:
+  label: fig-np-asymetrie
+
+  !tikz:
+    filename: 04b-asymetrie-prijimani-01
+    options: 'scale=0.95'
+
+    \newcommand{\chNPtree}[5]{% styly ctyr listu, popisek
+      \node[chNPc] (r) at (0,0) {};
+      \node[chNPc] (a) at (-1.2,-1) {}; \node[chNPc] (b) at (1.2,-1) {};
+      \node[#1] (l1) at (-1.8,-2.1) {\qR};
+      \node[#2] (l2) at (-0.6,-2.1) {\qR};
+      \node[#3] (l3) at (0.6,-2.1) {\qR};
+      \node[#4] (l4) at (1.8,-2.1) {#5};
+      \foreach \u/\w in {r/a,r/b,a/l1,a/l2,b/l3,b/l4} {\draw[chNPe] (\u) -- (\w);}}
+    \begin{scope}
+      \chNPtree{chNPrej}{chNPrej}{chNPrej}{chNPacc}{\qA}
+      \draw[chNPg] (r) -- (b); \draw[chNPg] (b) -- (l4);
+      \node[bloka,font=\small] at (0,-3.2) {3$\times$ \qR, 1$\times$ \qA\ $\Rightarrow$ \textbf{PŘIJATO}};
+    \end{scope}
+    \begin{scope}[xshift=6.5cm]
+      \chNPtree{chNPrej}{chNPrej}{chNPrej}{chNPstuck}{zásek}
+      \node[blokr,font=\small] at (0,-3.2) {žádné \qA\ $\Rightarrow$ \textbf{ZAMÍTNUTO}};
+    \end{scope}
+
+  .caption:
+
+    Přijetí stačí najít jednou; zamítnutí vyžaduje shodu "všech".emphasize větví.
+
+
+.Warning:
+  title: 'Pozor'
+
+  Konkrétní běh (jedna větev) může skončit v $\qR$, a přesto celý stroj slovo "přijme".emphasize –
+  protože jiná větev došla do $\qA$. Pojem „stroj zamítl“ se týká celého stromu, ne jedné větve.
+
+
+.Concept:
+  title: 'NDTS jako průchod bludištěm'
+
+  "Křižovatka".notion = nedeterministická volba (několik přechodů v $\delta$);
+  "slepá ulička".notion = zamítací stav $\qR$ nebo zásek; "východ".notion = stav $\qA$.
+  Když na křižovatce zabočíte doleva a narazíte na zeď, "neznamená to".emphasize, že bludiště nemá
+  řešení – jen tato cesta byla špatná. Bludiště je „vyřešeno“ (slovo přijato), pokud alespoň
+  jedna možná cesta vede ven.
+
+
+.Figure:
+  label: fig-np-bludiste
+
+  !tikz:
+    filename: 04b-asymetrie-prijimani-02
+
+    \node[chNPc,minimum size=9mm,font=\scriptsize] (s) at (0,0) {start};
+    \node[chNPc] (l) at (-1.8,-1.2) {};
+    \node[chNPrej] (ll) at (-2.7,-2.4) {zeď};
+    \node[chNPrej] (lp) at (-0.9,-2.4) {zeď};
+    \node[chNPrej] (pl) at (0.9,-2.4) {zeď};
+    \node[chNPacc] (pp) at (2.7,-2.4) {východ};
+    \draw[chNPe] (s) -- node[lab,above left]{L} (l);
+    \draw[chNPe] (l) -- node[lab,left]{L} (ll);
+    \draw[chNPe] (l) -- node[lab,right]{P} (lp);
+    \node[chNPc] (p) at (1.8,-1.2) {};
+    \draw[chNPg] (s) -- node[lab,above right]{P} (p);
+    \draw[chNPe] (p) -- node[lab,left]{L} (pl);
+    \draw[chNPg] (p) -- node[lab,right]{P} (pp);
+
+  .caption:
+
+    Bludiště jako strom voleb L/P. Tři slepé uličky nevadí – jedna cesta ven stačí.
+
+
+.Subsection Rozbíjíme mýty o nedeterminismu
+  label: ch-np-rozbijime-myty-o-nedeterminismu
+
+
+.Warning:
+  title: 'Mýtus 1: „Stroj paralelně zkouší všechny možnosti“'
+
+  Představa, že se NDTS při větvení rozdvojí do vláken, která pak spolu komunikují na sdílené
+  pásce, je "špatně".notion. NDTS provádí vždy jen "jeden".emphasize sekvenční výpočet; otázka „existuje
+  přijímající větev?“ se vyhodnocuje "mimo".emphasize stroj. Zkoumáme vlastnost grafu (stromu),
+  nejde o multithreading.
+
+
+.centered:
+
+  !tikz:
+    filename: 04b-asymetrie-prijimani-03
+
+    \begin{scope}
+      \node[font=\sffamily\small\bfseries,rej] at (0,1.0) {Jak to NENÍ (fyzický model)};
+      \node[draw,thick,fill=black!10,minimum width=16mm,minimum height=8mm,font=\sffamily\small] (cpu) at (0,0) {CPU};
+      \foreach \x/\i in {-1.6/1,0/2,1.6/3} {
+        \node[draw,rounded corners=2pt,fill=intc!12,draw=intc,font=\scriptsize,minimum width=13mm] (t\i) at (\x,-1.4) {vlákno \i};
+        \draw[->,thick,intc] (cpu) -- (t\i);}
+      \draw[<->,dashed,intc] (t1) -- (t2); \draw[<->,dashed,intc] (t2) -- (t3);
+      \node[note] at (0,-2.2) {„komunikují na sdílené pásce“};
+      \draw[rej,line width=2.5pt,opacity=0.6] (-2.3,-2.5) -- (2.3,0.6);
+      \draw[rej,line width=2.5pt,opacity=0.6] (-2.3,0.6) -- (2.3,-2.5);
+    \end{scope}
+    \begin{scope}[xshift=7cm]
+      \node[font=\sffamily\small\bfseries,acc!70!black] at (0,1.0) {Jak to JE (matematický model)};
+      \node[chNPc] (r) at (0,0.2) {};
+      \node[chNPc] (a) at (-1,-0.6) {}; \node[chNPc] (b) at (1,-0.6) {};
+      \node[chNPrej] (a1) at (-1.5,-1.5) {\qR}; \node[chNPrej] (a2) at (-0.5,-1.5) {\qR};
+      \node[chNPrej] (b1) at (0.5,-1.5) {\qR}; \node[chNPacc] (b2) at (1.5,-1.5) {\qA};
+      \foreach \u/\w in {r/a,a/a1,a/a2,b/b1} {\draw[chNPe] (\u) -- (\w);}
+      \draw[chNPg] (r) -- (b); \draw[chNPg] (b) -- (b2);
+      \node[note] at (0,-2.2) {„existuje v grafu cesta do \qA?“};
+    \end{scope}
+
+
+.Warning:
+  title: 'Mýtus 2: „Stroj má magickou intuici“'
+
+  NDTS nic „nehádá“ – dopředu neví, kam cesty vedou. Přechodová relace jen definuje hrany grafu
+  a my se jako matematici ptáme: "existuje v tomto grafu cesta z kořene do $\qA$?".emphasize
+
+
+.Remark:
+  title: 'Proč se tedy v literatuře mluví o „hádání“?'
+
+  Je to jen úzus z pohledu vnějšího pozorovatele. Podíváme-li se "pouze".emphasize na jedinou
+  přijímající větev (zelená cesta na obr. .reference:fig-np-strom), vypadá to, jako by stroj v každém
+  větvení provedl „zázračně správnou volbu“. Tento pohled budeme masivně využívat u certifikátů.

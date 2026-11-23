@@ -1,0 +1,28 @@
+% Makra a styly obrazku kapitoly 11 (Cesty, rovnice, site a cisla) -- opsano z ../skripta/kapitoly/11-cesty-ilp-cisla.tex
+% --- oddil Hamiltonovska cesta ---
+\tikzset{
+  hv/.style={circle,draw=black!80,fill=white,thick,minimum size=5.2mm,inner sep=0pt,font=\scriptsize},
+  hs/.style={hv,fill=black!12,draw=black!50},
+  hc/.style={hv,fill=intc!22,draw=intc!80!black,minimum size=6.5mm},
+  hst/.style={hv,fill=defc!15,draw=defc,minimum size=6.5mm},
+  bid/.style={<->,thick,draw=black!55,>={Stealth[round,length=1.6mm]}},
+  one/.style={->,thick,draw=black!55},
+  odsT/.style={->,thick,draw=tT!80!black},
+  odsF/.style={->,thick,draw=tF!90!black},
+  hpath/.style={->,line width=2.2pt,draw=acc!45,>={Stealth[round,length=2.6mm]}},
+}
+% --- oddil Podezrele redukce z batohu (proseminar 5) ---
+\tikzset{
+  pu/.style={circle,draw=black!80,fill=white,thick,minimum size=5.5mm,inner sep=0pt,font=\scriptsize},
+  pm/.style={circle,draw=black!60,fill=black!10,minimum size=2.4mm,inner sep=0pt},
+  pe/.style={->,thick,draw=black!65},
+}
+% --- oddil Cviceni 5 (tabulky DP pro Knapsack) ---
+\tikzset{
+  dpcell/.style={draw=black!40,minimum height=6mm,inner sep=0pt,font=\scriptsize,fill=white},
+  dptake/.style={dpcell,fill=acc!35,font=\scriptsize\bfseries},
+  dpskip/.style={dpcell,fill=hl},
+  dparrT/.style={->,thick,draw=acc!80!black},
+  dparrN/.style={->,thick,draw=black!60},
+}
+\tikzset{dpend/.style={dpcell,fill=black!12}}

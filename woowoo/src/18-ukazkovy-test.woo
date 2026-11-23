@@ -1,0 +1,110 @@
+.Chapter Ukázkový zápočtový test s řešením
+  label: ch-ukazkovy
+
+
+Zdroje: oficiální ukázkový průběžný test NI-ICC (soubor "ukazkovy-test.pdf".code na stránkách předmětu)
+a stránka předmětu „Hodnocení“.
+
+
+.Concept:
+  title: 'Proč to děláme'
+
+  Zápočtový test má pevnou kostru: čtyři úlohy čtyř typů, které jsou předem známé (Turingův stroj, self-redukce,
+  formulace jako ILP nebo SAT, důkaz NP-těžkosti redukcí). Tato příloha prochází oficiální ukázkový test úlohu po
+  úloze. U každé úlohy je nejdřív úplné zadání, pak vzorové řešení v podobě, v jaké by mělo být odevzdáno
+  (se zdůvodněním každého kroku), a nakonec rámeček s tím, na co si dát pozor. Formát testu popisuje příloha
+  .reference:ch-test, další úlohy stejných typů jsou v příloze .reference:ch-typove.
+
+
+.Remark:
+  title: 'Záhlaví testu (doslova)'
+
+  „Test má čtyři úlohy, celkem "30 bodů".notion. Odpovědi zdůvodňujte; samotný výsledek bez zdůvodnění
+  nestačí. Na přednášce probrané NP-úplné problémy (SAT, 3-SAT, Nezávislá množina, Vrcholové pokrytí, Klika,
+  3-barvení, Hamiltonovská cesta/kružnice, Subset Sum, … ) můžete použít bez důkazu.“
+
+
+Bodování úloh podle zadání; ve sloupci „typ“ je, jak úlohu popisuje stránka Hodnocení.
+
+
+.table:
+  columns: 'clp{7.5cm}c'
+
+  .row:
+    head: true
+
+    úloha
+
+    název v testu
+
+    typ (stránka Hodnocení)
+
+    body
+
+  .row:
+
+    1
+
+    Turingův stroj
+
+    nalezněte Turingův stroj požadovaných vlastností (čas, prostor, (ne)determinismus) pro zadaný jazyk
+
+    6
+
+  .row:
+
+    2
+
+    Self-redukce
+
+    pomocí rozhodovací verze nalezněte konkrétní řešení problému
+
+    6
+
+  .row:
+
+    3
+
+    Formulace jako ILP
+
+    formulujte daný problém jako ILP nebo SAT úlohu
+
+    6
+
+  .row:
+
+    4
+
+    NP-úplnost
+
+    ukažte redukcí z vhodného problému, že daný problém je NP-těžký (úplný)
+
+    12
+
+  .row:
+
+    $\Sigma$
+
+    ~
+
+    ~
+
+    30
+
+
+Podle stránky Hodnocení se na vypracování ostrého testu dává "70 minut".notion a hranice pro zápočet je
+"10 bodů".notion.
+
+
+.Warning:
+  title: 'Oficiální zadání, neoficiální řešení'
+
+  Zadání všech čtyř úloh jsou převzata doslova z oficiálního ukázkového testu. Řešení jsou vzorová řešení
+  těchto skript, "nikoli".emphasize oficiální autorské řešení. Rámečky „Co se boduje / na co si dát pozor“
+  jsou rady skript odvozené z toho, co zadání výslovně požaduje, a z typických chyb; oficiální bodovací schéma
+  v podkladech předmětu, ze kterých skripta vycházejí, není. Konstrukce, počty dotazů a velikosti programů v řešeních jsme ověřili
+  krátkými skripty hrubou silou na malých instancích.
+
+
+"Jak přílohu použít:".notion nejdřív si nastav 70 minut a zkus celý test napsat sám; řešení jsou na webu
+sbalená. Pak řešení rozbal a porovnej nejen výsledek, ale hlavně zdůvodnění – za samotný výsledek body nejsou.

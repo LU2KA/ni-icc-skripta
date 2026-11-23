@@ -1,0 +1,8 @@
+% Makra a styly obrazku kapitoly 7 (varianty SAT)
+% ctverecek s hodnotou 0/1 (stejny vzhled jako obrazek 07b-nae-3-sat-01)
+\tikzset{chNAEsq/.style={draw,minimum size=6mm,font=\small\ttfamily,inner sep=0pt}}
+% \chNAEvals{x}{y}{seznam 0/1}: rada hodnot zleva od (x,y), rozestup 0.65
+\newcommand{\chNAEvals}[3]{%
+  \foreach \v [count=\i] in {#3} {%
+    \ifnum\v=1 \node[chNAEsq,fill=tT!40] at ({#1+(\i-1)*0.65},#2) {1};%
+    \else \node[chNAEsq,fill=tF!30] at ({#1+(\i-1)*0.65},#2) {0};\fi}}

@@ -1,0 +1,1108 @@
+.Section Úlohy navíc
+  label: ch-ts-ulohy-navic
+
+
+Úlohy procvičují práci s Turingovým strojem: stopování výpočtu, návrh jednopáskových a dvoupáskových strojů
+s odhadem počtu kroků, kódování stroje a cenu simulace více pásek na jedné. Opírají se o oddíly
+.reference:ch-ts-turinguv-stroj, .reference:ch-ts-optimalizacni-vs-rozhodovaci-problemy,
+.reference:ch-ts-univerzalni-turinguv-stroj a o cvičení .reference:sec-cv1.
+
+
+.Warning:
+  title: 'Neoficiální úlohy'
+
+  Úlohy v tomto oddílu "nejsou".notion oficiální zadání předmětu. Jsou to procvičovací úlohy navíc k látce kapitoly;
+  každý stroj z řešení byl naprogramován a odsimulován na všech vstupech do délky 14 (unární vstupy do délky
+  2099), výsledky byly porovnány s definicí jazyka a všechny počty kroků, dotazů a délky kódů spočítal program.
+
+
+Ve všech úlohách platí konvence skript: páska je oboustranně nekonečná, na začátku je vstup na pásce 1
+obklopený symboly $\blank$, ostatní pásky jsou prázdné a všechny hlavy stojí na první buňce vstupu.
+Nevykreslené přechody vedou do $\qR$.
+
+
+.Subsection Rozcvička
+  label: ch-ts-ulohy-navic-rozcvicka
+
+
+.Exercise:
+  title: 'Úloha 1.1 (stopování stroje)'
+  label: un-1-1
+
+  Jednopáskový stroj $M$ má vstupní abecedu $\Sigma=\{1\}$, abecedu pásky $\{1,X,Y,\blank\}$, počáteční stav $q_0$
+  a koncový stav $\qhalt$. Přechodová funkce (položka $(q',s',D)$ znamená „přejdi do $q'$, zapiš $s'$, posuň
+  hlavu ve směru $D$“; pomlčka = situace, která nenastane):
+
+  .table:
+    columns: 'lllll'
+
+    .row:
+      head: true
+
+      stav
+
+      $1$
+
+      $X$
+
+      $Y$
+
+      $\blank$
+
+    .row:
+
+      $q_0$
+
+      $(q_1,X,\Rgt)$
+
+      –
+
+      $(q_3,1,\Rgt)$
+
+      $(\qhalt,\blank,\Stay)$
+
+    .row:
+
+      $q_1$
+
+      $(q_1,1,\Rgt)$
+
+      –
+
+      $(q_1,Y,\Rgt)$
+
+      $(q_2,Y,\Lft)$
+
+    .row:
+
+      $q_2$
+
+      $(q_2,1,\Lft)$
+
+      $(q_0,X,\Rgt)$
+
+      $(q_2,Y,\Lft)$
+
+      –
+
+    .row:
+
+      $q_3$
+
+      –
+
+      –
+
+      $(q_3,1,\Rgt)$
+
+      $(q_4,\blank,\Lft)$
+
+    .row:
+
+      $q_4$
+
+      $(q_4,1,\Lft)$
+
+      $(q_4,1,\Lft)$
+
+      –
+
+      $(\qhalt,\blank,\Rgt)$
+
+  .enumerate:
+    type: a
+
+    .item:
+
+      Vypište všechny konfigurace výpočtu na vstupu $11$.
+
+    .item:
+
+      Jakou funkci $f_M$ stroj počítá (definice .reference:def-fm)? Dokažte to.
+
+    .item:
+
+      Kolik přesně kroků udělá na vstupu $1^n$? Jaká je to časová složitost?
+
+
+.Solution:
+
+  "a) Konfigurace.".notion Páska od buňky před vstupem, podtržený symbol je pod hlavou.
+
+  .table:
+    columns: 'rllrll'
+
+    .row:
+      head: true
+
+      krok
+
+      stav
+
+      páska
+
+      krok
+
+      stav
+
+      páska
+
+    .row:
+
+      0
+
+      $q_0$
+
+      $\blank\,\underline{1}\,1\,\blank\,\blank\,\blank$
+
+      10
+
+      $q_0$
+
+      $\blank\,X\,X\,\underline{Y}\,Y\,\blank$
+
+    .row:
+
+      1
+
+      $q_1$
+
+      $\blank\,X\,\underline{1}\,\blank\,\blank\,\blank$
+
+      11
+
+      $q_3$
+
+      $\blank\,X\,X\,1\,\underline{Y}\,\blank$
+
+    .row:
+
+      2
+
+      $q_1$
+
+      $\blank\,X\,1\,\underline{\blank}\,\blank\,\blank$
+
+      12
+
+      $q_3$
+
+      $\blank\,X\,X\,1\,1\,\underline{\blank}$
+
+    .row:
+
+      3
+
+      $q_2$
+
+      $\blank\,X\,\underline{1}\,Y\,\blank\,\blank$
+
+      13
+
+      $q_4$
+
+      $\blank\,X\,X\,1\,\underline{1}\,\blank$
+
+    .row:
+
+      4
+
+      $q_2$
+
+      $\blank\,\underline{X}\,1\,Y\,\blank\,\blank$
+
+      14
+
+      $q_4$
+
+      $\blank\,X\,X\,\underline{1}\,1\,\blank$
+
+    .row:
+
+      5
+
+      $q_0$
+
+      $\blank\,X\,\underline{1}\,Y\,\blank\,\blank$
+
+      15
+
+      $q_4$
+
+      $\blank\,X\,\underline{X}\,1\,1\,\blank$
+
+    .row:
+
+      6
+
+      $q_1$
+
+      $\blank\,X\,X\,\underline{Y}\,\blank\,\blank$
+
+      16
+
+      $q_4$
+
+      $\blank\,\underline{X}\,1\,1\,1\,\blank$
+
+    .row:
+
+      7
+
+      $q_1$
+
+      $\blank\,X\,X\,Y\,\underline{\blank}\,\blank$
+
+      17
+
+      $q_4$
+
+      $\underline{\blank}\,1\,1\,1\,1\,\blank$
+
+    .row:
+
+      8
+
+      $q_2$
+
+      $\blank\,X\,X\,\underline{Y}\,Y\,\blank$
+
+      18
+
+      $\qhalt$
+
+      $\blank\,\underline{1}\,1\,1\,1\,\blank$
+
+    .row:
+
+      9
+
+      $q_2$
+
+      $\blank\,X\,\underline{X}\,Y\,Y\,\blank$
+
+      ~
+
+      ~
+
+      ~
+
+
+  .centered:
+
+    !tikz:
+      filename: 01z-ulohy-navic-01
+
+      \tmtape{0}{0}{_,1,1,_,_,_}{2}
+      \node[note,anchor=west] at (4.6,0) {krok 0, $q_0$: začíná 1.~kolo};
+      \tmtape{0}{-1.4}{_,X,1,Y,_,_}{3}
+      \node[note,anchor=west] at (4.6,-1.4) {krok 5, $q_0$: začíná 2.~kolo};
+      \tmtape{0}{-2.8}{_,X,X,Y,Y,_}{4}
+      \node[note,anchor=west] at (4.6,-2.8) {krok 10, $q_0$ čte $Y$: všechny původní jedničky jsou zpracované};
+      \tmtape{0}{-4.2}{_,X,X,1,1,_}{5}
+      \node[note,anchor=west] at (4.6,-4.2) {krok 13, $q_4$: $Y$ přepsána na $1$, návrat doleva};
+      \tmtape{0}{-5.6}{_,1,1,1,1,_}{2}
+      \node[note,anchor=west] at (4.6,-5.6) {krok 18, \qhalt: na pásce je $1111$};
+
+
+  Snímky pásky z tabulky na začátku každého kola a na konci. "Všimni si:".emphasize $X$ označuje už zpracovanou
+  původní jedničku a $Y$ nově připsanou; obojí se na konci přepíše zpět na $1$.
+
+
+  "b) Funkce.".notion $f_M(1^n)=1^{2n}$. "Invariant:".emphasize na začátku $i$-tého kola ($i=1,\dots,n$) je stroj
+  v $q_0$, na pásce je $X^{i-1}\,1^{n-i+1}\,Y^{i-1}$ a hlava stojí na první $1$. Platí pro $i=1$ (vstup $1^n$).
+  V kole $q_0$ přepíše tuto $1$ na $X$, $q_1$ přejede zbylé jedničky a symboly $Y$ doprava a na první $\blank$
+  zapíše nové $Y$, $q_2$ se vrátí doleva k nejpravějšímu $X$ a posune se o buňku doprava. Na pásce je pak
+  $X^{i}\,1^{n-i}\,Y^{i}$ a hlava stojí na první $1$ (pro $i=n$ na prvním $Y$) – invariant pro kolo $i+1$.
+  Po $n$ kolech čte $q_0$ symbol $Y$ a pásku tvoří $X^nY^n$. Pak $q_3$ přepíše všechna $Y$ na $1$, $q_4$ jde
+  doleva a přepíše všechna $X$ na $1$; na $\blank$ před slovem udělá krok doprava a zastaví. Na pásce zůstane
+  $1^{2n}$ a hlava stojí na jeho prvním symbolu. Pro $n=0$ čte $q_0$ hned $\blank$ a zastaví s prázdnou páskou,
+  $f_M(\varepsilon)=\varepsilon=1^{0}$.
+
+
+  "c) Počet kroků.".notion Kolo $i$: přepis na $X$ (1 krok), $q_1$ přejede $n-1$ buněk (zbylých $n-i$ jedniček
+  a $i-1$ symbolů $Y$) a zapíše $Y$ ($n-1+1$ kroků), $q_2$ přejede doleva $n-1$ buněk a na $X$ udělá krok
+  doprava ($n-1+1$ kroků). Kolo stojí $2n+1$ kroků, všech $n$ kol $n(2n+1)$. Závěr: $q_0$ na $Y$ (1 krok),
+  $q_3$ přes zbylých $n-1$ symbolů $Y$ a na $\blank$ ($n$ kroků), $q_4$ přes $2n$ buněk a na $\blank$ ($2n+1$
+  kroků), celkem $3n+2$. Dohromady
+
+  .equation:
+
+    n(2n+1)+3n+2 \;=\; 2n^2+4n+2 \;=\; 2(n+1)^2 \qquad (n\ge 1),
+
+  pro $n=0$ jeden krok. Na vstupu $11$ je to $2\cdot 3^2=18$ kroků, jak ukazuje tabulka. Časová složitost je
+  $\Theta(n^2)$ (vzhledem k délce vstupu $n$).
+
+
+.Exercise:
+  title: 'Úloha 1.2 (rozhodovací verze a velikost instance)'
+  label: un-1-2
+
+  Uvažujte tři optimalizační problémy.
+
+  .itemize:
+
+    .item:
+
+      $\prob{MaxCut}$: pro graf $G=(V,E)$ najdi rozdělení $V$ na dvě části s co nejvíce hranami mezi nimi.
+
+    .item:
+
+      $\prob{Bin Packing}$: pro velikosti předmětů $s_1,\dots,s_n\in\N$ a kapacitu koše $C$ najdi nejmenší počet
+      košů, do kterých se předměty vejdou.
+
+    .item:
+
+      $\prob{Nejdelší cesta}$: pro graf $G$, váhy $w\colon E\to\N$ a vrcholy $s,t$ najdi jednoduchou cestu z $s$
+      do $t$ s největším součtem vah.
+
+  .enumerate:
+    type: a
+
+    .item:
+
+      Napište rozhodovací verzi každého z nich (vstup a otázka).
+
+    .item:
+
+      Ukažte, že rozhodovací verze není těžší než výpočet hodnoty optima.
+
+    .item:
+
+      Instance $\prob{Nejdelší cesty}$ má $|V|=30$, $|E|=60$ a váhy z $\{0,\dots,1000\}$. Kolik dotazů na
+      rozhodovací „API“ stačí k nalezení hodnoty optima? Kolik bitů zaberou váhy v binárním zápisu a kolik
+      symbolů v unárním?
+
+    .item:
+
+      Kolega navrhuje ptát se postupně pro $k=0,1,2,\dots$, dokud API neodpoví $\NE$. Kolik dotazů to může
+      být, jsou-li váhy zapsané binárně na $b$ bitech? Je to polynomiální v délce vstupu? A při unárním zápisu?
+
+
+.Solution:
+
+  "a) Rozhodovací verze".notion (recept z oddílu .reference:ch-ts-optimalizacni-vs-rozhodovaci-problemy: přidat
+  práh $k$ a ptát se na existenci):
+
+  .itemize:
+
+    .item:
+
+      $\prob{MaxCut}$: vstup $(G,k)$; existuje $S\subseteq V$ takové, že mezi $S$ a $V\setminus S$ vede
+      "alespoň".emphasize $k$ hran?
+
+    .item:
+
+      $\prob{Bin Packing}$: vstup $(s_1,\dots,s_n,C,k)$; lze předměty rozdělit do "nejvýše".emphasize $k$ košů tak,
+      aby součet velikostí v každém koši byl nejvýše $C$?
+
+    .item:
+
+      $\prob{Nejdelší cesta}$: vstup $(G,w,s,t,k)$; existuje jednoduchá cesta z $s$ do $t$ s vahou "alespoň".emphasize $k$?
+
+  Směr nerovnosti se řídí cílem: u maximalizace „alespoň $k$“, u minimalizace „nejvýše $k$“. Opačný směr dá
+  nezajímavý problém – například „existuje řez s nejvýše $k$ hranami?“ má vždy odpověď $\ANO$ ($S=\emptyset$).
+
+
+  "b) Rozhodovací verze z optima.".notion Umíme-li spočítat hodnotu optima $\mathrm{OPT}$, odpovíme na
+  rozhodovací otázku jedním výpočtem a jedním porovnáním čísel: u maximalizace $\ANO$, právě když
+  $\mathrm{OPT}\ge k$, u minimalizace $\ANO$, právě když $\mathrm{OPT}\le k$ (u $\prob{Nejdelší cesty}$ navíc:
+  nevede-li z $s$ do $t$ žádná cesta, optimum neexistuje a odpověď je $\NE$). Porovnání dvou binárně zapsaných
+  čísel trvá polynomiálně dlouho. Opačný směr je důsledek .reference:cor-binsearch.
+
+
+  "c) Binární vyhledávání.".notion Jednoduchá cesta projde každý vrchol nejvýše jednou, má tedy nejvýše
+  $29$ hran a váhu nejvýše $\mathrm{MAX}=29\cdot1000=29\,000$. Jeden dotaz s $k=0$ zjistí, zda cesta z $s$ do $t$
+  vůbec existuje. Pokud ano, leží optimum v $\{0,\dots,29\,000\}$; udržujeme interval $[lo,hi]$, který optimum
+  obsahuje, ptáme se na $k=\lceil(lo+hi)/2\rceil$ a při $\ANO$ položíme $lo=k$, při $\NE$ $hi=k-1$. Každý dotaz
+  interval zhruba rozpůlí, takže stačí $\lceil\log_2 29\,001\rceil=15$ dotazů ($2^{14}=16\,384<29\,001\le 2^{15}$),
+  s úvodním dotazem nejvýše 16.
+
+
+  "Velikost instance.".notion Váha nejvýše $1000<2^{10}$ zabere binárně 10 bitů, všech 60 vah tedy 600 bitů.
+  Hrany jako dvojice čísel vrcholů po 5 bitech ($30\le 2^5$) dají dalších 600 bitů; celkem asi 1200 bitů
+  (plus $s$, $t$, $k$ a oddělovače). Unárně ($w\mapsto 1^{w}$) zaberou samotné váhy až $60\cdot1000=60\,000$
+  symbolů.
+
+
+  "d) Lineární hledání.".notion Při vahách na $b$ bitech je $\mathrm{MAX}=29\cdot(2^b-1)$. Je-li optimum rovno
+  $\mathrm{MAX}$, dostane kolega odpověď $\ANO$ pro $k=0,1,\dots,\mathrm{MAX}$ a $\NE$ až pro $k=\mathrm{MAX}+1$,
+  potřebuje tedy až $\mathrm{MAX}+2\approx 29\cdot 2^b$ dotazů. Délka vstupu je ale jen řádově $60\,b$ bitů, takže
+  počet dotazů je "exponenciální".emphasize v délce vstupu. Pro $b=20$: vstup asi 1800 bitů, binární vyhledávání
+  $25$ dotazů (s úvodním dotazem $k=0$ nejvýše 26), lineární až $30\,408\,677$ dotazů. Binární vyhledávání
+  potřebuje $\lceil\log_2(\mathrm{MAX}+1)\rceil+1\le b+6$ dotazů, což je méně než délka vstupu.
+
+
+  Při "unárním".emphasize zápisu je váha každé cesty nejvýše součet všech vah a ten je nejvýše délka vstupu $N$.
+  Lineární hledání pak potřebuje nejvýše $N+2$ dotazů a je polynomiální v délce vstupu – ale jen proto, že unární zápis vstup exponenciálně
+  nafoukl (poznámka „Na kódování (skoro) nezáleží“ v oddílu .reference:ch-ts-co-vlastne-pocitame-abecedy-jazyky-problemy).
+  Proto se čísla měří vždy v binárním zápisu.
+
+
+.Exercise:
+  title: 'Úloha 1.3 (kódování stroje)'
+  label: un-1-3
+
+  Konkrétní kódování $\enc{M}$ je "(nad rámec přednášky)".emphasize; přednáška říká jen, že nějaké existuje.
+  Jednopáskový stroj má stavy $q_1,\dots,q_r$, kde $q_1$ je počáteční, $q_2=\qA$ (u stroje počítajícího funkci
+  $\qhalt$) a $q_3=\qR$, symboly pásky $s_1=0$, $s_2=1$, $s_3=\blank$ a směry $D_1=\Lft$, $D_2=\Stay$, $D_3=\Rgt$.
+  Přechod $\delta(q_i,s_j)=(q_k,s_l,D_m)$ zakódujeme jako
+
+  .equation:
+
+    0^i\,1\,0^j\,1\,0^k\,1\,0^l\,1\,0^m
+
+  a $\enc{M}$ jsou kódy všech přechodů v libovolném pořadí oddělené dvojicí $11$.
+
+  .enumerate:
+    type: a
+
+    .item:
+
+      Zakódujte stroj $M$ s přechody $\delta(q_1,0)=(q_1,0,\Rgt)$, $\delta(q_1,1)=(\qA,1,\Stay)$,
+      $\delta(q_1,\blank)=(\qR,\blank,\Stay)$. Jaký jazyk $M$ rozhoduje?
+
+    .item:
+
+      Dekódujte stroj $N$ s kódem $\enc{N}=c_1\,11\,c_2\,11\,c_3\,11\,c_4\,11\,c_5\,11\,c_6$, kde
+      $c_1=\mathtt{010101001000}$, $c_2=\mathtt{010010101000}$, $c_3=\mathtt{0100010000100010}$,
+      $c_4=\mathtt{000010100001010}$, $c_5=\mathtt{00001001000010010}$, $c_6=\mathtt{0000100010010001000}$.
+      Co stroj $N$ počítá a kolik kroků udělá na vstupu délky $n$?
+
+    .item:
+
+      Odhadněte délku $\enc{M}$ pro stroj s $r$ stavy a $g$ symboly pásky. Proč pro pevný stroj stojí
+      univerzálnímu stroji nalezení správného přechodu jen konstantu?
+
+    .item:
+
+      Je každý binární řetězec kódem nějakého stroje? Má každý stroj jediný kód?
+
+
+.Solution:
+
+  "a)".notion Po přechodech (v pořadí $i,j,k,l,m$):
+
+  .itemize:
+
+    .item:
+
+      $\delta(q_1,s_1)=(q_1,s_1,D_3)$: $\mathtt{0\,1\,0\,1\,0\,1\,0\,1\,000}$,
+
+    .item:
+
+      $\delta(q_1,s_2)=(q_2,s_2,D_2)$: $\mathtt{0\,1\,00\,1\,00\,1\,00\,1\,00}$,
+
+    .item:
+
+      $\delta(q_1,s_3)=(q_3,s_3,D_2)$: $\mathtt{0\,1\,000\,1\,000\,1\,000\,1\,00}$.
+
+  Tedy $\enc{M}=\mathtt{01010101000}\,11\,\mathtt{0100100100100}\,11\,\mathtt{0100010001000100}$, celkem
+  $11+2+13+2+16=44$ symbolů. Stroj jde doprava přes nuly; na první jedničce přijme, na $\blank$ za slovem zamítne.
+  Rozhoduje tedy jazyk slov nad $\{0,1\}$, která obsahují aspoň jednu jedničku, a udělá nejvýše $n+1$ kroků.
+
+
+  "b)".notion Kód přechodu nikdy neobsahuje $11$ (bloky nul jsou neprázdné a oddělené jednou jedničkou), takže
+  rozdělení na přechody je jednoznačné. Délky bloků nul:
+
+  .table:
+    columns: 'lll'
+
+    .row:
+      head: true
+
+      kód
+
+      $(i,j,k,l,m)$
+
+      přechod
+
+    .row:
+
+      $c_1$
+
+      $(1,1,1,2,3)$
+
+      $\delta(q_1,0)=(q_1,1,\Rgt)$
+
+    .row:
+
+      $c_2$
+
+      $(1,2,1,1,3)$
+
+      $\delta(q_1,1)=(q_1,0,\Rgt)$
+
+    .row:
+
+      $c_3$
+
+      $(1,3,4,3,1)$
+
+      $\delta(q_1,\blank)=(q_4,\blank,\Lft)$
+
+    .row:
+
+      $c_4$
+
+      $(4,1,4,1,1)$
+
+      $\delta(q_4,0)=(q_4,0,\Lft)$
+
+    .row:
+
+      $c_5$
+
+      $(4,2,4,2,1)$
+
+      $\delta(q_4,1)=(q_4,1,\Lft)$
+
+    .row:
+
+      $c_6$
+
+      $(4,3,2,3,3)$
+
+      $\delta(q_4,\blank)=(q_2,\blank,\Rgt)$
+
+  Stav $q_1$ jde doprava a "prohodí každý bit".emphasize ($0\leftrightarrow1$), na $\blank$ za slovem přejde do
+  $q_4$, který vrátí hlavu na začátek, a stroj skončí v $q_2$. Počítá tedy funkci „bitová negace“, např.
+  $f_N(0110)=1001$. Kroků je $(n+1)+(n+1)=2n+2$: $n$ přepisů a krok na $\blank$, pak $n$ kroků doleva a krok
+  z $\blank$ před slovem doprava.
+
+
+  "c)".notion Kód jednoho přechodu má nejvýše $r+g+r+g+3$ nul a 4 jedničky, tedy nejvýše $2r+2g+7$ symbolů.
+  Přechodů je nejvýše $r\cdot g$ (ze stavů $\qA$, $\qR$ žádné nevedou, přesně tedy $(r-2)g$) a každý oddělovač
+  přidá 2 symboly, takže
+
+  .equation:
+
+    |\enc{M}| \;\le\; r g\,(2r+2g+9) \;=\; O\bigl(rg(r+g)\bigr).
+
+  Pro $N$ ($r=4$, $g=3$) má jeden přechod nejvýše 21 symbolů; skutečně má $\enc{N}$ délku 101. Pro pevný stroj
+  jsou $r$ a $g$ konstanty, $\enc{M}$ má konstantní délku a univerzální stroj najde přechod začínající
+  $0^i\,1\,0^j\,1$ průchodem po $\enc{M}$ v čase závislém jen na $|\enc{M}|$, ne na délce dat $x$ – to je první
+  bod rozboru ceny simulace v oddílu .reference:ch-ts-univerzalni-turinguv-stroj.
+
+
+  "d)".notion Ne. Například $\mathtt{1}$, $\mathtt{0101}$ (jen dva bloky nul), $\mathtt{0101010}$ (jen čtyři bloky)
+  nebo $\mathtt{01010101000}\,11\,\mathtt{01010101000}$ (dva přechody pro tutéž dvojici $(q_1,0)$, stroj by nebyl
+  deterministický) nejsou kódy žádného DTS. Takové řetězce se berou jako „není zápisem stroje“ (tak s nimi
+  zachází funkce $\mathrm{UC}$, definice .reference:def-uc). Jediný kód stroj také nemá: pořadí přechodů je
+  libovolné, stroj s $t$ přechody má tedy $t!$ různých kódů (a další dostaneme přejmenováním stavů $q_4,q_5,\dots$).
+
+
+.Subsection Na úrovni testu
+  label: ch-ts-ulohy-navic-test
+
+
+.Exercise:
+  title: 'Úloha 1.4 (stejně $a$ jako $b$ na jedné pásce)'
+  label: un-1-4
+
+  Sestrojte "jednopáskový".notion deterministický TS, který rozhoduje jazyk
+
+  .equation:
+
+    L=\{\,w\in\{a,b\}^* \mid \#_a(w)=\#_b(w)\,\},
+
+  kde $\#_a(w)$ je počet výskytů $a$ ve $w$. Uveďte myšlenku, stavový diagram, význam stavů a horní odhad počtu
+  kroků na vstupu délky $n$.
+
+
+.Solution:
+
+  "Myšlenka.".notion V každém kole odškrtneme (přepíšeme na $X$) první neodškrtnuté písmeno a k němu první
+  neodškrtnuté písmeno opačného druhu a vrátíme se na začátek. Na rozdíl od $a^nb^n$ (obr. .reference:fig-anbn)
+  se nehlídá pořadí. Kolo odškrtne vždy jedno $a$ a jedno $b$, proto rozdíl počtu neodškrtnutých $a$ a $b$
+  zůstává $\#_a(w)-\#_b(w)$.
+
+
+  .centered:
+
+    !tikz:
+      filename: 01z-ulohy-navic-02
+
+      \node[st,initial,initial text=] (s) at (0,0) {$s$};
+      \node[st] (ha) at (4,2) {$h_a$};
+      \node[st] (hb) at (4,-2) {$h_b$};
+      \node[st] (bk) at (8,0) {$\mathit{back}$};
+      \node[stacc] (acc) at (0,-3) {\qA};
+      \draw[tr] (s) edge[loop above] node[lab]{$X/X,\Rgt$} (s);
+      \draw[tr] (s) -- node[lab,above left]{$a/X,\Rgt$} (ha);
+      \draw[tr] (s) -- node[lab,below left]{$b/X,\Rgt$} (hb);
+      \draw[tr] (s) -- node[lab,left]{$\blank/\blank,\Stay$} (acc);
+      \draw[tr] (ha) edge[loop above] node[lab]{$a,X/\text{stejné},\Rgt$} (ha);
+      \draw[tr] (hb) edge[loop below] node[lab]{$b,X/\text{stejné},\Rgt$} (hb);
+      \draw[tr] (ha) -- node[lab,above right]{$b/X,\Lft$} (bk);
+      \draw[tr] (hb) -- node[lab,below right]{$a/X,\Lft$} (bk);
+      \draw[tr] (bk) edge[loop right] node[lab]{$a,b,X/\text{stejné},\Lft$} (bk);
+      \draw[tr] (bk) -- node[lab]{$\blank/\blank,\Rgt$} (s);
+
+
+  Stavový diagram (16 přechodů, $h_a$ a $h_b$ na $\blank$ zamítají). "Všimni si:".emphasize $X$ může ležet
+  i mezi neodškrtnutými písmeny, proto ho přeskakují všechny stavy.
+
+
+  "Význam stavů.".notion
+
+  .description:
+
+    .ditem:
+      bullet: '$s$ (počáteční):'
+
+      hlava je na levém okraji slova; přeskakuje $X$ a hledá první neodškrtnuté písmeno. Najde-li $\blank$, jsou
+      všechna písmena odškrtnutá po dvojicích, tedy $\#_a=\#_b$: přijmi.
+
+    .ditem:
+      bullet: '$h_a$:'
+
+      odškrtli jsme $a$ a hledáme neodškrtnuté $b$ (přeskakujeme $a$ a $X$). Najde-li $\blank$, zbylo více $a$
+      než $b$: zamítni.
+
+    .ditem:
+      bullet: '$h_b$:'
+
+      symetricky – hledá $a$ k odškrtnutému $b$.
+
+    .ditem:
+      bullet: '$\mathit{back}$:'
+
+      dvojice je odškrtnutá; jde doleva na $\blank$ před slovem a krokem doprava se vrátí do $s$.
+
+
+  "Správnost.".notion Invariant na začátku kola: počet neodškrtnutých $a$ minus počet neodškrtnutých $b$ je
+  $\#_a(w)-\#_b(w)$. Je-li $w\in L$, každé kolo najde k prvnímu písmenu partnera (rozdíl je 0, takže zbývá-li
+  nějaké $a$, zbývá i $b$ a naopak) a po $n/2$ kolech $s$ přečte jen $X$ a $\blank$: přijme. Je-li $w\notin L$,
+  nemůže $s$ nikdy narazit na $\blank$ (rozdíl je nenulový, něco zbývá), a protože každé kolo odškrtne dvě
+  písmena, nastane nejpozději po $n/2$ kolech situace, kdy $h_a$ nebo $h_b$ partnera nenajde: zamítne.
+  Příklad: $abba$ – kolo 1 odškrtne $a$, $b$ ($XXba$), kolo 2 odškrtne $b$, $a$ ($XXXX$), pak $s$ čte $\blank$ a přijme.
+  Slovo $aab$ – kolo 1 dá $XaX$, v kole 2 $h_a$ narazí na $\blank$ a zamítne.
+
+
+  "Čas.".notion Úspěšné kolo, jehož partner leží na pozici $r\le n-1$ (číslováno od 0), stojí $2r+2\le 2n$
+  kroků: cesta doprava k partnerovi a zpět k $\blank$ před slovem a krok doprava. Úspěšných kol je nejvýše
+  $n/2$, poslední kolo (přijetí či zamítnutí) stojí nejvýše $n+2$ kroků. Celkem
+
+  .equation:
+
+    T(n)\;\le\;\frac n2\cdot 2n + n+2 \;=\; n^2+n+2 \;=\; O(n^2).
+
+  Simulace na všech slovech do délky 14 dává nejhorší případ $a^{n/2}b^{n/2}$ s $(3n^2+6n+4)/4$ kroky
+  (pro sudé $n$), tedy odhad sedí i řádově. Rychlejší jednopáskový stroj je úloha 1.8 v oddílu .reference:ch-ts-ulohy-navic-tezsi.
+
+
+.Exercise:
+  title: 'Úloha 1.5 (různý počet $a$ a $b$ na dvou páskách)'
+  label: un-1-5
+
+  .enumerate:
+    type: a
+
+    .item:
+
+      Sestrojte deterministický "dvoupáskový".notion TS, který rozhoduje $L=\{\,a^ib^j \mid i,j\ge0,\ i\neq j\,\}$
+      v čase $O(n)$. Uveďte myšlenku, význam stavů a odhad času.
+
+    .item:
+
+      Proč nestačí vzít správný stroj pro $\{a^nb^n\}$ a prohodit v něm $\qA$ a $\qR$?
+
+
+.Solution:
+
+  "a) Myšlenka.".notion Jako v .reference:cv-1-2: za každé $a$ zapíšeme na pásku 2 symbol $X$ a za každé $b$
+  posuneme hlavu 2 o jeden $X$ doleva. Přijímáme, když jedna strana „dojde“ dřív, a navíc hlídáme tvar $a^*b^*$.
+
+
+  .centered:
+
+    !tikz:
+      filename: 01z-ulohy-navic-03
+
+      \node[st,initial,initial text=] (q0) at (0,0) {$q_0$};
+      \node[st] (qa) at (6,0) {$q_a$};
+      \node[st] (qb) at (6,-3.6) {$q_b$};
+      \node[st] (ch) at (0,-3.6) {$\mathit{chk}$};
+      \node[stacc] (acc) at (3,-1.8) {\qA};
+      \draw[tr] (q0) -- node[lab,above]{$(a,\blank)/(a,X),\ \Rgt,\Rgt$} (qa);
+      \draw[tr] (qa) edge[loop above] node[lab]{$(a,\blank)/(a,X),\ \Rgt,\Rgt$} (qa);
+      \draw[tr] (qa) -- node[lab,right]{$(b,\blank)/(b,\blank),\ \Stay,\Lft$} (qb);
+      \draw[tr] (qb) edge[loop right] node[lab,right]{$(b,X)/(b,X),\ \Rgt,\Lft$} (qb);
+      \draw[tr] (qb) -- node[lab,below]{$(b,\blank)/(b,\blank),\ \Rgt,\Stay$} (ch);
+      \draw[tr] (q0) -- node[lab,left]{$(b,\blank)/(b,\blank),\ \Rgt,\Stay$} (ch);
+      \draw[tr] (ch) edge[loop below] node[lab]{$(b,\blank)/(b,\blank),\ \Rgt,\Stay$} (ch);
+      \draw[tr] (qa) -- node[lab]{$(\blank,\blank)$} (acc);
+      \draw[tr] (qb) -- node[lab]{$(\blank,X)$} (acc);
+      \draw[tr] (ch) -- node[lab]{$(\blank,\blank)$} (acc);
+
+
+  Stavový diagram; na hranách do $\qA$ stroj nic nepřepisuje a hlavy stojí. Nevykreslené situace vedou do $\qR$.
+
+
+  "Význam stavů.".notion
+
+  .description:
+
+    .ditem:
+      bullet: '$q_0$ (počáteční):'
+
+      nic nepřečteno. $(a,\blank)$: zapiš $X$, obě hlavy $\Rgt$, do $q_a$. $(b,\blank)$: $i=0$ a $j\ge1$, stačí
+      ověřit, že zbytek jsou samá $b$ – do $\mathit{chk}$. $(\blank,\blank)$: prázdné slovo, $i=j=0$, zamítni.
+
+    .ditem:
+      bullet: '$q_a$:'
+
+      čteme blok $a$; na pásce 2 je tolik $X$, kolik bylo $a$ (aspoň jedno). $(\blank,\blank)$: $j=0<i$, přijmi.
+      $(b,\blank)$: hlava 1 stojí, hlava 2 jde na poslední $X$, do $q_b$.
+
+    .ditem:
+      bullet: '$q_b$:'
+
+      počet dosud přečtených $b$ = počet $X$ vpravo od hlavy 2. $(b,X)$: hlavy $\Rgt\Lft$. $(\blank,X)$: slovo
+      skončilo a $X$ zbývají, $j<i$, přijmi. $(\blank,\blank)$: $j=i$, zamítni. $(b,\blank)$: všech $i$ symbolů
+      $X$ je spárováno a přišlo další $b$, tedy $j>i$, pokud je tvar v pořádku – do $\mathit{chk}$.
+      $(a,\cdot)$: $a$ za $b$, zamítni.
+
+    .ditem:
+      bullet: '$\mathit{chk}$:'
+
+      už víme $j>i$; hlava 1 jde doprava přes $b$. $(\blank,\blank)$: přijmi; $a$: zamítni.
+
+
+  "Čas.".notion Hlava 1 se posune doprava v každém kroku kromě jediného přepnutí $q_a\to q_b$ a posledního
+  kroku, který jen čte. Celkem nejvýše $n+2$ kroků (simulace na všech slovech do délky 14: maximum je přesně
+  $n+2$, např. $aab$). Každý výpočet zastaví, stroj $L$ rozhoduje v čase $O(n)$.
+
+
+  "b)".notion Stroj pro $\{a^nb^n\}$ zamítá i slova, která vůbec nemají tvar $a^*b^*$, např. $ba$ nebo $aba$.
+  Po prohození by je přijal, a ta v $L$ nejsou. Prohození $\qA\leftrightarrow\qR$ dá stroj pro doplněk
+  $\{a,b\}^*\setminus\{a^nb^n\}$, ne pro $L$; proto potřebujeme stav $\mathit{chk}$ a zamítání $(a,\cdot)$ v $q_b$.
+  (Ověřeno: prohozený stroj chybně přijímá právě slova mimo $a^*b^*$, nejkratší je $ba$.)
+
+
+.Exercise:
+  title: 'Úloha 1.6 (mocniny dvojky na jedné pásce)'
+  label: un-1-6
+
+  Sestrojte jednopáskový deterministický TS, který rozhoduje jazyk $L=\{\,0^{2^k}\mid k\ge0\,\}=\{0,00,0000,\dots\}$
+  nad abecedou $\{0\}$. Dejte přechodovou funkci, zdůvodněte správnost a ukažte, že stroj udělá $O(n\log n)$ kroků.
+
+
+.Solution:
+
+  "Myšlenka.".notion Opakovaně půlíme: v jednom průchodu zleva doprava škrtneme (přepíšeme na $X$) každou druhou
+  zbývající nulu, tj. druhou, čtvrtou, šestou… Je-li zbývajících nul lichý počet větší než 1, číslo není
+  mocninou dvojky; zbude-li jediná nula, je. Parita počtu nul se nese ve stavu.
+
+
+  "Přechodová funkce".notion (položka $(q',s',D)$):
+
+  .table:
+    columns: 'llll'
+
+    .row:
+      head: true
+
+      stav
+
+      $0$
+
+      $X$
+
+      $\blank$
+
+    .row:
+
+      $s$ (v průchodu ještě žádná $0$)
+
+      $(o_1,0,\Rgt)$
+
+      $(s,X,\Rgt)$
+
+      $\qR$
+
+    .row:
+
+      $o_1$ (právě jedna $0$)
+
+      $(e,X,\Rgt)$
+
+      $(o_1,X,\Rgt)$
+
+      $\qA$
+
+    .row:
+
+      $e$ (sudý počet, aspoň 2)
+
+      $(o,0,\Rgt)$
+
+      $(e,X,\Rgt)$
+
+      $(\mathit{back},\blank,\Lft)$
+
+    .row:
+
+      $o$ (lichý počet, aspoň 3)
+
+      $(e,X,\Rgt)$
+
+      $(o,X,\Rgt)$
+
+      $\qR$
+
+    .row:
+
+      $\mathit{back}$
+
+      $(\mathit{back},0,\Lft)$
+
+      $(\mathit{back},X,\Lft)$
+
+      $(s,\blank,\Rgt)$
+
+  Nulu, kterou stroj čte ve stavu s lichým počtem ($o_1$, $o$), škrtne – je to druhá, čtvrtá… nula průchodu.
+  Na $\blank$ v $s$ je slovo prázdné ($0^0$ není v $L$, $2^k\ge1$).
+
+
+  .centered:
+
+    !tikz:
+      filename: 01z-ulohy-navic-04
+
+      \tmtape{0}{0}{_,0,0,0,0,0,0,0,0,_}{2}
+      \node[note,anchor=west] at (7.4,0) {1.~průchod: 8 nul (sudý počet)};
+      \tmtape{0}{-1.4}{_,0,X,0,X,0,X,0,X,_}{2}
+      \node[note,anchor=west] at (7.4,-1.4) {2.~průchod: 4 nuly};
+      \tmtape{0}{-2.8}{_,0,X,X,X,0,X,X,X,_}{2}
+      \node[note,anchor=west] at (7.4,-2.8) {3.~průchod: 2 nuly};
+      \tmtape{0}{-4.2}{_,0,X,X,X,X,X,X,X,_}{2}
+      \node[note,anchor=west] at (7.4,-4.2) {4.~průchod: jediná nula};
+      \tmtape{0}{-5.6}{_,0,X,X,X,X,X,X,X,_}{10}
+      \node[note,anchor=west] at (7.4,-5.6) {$o_1$ čte $\blank$ $\Rightarrow$ \qA\ (krok 63)};
+
+
+  Výpočet na $0^8$: páska na začátku každého průchodu (stav $s$). "Všimni si:".emphasize první nula se nikdy
+  neškrtá, takže stroj nepotřebuje značku levého okraje – $\mathit{back}$ se vrací až na $\blank$ před slovem.
+
+
+  "Správnost.".notion Pro $m\ge1$ platí: $m$ je mocnina dvojky, právě když $m=1$, nebo $m$ je sudé a $m/2$ je
+  mocnina dvojky (liché $m\ge3$ mocninou dvojky není). Průchod začínající s $m$ nezaškrtnutými nulami skončí
+  na $\blank$ ve stavu podle $m$: pro $m=0$ v $s$ (jen prázdné slovo), zamítne; pro $m=1$ v $o_1$, přijme; pro liché $m\ge3$
+  v $o$, zamítne; pro sudé $m\ge2$ v $e$ a škrtnuto bylo přesně $m/2$ nul a další průchod začne s $m/2$ nulami.
+  Indukcí podle $m$ stroj přijme $0^n$, právě když $n$ je mocnina dvojky.
+
+
+  "Čas.".notion Průchod tam stojí $n+1$ kroků (přes $n$ buněk a krok na $\blank$), návrat $n+1$ kroků. Počet nul
+  se v každém pokračujícím průchodu přesně půlí, takže průchodů je nejvýše $\lfloor\log_2 n\rfloor+1$. Celkem
+
+  .equation:
+
+    T(n)\;\le\;(2n+2)\bigl(\lfloor\log_2 n\rfloor+1\bigr)\;=\;O(n\log n).
+
+  Simulace pro všechna $n\le 2099$ odhad potvrzuje (např. $T(8)=63\le 18\cdot4$).
+
+
+.Subsection Těžší úlohy
+  label: ch-ts-ulohy-navic-tezsi
+
+
+.Exercise:
+  title: 'Úloha 1.7 (simulace $k$ pásek na jedné)'
+  label: un-1-7
+
+  Nechť $M$ je $k$-páskový DTS, který na každém vstupu délky $n$ zastaví po nejvýše $T(n)$ krocích.
+
+  .enumerate:
+    type: a
+
+    .item:
+
+      Popište jednopáskový DTS $S$, který rozhoduje stejný jazyk, a dokažte, že udělá $O(T(n)^2)$ kroků
+      (odvoďte konkrétní mez).
+
+    .item:
+
+      Použijte výsledek na dvoupáskový stroj pro palindromy z příkladu .reference:ex-palin: kolik kroků udělá
+      $M$ a jakou mez dostaneme pro $S$?
+
+    .item:
+
+      Kolik symbolů má abeceda pásky stroje $S$ z části b)?
+
+
+.Solution:
+
+  "a) Abeceda.".notion Páska stroje $S$ má $k$ "stop".emphasize (obrázek v oddílu
+  .reference:ch-ts-univerzalni-turinguv-stroj). Symbol pásky je $k$-tice $((x_1,h_1),\dots,(x_k,h_k))$
+  s $x_j\in G$ a $h_j\in\{0,1\}$: na pásce $j$ je v této buňce $x_j$ a $h_j=1$ ("značka".emphasize), právě když
+  tu stojí hlava $j$. Původní symbol $x\in\Sigma\cup\{\blank\}$ čte $S$ jako $((x,0),(\blank,0),\dots,(\blank,0))$,
+  takže vstup není třeba přepisovat. Stav stroje $S$ nese stav stroje $M$ a konečně mnoho pomocné informace
+  (přečtené symboly, kolik značek už viděl, které značky nese doleva) – to je konečné, protože $k$, $G$ a $Q$ jsou pevné.
+
+
+  .centered:
+
+    !tikz:
+      filename: 01z-ulohy-navic-05
+
+      \foreach \r/\lab/\syms/\h in {0/{stopa 1}/{_,0,1,1,0,1,_,_,_}/3,-0.7/{stopa 2}/{_,_,1,0,0,1,1,_,_}/7}{
+        \node[font=\scriptsize,anchor=east] at (-0.2,\r) {\lab};
+        \foreach \s [count=\i] in \syms {
+          \ifnum\i=\h \node[cellhl] at ({(\i-1)*0.7},\r) {\tmsym{\s}};
+          \else \node[cell] at ({(\i-1)*0.7},\r) {\tmsym{\s}}; \fi }
+      }
+      \draw[flow,draw=acc!80!black] (1.75,0.65) -- node[above,font=\scriptsize]{1) čtení: doprava, dokud neuvidí všech $k$ značek} (4.55,0.65);
+      \draw[flow,draw=rej] (4.55,-1.35) -- node[below,font=\scriptsize]{2) zápis: doleva, přepíše symboly a posune značky} (1.75,-1.35);
+      \draw[decorate,decoration={brace,amplitude=4pt,mirror}] (1.4,-2.05) -- (4.9,-2.05)
+        node[midway,below=4pt,font=\scriptsize]{od značky $L$ po značku $R$: nejvýše $2t+1$ buněk};
+      \node[note,anchor=west,text width=40mm,align=left] at (6.6,-0.35) {buňka nese $k$ symbolů a $k$ bitů „je tu hlava $j$“};
+
+
+  Jeden simulovaný krok pro $k=2$; žlutě buňky se značkou hlavy. "Všimni si:".emphasize obě cesty vedou jen
+  mezi krajními značkami, vzdálenost od vstupu nehraje roli.
+
+
+  "Inicializace".notion (1 krok): buňka 0 dostane všech $k$ značek.
+
+
+  "Invariant.".notion Před simulací kroku $t+1$ ($t=0,1,\dots$) kóduje páska $S$ konfiguraci $M$ po $t$ krocích,
+  stav $S$ nese stav $M$ a hlava $S$ stojí na nejlevější značce $L$ nebo o buňku vlevo od ní.
+
+
+  "Simulace jednoho kroku.".notion
+
+  .enumerate:
+
+    .item:
+
+      "Čtení.".notion $S$ jde doprava a do stavu si zapisuje symboly pod značkami; jakmile viděl všech $k$ značek,
+      stojí na nejpravější značce $R$. Zná teď stav $q$ a symboly $x_1,\dots,x_k$, tedy i
+      $\delta(q,x_1,\dots,x_k)=(q',y_1,\dots,y_k,D_1,\dots,D_k)$.
+
+    .item:
+
+      "Zápis.".notion $S$ jde doleva od $R$ do $L$. V buňce se (původní) značkou $j$ zapíše do stopy $j$ symbol
+      $y_j$. Při $D_j=\Stay$ značka zůstane; při $D_j=\Lft$ ji smaže a položí do sousední buňky vlevo (tam jde tak
+      jako tak); při $D_j=\Rgt$ ji smaže, udělá krok doprava, položí ji tam a vrátí se (2 kroky navíc za buňku).
+      Až zpracuje všech $k$ původních značek (počítá je ve stavu) a případně položí značky nesené doleva do $L-1$,
+      končí na $L$ nebo $L-1$. Nová nejlevější značka leží v $\{L-1,L,L+1\}$, invariant tedy platí pro $t+1$.
+
+    .item:
+
+      Je-li $q'\in\{\qA,\qR\}$, přejde $S$ do téhož stavu.
+
+  Z invariantu plyne, že $S$ přijme, právě když $M$ přijme, a vždy zastaví.
+
+
+  "Počet kroků.".notion Všechny hlavy $M$ začínají v buňce 0 a v každém kroku se posunou nejvýše o 1, po $t$
+  krocích jsou tedy v intervalu $[-t,t]$ a $R-L\le 2t$. Čtení stojí nejvýše $2t+1$ kroků (možná začíná v $L-1$).
+  Zápis stojí nejvýše $2t+1$ kroků cesty, nejvýše $2k$ kroků za značky posouvané doprava a 1 krok za položení
+  značek do $L-1$. Simulace kroku $t+1$ tedy stojí nejvýše $4t+2k+3$ kroků a celkem
+
+  .equation:
+
+    T_S(n)\;\le\;1+\sum_{t=0}^{T-1}(4t+2k+3)\;=\;2T^2+(2k+1)T+1\;=\;O(T(n)^2),
+
+  protože $k$ je konstanta. (Postup byl naprogramován přesně takto a vyzkoušen na palindromech do délky 11
+  a na 1500 náhodných strojích s 1–3 páskami; páska $S$ po každém kroku odpovídala konfiguraci $M$ a mez platila.)
+
+
+  "b) Palindromy.".notion Stroj z příkladu .reference:ex-palin kopíruje ($n+1$ kroků), převíjí ($n+1$) a porovnává
+  (nejvýše $n+1$), tedy $T(n)=3n+3$. Pro $k=2$ dostaneme
+
+  .equation:
+
+    T_S(n)\;\le\;2(3n+3)^2+5(3n+3)+1\;=\;18n^2+51n+34\;=\;O(n^2),
+
+  pro $n=10$ mez 2344 kroků (skutečně jich simulace udělala nejvýše 361 – hlavy palindromového stroje jsou
+  si blízko). Výsledek $O(n^2)$ odpovídá přímé konstrukci v .reference:cv-1-1. Že palindromy na jedné pásce
+  v čase $o(n^2)$ rozhodnout nejdou, a kvadratické zpomalení tedy obecně zlepšit nelze, je
+  "(nad rámec přednášky)".emphasize.
+
+
+  "c) Abeceda.".notion $G=\{0,1,\blank\}$, $k=2$: dvojic $(x,h)$ je $3\cdot2=6$, $k$-tic $6^2=36$, k tomu původní
+  symboly $0,1,\blank$ – celkem 39 symbolů. Abeceda roste s $k$ exponenciálně, ale pro pevný stroj je to konstanta.
+
+
+.Exercise:
+  title: 'Úloha 1.8 (stejně $a$ jako $b$ v čase $O(n\log n)$)'
+  label: un-1-8
+
+  Zlepšete stroj z .reference:un-1-4: sestrojte jednopáskový deterministický TS, který rozhoduje
+  $L=\{\,w\in\{a,b\}^*\mid \#_a(w)=\#_b(w)\,\}$ v čase $O(n\log n)$.
+  "Nápověda: v jednom průchodu lze zjistit paritu obou počtů a zároveň oba počty zhruba rozpůlit.".emphasize
+
+
+.Solution:
+
+  "Myšlenka.".notion Nechť $A$ a $B$ jsou počty dosud neškrtnutých $a$ a $b$. V jednom průchodu zleva doprava
+  stroj nese ve stavu parity dosud viděných neškrtnutých $a$ a $b$ a škrtne (přepíše na $X$) první, třetí,
+  páté… neškrtnuté $a$ a stejně tak $b$. Zbude $\lfloor A/2\rfloor$ symbolů $a$ a $\lfloor B/2\rfloor$ symbolů $b$.
+
+
+  "Klíčové pozorování.".notion Mají-li $A$ a $B$ různou paritu, je $A\neq B$. Mají-li stejnou, platí
+  $A=B\iff\lfloor A/2\rfloor=\lfloor B/2\rfloor$ (obě sudá: $A/2=B/2$; obě lichá: $(A-1)/2=(B-1)/2$).
+  Proto se vlastnost „$A=B$“ průchodem se shodnými paritami nezmění a průchod s různými paritami ji vyvrátí.
+
+
+  "Stavy.".notion
+
+  .description:
+
+    .ditem:
+      bullet: '$z$ (počáteční):'
+
+      v tomto průchodu zatím žádné neškrtnuté písmeno. $X$: doprava. $a$: škrtni, do $p_{10}$. $b$: škrtni, do
+      $p_{01}$. $\blank$: nic neškrtnutého nezbylo, $A=B=0$: přijmi.
+
+    .ditem:
+      bullet: '$p_{xy}$, $x,y\in\{0,1\}$:'
+
+      viděli jsme aspoň jedno písmeno, $x$ je parita viděných $a$, $y$ parita viděných $b$. $X$: doprava. $a$: je-li
+      $x=0$, je to lichý (první, třetí…) výskyt – škrtni; jinak nech; přejdi do $p_{(1-x)y}$. $b$ symetricky.
+      $\blank$: pro $x=y$ do $\mathit{back}$ s pohybem $\Lft$, pro $x\neq y$ zamítni.
+
+    .ditem:
+      bullet: '$\mathit{back}$:'
+
+      doleva přes $a$, $b$, $X$; na $\blank$ před slovem krok doprava a do $z$.
+
+  Stavů je 6 (bez $\qA$, $\qR$), přechodů 24.
+
+
+  .centered:
+
+    !tikz:
+      filename: 01z-ulohy-navic-06
+
+      \tmtape{0}{0}{_,a,a,b,b,a,b,_}{2}
+      \node[note,anchor=west,text width=62mm,align=left] at (6.0,0) {1.~průchod: $A=3$, $B=3$, parity shodné; škrtne první a třetí $a$ i první a třetí $b$};
+      \tmtape{0}{-1.4}{_,X,a,X,b,X,X,_}{2}
+      \node[note,anchor=west,text width=62mm,align=left] at (6.0,-1.4) {2.~průchod: $A=1$, $B=1$; škrtne obě};
+      \tmtape{0}{-2.8}{_,X,X,X,X,X,X,_}{2}
+      \node[note,anchor=west,text width=62mm,align=left] at (6.0,-2.8) {3.~průchod: $z$ přečte jen $X$ a $\blank$ $\Rightarrow$ \qA};
+
+
+  Výpočet na $aabbab$, páska na začátku každého průchodu. Na slově $aabbbb$ první průchod (parity $0,0$)
+  nechá $XaXbXb$ a ve druhém je $A=1$, $B=2$ – různé parity, zamítnutí.
+
+
+  "Správnost.".notion Podle pozorování platí na začátku každého průchodu: $\#_a(w)=\#_b(w)\iff A=B$. Přijetí
+  nastane jen při $A=B=0$, zamítnutí jen při různých paritách, tedy $A\ne B$. Stroj vždy zastaví: pokračující
+  průchod nastane jen tehdy, když aspoň jedno z $A$, $B$ je kladné, a pak $\max(A,B)$ klesne aspoň na polovinu
+  (dolní celou část).
+
+
+  "Čas.".notion Průchod tam i zpět stojí nejvýše $2n+2$ kroků. Po $p$ pokračujících průchodech je
+  $\max(A,B)\le\lfloor n/2^p\rfloor$, takže pokračujících průchodů je nejvýše $\lfloor\log_2 n\rfloor+1$
+  a s posledním průchodem nejvýše $\lfloor\log_2 n\rfloor+2$. Celkem
+
+  .equation:
+
+    T(n)\;\le\;(2n+2)\bigl(\lfloor\log_2 n\rfloor+2\bigr)\;=\;O(n\log n).
+
+  (Ověřeno na všech slovech do délky 14 a na 3000 náhodných slovech délky 15–400.) Lépe to na jedné pásce nejde:
+  jednopáskový stroj s časem $o(n\log n)$ rozhoduje jen regulární jazyky a $L$ regulární není – to je
+  "(nad rámec přednášky)".emphasize.

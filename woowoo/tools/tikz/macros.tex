@@ -1,0 +1,54 @@
+% GENEROVANO z ../skripta/preamble.tex -- barvy a matematicka makra (sdili TikZ obrazky i kontrola matematiky)
+% ---------- Barvy ----------
+\definecolor{defc}{HTML}{1F5FA8}   % definice -- modra
+\definecolor{thmc}{HTML}{8E2C6E}   % vety / lemmata -- purpurova
+\definecolor{exc}{HTML}{2E7D32}    % priklady -- zelena
+\definecolor{intc}{HTML}{C77700}   % intuice -- jantarova
+\definecolor{warnc}{HTML}{C62828}  % pozor -- cervena
+\definecolor{sumc}{HTML}{455A64}   % shrnuti -- sedomodra
+\definecolor{cvc}{HTML}{00796B}    % cviceni -- tyrkysova
+\definecolor{solc}{HTML}{5D4037}   % reseni -- hneda
+\definecolor{acc}{HTML}{2E7D32}    % "prijato" (qA, ANO)
+\definecolor{rej}{HTML}{C62828}    % "zamitnuto" (qR, NE)
+\definecolor{hl}{HTML}{FFE082}     % zvyrazneni bunky / vrcholu
+\definecolor{tT}{HTML}{43A047}     % barva T (True)
+\definecolor{tF}{HTML}{E53935}     % barva F (False)
+\definecolor{tB}{HTML}{1E88E5}     % barva B (Base)
+\definecolor{gr}{HTML}{9E9E9E}
+
+% ---------- Matematicke makra ----------
+\newcommand{\cls}[1]{\ensuremath{\mathsf{#1}}}
+\newcommand{\PP}{\cls{P}}
+\newcommand{\NP}{\cls{NP}}
+\newcommand{\NPhat}{\ensuremath{\widehat{\mathsf{NP}}}}
+\newcommand{\EXP}{\cls{EXP}}
+\newcommand{\NEXP}{\cls{NEXP}}
+\newcommand{\DTIME}{\cls{DTIME}}
+\newcommand{\NTIME}{\cls{NTIME}}
+\newcommand{\DSPACE}{\cls{DSPACE}}
+\newcommand{\NSPACE}{\cls{NSPACE}}
+\newcommand{\PSPACE}{\cls{PSPACE}}
+\newcommand{\NPSPACE}{\cls{NPSPACE}}
+\newcommand{\LL}{\cls{L}}
+\newcommand{\NL}{\cls{NL}}
+\newcommand{\coNP}{\cls{coNP}}
+\newcommand{\coNL}{\cls{coNL}}
+\newcommand{\redp}{\le_{p}}
+\newcommand{\enc}[1]{\ensuremath{\langle #1\rangle}}
+\newcommand{\prob}[1]{\textsc{#1}}
+\newcommand{\qA}{\ensuremath{q_{A}}}
+\newcommand{\qR}{\ensuremath{q_{R}}}
+\newcommand{\qhalt}{\ensuremath{q_{\mathrm{halt}}}}
+\newcommand{\blank}{\ensuremath{\sqcup}}
+\newcommand{\Sig}{\ensuremath{\Sigma}}
+\newcommand{\N}{\ensuremath{\mathbb{N}}}
+\newcommand{\Lft}{\ensuremath{\leftarrow}}
+\newcommand{\Rgt}{\ensuremath{\rightarrow}}
+\newcommand{\Stay}{\ensuremath{\bullet}}
+\newcommand{\ANO}{\textcolor{acc}{\textsf{\textbf{ANO}}}}
+\newcommand{\NE}{\textcolor{rej}{\textsf{\textbf{NE}}}}
+\DeclareMathOperator{\dist}{dist}
+\DeclareMathOperator{\polylog}{polylog}
+
+\newcommand{\clr}[2]{{\color{#1}#2}}
+\providecommand{\uv}[1]{\quotedblbase #1\textquotedblleft}

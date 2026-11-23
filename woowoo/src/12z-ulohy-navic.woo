@@ -1,0 +1,898 @@
+.Section Úlohy navíc
+  label: ch-prostor-ulohy-navic
+
+
+Úlohy procvičují prostorovou složitost: Savitchův algoritmus $\mathrm{REACH}$ (oddíl
+.reference:ch-prostor-savitchova-veta), počítání konfigurací (oddíl .reference:ch-prostor-graf-konfiguraci-a-pspace-exp),
+stroje s logaritmickým pracovním prostorem a hádání cest v $\NL$ (oddíl .reference:ch-prostor-logaritmicky-prostor-l-a-nl,
+věta .reference:thm-immerman) a implikační graf $\prob{2-SAT}$u (oddíl .reference:ch-prostor-2-sat-je-v-p).
+
+
+.Warning:
+  title: 'Neoficiální úlohy'
+
+  Úlohy v tomto oddílu "nejsou".notion oficiální zadání předmětu. Jsou to procvičovací úlohy navíc k látce kapitoly;
+  stroje a algoritmy z řešení byly naprogramovány a ověřeny na všech malých vstupech proti definici (nebo hrubé
+  síle), čísla a průběhy výpočtů spočítal program, úloha 12.6 je čistě důkazová.
+
+
+.Subsection Rozcvička
+  label: ch-prostor-ulohy-navic-rozcvicka
+
+
+.Exercise:
+  title: 'Úloha 12.1 (REACH na malém grafu)'
+  label: un-12-1
+
+  Orientovaný graf $G$ má vrcholy $1,2,3,4$ a hrany $1\to3$, $3\to2$, $2\to4$. Funkci
+  $\mathrm{REACH}(A,B,t)$ ze Savitchovy věty (algoritmus v oddílu .reference:ch-prostor-savitchova-myslenka-rozdel-a-panuj)
+  spouštíme přímo na $G$: vrcholy hrají roli konfigurací, prostředky se zkoušejí v pořadí $1,2,3,4$ a pravé
+  volání $\mathrm{REACH}(C_{\mathrm{mid}},B,\lfloor t/2\rfloor)$ proběhne jen tehdy, když levé vrátilo TRUE.
+
+  .enumerate:
+    type: a
+
+    .item:
+
+      Projděte výpočet $\mathrm{REACH}(1,4,4)$. Která volání s $t=2$ proběhnou, co vrátí a s jakým prostředkem
+      nakonec uspěje kořen? Kolik volání proběhne celkem?
+
+    .item:
+
+      Proč $\mathrm{REACH}(1,4,2)$ vrátí FALSE, přestože se z $1$ do $4$ dostat dá?
+
+    .item:
+
+      Kolik pater má zásobník nejvýše a co na něm leží ve chvíli, kdy se vyhodnocuje $\mathrm{REACH}(3,2,1)$?
+
+    .item:
+
+      Obecně: graf s $n$ vrcholy je na vstupní pásce jako matice sousednosti a pro dané vrcholy $u,v$ voláme
+      $\mathrm{REACH}(u,v,n)$. Odhadněte pracovní prostor.
+
+
+.Solution:
+
+  "a) Průběh.".notion Kořen $\mathrm{REACH}(1,4,4)$ zkouší prostředky $m=1,2,\dots$ a pro každý volá
+  $\mathrm{REACH}(1,m,2)$ a případně $\mathrm{REACH}(m,4,2)$. Každé volání s $t=2$ opět zkouší prostředky a volá
+  základní případy s $t=1$ (ty jen testují „$A=B$ nebo hrana $A\to B$“).
+
+  .table:
+    columns: 'llll'
+
+    .row:
+      head: true
+
+      volání ($t=2$)
+
+      zkoušené prostředky a základní případy
+
+      výsledek
+
+      volání $t=1$
+
+    .row:
+
+      $\mathrm{REACH}(1,1,2)$ (kořen, $m=1$, vlevo)
+
+      $m'=1$: $(1,1)$ T, $(1,1)$ T
+
+      TRUE
+
+      2
+
+    .row:
+
+      $\mathrm{REACH}(1,4,2)$ (kořen, $m=1$, vpravo)
+
+      $m'=1$: T, $(1,4)$ F; $m'=2$: $(1,2)$ F; $m'=3$: $(1,3)$ T, $(3,4)$ F; $m'=4$: $(1,4)$ F
+
+      FALSE
+
+      6
+
+    .row:
+
+      $\mathrm{REACH}(1,2,2)$ (kořen, $m=2$, vlevo)
+
+      $m'=1$: T, $(1,2)$ F; $m'=2$: $(1,2)$ F; $m'=3$: $(1,3)$ T, $(3,2)$ T
+
+      TRUE
+
+      5
+
+    .row:
+
+      $\mathrm{REACH}(2,4,2)$ (kořen, $m=2$, vpravo)
+
+      $m'=1$: $(2,1)$ F; $m'=2$: $(2,2)$ T, $(2,4)$ T
+
+      TRUE
+
+      3
+
+
+  Prostředek $m=1$ tedy selže (pravá polovina vrátí FALSE), prostředek $m=2$ uspěje a kořen vrátí TRUE.
+  Celkem proběhne $1+4+16=21$ volání (jedno s $t=4$, čtyři s $t=2$ a $2+6+5+3=16$ s $t=1$).
+
+
+  "b)".notion $\mathrm{REACH}(1,4,2)$ se ptá na cestu délky "nejvýše 2".emphasize. Jediná cesta z $1$ do $4$ je
+  $1\to3\to2\to4$ a má délku 3. Proto žádný prostředek $m'$ nesplní obě poloviny po jednom kroku. (Pro $t=3$
+  už $\mathrm{REACH}(1,4,3)$ vrátí TRUE, přes prostředek $m'=2$: $\mathrm{REACH}(1,2,2)$ a $\mathrm{REACH}(2,4,1)$.)
+
+
+  "c) Zásobník.".notion Hodnota $t$ klesá $4\to2\to1$, takže jsou nejvýše "tři patra".emphasize (0, 1, 2); patro
+  se základním případem $t=1$ nemá prostředek. Volání $\mathrm{REACH}(3,2,1)$ je pravá polovina volání
+  $\mathrm{REACH}(1,2,2)$ s prostředkem 3, které je levou polovinou kořene s prostředkem 2:
+
+
+  .centered:
+
+    !tikz:
+      filename: 12z-ulohy-navic-01
+      options: 'x=1cm,y=1cm'
+
+      \node[v] (v1) at (0,0) {1}; \node[v,fill=hl] (v3) at (1.5,0) {3};
+      \node[v,fill=hl] (v2) at (3,0) {2}; \node[v] (v4) at (4.5,0) {4};
+      \draw[->,thick] (v1)--(v3); \draw[->,very thick,acc!80!black] (v3)--(v2); \draw[->,thick] (v2)--(v4);
+      \node[font=\scriptsize] at (2.25,-0.75) {graf $G$; právě se testuje hrana $3\to2$};
+      \node[anchor=west,font=\scriptsize] at (5.6,0) {\begin{tabular}{|c|c|c|c|}\hline patro & konce & $t$ & $C_{\mathrm{mid}}$\\\hline 0 & $(1,4)$ & 4 & 2\\\hline 1 & $(1,2)$ & 2 & 3\\\hline 2 & $(3,2)$ & 1 & --\\\hline\end{tabular}};
+      \node[font=\scriptsize\bfseries,anchor=south west] at (5.6,0.9) {zásobník};
+
+
+  Zásobník v okamžiku volání $\mathrm{REACH}(3,2,1)$. Hrana $3\to2$ existuje, volání vrátí TRUE a s ním
+  i $\mathrm{REACH}(1,2,2)$. Patro 1 se pak smaže a přepíše voláním $\mathrm{REACH}(2,4,2)$.
+
+
+  "d) Prostor obecně.".notion Hodnota $t$ se v každém zanoření nejvýše půlí (shora zaokrouhleno), z $t=n$
+  se k $t=1$ dostaneme po $\lceil\log_2n\rceil$ krocích, pater je tedy nejvýše $\lceil\log_2n\rceil+1$. Patro drží
+  čtyři čísla nejvýše $n$ (konce $A,B$, hodnotu $t$ a prostředek), každé zabere $\lfloor\log_2n\rfloor+1$ bitů.
+  Základní případ přečte jeden bit matice na pozici $(A-1)n+B$; k přesunu čtecí hlavy stačí konstantně mnoho
+  čítačů s $O(\log n)$ bity. Celkem
+
+  .equation:
+
+    \bigl(\lceil\log_2n\rceil+1\bigr)\cdot4\bigl(\lfloor\log_2n\rfloor+1\bigr)+O(\log n)=O(\log^2n),
+
+  tedy $\prob{ST-REACH}\in\DSPACE(\log^2n)$ – přesně Savitchova věta pro $S(n)=\log n$ (věta .reference:thm-nlp).
+  Čas je ovšem obrovský: na každém patře se zkouší $n$ prostředků.
+
+
+.Exercise:
+  title: 'Úloha 12.2 (implikační graf konkrétní formule)'
+  label: un-12-2
+
+  Je dána formule
+
+  .equation:
+
+    \varphi=(\lnot x_1\lor x_2)\land(\lnot x_2\lor x_3)\land(\lnot x_3\lor x_1)\land(x_1\lor x_4)\land(\lnot x_4\lor x_3).
+
+  .enumerate:
+    type: a
+
+    .item:
+
+      Sestrojte implikační graf $G_\varphi$.
+
+    .item:
+
+      Najděte silně souvislé komponenty, kondenzaci a všechna její topologická uspořádání. Podle pravidla
+      $\tau(x)=1\iff C_{\lnot x}\prec C_x$ (věta .reference:thm-2sat) sestavte splňující ohodnocení a ověřte ho.
+
+    .item:
+
+      Ukažte, že $\varphi'=\varphi\land(\lnot x_2\lor\lnot x_3)$ je nesplnitelná, a to dvěma cestami
+      v implikačním grafu.
+
+
+.Solution:
+
+  "a) Hrany.".notion Klauzule $(\ell_1\lor\ell_2)$ dává hrany $\lnot\ell_1\to\ell_2$ a $\lnot\ell_2\to\ell_1$:
+
+  .table:
+    columns: 'll'
+
+    .row:
+      head: true
+
+      klauzule
+
+      hrany
+
+    .row:
+
+      $(\lnot x_1\lor x_2)$
+
+      $x_1\to x_2$, $\lnot x_2\to\lnot x_1$
+
+    .row:
+
+      $(\lnot x_2\lor x_3)$
+
+      $x_2\to x_3$, $\lnot x_3\to\lnot x_2$
+
+    .row:
+
+      $(\lnot x_3\lor x_1)$
+
+      $x_3\to x_1$, $\lnot x_1\to\lnot x_3$
+
+    .row:
+
+      $(x_1\lor x_4)$
+
+      $\lnot x_1\to x_4$, $\lnot x_4\to x_1$
+
+    .row:
+
+      $(\lnot x_4\lor x_3)$
+
+      $x_4\to x_3$, $\lnot x_3\to\lnot x_4$
+
+  Graf má $2\cdot4=8$ vrcholů a $2\cdot5=10$ hran.
+
+
+  .centered:
+
+    !tikz:
+      filename: 12z-ulohy-navic-02
+      options: 'x=1cm,y=1cm,lt/.style={v,minimum size=8mm,font=\scriptsize}'
+
+      \begin{scope}[on background layer]
+        \fill[rej!10,rounded corners=8pt] (-0.65,-0.65) rectangle (1.95,2.65);
+        \fill[acc!15,rounded corners=8pt] (4.45,-0.65) rectangle (7.05,2.65);
+        \fill[intc!15,rounded corners=8pt] (2.65,1.85) rectangle (3.75,2.95);
+        \fill[warnc!12,rounded corners=8pt] (2.65,-0.95) rectangle (3.75,0.15);
+      \end{scope}
+      \node[lt] (n1) at (0,2) {$\lnot x_1$}; \node[lt] (n2) at (1.3,1) {$\lnot x_2$}; \node[lt] (n3) at (0,0) {$\lnot x_3$};
+      \node[lt] (p1) at (5.1,1) {$x_1$}; \node[lt] (p2) at (6.4,0) {$x_2$}; \node[lt] (p3) at (6.4,2) {$x_3$};
+      \node[lt] (p4) at (3.2,2.4) {$x_4$}; \node[lt] (n4) at (3.2,-0.4) {$\lnot x_4$};
+      \draw[->,thick] (n2)--(n1); \draw[->,thick] (n1)--(n3); \draw[->,thick] (n3)--(n2);
+      \draw[->,thick] (p1)--(p2); \draw[->,thick] (p2)--(p3); \draw[->,thick] (p3)--(p1);
+      \draw[->,thick] (n1)--(p4); \draw[->,thick] (p4)--(p3); \draw[->,thick] (n3)--(n4); \draw[->,thick] (n4)--(p1);
+      \node[font=\scriptsize,rej] at (0.65,3.0) {$N$};
+      \node[font=\scriptsize,acc!70!black] at (5.75,3.0) {$P$};
+      % kondenzace
+      \begin{scope}[yshift=-2.3cm]
+        \node[blok,draw=rej,fill=rej!10,font=\scriptsize] (N) at (0.6,0) {$N=\{\lnot x_1,\lnot x_2,\lnot x_3\}$};
+        \node[blok,draw=intc,fill=intc!15,font=\scriptsize] (X) at (3.6,0.55) {$\{x_4\}$};
+        \node[blok,draw=warnc,fill=warnc!12,font=\scriptsize] (Y) at (3.6,-0.55) {$\{\lnot x_4\}$};
+        \node[blok,draw=acc,fill=acc!15,font=\scriptsize] (P) at (6.2,0) {$P=\{x_1,x_2,x_3\}$};
+        \draw[->,thick] (N)--(X); \draw[->,thick] (N)--(Y); \draw[->,thick] (X)--(P); \draw[->,thick] (Y)--(P);
+      \end{scope}
+
+
+  Nahoře implikační graf $G_\varphi$ se silně souvislými komponentami (podbarvené), dole jeho kondenzace.
+  "Všimni si:".emphasize $\{x_4\}$ a $\{\lnot x_4\}$ spolu nejsou spojené, proto mají v topologickém uspořádání
+  libovolné pořadí.
+
+
+  "b) Komponenty.".notion Hrany $x_1\to x_2\to x_3\to x_1$ tvoří cyklus, tedy $P=\{x_1,x_2,x_3\}$ je jedna SCC;
+  zrcadlově (lemma .reference:lem-skew) $\lnot x_2\to\lnot x_1\to\lnot x_3\to\lnot x_2$, tedy $N=\{\lnot x_1,\lnot x_2,\lnot x_3\}$.
+  Z $x_4$ vede jen hrana do $x_3\in P$ a z $P$ se nikam jinam nedostaneme, takže $x_4$ neleží na žádném cyklu
+  a tvoří komponentu $\{x_4\}$; stejně $\{\lnot x_4\}$ (do $\lnot x_4$ vede jen hrana z $\lnot x_3$, ven jen do
+  $x_1$). Čtyři komponenty, žádná neobsahuje současně $x_i$ i $\lnot x_i$, formule je tedy splnitelná.
+
+
+  "Kondenzace".notion má hrany $N\to\{x_4\}$ (z $\lnot x_1\to x_4$), $N\to\{\lnot x_4\}$ (z $\lnot x_3\to\lnot x_4$),
+  $\{x_4\}\to P$ a $\{\lnot x_4\}\to P$. Topologická uspořádání jsou právě dvě:
+  $N\prec\{x_4\}\prec\{\lnot x_4\}\prec P$ a $N\prec\{\lnot x_4\}\prec\{x_4\}\prec P$.
+
+
+  "Ohodnocení.".notion Pro $i=1,2,3$ je $C_{\lnot x_i}=N\prec P=C_{x_i}$, tedy $\tau(x_i)=1$ v obou uspořádáních.
+  Pro $x_4$ záleží na uspořádání: v prvním je $C_{x_4}\prec C_{\lnot x_4}$, tedy $\tau(x_4)=0$; ve druhém
+  $\tau(x_4)=1$. Dostáváme $\tau=(1,1,1,0)$ a $\tau=(1,1,1,1)$. Kontrola $(1,1,1,0)$: $(\lnot x_1\lor x_2)=(0\lor1)$,
+  $(\lnot x_2\lor x_3)=(0\lor1)$, $(\lnot x_3\lor x_1)=(0\lor1)$, $(x_1\lor x_4)=(1\lor0)$, $(\lnot x_4\lor x_3)=(1\lor1)$ –
+  vše splněno; pro $(1,1,1,1)$ se změní jen $(x_1\lor x_4)=(1\lor1)$ a $(\lnot x_4\lor x_3)=(0\lor1)$, opět splněno.
+  (Program ověřil, že jiná splňující ohodnocení nejsou.)
+
+
+  "c) Nesplnitelnost.".notion Nová klauzule $(\lnot x_2\lor\lnot x_3)$ přidá hrany $x_2\to\lnot x_3$ a $x_3\to\lnot x_2$.
+  Pak v $G_{\varphi'}$ vedou cesty
+
+  .equation:
+
+    x_1\to x_2\to\lnot x_3\to\lnot x_2\to\lnot x_1
+    \qquad\text{a}\qquad
+    \lnot x_1\to x_4\to x_3\to x_1 ,
+
+  takže $x_1$ a $\lnot x_1$ leží ve stejné SCC. Podle lemmatu .reference:lem-donuceni by každé splňující
+  ohodnocení s $x_1=1$ mělo i $\lnot x_1=1$ (první cesta) a každé s $x_1=0$, tj. $\lnot x_1=1$, by mělo $x_1=1$
+  (druhá cesta). Obě možnosti vedou ke sporu, $\varphi'$ je nesplnitelná (směr $\Rightarrow$ věty
+  .reference:thm-2sat).
+
+
+  .centered:
+
+    !tikz:
+      filename: 12z-ulohy-navic-03
+      options: 'x=1cm,y=1cm,lt/.style={v,minimum size=8mm,font=\scriptsize}'
+
+      \node[lt] (n1) at (0,2) {$\lnot x_1$}; \node[lt] (n2) at (1.3,1) {$\lnot x_2$}; \node[lt] (n3) at (0,0) {$\lnot x_3$};
+      \node[lt] (p1) at (5.1,1) {$x_1$}; \node[lt] (p2) at (6.4,0) {$x_2$}; \node[lt] (p3) at (6.4,2) {$x_3$};
+      \node[lt] (p4) at (3.2,2.4) {$x_4$}; \node[lt] (n4) at (3.2,-0.4) {$\lnot x_4$};
+      \draw[->,thick,black!30] (n1)--(n3); \draw[->,thick,black!30] (p2)--(p3);
+      \draw[->,thick,black!30] (n3)--(n4); \draw[->,thick,black!30] (n4)--(p1);
+      \draw[->,thick,black!30,dashed] (p3) to[out=150,in=70] (n2);
+      % cesta x1 ~> ~x1
+      \draw[->,very thick,defc] (p1)--(p2);
+      \draw[->,very thick,defc,dashed] (p2) to[out=-140,in=-40] (n3);
+      \draw[->,very thick,defc] (n3)--(n2); \draw[->,very thick,defc] (n2)--(n1);
+      % cesta ~x1 ~> x1
+      \draw[->,very thick,rej] (n1)--(p4); \draw[->,very thick,rej] (p4)--(p3); \draw[->,very thick,rej] (p3)--(p1);
+      \node[font=\scriptsize,defc,anchor=west] at (7.2,0.4) {cesta $x_1\leadsto\lnot x_1$};
+      \node[font=\scriptsize,rej,anchor=west] at (7.2,1.6) {cesta $\lnot x_1\leadsto x_1$};
+      \node[font=\scriptsize,anchor=west] at (7.2,-0.6) {čárkovaně: hrany z $(\lnot x_2\lor\lnot x_3)$};
+
+
+  Implikační graf $G_{\varphi'}$. Modrá a červená cesta spojují $x_1$ a $\lnot x_1$ oběma směry, celý graf je
+  jediná silně souvislá komponenta.
+
+
+.Exercise:
+  title: 'Úloha 12.3 (kolik je konfigurací)'
+  label: un-12-3
+
+  Deterministický stroj $M$ má vstupní pásku jen pro čtení a jednu pracovní pásku, $|Q|=10$ stavů, pracovní abecedu
+  $\Gamma=\{0,1,\triangleright,\blank\}$ a na vstupu délky $n$ navštíví nejvýše $S(n)=2\lceil\log_2n\rceil$ buněk
+  pracovní pásky.
+
+  .enumerate:
+    type: a
+
+    .item:
+
+      Kolik různých konfigurací může mít $M$ na vstupu délky $n=1024$? Vyjádřete počet i obecně jako funkci $n$.
+
+    .item:
+
+      Víme, že $M$ na každém vstupu zastaví. Kolik nejvýše kroků může na vstupu délky 1024 udělat? Proč?
+
+    .item:
+
+      Dokažte obecně $\DSPACE(f(n))\subseteq\DTIME(2^{O(f(n))})$ pro $f(n)\ge\log n$. Kde se předpoklad
+      $f(n)\ge\log n$ použije?
+
+    .item:
+
+      Platí totéž pro nedeterministický stroj, tj. $\NSPACE(f(n))\subseteq\DTIME(2^{O(f(n))})$?
+
+
+.Solution:
+
+  "a)".notion Konfiguraci určuje stav, pozice čtecí hlavy na vstupu (včetně krajních $\blank$: $n+2$ možností),
+  pozice hlavy na pracovní pásce ($S(n)$ možností) a obsah pracovní pásky ($|\Gamma|^{S(n)}$ možností). Pro
+  $n=1024=2^{10}$ je $S(n)=20$ a
+
+  .equation:
+
+    C(1024)=10\cdot1026\cdot20\cdot4^{20}=205\,200\cdot2^{40}=225\,619\,786\,019\,635\,200\approx2{,}3\cdot10^{17}.
+
+  Obecně $4^{2\lceil\log_2n\rceil}\le4^{2\log_2n+2}=16n^4$, tedy
+  $C(n)=10(n+2)\cdot2\lceil\log_2n\rceil\cdot4^{2\lceil\log_2n\rceil}=O(n^5\log n)$ – "polynom".emphasize,
+  přestože konfigurací je „exponenciálně mnoho vzhledem k prostoru“. (Pro $n$ mocninu dvojky přesně
+  $C(n)=20(n+2)\,n^4\log_2n$.)
+
+
+  "b)".notion Nejvýše $C(1024)-1$ kroků. Výpočet je posloupnost konfigurací $K_0,K_1,K_2,\dots$ Kdyby se některá
+  zopakovala, $K_i=K_j$ pro $i<j$, deterministický stroj by z $K_j$ pokračoval stejně jako z $K_i$ a opakoval
+  úsek $K_i,\dots,K_j$ donekonečna – nezastavil by (důsledek .reference:cor-zacykleni). Zastavující výpočet tedy
+  prochází navzájem různé konfigurace, nejvýše $C(n)$ kusů, a udělá nejvýše $C(n)-1$ kroků.
+
+
+  "c)".notion Nechť $M$ rozhoduje $L$ v prostoru $c\cdot f(n)$ (s pracovními páskami s abecedou $\Gamma$, $k$ pásek). Počet
+  konfigurací je
+
+  .equation:
+
+    C(n)\le|Q|\cdot(n+2)\cdot\bigl(c f(n)\bigr)^k\cdot|\Gamma|^{k c f(n)} .
+
+  Každý činitel je $2^{O(f(n))}$: $|Q|$ je konstanta, $cf(n)\le2^{cf(n)}$, $|\Gamma|^{kcf(n)}=2^{kc\log_2|\Gamma|\cdot f(n)}$ a
+  "právě zde".notion potřebujeme $f(n)\ge\log_2n$, aby $n+2\le4n\le2^{f(n)+2}$. Tedy $C(n)=2^{O(f(n))}$
+  a podle b) stroj $M$ (rozhoduje, tedy vždy zastaví) udělá nejvýše $C(n)$ kroků, $L\in\DTIME(2^{O(f(n))})$.
+  Bez předpokladu by tvrzení neplatilo: jazyk slov nad $\{0,1\}$ se sudým počtem jedniček rozhodne stroj, který
+  jen přečte vstup a paritu nese ve stavu, tedy leží v $\DSPACE(1)$. V $\DTIME(2^{O(1)})=\DTIME(O(1))$ ale není:
+  stroj s konstantním časem $c$ dojede čtecí hlavou nejvýše o $c$ buněk, uvidí tedy jen prvních $c+1$ symbolů
+  vstupu, takže na slovech $0^{2c}0$ a $0^{2c}1$ odpoví stejně, přestože první do jazyka patří a druhé ne.
+
+
+  "d)".notion Ano. Nedeterministický stroj se může zacyklit v jedné větvi a přijmout v jiné, proto argument z b)
+  nestačí. Postupujeme jako v důkazu $\NL\subseteq\PP$ (věta .reference:thm-nlp): deterministický simulátor
+  projde graf konfigurací do šířky z počáteční konfigurace a přijme, narazí-li na přijímající konfiguraci.
+  Vrcholů je $C(n)=2^{O(f(n))}$, z každého vede jen konstantně mnoho hran (podle $\delta$), BFS běží v čase
+  polynomiálním v $C(n)$, tedy $\bigl(2^{O(f(n))}\bigr)^{O(1)}=2^{O(f(n))}$. (Kvůli zjištění $f(n)$ a výčtu
+  konfigurací předpokládáme, že $f$ je prostorově konstruovatelná.)
+
+
+.Subsection Na úrovni testu
+  label: ch-prostor-ulohy-navic-test
+
+
+.Exercise:
+  title: 'Úloha 12.4 (dva jazyky v logaritmickém prostoru)'
+  label: un-12-4
+
+  Popište "deterministické".notion Turingovy stroje se vstupní páskou pouze pro čtení, které rozhodují dané
+  jazyky s "pracovním prostorem".notion $O(\log n)$. Uveďte, co přesně je na pracovních páskách, a zdůvodněte
+  odhad prostoru.
+
+  .enumerate:
+    type: a
+
+    .item:
+
+      $L_1=\{\,w\in\{a,b\}^*\mid \#_a(w)=2\cdot\#_b(w)\,\}$ (např. $aab\in L_1$, $abab\notin L_1$, $\varepsilon\in L_1$).
+
+    .item:
+
+      $L_2$ = správně uzávorkované výrazy nad $\{(,)\}$, kde $L_2$ je nejmenší jazyk s $\varepsilon\in L_2$ a
+      $u,v\in L_2\Rightarrow(u)v\in L_2$ (např. $(()())\in L_2$, $())(\notin L_2$).
+
+
+.Solution:
+
+  "Model.".notion Vstupní páska se nepočítá, počítají se navštívené buňky pracovních pásek (definice
+  .reference:def-prostor a .reference:def-lnl). Konečně mnoho informace (fáze výpočtu, právě přečtený symbol) nese
+  vnitřní stav.
+
+
+  "Binární čítač.".notion Na pracovní pásce je v buňce 0 zarážka $\triangleright$, za ní bity čísla,
+  "nejnižší bit vlevo".emphasize; číslo 0 je prázdný zápis. Přičtení 1: od nejnižšího bitu přepisuj $1\to0$
+  a jdi doprava, první $0$ nebo $\blank$ přepiš na $1$. Odečtení 1 (jen když číslo není 0): přepisuj
+  $0\to1$, první $1$ přepiš na $0$. Test nuly: žádný bit není $1$. Po každé operaci se hlava vrátí
+  k zarážce. Čítač s hodnotou nejvýše $N\ge1$ zabere nejvýše $\lfloor\log_2N\rfloor+1$ bitů.
+
+
+  "a) Stroj pro $L_1$.".notion Dvě pracovní pásky, na pásce 1 čítač $p$ (počet $a$), na pásce 2 čítač $q$ (počet $b$).
+
+  .enumerate:
+
+    .item:
+
+      "Počítání.".notion Čtecí hlava jde po vstupu zleva doprava; na $a$ přičti 1 k $p$, na $b$ přičti 1 k $q$.
+
+    .item:
+
+      "Porovnání $p=2q$.".notion Binárně je $2q$ zápis $q$ posunutý o jedno místo: nejnižší bit $0$, za ním bity $q$.
+      Obě hlavy postav na první bit. Je-li $q=0$ (na pásce 2 hned $\blank$), přijmi, právě když i $p=0$.
+      Jinak musí být první bit $p$ roven $0$; pak hlavu 1 posuň o jedno místo dál a porovnávej bity obou
+      pásek současně, dokud obě nedojdou na $\blank$ ve stejném kroku. Při neshodě nebo dřívějším konci jedné
+      pásky zamítni, jinak přijmi.
+
+
+  "Proč porovnání funguje.".notion Čítače se jen zvětšují, takže jejich zápis nikdy nemá na konci (v nejvyšším
+  řádu) nulu: nejvyšší bit vznikne přepisem $\blank\to1$. Dvě čísla se pak rovnají, právě když mají stejný
+  zápis, a zápis $2q$ pro $q>0$ je přesně „$0$ a pak zápis $q$“. Krok 1 spočítá $p=\#_a(w)$ a $q=\#_b(w)$,
+  krok 2 přijme právě při $p=2q$.
+
+
+  .centered:
+
+    !tikz:
+      filename: 12z-ulohy-navic-04
+      options: 'x=1cm,y=1cm'
+
+      \node[font=\scriptsize,anchor=east] at (-0.2,1.6) {vstup (jen čtení)};
+      \tmtape{0}{1.6}{_,a,a,b,a,a,b,_}{8}
+      \draw[decorate,decoration={brace,amplitude=4pt}] (0.35,2.05)--(4.55,2.05) node[midway,above=4pt,font=\scriptsize]{nepočítá se};
+      \node[font=\scriptsize,anchor=east] at (-0.2,0) {páska 1: $p=4$};
+      \tmtape{0}{0}{$\triangleright$,0,0,1,_}{0}
+      \node[font=\scriptsize,anchor=east] at (-0.2,-1.2) {páska 2: $q=2$};
+      \tmtape{0.7}{-1.2}{$\triangleright$,0,1,_}{0}
+      \draw[<->,thick,intc] (1.4,-0.4)--(1.4,-0.8); \draw[<->,thick,intc] (2.1,-0.4)--(2.1,-0.8);
+      \node[note,anchor=west,text width=58mm,align=left] at (3.8,-0.6) {Po přečtení $aabaab$. Nejnižší bit $p$ je $0$, zbylé bity $p$ ($0,1$) se shodují s bity $q$: $p=2q$, přijmi.};
+
+
+  Stroj z části a) před porovnáním na vstupu $aabaab$. Pásku 2 jsme nakreslili posunutou o jednu buňku,
+  aby bylo vidět, které bity se porovnávají.
+
+
+  "Prostor a).".notion $p,q\le n$, takže každý čítač má nejvýše $\lfloor\log_2n\rfloor+1$ bitů a jeho páska
+  zabere nejvýše $\lfloor\log_2n\rfloor+3$ buněk (zarážka, bity, jedna $\blank$ za nimi, kterou čte přenos
+  a porovnání). Celkem $2\lfloor\log_2n\rfloor+6=O(\log n)$ buněk. Jiné údaje se na pracovní pásky nepíšou:
+  pozici ve vstupu určuje čtecí hlava, fázi výpočtu stav.
+
+
+  "b) Stroj pro $L_2$.".notion Jedna pracovní páska s čítačem $h$ = (počet „(“) $-$ (počet „)“) v dosud
+  přečtené předponě. Na začátku $h=0$; na „(“ přičti 1; na „)“ otestuj $h=0$ – pokud ano, zamítni, jinak
+  odečti 1; na konci vstupu přijmi, právě když $h=0$.
+
+
+  "Správnost b).".notion Označme $h(k)$ hodnotu po přečtení $w_1\dots w_k$. Stroj přijme, právě když
+  $h(k)\ge0$ pro všechna $k$ a $h(n)=0$. Ukážeme, že to platí právě pro $w\in L_2$.
+
+  .itemize:
+
+    .item:
+
+      ($w\in L_2\Rightarrow$ stroj přijme) Indukcí podle pravidel: pro $\varepsilon$ platí. Pro $w=(u)v$ s $u,v\in L_2$ je uvnitř
+      závorky $h=1+h_u\ge1$, po „)“ je $h=0$ a dál $h=h_v\ge0$ s koncem $0$.
+
+    .item:
+
+      (stroj přijme $\Rightarrow w\in L_2$) Silnou indukcí podle $|w|$. Pro $w=\varepsilon$ platí. Jinak $w_1=($ (jinak $h(1)=-1$).
+      Nechť $j$ je první index s $h(j)=0$ (existuje, $h(n)=0$). Protože $h(j-1)=1$, je $w_j=)$.
+      Položme $u=w_2\dots w_{j-1}$ a $v=w_{j+1}\dots w_n$. Uvnitř $u$ je $h\ge1$, tedy výšky $u$ (o 1 menší)
+      jsou $\ge0$ a končí 0; výšky $v$ jsou výšky $w$ od pozice $j$, také $\ge0$ s koncem 0. Podle indukce
+      $u,v\in L_2$, tedy $w=(u)v\in L_2$.
+
+
+  "Prostor b).".notion $0\le h\le n$, čítač má nejvýše $\lfloor\log_2n\rfloor+1$ bitů (odečítání ho
+  neprodlouží), páska zabere nejvýše $\lfloor\log_2n\rfloor+3=O(\log n)$ buněk. Oba stroje vždy zastaví:
+  vstup se čte jednou a každá operace s čítačem trvá $O(\log n)$ kroků (čas $O(n\log n)$).
+
+
+.Exercise:
+  title: 'Úloha 12.5 (hádání cest: tři problémy v NL)'
+  label: un-12-5
+
+  Graf je na vstupu zadán maticí sousednosti, vrcholy jsou $1,\dots,n$. Ukažte, že následující problémy leží
+  v $\NL$: popište nedeterministický algoritmus, co si pamatuje, proč je správný a proč stačí prostor $O(\log n)$.
+
+  .enumerate:
+    type: a
+
+    .item:
+
+      $\prob{Cycle-Through}$: orientovaný graf $G$ a vrchol $v$; leží $v$ na nějakém orientovaném cyklu?
+
+    .item:
+
+      $\prob{Strongly-Connected}$: je orientovaný graf $G$ silně souvislý (každý vrchol dosažitelný z každého)?
+
+    .item:
+
+      $\prob{Non-Bipartite}$: není neorientovaný graf $G$ bipartitní? Odvoďte z toho, že i
+      $\prob{Bipartite}\in\NL$.
+
+
+.Solution:
+
+  "Společný stavební kámen.".notion Hádání cesty z $a$ do $b$ (jako u $\prob{ST-REACH}$, problém
+  .reference:prob-streach): pamatuj si aktuální vrchol $c$ (začni $c:=a$) a počítadlo $k$ (začni $k:=0$).
+  Dokud $c\neq b$: je-li $k=n-1$, zamítni; jinak uhodni vrchol $c'$, ověř ve vstupu hranu $c\to c'$ (v matici
+  je to bit na pozici $(c-1)n+c'$, k přesunu hlavy stačí pomocné čítače s $O(\log n)$ bity), při
+  neexistenci zamítni, jinak $c:=c'$, $k:=k+1$. Některá větev dojde do $b$, právě když v $G$ vede cesta
+  $a\leadsto b$: nejkratší cesta má nejvýše $n-1$ hran a uhodnutá posloupnost je vždy skutečný sled. Každá
+  větev skončí nejvýše po $n-1$ krocích. Pamatujeme $a,b,c,k$, tedy čtyři čísla $\le n$.
+
+
+  "a)".notion Uhodni vrchol $u$ a ověř hranu $v\to u$; pak uhodni cestu $u\leadsto v$. Správnost: leží-li $v$ na
+  cyklu $v\to u\to\dots\to v$, větev, která uhodne $u$ a pak zbytek cyklu, přijme (smyčka $v\to v$ je případ
+  $u=v$ s cestou délky 0). Naopak přijímající větev našla hranu $v\to u$ a sled $u\leadsto v$. Vynecháním
+  opakovaných úseků ze sledu dostaneme cestu $u\leadsto v$ s navzájem různými vrcholy, v níž je $v$ jen na konci;
+  spolu s hranou $v\to u$ je to cyklus přes $v$. Prostor: $v,u$ a čtveřice ze stavebního kamene, $O(\log n)$.
+
+
+  "b)".notion Deterministicky projdi všechny dvojice $(a,b)\in\{1,\dots,n\}^2$ (dva čítače) a pro každou
+  nedeterministicky uhodni cestu $a\leadsto b$; selže-li hádání, větev zamítne. Na konci přijmi. Přijímající
+  větev existuje, právě když pro "každou".emphasize dvojici existuje cesta: je-li graf silně souvislý, větev, která
+  vždy hádá správně, přijme; není-li, pro nějakou dvojici $(a,b)$ cesta není a každá větev u ní zamítne.
+  Prostor: $a,b,c,k$ – opět konstantně mnoho čísel $\le n$, tedy $O(\log n)$. Paměť pro dvojici $(a,b)$ se po
+  jejím vyřízení přepíše další dvojicí.
+
+
+  "c)".notion Graf je bipartitní, právě když nemá lichou kružnici. Algoritmus: uhodni vrchol $v$ a pak choď po
+  hranách (každý krok uhodni souseda a ověř hranu), pamatuj aktuální vrchol $c$, počet kroků $k\le n$ a jeho
+  paritu (ve stavu). Po každém kroku nejdřív testuj: je-li $c=v$ a $k$ liché, přijmi; teprve potom při $k=n$
+  zamítni (lichá kružnice délky přesně $n$ se tak ještě stihne přijmout).
+
+  .itemize:
+
+    .item:
+
+      Má-li $G$ lichou kružnici, má délku $\le n$; větev, která uhodne její vrchol $v$ a obejde ji, přijme.
+
+    .item:
+
+      Přijme-li větev, našla uzavřený sled liché délky. "Lemma:".notion nejkratší uzavřený sled liché délky je
+      lichá kružnice. Kdyby se v něm (kromě shodného začátku a konce) opakoval vrchol, rozpadl by se v tomto
+      vrcholu na dva kratší uzavřené sledy, jejichž délky mají lichý součet – jeden z nich by byl lichý a
+      kratší, spor. Vrcholy se tedy neopakují a sled délky aspoň 3 (graf nemá smyčky, délka 1 nejde) je
+      kružnice.
+
+  Prostor: $v,c,k$, $O(\log n)$. Tedy $\prob{Non-Bipartite}\in\NL$. Jeho doplněk je (až na vstupy, které nejsou
+  zápisem grafu – ty se rozpoznají v logaritmickém prostoru) $\prob{Bipartite}$, takže
+  $\prob{Bipartite}\in\coNL=\NL$ podle věty Immermana a Szelepcsényiho (.reference:thm-immerman).
+
+
+  "Pozor.".notion U b) nejde prostě „uhodnout jednu cestu“: problém se ptá na "všechny".emphasize dvojice, a proto
+  dvojice procházíme deterministicky a hádáme jen uvnitř. U $\prob{Bipartite}$ se přímé hádání nenabízí: přirozený
+  certifikát odpovědi ANO je 2-obarvení s $n$ bity, a to se do logaritmického prostoru nevejde; proto oklika přes
+  doplněk a $\NL=\coNL$.
+
+
+.Exercise:
+  title: 'Úloha 12.6 (co plyne z hierarchie a ze Savitche)'
+  label: un-12-6
+
+  O každém tvrzení rozhodněte, zda je pravdivé, nepravdivé, nebo zda to dnes nevíme. Odpověď zdůvodněte
+  větami z kapitoly.
+
+  .enumerate:
+
+    .item:
+
+      $\NSPACE(n^2)\subseteq\DSPACE(n^4)$.
+
+    .item:
+
+      $\NSPACE(n^2)\subsetneq\DSPACE(n^5)$.
+
+    .item:
+
+      $\DSPACE(n)\subsetneq\DSPACE(2n)$.
+
+    .item:
+
+      $\NL\subsetneq\PSPACE$.
+
+    .item:
+
+      Pokud $\PP=\NL$, pak $\PP\neq\PSPACE$.
+
+    .item:
+
+      $\LL\subsetneq\PP$.
+
+    .item:
+
+      Platí $\PP\subsetneq\PSPACE$ nebo $\PSPACE\subsetneq\EXP$ (aspoň jedno).
+
+    .item:
+
+      $\NSPACE(n)\subseteq\DSPACE(n)$.
+
+
+.Solution:
+
+  .enumerate:
+
+    .item:
+
+      "Pravda.".notion Savitchova věta (.reference:thm-savitch) pro $S(n)=n^2$ (prostorově konstruovatelná, $\ge\log n$):
+      $\NSPACE(n^2)\subseteq\DSPACE\bigl((n^2)^2\bigr)=\DSPACE(n^4)$.
+
+    .item:
+
+      "Pravda.".notion Podle 1. je $\NSPACE(n^2)\subseteq\DSPACE(n^4)$ a podle prostorové hierarchie
+      (.reference:thm-prostorhier, $n^4=o(n^5)$) je $\DSPACE(n^4)\subsetneq\DSPACE(n^5)$. Jazyk z
+      $\DSPACE(n^5)\setminus\DSPACE(n^4)$ tedy v $\NSPACE(n^2)$ není.
+
+    .item:
+
+      "Nepravda.".notion $\DSPACE(S(n))$ obsahuje problémy řešitelné v prostoru $O(S(n))$ (definice
+      .reference:def-prostor), a $O(n)=O(2n)$, takže $\DSPACE(n)=\DSPACE(2n)$. Hierarchie se nepoužije, protože
+      $n\neq o(2n)$.
+
+    .item:
+
+      "Pravda.".notion $\NL\subseteq\DSPACE(\log^2n)$ (věta .reference:thm-nlp, tj. Savitch) a $\log^2n=o(n)$, tedy podle
+      hierarchie $\DSPACE(\log^2n)\subsetneq\DSPACE(n)\subseteq\PSPACE$.
+
+    .item:
+
+      "Pravda.".notion Z $\PP=\NL$ a bodu 4 plyne $\PP=\NL\subsetneq\PSPACE$.
+
+    .item:
+
+      "Nevíme.".notion Víme jen $\LL\subseteq\NL\subseteq\PP$. Prostorová hierarchie porovnává prostor s prostorem
+      a $\PP$ je časová třída; $\PP\subseteq\PSPACE$ a $\LL\subsetneq\PSPACE$ nevylučují ani $\LL=\PP$, ani $\LL\neq\PP$.
+
+    .item:
+
+      "Pravda.".notion Časová hierarchie (věta .reference:thm-hierarchie) dává $\PP\subsetneq\EXP$. Kdyby
+      $\PP=\PSPACE$ i $\PSPACE=\EXP$, bylo by $\PP=\EXP$ – spor. Nevíme ale, "která".emphasize z obou inkluzí je ostrá.
+
+    .item:
+
+      "Nevíme.".notion Savitch dává jen $\NSPACE(n)\subseteq\DSPACE(n^2)$; zda lze nedeterminismus v lineárním
+      prostoru odstranit bez ztráty, je otevřený problém "(nad rámec přednášky: tzv. problém LBA)".emphasize.
+      Pozor, že nejde o $\NL$ vs. $\coNL$ – uzavřenost na doplněk (Immerman–Szelepcsényi) je jiná otázka.
+
+
+.Subsection Těžší úlohy
+  label: ch-prostor-ulohy-navic-tezsi
+
+
+.Exercise:
+  title: 'Úloha 12.7 (dva druhy závorek v L)'
+  label: un-12-7
+
+  Nechť $D$ je jazyk správně uzávorkovaných výrazů se dvěma druhy závorek: nejmenší jazyk nad $\{(,),[,]\}$
+  s $\varepsilon\in D$ a $u,v\in D\Rightarrow(u)v\in D$ a $[u]v\in D$. Např. $([]())[]\in D$, ale $([)]\notin D$.
+  Popište deterministický stroj se vstupní páskou jen pro čtení, který rozhoduje $D$ v pracovním prostoru
+  $O(\log n)$, a dokažte jeho správnost.
+
+
+.Solution:
+
+  "Myšlenka.".notion Zásobník (obvyklé řešení) může mít hloubku $\Theta(n)$, ten si dovolit nemůžeme. Místo
+  toho pro každou otevírací závorku "dopočítáme".emphasize, kde je její párová závorka – stačí na to čítač
+  hloubky – a zkontrolujeme, že je stejného druhu. Mezivýsledky zapomínáme, prostor recyklujeme.
+
+
+  "Značení.".notion Pro $w=w_1\dots w_n$ nechť $h(k)$ je (počet otevíracích) $-$ (počet zavíracích) závorek
+  v $w_1\dots w_k$ "bez ohledu na druh".emphasize, $h(0)=0$. Pro otevírací závorku na pozici $i$ definujeme
+  "párovou pozici".emphasize $\mu(i)=\min\{\,j>i\mid h(j)=h(i-1)\,\}$.
+
+  .enumerate:
+
+    .item:
+
+      "Fáze 1 (tvar bez ohledu na druh).".notion Stroj z úlohy "12.4"#un-12-4 b), kde „(“ i „[“ počítáme jako
+      otevírací a „)“ i „]“ jako zavírací: ověří $h(k)\ge0$ pro všechna $k$ a $h(n)=0$, jinak zamítne.
+
+    .item:
+
+      "Fáze 2 (druhy).".notion Pro $i=1,2,\dots,n$ (čítač $i$): přesuň čtecí hlavu na pozici $i$ (hlavu na levý
+      okraj, do pomocného čítače $c$ zkopíruj $i$, posouvej doprava a odečítej, dokud $c\neq0$). Je-li $w_i$
+      zavírací, pokračuj dalším $i$. Je-li otevírací, zapamatuj si ve stavu její druh, nastav $d:=1$ a jdi
+      doprava: otevírací závorka $d:=d+1$, zavírací $d:=d-1$, dokud není $d=0$. Hlava teď stojí na $\mu(i)$
+      (po fázi 1 tato pozice existuje). Není-li tam zavírací závorka téhož druhu, zamítni.
+
+    .item:
+
+      Prošla-li všechna $i$, přijmi.
+
+
+  Pro $i$ s otevírací závorkou je $h(i)=h(i-1)+1$ a $h$ se mění po $\pm1$, takže čítač $d$ na pozici $j$ má
+  hodnotu $h(j)-h(i-1)$ a poprvé klesne na $0$ právě v $\mu(i)$; mezi $i$ a $\mu(i)$ je $h>h(i-1)$
+  a $w_{\mu(i)}$ je zavírací. Fáze 1 zaručí, že $\mu(i)$ existuje ($h(n)=0\le h(i-1)$).
+
+
+  .centered:
+
+    !tikz:
+      filename: 12z-ulohy-navic-05
+      options: 'x=1cm,y=1cm'
+
+      \node[cell,font=\ttfamily] (a1) at (0.7,0) {(}; \node[cell,font=\ttfamily] (a2) at (1.4,0) {[}; \node[cell,font=\ttfamily] (a3) at (2.1,0) {]}; \node[cell,font=\ttfamily] (a4) at (2.8,0) {(}; \node[cell,font=\ttfamily] (a5) at (3.5,0) {)}; \node[cell,font=\ttfamily] (a6) at (4.2,0) {)}; \node[cell,font=\ttfamily] (a7) at (4.9,0) {[}; \node[cell,font=\ttfamily] (a8) at (5.6,0) {]};
+      \foreach \hh [count=\i] in {1,2,1,2,1,0,1,0} \node[font=\scriptsize,gr] at ({0.7*\i},-0.65) {\hh};
+      \node[font=\scriptsize,gr,anchor=east] at (0.3,-0.65) {$h$:};
+      \foreach \i in {1,...,8} \node[font=\tiny,black!50] at ({0.7*\i},0.55) {\i};
+      \draw[thick,acc!80!black] (a1.north) ++(0,0.3) to[out=70,in=110] ($(a6.north)+(0,0.3)$);
+      \draw[thick,acc!80!black] (a2.north) ++(0,0.3) to[out=70,in=110] ($(a3.north)+(0,0.3)$);
+      \draw[thick,acc!80!black] (a4.north) ++(0,0.3) to[out=70,in=110] ($(a5.north)+(0,0.3)$);
+      \draw[thick,acc!80!black] (a7.north) ++(0,0.3) to[out=70,in=110] ($(a8.north)+(0,0.3)$);
+      \node[font=\scriptsize,acc!70!black] at (3.15,-1.25) {$\mu(1)=6$, $\mu(2)=3$, $\mu(4)=5$, $\mu(7)=8$: druhy sedí};
+      \begin{scope}[xshift=7.4cm]
+        \node[cell,font=\ttfamily] (b1) at (0.7,0) {(}; \node[cell,font=\ttfamily] (b2) at (1.4,0) {[}; \node[cell,font=\ttfamily] (b3) at (2.1,0) {)}; \node[cell,font=\ttfamily] (b4) at (2.8,0) {]};
+        \foreach \hh [count=\i] in {1,2,1,0} \node[font=\scriptsize,gr] at ({0.7*\i},-0.65) {\hh};
+        \foreach \i in {1,...,4} \node[font=\tiny,black!50] at ({0.7*\i},0.55) {\i};
+        \draw[thick,rej] (b1.north) ++(0,0.3) to[out=70,in=110] ($(b4.north)+(0,0.3)$);
+        \draw[thick,rej] (b2.north) ++(0,0.3) to[out=70,in=110] ($(b3.north)+(0,0.3)$);
+        \node[font=\scriptsize,rej] at (1.75,-1.25) {$\mu(1)=4$: \texttt{(} proti \texttt{]} $\Rightarrow$ zamítni};
+      \end{scope}
+
+
+  Párové pozice $\mu(i)$ na slovech $([]())[]$ a $([)]$. Fáze 1 projde u obou ($h\ge0$, konec 0); slovo $([)]$
+  zamítne až fáze 2.
+
+
+  "Správnost: stroj přijme $\iff$ $w\in D$.".notion
+
+  .itemize:
+
+    .item:
+
+      ($\Leftarrow$) Indukcí podle pravidel. Pro $\varepsilon$ platí. Nechť $w=(u)v$ nebo $w=[u]v$ s $u,v\in D$.
+      Fáze 1 projde (jazyk bez ohledu na druhy je $L_2$ z úlohy "12.4"#un-12-4 a pravidla se přenesou).
+      V $w$ je $h=1+h_u\ge1$ uvnitř závorky a $h=0$ hned za ní, takže $\mu(1)=|u|+2$ a druh sedí. Pro otevírací
+      závorku uvnitř $u$ se $h$ liší od $h_u$ o konstantu 1 a $u$ se vrací na svou výšku 0 nejpozději na svém
+      konci, takže $\mu$ v $w$ je párová pozice v $u$ (posunutá o 1) a druhy sedí podle indukce. Pro $v$ je $h$
+      od pozice $|u|+2$ přesně $h_v$, párové pozice jsou tytéž. Fáze 2 projde.
+
+    .item:
+
+      ($\Rightarrow$) Silnou indukcí podle $|w|$. Pro $w=\varepsilon$ platí. Jinak je $w_1$ otevírací (fáze 1)
+      a $j=\mu(1)$ je první index s $h(j)=0$. Podle fáze 2 je $w_1w_j$ buď $()$, nebo $[]$. Položme
+      $u=w_2\dots w_{j-1}$, $v=w_{j+1}\dots w_n$. Stejně jako v úloze "12.4"#un-12-4 b) splňují $u$ i $v$
+      podmínky fáze 1. Pro otevírací závorku na pozici $i\in[2,j-1]$ je $h(i-1)\ge1=h(j-1)$, takže $\mu(i)\le j-1$
+      leží uvnitř $u$ a je to párová pozice v $u$; pro pozice v $v$ je $h$ totéž jako v $v$. Fáze 2 tedy projde
+      i pro $u$ a $v$, podle indukce $u,v\in D$ a $w=(u)v$ nebo $[u]v$ leží v $D$.
+
+
+  "Prostor.".notion Na pracovní pásce jsou čtyři binární čítače: $h$ (fáze 1), $i$, $c$ a $d$ (fáze 2), všechny
+  s hodnotou nejvýše $n+1$, tedy každý nejvýše $\lfloor\log_2(n+1)\rfloor+1$ bitů. Druh závorky a fáze jsou ve
+  stavu. Celkem $O(\log n)$, $D\in\LL$. Stroj vždy zastaví (každá smyčka je řízena čítačem), čas je
+  polynomiální, řádově $n^2\log n$.
+
+
+.Exercise:
+  title: 'Úloha 12.8 (vynucený literál ve 2-SAT)'
+  label: un-12-8
+
+  "(nad rámec přednášky)".emphasize Je dána formule $\varphi$ v 2-CNF a literál $\ell$. Říkáme, že $\ell$ je
+  "vynucený".emphasize, pokud $\ell=1$ v každém splňujícím ohodnocení $\varphi$ (u nesplnitelné $\varphi$ je vynucený
+  každý literál).
+
+  .enumerate:
+    type: a
+
+    .item:
+
+      Dokažte: je-li $\varphi$ splnitelná, je $\ell$ vynucený, právě když v $G_\varphi$ vede cesta $\lnot\ell\leadsto\ell$.
+
+    .item:
+
+      Ukažte, že problém „je $\ell$ vynucený?“ leží v $\NL$.
+
+    .item:
+
+      Které literály jsou vynucené ve formuli $\varphi$ z úlohy "12.2"#un-12-2?
+
+
+.Solution:
+
+  "a) ($\Leftarrow$)".notion Vede-li cesta $\lnot\ell\leadsto\ell$ a ohodnocení $\tau$ splňuje $\varphi$ s $\tau(\ell)=0$,
+  pak $\tau(\lnot\ell)=1$ a podle lemmatu .reference:lem-donuceni i $\tau(\ell)=1$ – spor. Tento směr platí
+  i bez předpokladu splnitelnosti.
+
+
+  "a) ($\Rightarrow$)".notion Obměnou: nechť $\varphi$ je splnitelná a cesta $\lnot\ell\leadsto\ell$ nevede. Ukážeme,
+  že $\varphi'=\varphi\land(\lnot\ell)$ je splnitelná; její splňující ohodnocení splňuje $\varphi$ a má $\ell=0$,
+  takže $\ell$ není vynucený. Jednoliterálová klauzule $(\lnot\ell)$ přidá do grafu jedinou hranu $\ell\to\lnot\ell$
+  (oddíl .reference:ch-prostor-implikacni-graf). "Pozorování:".notion vede-li v $G_{\varphi'}$ cesta $a\leadsto b$,
+  která novou hranu používá, pak v $G_\varphi$ vedou cesty $a\leadsto\ell$ (úsek před prvním použitím) a
+  $\lnot\ell\leadsto b$ (úsek po posledním použitím).
+
+
+  Předpokládejme pro spor, že $\varphi'$ je nesplnitelná. Podle věty .reference:thm-2sat existuje $y$ s cestami
+  $y\leadsto\lnot y$ a $\lnot y\leadsto y$ v $G_{\varphi'}$. Obě nemohou ležet v $G_\varphi$, protože $\varphi$ je
+  splnitelná. Rozebereme zbylé případy:
+
+  .itemize:
+
+    .item:
+
+      Obě cesty používají novou hranu: v $G_\varphi$ jsou $y\leadsto\ell$, $\lnot\ell\leadsto\lnot y$, $\lnot y\leadsto\ell$,
+      $\lnot\ell\leadsto y$; pak $\lnot\ell\leadsto y\leadsto\ell$ v $G_\varphi$.
+
+    .item:
+
+      Jen $y\leadsto\lnot y$ ji používá: v $G_\varphi$ jsou $y\leadsto\ell$, $\lnot\ell\leadsto\lnot y$ a $\lnot y\leadsto y$;
+      pak $\lnot\ell\leadsto\lnot y\leadsto y\leadsto\ell$.
+
+    .item:
+
+      Jen $\lnot y\leadsto y$ ji používá: v $G_\varphi$ jsou $\lnot y\leadsto\ell$, $\lnot\ell\leadsto y$ a $y\leadsto\lnot y$;
+      pak $\lnot\ell\leadsto y\leadsto\lnot y\leadsto\ell$.
+
+  Vždy vede v $G_\varphi$ cesta $\lnot\ell\leadsto\ell$, což je spor s předpokladem. Tedy $\varphi'$ je splnitelná.
+
+
+  "b)".notion Podle a) je $\ell$ vynucený, právě když $\varphi$ je nesplnitelná "nebo".emphasize vede cesta
+  $\lnot\ell\leadsto\ell$ (směr $\Leftarrow$ platí vždy, směr $\Rightarrow$ pro splnitelnou $\varphi$, a nesplnitelná
+  dává ANO). Nedeterministický algoritmus nejprve uhodne, kterou možnost ověří:
+
+  .itemize:
+
+    .item:
+
+      Nesplnitelnost: algoritmus pro $\prob{2-UNSAT}$ z oddílu .reference:ch-prostor-2-sat-je-v-nl (uhodni $x$, cesty
+      $x\leadsto\lnot x$ a $\lnot x\leadsto x$).
+
+    .item:
+
+      Cesta: uhodni cestu $\lnot\ell\leadsto\ell$ krok po kroku, pamatuj aktuální literál a počítadlo $\le2n$;
+      hranu $a\to b$ ověř ve vstupu (existuje klauzule $(\lnot a\lor b)$?).
+
+  Přijímající větev existuje, právě když platí aspoň jedna možnost. Pamatujeme konstantně mnoho literálů
+  a čítačů, každý $O(\log n)$ bitů, tedy problém je v $\NL$. Ověřovat zvlášť, že $\varphi$ je splnitelná,
+  nepotřebujeme.
+
+
+  "c)".notion Ve $\varphi$ z úlohy "12.2"#un-12-2 vedou cesty
+
+  .gather:
+
+    \lnot x_1\to x_4\to x_3\to x_1,\qquad
+    \lnot x_2\to\lnot x_1\to x_4\to x_3\to x_1\to x_2,\qquad
+    \lnot x_3\to\lnot x_4\to x_1\to x_2\to x_3,
+
+  takže $x_1,x_2,x_3$ jsou vynucené. Z $\lnot x_4$ se dostaneme jen do $\{\lnot x_4,x_1,x_2,x_3\}$ a z $x_4$ jen
+  do $\{x_4,x_3,x_1,x_2\}$, takže ani $x_4$, ani $\lnot x_4$ vynucený není. To souhlasí s b) úlohy
+  "12.2"#un-12-2: splňující ohodnocení jsou právě $(1,1,1,0)$ a $(1,1,1,1)$. Literály $\lnot x_1,\lnot x_2,\lnot x_3$
+  vynucené nejsou (cesta $x_i\leadsto\lnot x_i$ nevede, z $P$ se nikam nedostaneme).

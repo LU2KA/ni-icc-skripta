@@ -1,0 +1,115 @@
+.Section Deterministická časová hierarchie
+  label: ch-cas-deterministicka-casova-hierarchie
+
+
+.Definition:
+  title: 'Časová konstruovatelnost'
+  label: def-konstr
+
+  Funkce $f\colon\N\to\N$ je "časově konstruovatelná".notion, pokud existuje TS, který na vstupu
+  $1^n$ spočítá $f(n)$ v čase $c\cdot f(n)$ pro nějakou konstantu $c\in\N$.
+
+
+Všechny „rozumné“ funkce ($n^2$, $n\log n$, $2^n$, …) jsou časově konstruovatelné.
+
+
+.Theorem:
+  title: 'O časové hierarchii'
+  label: thm-hierarchie
+
+  Nechť $f,g$ jsou časově konstruovatelné a $f(n)\cdot\log f(n) = o(g(n))$. Pak
+
+  .equation:
+
+    \DTIME(f(n)) \subsetneq \DTIME(g(n)).
+
+  (Logaritmus je přesně cena simulace na univerzálním stroji, viz důsledek .reference:cor-uts.)
+
+
+.Concept:
+  title: 'Idea důkazu: diagonalizace s budíkem'
+
+  Sestrojíme stroj $D$, který na vstupu $\enc{M}$ nastaví budík na $g(n)$ kroků a simuluje $M$
+  na $\enc{M}$. Pokud $M$ stihne odpovědět, $D$ odpoví "opačně".emphasize; pokud budík zazvoní,
+  $D$ zamítne. $D$ běží v čase $O(g(n))$, ale liší se od každého stroje pracujícího v čase $f(n)$
+  (ten se díky $f\log f=o(g)$ do budíku vejde) – stejně jako $\prob{UC}$ na diagonále v obr. .reference:fig-diag.
+  Schéma stroje $D$ je na obr. .reference:fig-cas-stroj-d.
+
+
+.Figure:
+  label: fig-cas-stroj-d
+
+  !tikz:
+    filename: 03e-casova-hierarchie-02
+    options: 'node distance=6mm and 9mm'
+
+    \node[blok] (in) {vstup $w=\enc{M}$\\ $n=|w|$};
+    \node[blokd,right=of in] (bud) {spočítej $g(n)$\\ a nastav budík\\ \scriptsize(konstruovatelnost)};
+    \node[blokd,right=of bud] (sim) {$U$ simuluje\\ $M$ na $\enc{M}$};
+    \node[blokr,right=30mm of sim,yshift=13mm] (o1) {$D$ zamítne};
+    \node[bloka,right=30mm of sim] (o2) {$D$ přijme};
+    \node[blokr,right=30mm of sim,yshift=-13mm] (o3) {$D$ zamítne};
+    \draw[flow] (in)--(bud);
+    \draw[flow] (bud)--(sim);
+    \coordinate (j) at ($(sim.east)+(5mm,0)$);
+    \draw[flow] (sim.east) -- (j) |- node[lab,above,pos=0.75]{$M$ přijal} (o1.west);
+    \draw[flow] (j) -- node[lab,above,pos=0.6]{$M$ zamítl} (o2.west);
+    \draw[flow] (j) |- node[lab,above,pos=0.75]{budík zazvonil} (o3.west);
+    \node[note,below=7mm of bud,anchor=north west,xshift=-20mm,align=left] {$D$ běží v čase $O(g(n))$ díky budíku. Pracuje-li $M$ v čase $f$, stojí simulace\\ $O(f(n)\log f(n))=o(g(n))$, takže se (pro dost dlouhý kód $\enc{M}$) do budíku\\ vejde a $D(\enc{M})\neq M(\enc{M})$.};
+
+  .caption:
+
+    Stroj $D$ z důkazu věty o časové hierarchii. "Všimni si:".emphasize větve „$M$ přijal“ a „$M$ zamítl“ jsou
+    přesně negace diagonály z obr. .reference:fig-diag, budík jen zaručí, že $D$ sám leží v $\DTIME(g(n))$.
+    Proč stačí „dost dlouhý kód“: každý stroj má nekonečně mnoho zápisů (lze přidat nepoužité stavy),
+    takže pro velké $n$ už se konstanta simulace neprojeví "(nad rámec přednášky)".emphasize.
+
+
+.Figure:
+  label: fig-cas-hierarchie
+
+  !tikz:
+    filename: 03e-casova-hierarchie-01
+
+    \foreach \r/\c/\t in {3.1/defc!5/{$\DTIME(2^{n^2})$},2.4/defc!10/{$\DTIME(2^{n})$},
+                          1.7/exc!8/{$\DTIME(n^3)$},1.1/exc!14/{$\DTIME(n^2)$},0.55/exc!22/{$\DTIME(n)$}} {
+       \fill[\c,draw=black!40] (0,0) ellipse ({1.7*\r} and \r);
+       \node[font=\scriptsize] at (0,\r-0.25) {\t};}
+    \draw[exc!70!black,very thick,dashed] (0,0) ellipse ({1.7*1.95} and 1.95);
+    \node[font=\scriptsize\bfseries,exc!70!black,fill=white,inner sep=1pt] at (2.3,-1.35) {\PP};
+    \node[font=\scriptsize\bfseries,defc,fill=white,inner sep=1pt] at (4.6,-1.6) {\EXP};
+
+  .caption:
+
+    Každé inkluze je ostrá: s asymptoticky víc časem rozhodneme striktně víc jazyků.
+
+
+.Corollary:
+  title: '$\PP\subsetneq\EXP$'
+  label: cor-pexp
+
+  Pro $f(n)=n^d$ a $g(n)=2^{n^{d+1}}$ dostaneme $\DTIME(n^d)\subsetneq\DTIME(2^{n^{d+1}})$.
+  Sjednocením přes všechna $d$ plyne $\PP\subsetneq\EXP$ – jedna z mála "bezpodmínečných".emphasize
+  separací, které umíme dokázat.
+
+
+.Remark:
+  title: 'Co si odnést'
+
+  .itemize:
+
+    .item:
+
+      Časová složitost = počet kroků TS v nejhorším případě.
+
+    .item:
+
+      Díky lineárnímu zrychlení ignorujeme multiplikativní konstanty a píšeme $O(\cdot)$.
+
+    .item:
+
+      Třídy $\PP=\bigcup_d\DTIME(n^d)$ a $\EXP=\bigcup_d\DTIME(2^{n^d})$; $\prob{TSP}$ hrubou silou leží v $\EXP$.
+
+    .item:
+
+      Věta o časové hierarchii (diagonalizace s budíkem) dává bezpodmínečně $\PP\subsetneq\EXP$.

@@ -1,0 +1,146 @@
+% GENEROVANO z ../skripta/preamble.tex a kapitoly/makra.tex -- globalni styly a makra obrazku
+% ---------- TikZ styly ----------
+\tikzset{
+  >={Stealth[round]},
+  % paska Turingova stroje
+  cell/.style={draw=black!70,minimum width=7mm,minimum height=7mm,inner sep=0pt,
+    font=\small\ttfamily,anchor=west,fill=white},
+  cellhl/.style={cell,fill=hl},
+  cellgr/.style={cell,fill=black!8,text=black!50},
+  headarrow/.style={-{Triangle[length=2.2mm,width=2.4mm]},thick,draw=warnc,fill=warnc},
+  % automaty / stavove diagramy
+  st/.style={state,minimum size=10mm,inner sep=1pt,font=\small,draw=defc!80!black,
+    fill=defc!6,thick},
+  stacc/.style={st,accepting,draw=acc,fill=acc!10},
+  strej/.style={st,draw=rej,fill=rej!8},
+  tr/.style={->,thick,draw=black!75},
+  lab/.style={font=\scriptsize,fill=white,inner sep=1pt},
+  % grafy
+  v/.style={circle,draw=black!80,fill=white,thick,minimum size=6.5mm,inner sep=0pt,font=\small},
+  vs/.style={circle,draw=black!80,fill=white,thick,minimum size=2.2mm,inner sep=0pt},
+  vsel/.style={v,fill=acc!25,draw=acc!80!black,very thick},
+  vbad/.style={v,fill=rej!15,draw=rej,very thick},
+  e/.style={draw=black!70,thick},
+  esel/.style={draw=acc!80!black,line width=2pt},
+  ebad/.style={draw=rej,line width=1.6pt,dashed},
+  efaint/.style={draw=black!20,thin},
+  wt/.style={font=\scriptsize,fill=white,inner sep=1pt},
+  % obecne bloky / krabicky
+  blok/.style={draw,rounded corners=3pt,thick,align=center,inner sep=5pt,font=\small,fill=white},
+  blokd/.style={blok,draw=defc,fill=defc!7},
+  bloka/.style={blok,draw=acc,fill=acc!8},
+  blokr/.style={blok,draw=rej,fill=rej!7},
+  bloki/.style={blok,draw=intc,fill=intc!10},
+  flow/.style={->,thick,draw=black!70},
+  note/.style={font=\footnotesize\itshape,text=black!65,align=center},
+}
+
+\makeatletter
+% \tmtape{x}{y}{seznam symbolu}{index hlavy (1..)}  -- vykresli pasku
+% symbol "_" se vykresli jako blank; "#" jako krizek
+\def\tm@blank{_}\def\tm@sharp{*}
+\newcommand{\tmsym}[1]{\edef\tm@tmp{#1}%
+  \ifx\tm@tmp\tm@blank\ensuremath{\sqcup}\else\ifx\tm@tmp\tm@sharp\ensuremath{\sharp}\else#1\fi\fi}
+\newcommand{\tmtape}[4]{%
+  \foreach \s [count=\i] in {#3} {
+    \ifnum\i=#4
+      \node[cellhl] at ({#1+(\i-1)*0.7},#2) {\tmsym{\s}};
+    \else
+      \node[cell] at ({#1+(\i-1)*0.7},#2) {\tmsym{\s}};
+    \fi
+  }
+  \ifnum#4>0
+    \draw[headarrow] ({#1+(#4-1)*0.7+0.35},{#2-0.85}) -- ({#1+(#4-1)*0.7+0.35},{#2-0.4});
+  \fi
+}
+\makeatother
+
+
+% Sdilena makra kapitol o NP-uplnosti (prefixy chR = dlazdice/grafy, chZ = gadgety)
+% ---------- Makra teto kapitoly (prefix chR) ----------
+\definecolor{chRr}{HTML}{FF8080}  % cervena
+\definecolor{chRg}{HTML}{D9D9D9}  % seda
+\definecolor{chRb}{HTML}{8080FF}  % modra
+\definecolor{chRz}{HTML}{80F080}  % zelena
+\definecolor{chRo}{HTML}{FFBF80}  % oranzova
+\definecolor{chRy}{HTML}{FFFFA0}  % zluta
+% Wangova dlazdice: \chRtile{x}{y}{horni}{pravy}{spodni}{levy}{popisek}; (x,y) = levy dolni roh
+\newcommand{\chRtile}[7]{%
+  \begin{scope}[shift={(#1,#2)}]
+    \fill[#3] (0,1)--(1,1)--(0.5,0.5)--cycle;
+    \fill[#4] (1,1)--(1,0)--(0.5,0.5)--cycle;
+    \fill[#5] (0,0)--(1,0)--(0.5,0.5)--cycle;
+    \fill[#6] (0,0)--(0,1)--(0.5,0.5)--cycle;
+    \draw[black!80] (0,0) rectangle (1,1) (0,0)--(1,1) (0,1)--(1,0);
+    \node[circle,fill=white,inner sep=0.6pt,minimum size=3.6mm,font=\scriptsize\sffamily\bfseries] at (0.5,0.5) {#7};
+  \end{scope}}
+\newcommand{\chRA}[2]{\chRtile{#1}{#2}{chRr}{chRg}{chRb}{chRz}{A}}
+\newcommand{\chRB}[2]{\chRtile{#1}{#2}{chRr}{chRo}{chRr}{chRg}{B}}
+\newcommand{\chRC}[2]{\chRtile{#1}{#2}{chRr}{chRy}{chRg}{chRo}{C}}
+\newcommand{\chRD}[2]{\chRtile{#1}{#2}{chRb}{chRg}{chRb}{chRz}{D}}
+\newcommand{\chRE}[2]{\chRtile{#1}{#2}{chRg}{chRy}{chRg}{chRo}{E}}
+\newcommand{\chRF}[2]{\chRtile{#1}{#2}{chRr}{chRo}{chRb}{chRg}{F}}
+\newcommand{\chRG}[2]{\chRtile{#1}{#2}{chRg}{chRy}{chRb}{chRo}{G}}
+\newcommand{\chRH}[2]{\chRtile{#1}{#2}{chRr}{chRo}{chRg}{chRg}{H}}
+% Popisna dlazdice (text v trojuhelnicich): \chRltile{x}{y}{horni}{pravy}{spodni}{levy}{barva H}{barva P}{barva S}{barva L}
+\newcommand{\chRltile}[6]{%
+  \begin{scope}[shift={(#1,#2)}]
+    \draw[black!80,fill=white] (0,0) rectangle (2,2);
+    \draw[black!50] (0,0)--(2,2) (0,2)--(2,0);
+    \node[font=\scriptsize] at (1,1.6) {#3};
+    \node[font=\scriptsize] at (1.6,1) {#4};
+    \node[font=\scriptsize] at (1,0.4) {#5};
+    \node[font=\scriptsize] at (0.4,1) {#6};
+  \end{scope}}
+\tikzset{
+  chRlit/.style={v,minimum size=8.5mm,font=\scriptsize},
+  chRlitsel/.style={chRlit,fill=acc!30,draw=acc!80!black,very thick},
+  chRconf/.style={draw=rej!80,dashed,thick},
+}
+
+% ---------- lokalni makra a styly kapitoly ----------
+\colorlet{chZT}{tT!75}
+\colorlet{chZF}{tF!75}
+\colorlet{chZB}{tB!70}
+\colorlet{chZN}{white}
+\colorlet{chZo}{intc!65}
+\colorlet{chZc}{cyan!45}
+\colorlet{chZp}{thmc!40}
+\tikzset{
+  chZv/.style={circle,draw=black!80,thick,minimum size=3.4mm,inner sep=0pt},
+  chZlv/.style={circle,draw=black!80,thick,minimum size=7mm,inner sep=0pt,font=\small},
+  chZside/.style={rounded corners=6pt,draw=none},
+  chZag/.style={circle,draw=black,thick,minimum size=4.6mm,inner sep=0pt,font=\scriptsize\bfseries},
+  chZset/.style={rounded corners=2pt,opacity=0.35},
+}
+% male prasatko: barvy l1 l2 l3 a b c d e o (T/F/B/N)
+\newcommand{\chZpig}[9]{%
+  \node[chZv,fill=chZ#1] (l1) at (0,2.5) {};
+  \node[chZv,fill=chZ#2] (l2) at (1.6,2.5) {};
+  \node[chZv,fill=chZ#3] (l3) at (2.6,2.5) {};
+  \node[chZv,fill=chZ#4] (a) at (0.45,1.85) {};
+  \node[chZv,fill=chZ#5] (b) at (1.15,1.85) {};
+  \node[chZv,fill=chZ#6] (c) at (0.8,1.3) {};
+  \node[chZv,fill=chZ#7] (d) at (1.45,0.7) {};
+  \node[chZv,fill=chZ#8] (e) at (2.15,0.7) {};
+  \node[chZv,fill=chZ#9] (o) at (1.8,0.15) {};
+  \draw[e] (l1)--(a) (l2)--(b) (a)--(b) (a)--(c) (b)--(c) (c)--(d) (l3)--(e) (d)--(e) (d)--(o) (e)--(o);}
+% gadget krizeni: 13 barev v poradi C,N,E,S,W,NW,NE,SE,SW,y,x,x',y'
+\makeatletter
+\newcommand{\chZcross}[2][]{%
+  \foreach \c [count=\i] in {#2} {\expandafter\xdef\csname chZcc\romannumeral\i\endcsname{\c}}%
+  \begin{scope}[#1]
+  \foreach \n/\p/\k in {C/{(0,0)}/i,N/{(0,1)}/ii,E/{(1,0)}/iii,S/{(0,-1)}/iv,W/{(-1,0)}/v,
+     NW/{(-1,1)}/vi,NE/{(1,1)}/vii,SE/{(1,-1)}/viii,SW/{(-1,-1)}/ix,
+     y/{(0,2.6)}/x,x/{(-2.6,0)}/xi,xp/{(2.6,0)}/xii,yp/{(0,-2.6)}/xiii}
+     {\node[chZv,minimum size=4mm,fill=\csname chZcc\k\endcsname] (\n) at \p {};}
+  \foreach \u/\w in {C/N,C/E,C/S,C/W,N/E,E/S,S/W,W/N,NW/y,NW/x,NW/N,NE/y,NE/xp,NE/E,
+     SE/xp,SE/yp,SE/S,SW/x,SW/yp,SW/W,y/N,x/W,xp/E,yp/S}
+     {\draw[e] (\u)--(\w);}
+  \end{scope}}
+\makeatother
+
+% odkazy uvnitr obrazku se na webu nevyhodnocuji (obrazek se preklada samostatne)
+\providecommand{\hyperlink}[2]{#2}
+\providecommand{\hyperref}[2][]{#2}
+\providecommand{\hypertarget}[2]{#2}

@@ -1,0 +1,48 @@
+.Section K čemu je to v praxi dobré
+  label: ch-redukce-k-cemu-je-to-v-praxi-dobre
+
+
+Šéf vám zadá problém a chce rychlý algoritmus. Vy ho nedokážete najít. Co teď?
+
+
+.Figure:
+  label: fig-redukce-garey-johnson
+
+  !tikz:
+    filename: 05c-k-cemu-je-to-v-praxi-dobre-01
+    options: 'node distance=4mm'
+
+    \node[blokr,text width=40mm,align=flush center] (a) {„Nedokážu najít\\ rychlý algoritmus.\\ Asi jsem hloupý.“};
+    \node[blokr,text width=40mm,align=flush center,right=of a] (b) {„Rychlý algoritmus neexistuje.“\\ \footnotesize(to neumí dokázat nikdo)};
+    \node[bloka,text width=44mm,align=flush center,right=of b] (c) {„Rychlý algoritmus neumím najít, ale nedokážou to ani všichni tihle slavní lidé.“\\ \footnotesize(problém je NP-úplný)};
+
+  .caption:
+
+    Klasická ilustrace z knihy Garey & Johnson. Důkaz NP-úplnosti nás zachrání před
+    marným hledáním a můžeme rovnou zkusit jiný přístup (2. polovina semestru).
+
+
+.Remark:
+  title: 'Co si odnést'
+
+  .itemize:
+
+    .item:
+
+      "Polynomiální redukce".notion $L\redp Q$: $x\in L\iff f(x)\in Q$, $f$ spočitatelná v polynomiálním čase.
+
+    .item:
+
+      Redukce je tranzitivní a přenáší řešitelnost v $\PP$ (a naopak neřešitelnost).
+
+    .item:
+
+      "NP-těžký".notion = všechno z $\NP$ se na něj redukuje; "NP-úplný".notion = NP-těžký a v $\NP$. Polynomiální algoritmus pro jediný NP-úplný problém dává $\PP=\NP$.
+
+    .item:
+
+      $\prob{UNP}$ je NP-úplný přímo z definice – pozor na unárně zapsaný počet kroků.
+
+    .item:
+
+      Důkaz NP-úplnosti v praxi šetří čas: místo hledání rychlého algoritmu sáhneme po jiném přístupu.

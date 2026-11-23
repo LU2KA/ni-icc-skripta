@@ -1,0 +1,34 @@
+.Section Shrnutí kapitoly
+  label: ch-cisla-shrnuti-kapitoly
+
+
+.Remark:
+  title: 'Co si odnést'
+
+  .itemize:
+
+    .item:
+
+      "Sekvenční problémy:".notion $\prob{3-SAT}\redp\prob{DHP}$ – řady proměnných (směr = hodnota) a odskoky
+      do klauzulí; klíčové je lemma o odskoku. Lokálními úpravami: UHP (štěpení vrcholů), HC (hrana $T\to S$),
+      TSP (váhy $\{1,2\}$), Longest Path ($k=|V|-1$).
+
+    .item:
+
+      "ILP:".notion stačí požadovat celočíselné řešení soustavy lineárních nerovnic; LP je přitom polynomiální.
+      VC, 3-SAT i 3-Coloring se do ILP přepíšou přímočaře.
+
+    .item:
+
+      "Sítě:".notion Steiner Tree je těžký, jakmile je terminálů mnoho; extrémy (cesta, kostra) jsou snadné.
+      NP-úplný je redukcí z VC.
+
+    .item:
+
+      "Čísla:".notion Subset Sum (z 1-in-3 SAT, základ 4), Partition, Knapsack jsou "slabě".emphasize NP-úplné
+      (pseudopolynomiální DP $O(nT)$). TSP, 3-Partition a Bin Packing jsou "silně".emphasize NP-úplné.
+
+    .item:
+
+      Čas měříme vůči "délce zápisu".emphasize, ne hodnotě čísel. Převádět čísla na strukturu smíme jen při redukci ze
+      silně NP-těžkého problému.

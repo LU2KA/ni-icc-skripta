@@ -1,0 +1,866 @@
+.Section Úlohy navíc
+  label: ch-x3c-ulohy-navic
+
+
+Úlohy procvičují podmínku „přesně jednou“: řešení konkrétních instancí $\prob{1-in-3 SAT}$ a $\prob{X3C}$
+(oddíly .reference:ch-x3c-1-in-3-sat a .reference:ch-x3c-exact-cover), běh redukce z oddílu .reference:ch-x3c-3-sat-x3c
+a nové redukce z $\prob{X3C}$ a $\prob{1-in-3 SAT}$ na příbuzné problémy. Poslední úloha ukazuje, kde těžkost
+$\prob{X3C}$ končí.
+
+
+.Warning:
+  title: 'Neoficiální úlohy'
+
+  Úlohy v tomto oddílu "nejsou".notion oficiální zadání předmětu. Jsou to procvičovací úlohy navíc k látce kapitoly;
+  všechna čísla a řešení konkrétních instancí jsou spočítaná programem a každá redukce (i algoritmus z úlohy 10.8)
+  byla porovnána s řešením hrubou silou na všech, resp. na tisících náhodných malých instancích (s odpovědí $\ANO$
+  i $\NE$); samotné důkazy jsou psané ručně.
+
+
+.Subsection Rozcvička
+  label: ch-x3c-ulohy-navic-rozcvicka
+
+
+.Exercise:
+  title: 'Úloha 10.1 (konkrétní instance)'
+  label: un-10-1
+
+  .enumerate:
+    type: a
+
+    .item:
+
+      Najděte všechna ohodnocení, při nichž je v každé klauzuli formule
+      $\Phi_1=(x_1\lor x_2\lor x_3)\land(x_2\lor x_3\lor x_4)\land(\lnot x_1\lor x_3\lor x_4)\land(\lnot x_1\lor x_2\lor x_4)$
+      pravdivý přesně jeden literál.
+
+    .item:
+
+      Ukažte, že pozitivní formule
+      $\Phi_2=(x_1\lor x_2\lor x_3)\land(x_1\lor x_2\lor x_4)\land(x_1\lor x_3\lor x_4)\land(x_2\lor x_3\lor x_4)$
+      je splnitelná, ale není splnitelná ve smyslu 1-in-3 SAT.
+
+    .item:
+
+      Najděte všechna exaktní pokrytí instance $\prob{X3C}$ s univerzem $U=\{1,\dots,9\}$ ($q=3$) a množinami
+      $S_1=\{1,2,3\}$, $S_2=\{1,4,7\}$, $S_3=\{2,5,8\}$, $S_4=\{4,5,6\}$, $S_5=\{3,6,9\}$, $S_6=\{7,8,9\}$,
+      $S_7=\{2,4,9\}$.
+
+
+.Solution:
+
+  "a)".notion Rozebereme hodnotu $x_1$.
+
+  .itemize:
+
+    .item:
+
+      $x_1=0$: ve třetí a čtvrté klauzuli je pravdivý literál $\lnot x_1$, ostatní literály tam proto musí být
+      nepravdivé: $x_3=x_4=0$ a $x_2=x_4=0$. Pak je v první klauzuli $(x_1\lor x_2\lor x_3)$ všechno nepravdivé – spor.
+
+    .item:
+
+      $x_1=1$: v první klauzuli je pravdivé $x_1$, tedy $x_2=x_3=0$. Druhá klauzule $(x_2\lor x_3\lor x_4)$ pak
+      vynutí $x_4=1$. Kontrola: třetí klauzule má hodnoty $(0,0,1)$, čtvrtá $(0,0,1)$ – přesně jedna jednička.
+
+  Jediné 1-in-3 ohodnocení je $x_1=1$, $x_2=0$, $x_3=0$, $x_4=1$.
+
+
+  "b)".notion Ohodnocení „všechno 1“ splní každou klauzuli v obyčejném smyslu, $\Phi_2$ je splnitelná. Kdyby
+  existovalo 1-in-3 ohodnocení s $t$ pravdivými proměnnými, sečteme počty pravdivých literálů přes všechny klauzule
+  dvěma způsoby. Po klauzulích: každá má přesně jeden, součet je $4$. Po proměnných: každá proměnná leží v přesně
+  třech klauzulích, součet je $3t$. Rovnice $3t=4$ nemá celočíselné řešení – spor. (Ověřeno i probráním všech 16
+  ohodnocení.)
+
+
+  "c)".notion Prvek $1$ leží jen v $S_1$ a $S_2$, jedna z nich v pokrytí být musí.
+
+  .itemize:
+
+    .item:
+
+      $S_1=\{1,2,3\}$ vybraná: prvek $4$ leží v $S_2$ (obsahuje $1$), $S_4$ a $S_7$ (obsahuje $2$); zbývá $S_4=\{4,5,6\}$.
+      Zbylé prvky $\{7,8,9\}$ pokryje jen $S_6$. Pokrytí $\{S_1,S_4,S_6\}$.
+
+    .item:
+
+      $S_2=\{1,4,7\}$ vybraná: prvek $2$ leží v $S_1$ (obsahuje $1$), $S_3$ a $S_7$ (obsahuje $4$); zbývá $S_3=\{2,5,8\}$.
+      Zbylé prvky $\{3,6,9\}$ pokryje jen $S_5$. Pokrytí $\{S_2,S_3,S_5\}$.
+
+  Instance má právě dvě exaktní pokrytí; $S_7$ nepoužije žádné z nich.
+
+
+  .centered:
+
+    !tikz:
+      filename: 10z-ulohy-navic-01
+
+      \foreach \pan/\xs in {0/0,1/5.6} {
+        \begin{scope}[xshift=\xs cm]
+          \foreach \r in {0,1,2} {
+            \ifnum\pan=0
+              \draw[exc,very thick,rounded corners=8pt,fill=exc!15] (-0.45,0.45-\r*1.2) rectangle (2.85,-0.45-\r*1.2);
+            \else
+              \draw[exc!45,dashed,rounded corners=8pt] (-0.45,0.45-\r*1.2) rectangle (2.85,-0.45-\r*1.2);
+            \fi}
+          \foreach \c in {0,1,2} {
+            \ifnum\pan=1
+              \draw[defc,very thick,rounded corners=8pt,fill=defc!12] (\c*1.2-0.38,0.38) rectangle (\c*1.2+0.38,-2.78);
+            \else
+              \draw[defc!45,dashed,rounded corners=8pt] (\c*1.2-0.38,0.38) rectangle (\c*1.2+0.38,-2.78);
+            \fi}
+          \draw[rej,dashed,thick] (1.2,0)--(0,-1.2)--(2.4,-2.4)--cycle;
+          \foreach \k in {1,...,9} {
+            \pgfmathtruncatemacro{\c}{mod(\k-1,3)}
+            \pgfmathtruncatemacro{\r}{(\k-1)/3}
+            \node[v] at (\c*1.2,-\r*1.2) {\k};}
+        \end{scope}}
+      \foreach \r/\s in {0/1,1/4,2/6} \node[font=\small,exc!80!black,anchor=west] at (2.95,-\r*1.2) {$S_\s$};
+      \foreach \c/\s in {0/2,1/3,2/5} \node[font=\small,defc] at (5.6+\c*1.2,0.75) {$S_\s$};
+      \node[font=\small,rej,anchor=west] at (8.4,-1.8) {$S_7$};
+      \node[font=\small] at (1.2,-3.4) {pokrytí $\{S_1,S_4,S_6\}$};
+      \node[font=\small] at (6.8,-3.4) {pokrytí $\{S_2,S_3,S_5\}$};
+
+
+  Instance c) jako hypergraf: prvky v mřížce $3\times3$, řádky jsou $S_1,S_4,S_6$, sloupce $S_2,S_3,S_5$, čárkovaný
+  trojúhelník je $S_7=\{2,4,9\}$. "Všimni si:".emphasize $S_7$ se protíná se $S_1$ i se $S_2$, takže vedle ní nelze
+  pokrýt prvek $1$.
+
+
+.Exercise:
+  title: 'Úloha 10.2 ($\prob{3-SAT}\redp\prob{X3C}$ v akci)'
+  label: un-10-2
+
+  Na formuli $\Phi=(x_1\lor\lnot x_2\lor x_3)\land(\lnot x_1\lor x_2\lor x_3)$ ($n=3$, $m=2$) použijte redukci
+  "$\prob{3-SAT}\redp\prob{X3C}$"#red-x3c z oddílu .reference:ch-x3c-3-sat-x3c (cyklus délky $2m$, úklid
+  s $K=m(n-1)$ dvojicemi).
+
+  .enumerate:
+    type: a
+
+    .item:
+
+      Určete $|U|$, počet množin v $\mathcal S$ (zvlášť podle druhu) a počet $q$ množin pokrytí.
+
+    .item:
+
+      Pro ohodnocení $x_1=1$, $x_2=1$, $x_3=0$ vypište jedno exaktní pokrytí.
+
+    .item:
+
+      Kolik exaktních pokrytí odpovídá tomuto ohodnocení? Kolik exaktních pokrytí má instance celkem?
+
+
+.Solution:
+
+  "a)".notion Každá proměnná $x_i$ má cyklus $v_{i,1},\dots,v_{i,4}$ a literálové vrcholy $p^T_{i,1},p^T_{i,2},p^F_{i,1},p^F_{i,2}$,
+  tedy $8$ prvků, celkem $24$. Klauzule přidají $c^1_1,c^2_1,c^1_2,c^2_2$, tedy $4$ prvky. Úklid má $K=m(n-1)=4$
+  dvojice $g^1_k,g^2_k$, tedy $8$ prvků. Celkem $|U|=24+4+8=36=6nm$ a $q=|U|/3=12$.
+
+
+  Množiny gadgetu proměnné ($2m=4$ na proměnnou, celkem $12$):
+
+  .equation:
+
+    T_{i,1}=\{v_{i,1},v_{i,2},p^F_{i,1}\},\quad F_{i,1}=\{v_{i,2},v_{i,3},p^T_{i,1}\},\quad
+    T_{i,2}=\{v_{i,3},v_{i,4},p^F_{i,2}\},\quad F_{i,2}=\{v_{i,4},v_{i,1},p^T_{i,2}\}.
+
+  Klauzulové množiny ($3m=6$): pro $C_1$ jsou to $\{c^1_1,c^2_1,p^T_{1,1}\}$, $\{c^1_1,c^2_1,p^F_{2,1}\}$,
+  $\{c^1_1,c^2_1,p^T_{3,1}\}$, pro $C_2$ $\{c^1_2,c^2_2,p^F_{1,2}\}$, $\{c^1_2,c^2_2,p^T_{2,2}\}$, $\{c^1_2,c^2_2,p^T_{3,2}\}$.
+  Úklidové množiny $\{g^1_k,g^2_k,p\}$ pro každou z $K=4$ dvojic a každý z $2nm=12$ literálových vrcholů: $48$.
+  Celkem $|\mathcal S|=12+6+48=66$.
+
+
+  "b)".notion $x_1=x_2=1$: vezmeme $T_{1,1},T_{1,2},T_{2,1},T_{2,2}$; $x_3=0$: vezmeme $F_{3,1},F_{3,2}$. Volné zůstanou
+  $p^T_{1,1},p^T_{1,2},p^T_{2,1},p^T_{2,2},p^F_{3,1},p^F_{3,2}$ ($nm=6$ vrcholů). V $C_1$ je pravdivý jen literál $x_1$
+  ($\lnot x_2$ i $x_3$ jsou nepravdivé), vezmeme $\{c^1_1,c^2_1,p^T_{1,1}\}$. V $C_2$ je pravdivý jen $x_2$, vezmeme
+  $\{c^1_2,c^2_2,p^T_{2,2}\}$. Zbudou $p^T_{1,2},p^T_{2,1},p^F_{3,1},p^F_{3,2}$ – přesně $K=4$ vrcholy, uklidíme je množinami
+  $\{g^1_1,g^2_1,p^T_{1,2}\}$, $\{g^1_2,g^2_2,p^T_{2,1}\}$, $\{g^1_3,g^2_3,p^F_{3,1}\}$, $\{g^1_4,g^2_4,p^F_{3,2}\}$.
+  Celkem $6+2+4=12=q$ množin, každý prvek je pokryt právě jednou.
+
+
+  .centered:
+
+    !tikz:
+      filename: 10z-ulohy-navic-02
+
+      \begin{scope}
+        \chXcycq{1/s,2/u,3/s,4/g}{1}
+        \node[font=\small] at (0,2.75) {$x_1=1$};
+      \end{scope}
+      \begin{scope}[xshift=5cm]
+        \chXcycq{1/s,2/g,3/s,4/u}{2}
+        \node[font=\small] at (0,2.75) {$x_2=1$};
+      \end{scope}
+      \begin{scope}[xshift=10cm]
+        \chXcycq{1/g,2/s,3/g,4/s}{3}
+        \node[font=\small] at (0,2.75) {$x_3=0$};
+      \end{scope}
+      \node[blok,draw=thmc,fill=thmc!8] (C1) at (0.6,-3.4) {$C_1$: $\{c^1_1,c^2_1,p^T_{1,1}\}$};
+      \node[blok,draw=thmc,fill=thmc!8] (C2) at (4.4,-3.4) {$C_2$: $\{c^1_2,c^2_2,p^T_{2,2}\}$};
+      \draw[thmc,very thick] (C1.north)--(G1Q2);
+      \draw[thmc,very thick] (C2.north)--(G2Q4);
+      \node[note,text width=42mm] at (10,-3.4) {žluté vrcholy ($K=4$) pokryjí\\ dvojice $g^1_k,g^2_k$ (úklid)};
+
+
+  Pokrytí z části b). Vybrané trojice gadgetů jsou vybarvené (zeleně $T$, červeně $F$), šedé literálové vrcholy
+  spotřebovaly gadgety, fialové použijí klauzule a žluté zbudou na úklid.
+
+
+  "c)".notion Podle lemmatu .reference:lem-x3c2 určuje každé exaktní pokrytí ohodnocení a gadgety jsou jím určené
+  jednoznačně. Pro pevné splňující ohodnocení $\sigma$ volíme v každé klauzuli $C_j$ jeden z jejích $t_j(\sigma)$
+  pravdivých literálů (vrcholy $p_{i,j}$ různých klauzulí se nepletou, protože jsou indexované klauzulí) a pak
+  libovolnou bijekci mezi $K$ zbylými vrcholy a $K$ dvojicemi. Pokrytí s ohodnocením $\sigma$ je tedy
+  $t_1(\sigma)\cdot t_2(\sigma)\cdot K!$.
+
+
+  Pro $x_1=x_2=1$, $x_3=0$: $t_1=t_2=1$, tedy $1\cdot1\cdot4!=24$ pokrytí.
+
+
+  Celkem: $\Phi$ splňuje 6 z 8 ohodnocení (nesplňují ji jen $(0,1,0)$ – padne $C_1$ – a $(1,0,0)$ – padne $C_2$).
+
+  .table:
+    columns: 'cccccccc'
+
+    .row:
+      head: true
+
+      $(x_1,x_2,x_3)$
+
+      $(0,0,0)$
+
+      $(0,0,1)$
+
+      $(0,1,1)$
+
+      $(1,0,1)$
+
+      $(1,1,0)$
+
+      $(1,1,1)$
+
+      součet
+
+    .row:
+
+      $t_1\cdot t_2$
+
+      $1\cdot1$
+
+      $2\cdot2$
+
+      $1\cdot3$
+
+      $3\cdot1$
+
+      $1\cdot1$
+
+      $2\cdot2$
+
+      $16$
+
+  Instance má $16\cdot 4!=384$ exaktních pokrytí (spočítáno i přímo programem). "Všimni si:".emphasize redukce
+  zachovává odpověď $\ANO$/$\NE$, ale ne počet řešení – to od redukce nikdo nechce.
+
+
+.Subsection Na úrovni testu
+  label: ch-x3c-ulohy-navic-test
+
+
+.Exercise:
+  title: 'Úloha 10.3 (Set Cover a Exact Cover z X3C)'
+  label: un-10-3
+
+  .enumerate:
+    type: a
+
+    .item:
+
+      Dokažte, že $\prob{Set Cover}$ (cvičení .reference:cv-3-4: univerzum $U$, systém $\mathcal S$ podmnožin, číslo $k$;
+      lze vybrat nejvýše $k$ množin se sjednocením $U$?) je NP-úplný redukcí z $\prob{X3C}$.
+
+    .item:
+
+      $\prob{Exact Cover}$: je dáno univerzum $U$ a systém $\mathcal S$ jeho podmnožin "libovolných".emphasize velikostí.
+      Lze vybrat podsystém, který pokryje každý prvek $U$ právě jednou? Dokažte, že je NP-úplný.
+
+
+.Solution:
+  label: red-un-10-3
+
+  "Redukce:".notion $\prob{X3C} \redp \prob{Set Cover}$, instance $(U,\mathcal S)$ s $|U|=3q$ $\mapsto$ $(U,\ \mathcal S,\ k=q)$.
+
+
+  "a) 1. Set Cover je v $\NP$.".notion Certifikát je nejvýše $k$ indexů množin; sjednocení spočítáme a porovnáme
+  s $U$ v polynomiálním čase.
+
+
+  "2. Konstrukce.".notion Univerzum i množiny ponecháme a položíme $k=q=|U|/3$. Není-li $|U|$ dělitelné třemi,
+  je odpověď X3C $\NE$ a vypíšeme pevnou $\NE$-instanci $U=\{1\}$, $\mathcal S=\emptyset$, $k=0$.
+
+
+  "3. Polynomialita.".notion Výstup je kopie vstupu a jedno číslo, čas lineární.
+
+
+  "4. ($\Rightarrow$)".notion Exaktní pokrytí v X3C má $q$ množin a jejich sjednocení je $U$ – je to pokrytí
+  s nejvýše $k=q$ množinami.
+
+
+  "5. ($\Leftarrow$)".notion Nechť $\mathcal C\subseteq\mathcal S$, $|\mathcal C|\le q$ a $\bigcup\mathcal C=U$. Pak
+
+  .equation:
+
+    3q=|U|=\Bigl|\bigcup_{S\in\mathcal C}S\Bigr|\le\sum_{S\in\mathcal C}|S|=3|\mathcal C|\le 3q .
+
+  Všude platí rovnost. Z $3|\mathcal C|=3q$ plyne $|\mathcal C|=q$; z rovnosti velikosti sjednocení a součtu velikostí
+  plyne, že množiny z $\mathcal C$ jsou po dvou disjunktní (každý společný prvek by sjednocení zmenšil). Každý prvek
+  $U$ je tedy pokryt právě jednou a $\mathcal C$ je exaktní pokrytí s $q$ množinami.
+
+
+  "6. Závěr.".notion $\prob{X3C}$ je NP-úplný (kapitola .reference:ch-x3c), tedy $\prob{Set Cover}$ je NP-těžký
+  a s bodem 1 NP-úplný. "Pozor:".emphasize mez $k=q$ je podstatná. Instance $U=\{1,\dots,6\}$, $\{1,2,3\}$, $\{3,4,5\}$,
+  $\{1,5,6\}$ exaktní pokrytí nemá (každé dvě množiny se protínají), ale všechny tři množiny pokryjí $U$ – s $k=3$
+  by redukce odpověděla špatně.
+
+
+  "b) Exact Cover.".notion V $\NP$: certifikát je podsystém, pro každý prvek spočítáme, kolikrát je pokryt.
+  NP-těžkost: $\prob{X3C}\redp\prob{Exact Cover}$ "identitou".emphasize $(U,\mathcal S)\mapsto(U,\mathcal S)$ – X3C je
+  speciální případ s tříprvkovými množinami. ($\Rightarrow$) exaktní pokrytí z X3C je exaktní pokrytí.
+  ($\Leftarrow$) exaktní pokrytí tříprvkovými množinami je disjunktní a pokrývá $|U|$ prvků, má tedy právě $|U|/3=q$
+  množin, jak X3C požaduje. Zobecnění NP-těžkého problému je NP-těžké.
+
+
+.Exercise:
+  title: 'Úloha 10.4 (Exact Hitting Set)'
+  label: un-10-4
+
+  Problém $\prob{Exact Hitting Set}$ (EHS): je dána konečná množina $A$ a systém jejích podmnožin $B_1,\dots,B_r$.
+  Existuje $H\subseteq A$ taková, že $|H\cap B_j|=1$ pro všechna $j$ (každou množinu „zasáhne“ přesně jednou)?
+
+
+  Dokažte, že EHS je NP-úplný. "Nápověda: převádějte z X3C a vyměňte role prvků a množin.".emphasize
+
+
+.Solution:
+  label: red-un-10-4
+
+  "Redukce:".notion $\prob{X3C} \redp \prob{Exact Hitting Set}$, instance $(U,\mathcal S)$ $\mapsto$
+  $(A=\mathcal S,\ \{B_u\}_{u\in U})$, kde $B_u=\{S\in\mathcal S\mid u\in S\}$.
+
+
+  "1. EHS je v $\NP$.".notion Certifikát je $H\subseteq A$; pro každé $j$ spočítáme $|H\cap B_j|$, celkem
+  v čase $O(|A|\cdot\sum_j|B_j|)$.
+
+
+  "2. Konstrukce.".notion Prvky nové instance jsou "množiny".emphasize $S\in\mathcal S$; za každý prvek $u\in U$ vznikne
+  množina $B_u$ všech trojic, které $u$ obsahují. (Je to transpozice matice incidence – stejný obrat jako mezi
+  $\prob{Set Cover}$ a $\prob{Hitting Set}$ v poznámce k cvičení .reference:cv-3-4.)
+
+
+  .centered:
+
+    !tikz:
+      filename: 10z-ulohy-navic-03
+
+      \foreach \k in {1,...,9} \node[v] (u\k) at (\k*1.0-1.0,1.9) {\k};
+      \foreach \i in {1,...,7} {
+        \ifnum\i=2 \node[vsel] (s\i) at (\i*1.333-1.333,0) {$S_\i$};
+        \else\ifnum\i=3 \node[vsel] (s\i) at (\i*1.333-1.333,0) {$S_\i$};
+        \else\ifnum\i=5 \node[vsel] (s\i) at (\i*1.333-1.333,0) {$S_\i$};
+        \else \node[v] (s\i) at (\i*1.333-1.333,0) {$S_\i$};\fi\fi\fi}
+      \foreach \i/\a/\b/\c in {1/1/2/3,4/4/5/6,6/7/8/9,7/2/4/9} {\draw[e,black!35] (s\i)--(u\a) (s\i)--(u\b) (s\i)--(u\c);}
+      \foreach \i/\a/\b/\c in {2/1/4/7,3/2/5/8,5/3/6/9} {\draw[esel] (s\i)--(u\a) (s\i)--(u\b) (s\i)--(u\c);}
+      \node[font=\small,anchor=east,align=right] at (-0.5,1.9) {prvky $u\in U$\\ (EHS: množiny $B_u$)};
+      \node[font=\small,anchor=east,align=right] at (-0.5,0) {trojice $S\in\mathcal S$\\ (EHS: prvky $A$)};
+
+
+  Graf incidence instance z úlohy 10.1 c). X3C hledá množinu dolních vrcholů, která má s každým horním vrcholem
+  přesně jednoho společného souseda; EHS hledá totéž, jen dolní vrcholy nazývá prvky a horní množinami
+  ($B_1=\{S_1,S_2\}$, $B_2=\{S_1,S_3,S_7\}$, …). Zeleně $H=\{S_2,S_3,S_5\}$.
+
+
+  "3. Polynomialita.".notion $|A|=|\mathcal S|$, $r=|U|$ a $\sum_u|B_u|=3|\mathcal S|$; sestrojíme jedním průchodem
+  množinami.
+
+
+  "4. ($\Rightarrow$)".notion Nechť $\mathcal C\subseteq\mathcal S$ je exaktní pokrytí; položíme $H=\mathcal C$. Pro každé
+  $u\in U$ je $H\cap B_u$ množina vybraných trojic obsahujících $u$, a ta je jednoprvková.
+
+
+  "5. ($\Leftarrow$)".notion Nechť $H\subseteq\mathcal S$ splňuje $|H\cap B_u|=1$ pro všechna $u$. Pak je každý prvek
+  $u$ v přesně jedné trojici z $H$, tedy $H$ pokrývá $U$ exaktně. Navíc $3|H|=\sum_{u}|H\cap B_u|=|U|$, takže
+  $|H|=|U|/3=q$ (a pro $|U|$ nedělitelné třemi takové $H$ neexistuje – speciální případ ošetřovat nemusíme).
+  Stejně tak prvek $u$, který neleží v žádné trojici: dá prázdnou množinu $B_u=\emptyset$, podmínku $|H\cap B_u|=1$
+  nesplní žádné $H$ a obě instance mají odpověď $\NE$.
+
+
+  "6. Závěr.".notion $\prob{X3C}$ je NP-úplný, tedy EHS je NP-těžký a podle bodu 1 NP-úplný.
+
+
+  "Poznámka.".notion EHS, v němž mají všechny $B_j$ tři prvky, je přesně pozitivní 1-in-3 SAT ($A$ = proměnné,
+  $B_j$ = klauzule, $H$ = pravdivé proměnné). Je tedy NP-úplný už i v této podobě (redukce
+  "$\prob{3-Coloring}\redp\prob{1-in-3 SAT}$"#red-1in3 dává klauzule se třemi různými proměnnými).
+
+
+.Exercise:
+  title: 'Úloha 10.5 ($\prob{X3C}\redp\prob{Subset Sum}$ přímo)'
+  label: un-10-5
+
+  .enumerate:
+    type: a
+
+    .item:
+
+      Dokažte, že $\prob{Subset Sum}$ (definice .reference:prob-subsetsum) je NP-těžký, redukcí "přímo z $\prob{X3C}$".emphasize:
+      za každý prvek univerza jedna číslice.
+
+    .item:
+
+      Vysvětlete, proč nestačí čísla zapsaná ve dvojkové soustavě, na instanci $U=\{1,\dots,6\}$,
+      $\mathcal S=\{\{1,3,5\},\{2,3,4\},\{3,4,5\}\}$.
+
+
+.Solution:
+  label: red-un-10-5
+
+  "Redukce:".notion $\prob{X3C} \redp \prob{Subset Sum}$, instance $U=\{u_1,\dots,u_{3q}\}$, $\mathcal S=\{S_1,\dots,S_m\}$
+  $\mapsto$ čísla $a_i=\sum_{u_t\in S_i}b^{t-1}$ ($i=1,\dots,m$) a cíl $T=\sum_{t=1}^{3q}b^{t-1}$, kde $b=m+1$.
+
+
+  "1. Subset Sum je v $\NP$.".notion Certifikát je $I\subseteq\{1,\dots,m\}$; sečteme $\sum_{i\in I}a_i$ a porovnáme s $T$,
+  polynomiálně v délce binárního zápisu.
+
+
+  "2. Konstrukce.".notion Čísla čteme v soustavě o základu $b=m+1$. Číslice $t$ (řád $b^{t-1}$) patří prvku $u_t$.
+  Číslo $a_i$ má jedničky přesně v číslicích prvků množiny $S_i$, ostatní nuly; cíl $T$ má všude jedničky. Příklad
+  pro $U=\{1,\dots,6\}$, $S_1=\{1,2,3\}$, $S_2=\{3,4,5\}$, $S_3=\{4,5,6\}$, $S_4=\{2,4,6\}$, $b=5$:
+
+  .table:
+    columns: 'lccccccr'
+
+    .row:
+      head: true
+
+      číslo
+
+      $u_6$
+
+      $u_5$
+
+      $u_4$
+
+      $u_3$
+
+      $u_2$
+
+      $u_1$
+
+      hodnota
+
+    .row:
+
+      $a_1$ ($S_1$)
+
+      0
+
+      0
+
+      0
+
+      1
+
+      1
+
+      1
+
+      $31$
+
+    .row:
+
+      $a_2$ ($S_2$)
+
+      0
+
+      1
+
+      1
+
+      1
+
+      0
+
+      0
+
+      $775$
+
+    .row:
+
+      $a_3$ ($S_3$)
+
+      1
+
+      1
+
+      1
+
+      0
+
+      0
+
+      0
+
+      $3875$
+
+    .row:
+
+      $a_4$ ($S_4$)
+
+      1
+
+      0
+
+      1
+
+      0
+
+      1
+
+      0
+
+      $3255$
+
+    .row:
+
+      $T$
+
+      1
+
+      1
+
+      1
+
+      1
+
+      1
+
+      1
+
+      $3906$
+
+  Jediná podmnožina se součtem $T$ je $a_1+a_3=31+3875=3906$ a odpovídá jedinému exaktnímu pokrytí $\{S_1,S_3\}$.
+
+
+  "3. Polynomialita.".notion Každé číslo je menší než $b^{3q}$, jeho binární zápis má nejvýše
+  $3q\lceil\log_2(m+1)\rceil+1=O(|U|\log|\mathcal S|)$ bitů. Výstup má $m+1$ takových čísel, celkem
+  $O(m\cdot|U|\log m)$ bitů – polynomiálně vzhledem ke vstupu. Čísla spočítáme sčítáním mocnin $b$ v polynomiálním čase.
+
+
+  "4. ($\Rightarrow$)".notion Nechť $\{S_i\mid i\in I\}$ je exaktní pokrytí. V každé číslici $t$ má jedničku přesně jedno
+  $a_i$ s $i\in I$ (to, jehož množina obsahuje $u_t$), takže $\sum_{i\in I}a_i=\sum_t 1\cdot b^{t-1}=T$.
+
+
+  "5. ($\Leftarrow$)".notion Nechť $\sum_{i\in I}a_i=T$. Označme $c_t=|\{i\in I\mid u_t\in S_i\}|$. Přerovnáním součtu
+
+  .equation:
+
+    \sum_{i\in I}a_i=\sum_{t=1}^{3q}c_t\,b^{t-1},\qquad 0\le c_t\le|I|\le m<b .
+
+  Protože jsou všechna $c_t$ menší než základ, je to "zápis čísla v soustavě o základu $b$".notion (nedochází k přenosům)
+  a ten je jednoznačný. Číslo $T$ má všechny číslice rovné $1$, proto $c_t=1$ pro každé $t$: každý prvek $u_t$ leží
+  v přesně jedné vybrané množině a $\{S_i\mid i\in I\}$ je exaktní pokrytí (s $q$ množinami, viz úloha 10.3 b).
+
+
+  "6. Závěr.".notion $\prob{X3C}$ je NP-úplný, tedy $\prob{Subset Sum}$ je NP-těžký (spolu s bodem 1 NP-úplný).
+
+
+  "b)".notion Ve dvojkové soustavě: $a_1=2^0+2^2+2^4=21$, $a_2=2^1+2^2+2^3=14$, $a_3=2^2+2^3+2^4=28$ a $T=2^6-1=63$.
+  Platí $21+14+28=63$, a přitom prvek $3$ je pokryt třikrát, $4$ a $5$ dvakrát a $6$ vůbec. Součty v číslicích
+  ($c=(1,1,3,2,2,0)$) „přetečou“ do vyšších řádů a náhodou vyjde $T$. Se základem $b=m+1=4$ dostaneme
+  $a=(273,84,336)$, $T=1365$, a žádná podmnožina součet $1365$ nemá – správně $\NE$.
+  V redukci "$\prob{1-in-3 SAT}\redp\prob{Subset Sum}$"#red-subsetsum stačil základ 4, protože do každé číslice
+  přispívala nejvýše tři čísla; tady může jeden prvek ležet až v $m$ množinách, proto základ $m+1$.
+
+
+.Exercise:
+  title: 'Úloha 10.6 (1-in-3 SAT jako soustava rovnic)'
+  label: un-10-6
+
+  Problém $\prob{0/1 soustava rovnic}$: je dána celočíselná matice $A$ typu $r\times n$ a vektor $b\in\mathbb Z^r$.
+  Existuje $y\in\{0,1\}^n$ s $Ay=b$?
+
+  .enumerate:
+    type: a
+
+    .item:
+
+      Dokažte, že problém je NP-úplný redukcí z $\prob{1-in-3 SAT}$.
+
+    .item:
+
+      Sestavte soustavu pro formuli $\Phi_1$ z úlohy 10.1 a) a vyřešte ji.
+
+    .item:
+
+      Odvoďte, že je NP-těžké i binární ILP ve tvaru $Ax\le b$ z definice .reference:prob-ilp.
+
+
+.Solution:
+  label: red-un-10-6
+
+  "Redukce:".notion $\prob{1-in-3 SAT} \redp \prob{0/1 soustava rovnic}$, formule $\Phi$ $\mapsto$ $(A_\Phi,b_\Phi)$
+  s jednou rovnicí za každou klauzuli.
+
+
+  "a) 1. V $\NP$.".notion Certifikát je vektor $y\in\{0,1\}^n$; spočítání $Ay$ a porovnání s $b$ zabere $O(rn)$
+  sčítání čísel délky polynomiální ve vstupu.
+
+
+  "2. Konstrukce.".notion Proměnné $x_i$ odpovídá $y_i\in\{0,1\}$; hodnota literálu $x_i$ je $y_i$, hodnota $\lnot x_i$
+  je $1-y_i$. Klauzule $C_j$ s $n_j$ negovanými literály dá rovnici „součet hodnot literálů je 1“:
+
+  .equation:
+
+    \sum_{x_i\in C_j}y_i+\sum_{\lnot x_i\in C_j}(1-y_i)=1
+    \quad\Longleftrightarrow\quad
+    \sum_{x_i\in C_j}y_i-\sum_{\lnot x_i\in C_j}y_i=1-n_j .
+
+  (Opakuje-li se proměnná v klauzuli, koeficienty se sečtou; rovnost obou stran platí dál.)
+
+
+  "3. Polynomialita.".notion $r=m$ rovnic o $n$ neznámých, koeficienty z $\{-3,\dots,3\}$, pravé strany
+  z $\{-2,\dots,1\}$; sestavení v čase $O(nm)$.
+
+
+  "4. ($\Rightarrow$)".notion Nechť $\sigma$ je 1-in-3 ohodnocení; položíme $y_i=\sigma(x_i)$. Levá strana rovnice $j$ je
+  počet pravdivých literálů v $C_j$, tedy $1$.
+
+
+  "5. ($\Leftarrow$)".notion Nechť $y\in\{0,1\}^n$ řeší soustavu; položíme $\sigma(x_i)=y_i$. Každý sčítanec levé strany
+  (v první podobě rovnice) je hodnota literálu, tedy $0$ nebo $1$, a jejich součet je $1$: v každé klauzuli je pravdivý
+  přesně jeden literál.
+
+
+  "6. Závěr.".notion $\prob{1-in-3 SAT}$ je NP-úplný (kapitola .reference:ch-x3c), tedy problém je NP-těžký a s bodem 1
+  NP-úplný.
+
+
+  "b)".notion Pro $\Phi_1$ (klauzule v pořadí ze zadání):
+
+  .equation:
+
+    y_1+y_2+y_3=1,\qquad y_2+y_3+y_4=1,\qquad -y_1+y_3+y_4=0,\qquad -y_1+y_2+y_4=0 .
+
+  Ze třetí a čtvrté rovnice $y_3+y_4=y_1$ a $y_2+y_4=y_1$. Pro $y_1=0$ je $y_2=y_3=y_4=0$ a první rovnice dá $0=1$.
+  Tedy $y_1=1$, z první $y_2=y_3=0$, ze třetí $y_4=1$; druhá i čtvrtá platí. Jediné řešení $y=(1,0,0,1)$ – stejné
+  jako v úloze 10.1 a).
+
+
+  "c)".notion Rovnost $\alpha^{\top}y=\beta$ je totéž co dvojice nerovnic $\alpha^{\top}y\le\beta$ a $-\alpha^{\top}y\le-\beta$;
+  binárnost celočíselných proměnných vynutíme nerovnicemi $y_i\le1$ a $-y_i\le0$. Z $(A,b)$ tak vznikne v lineárním čase ILP
+  $A'y\le b'$ se stejnou množinou řešení, takže $\prob{0/1 soustava rovnic}\redp\prob{ILP}$ a ILP je NP-těžké
+  (druhá cesta vedle redukce "$\prob{3-SAT}\redp\prob{ILP}$"#red-ilpsat).
+
+
+  "Poznámka".notion "(nad rámec přednášky)".emphasize. Pustíme-li integralitu ($0\le y_i\le1$ reálná), je soustava pozitivní formule
+  se třemi různými proměnnými v klauzuli vždy řešitelná: $y_i=\tfrac13$ dá v každé rovnici $\tfrac13+\tfrac13+\tfrac13=1$.
+  Například $\Phi_2$ z úlohy 10.1 b) žádné 0/1 řešení nemá, a $y=(\tfrac13,\tfrac13,\tfrac13,\tfrac13)$ přesto splní všechny
+  čtyři rovnice. Těžkost je celá v podmínce $y\in\{0,1\}^n$.
+
+
+.Subsection Těžší úlohy
+  label: ch-x3c-ulohy-navic-tezsi
+
+
+.Exercise:
+  title: 'Úloha 10.7 (přesné pokrytí čtveřicemi)'
+  label: un-10-7
+
+  Problém $\prob{X4C}$: je dáno univerzum $U$ s $|U|=4q$ a systém $\mathcal S$ "čtyřprvkových".emphasize podmnožin $U$.
+  Lze vybrat $q$ množin tak, aby byl každý prvek pokryt právě jednou?
+
+  .enumerate:
+    type: a
+
+    .item:
+
+      Dokažte, že $\prob{X4C}$ je NP-úplný redukcí z $\prob{X3C}$.
+
+    .item:
+
+      Proč nefunguje přidat každé množině $S$ vlastní nový prvek $e_S$? A proč nefunguje přidat všem množinám
+      jeden společný nový prvek $d$?
+
+
+.Solution:
+  label: red-un-10-7
+
+  "Redukce:".notion $\prob{X3C} \redp \prob{X4C}$, instance $(U,\mathcal S)$ s $|U|=3q$ $\mapsto$
+  $(U'=U\cup\{d_1,\dots,d_q\},\ \mathcal S'=\{S\cup\{d_j\}\mid S\in\mathcal S,\ 1\le j\le q\})$.
+
+
+  "a) 1. X4C je v $\NP$.".notion Certifikát je $q$ indexů množin; ověříme, že každý prvek $U$ leží v právě jedné.
+
+
+  "2. Konstrukce.".notion Přidáme $q$ nových prvků $d_1,\dots,d_q$ („čísla pozic“ v pokrytí) a každou trojici
+  $S\in\mathcal S$ nahradíme $q$ kopiemi $S\cup\{d_1\},\dots,S\cup\{d_q\}$. Není-li $|U|$ dělitelné třemi, vypíšeme
+  pevnou $\NE$-instanci $U'=\{1,2,3,4\}$, $\mathcal S'=\emptyset$.
+
+
+  .centered:
+
+    !tikz:
+      filename: 10z-ulohy-navic-04
+      options: 'x=0.8cm,y=0.6cm'
+
+      \fill[intc!12] (5.55,0.6) rectangle (7.45,-8.5);
+      \fill[acc!18] (-0.45,-0.5) rectangle (7.45,-1.5);
+      \fill[acc!18] (-0.45,-5.5) rectangle (7.45,-6.5);
+      \foreach \c/\t in {0/1,1/2,2/3,3/4,4/5,5/6,6/d_1,7/d_2} \node[font=\small] at (\c,0.05) {$\t$};
+      \draw[black!40] (-0.45,-0.5)--(7.45,-0.5);
+      \foreach \r/\a/\b/\c/\s/\d in {1/1/2/3/1/1,2/1/2/3/1/2,3/2/3/4/2/1,4/2/3/4/2/2,5/4/5/6/3/1,6/4/5/6/3/2,7/1/5/6/4/1,8/1/5/6/4/2} {
+        \node[font=\small,anchor=east] at (-0.6,-\r) {$S_\s\cup\{d_\d\}$};
+        \foreach \x in {\a,\b,\c} \fill[black!75] (\x-1,-\r) circle (3pt);
+        \fill[intc!90!black] (5+\d,-\r) circle (3pt);}
+      \node[note,anchor=west,text width=40mm] at (7.8,-1) {vybraná $S_1\cup\{d_1\}$};
+      \node[note,anchor=west,text width=40mm] at (7.8,-6) {vybraná $S_3\cup\{d_2\}$};
+
+
+  Instance z obr. .reference:fig-x3c-instance ($q=2$) po redukci: řádky jsou množiny $\mathcal S'$, tečky jejich prvky.
+  Zeleně jedno exaktní pokrytí. "Všimni si:".emphasize každý řádek má v jantarových sloupcích $d_1,d_2$ přesně
+  jednu tečku, takže pokrytí vybere přesně $q$ řádků a každou „pozici“ $d_j$ jednou. (Instance má 4 pokrytí: dvě
+  pokrytí X3C krát $2!$ způsobů, jak jim přidělit pozice.)
+
+
+  "3. Polynomialita.".notion $|U'|=4q$, $|\mathcal S'|=q\cdot|\mathcal S|$, každá množina má 4 prvky: výstup velikosti
+  $O(q\,|\mathcal S|)$, tedy nejvýše kvadratický ve vstupu.
+
+
+  "4. ($\Rightarrow$)".notion Nechť $C_1,\dots,C_q$ je exaktní pokrytí $U$ (v libovolném pořadí). Množiny $C_j\cup\{d_j\}$
+  leží v $\mathcal S'$, jsou po dvou disjunktní (části $C_j$ jsou disjunktní a $d_j$ různé) a jejich sjednocení je
+  $U\cup\{d_1,\dots,d_q\}=U'$.
+
+
+  "5. ($\Leftarrow$)".notion Nechť $\mathcal C'$ je exaktní pokrytí $U'$. Každá množina z $\mathcal S'$ obsahuje přesně
+  jeden nový prvek a každé $d_j$ je pokryto právě jednou, proto $|\mathcal C'|=q$ a $\mathcal C'=\{C_j\cup\{d_j\}\mid j=1,\dots,q\}$
+  pro nějaké $C_j\in\mathcal S$. Množiny $C_j=(C_j\cup\{d_j\})\cap U$ jsou po dvou disjunktní (jsou to části disjunktních
+  množin; speciálně je žádná trojice vybraná dvakrát) a každý $u\in U$ leží v přesně jedné z nich, protože leží v přesně
+  jedné množině z $\mathcal C'$. Tedy $\{C_1,\dots,C_q\}$ je exaktní pokrytí $U$ v X3C.
+
+
+  "6. Závěr.".notion $\prob{X3C}$ je NP-úplný, tedy $\prob{X4C}$ je NP-těžký a s bodem 1 NP-úplný. Stejným doplněním
+  ($\prob{X}k\prob{C}\redp\prob{X}(k{+}1)\prob{C}$, $q$ nových prvků) indukcí dostaneme NP-úplnost pro každé pevné $k\ge3$;
+  pro $k=2$ jde o perfektní párování v grafu, které je v $\PP$.
+
+
+  "b)".notion "Vlastní prvek $e_S$ za každou množinu:".emphasize prvek $e_S$ leží jen v $S\cup\{e_S\}$, takže každé
+  exaktní pokrytí by muselo vybrat "všechny".emphasize množiny. Instance z obrázku má exaktní pokrytí $\{S_1,S_3\}$,
+  ale po této úpravě by $e_{S_2},e_{S_4}$ zůstaly nepokryté – redukce by z $\ANO$ udělala $\NE$.
+  "Společný prvek $d$:".emphasize $d$ smí být pokryt jen jednou, takže lze vybrat nejvýše jednu množinu a pokrýt
+  4 prvky z $3q+1$; pro $q\ge2$ je výsledek vždy $\NE$ (a $3q+1$ navíc obecně není dělitelné čtyřmi). Nových prvků
+  musí být tolik, kolik množin pokrytí má – proto $q$ kopií každé trojice.
+
+
+.Exercise:
+  title: 'Úloha 10.8 (X3C se dvěma výskyty je v P)'
+  label: un-10-8
+
+  Uvažujme $\prob{X3C}$ jen pro instance, v nichž "každý prvek $U$ leží v nejvýše dvou množinách".notion ze $\mathcal S$.
+  Dokažte, že tato varianta je v $\PP$: popište algoritmus, dokažte obě směry jeho správnosti a odhadněte čas.
+  "Nápověda: sestrojte graf, jehož vrcholy jsou množiny ze $\mathcal S$.".emphasize
+
+
+.Solution:
+
+  "Pozorování.".notion Exaktní pokrytí je výběr $X\subseteq\mathcal S$ takový, že každý prvek leží v právě jedné vybrané
+  množině. Prvek ve dvou množinách $S\ne S'$ tedy říká „vyber právě jednu ze $S,S'$“, prvek v jediné množině $S$ říká
+  „vyber $S$“ (takovou $S$ nazveme "vynucenou".emphasize) a prvek v žádné množině znamená odpověď $\NE$.
+
+
+  "Algoritmus.".notion
+
+  .enumerate:
+
+    .item:
+
+      Pro každý prvek spočítáme seznam množin, které ho obsahují. Leží-li některý prvek v žádné, odpověz $\NE$.
+
+    .item:
+
+      Sestroj graf $H$: vrcholy jsou množiny ze $\mathcal S$, za každý prvek $u$ ležící ve dvou množinách $S,S'$
+      hrana $\{S,S'\}$ (označená $u$; může vzniknout i více rovnoběžných hran). Množiny obsahující prvek s jediným
+      výskytem označ jako vynucené.
+
+    .item:
+
+      Každou komponentu souvislosti $H$ projdi do šířky a obarvi dvěma barvami (test bipartitnosti, oddíl
+      .reference:ch-zoo-3-coloring). Má-li komponenta lichou kružnici, odpověz $\NE$. Jinak má právě dvě obarvení
+      a její vrcholy se rozpadnou na třídy $P,Q$.
+
+    .item:
+
+      Leží-li vynucené množiny komponenty v obou třídách, odpověz $\NE$. Jinak vyber tu třídu, v níž vynucené množiny
+      leží (nemá-li komponenta žádnou vynucenou množinu, libovolnou z nich).
+
+    .item:
+
+      Odpověz $\ANO$; vybrané třídy všech komponent dohromady tvoří exaktní pokrytí $X$.
+
+
+  .centered:
+
+    !tikz:
+      filename: 10z-ulohy-navic-05
+      options: 'x=1cm,y=1cm'
+
+      \node[vsel] (s1) at (0,0) {$S_1$};
+      \node[v] (s2) at (2.6,0) {$S_2$};
+      \node[v] (s3) at (0,2.6) {$S_3$};
+      \node[vsel] (s5) at (2.6,2.6) {$S_5$};
+      \node[v] (s4) at (1.2,1.0) {$S_4$};
+      \node[vsel] (s6) at (3.8,1.0) {$S_6$};
+      \node[vsel] (s7) at (1.2,3.6) {$S_7$};
+      \node[v] (s8) at (3.8,3.6) {$S_8$};
+      \draw[e] (s1) -- node[wt]{1} (s2);
+      \draw[e] (s1) -- node[wt]{2} (s3);
+      \draw[e] (s1) -- node[wt]{3} (s4);
+      \draw[e] (s2) -- node[wt,pos=0.75]{4} (s5);
+      \draw[e] (s2) -- node[wt]{5} (s6);
+      \draw[e] (s3) -- node[wt,pos=0.75]{6} (s5);
+      \draw[e] (s3) -- node[wt]{7} (s7);
+      \draw[e] (s4) -- node[wt,pos=0.3]{8} (s6);
+      \draw[e] (s4) -- node[wt,pos=0.35]{9} (s7);
+      \draw[e] (s5) -- node[wt]{10} (s8);
+      \draw[e] (s6) -- node[wt]{11} (s8);
+      \draw[e] (s7) -- node[wt]{12} (s8);
+
+
+  "Příklad.".notion $U=\{1,\dots,12\}$, $S_1=\{1,2,3\}$, $S_2=\{1,4,5\}$, $S_3=\{2,6,7\}$, $S_4=\{3,8,9\}$, $S_5=\{4,6,10\}$,
+  $S_6=\{5,8,11\}$, $S_7=\{7,9,12\}$, $S_8=\{10,11,12\}$. Každý prvek leží ve dvou množinách, hrana nese jméno prvku.
+  Graf $H$ je krychle, je bipartitní a třídy jsou $\{S_1,S_5,S_6,S_7\}$ (zeleně) a $\{S_2,S_3,S_4,S_8\}$ – to jsou
+  právě obě exaktní pokrytí instance. Kdyby tři množiny měly po dvou společný prvek (trojúhelník v $H$), odpověď by
+  byla $\NE$.
+
+
+  "Správnost ($\ANO\Rightarrow$ exaktní pokrytí).".notion Nechť algoritmus odpoví $\ANO$ s výběrem $X$. Prvek se dvěma
+  výskyty je hrana $\{S,S'\}$ uvnitř jedné komponenty a její konce mají různé barvy, takže ve vybrané třídě je právě
+  jeden z nich: prvek je pokryt právě jednou. Prvek s jediným výskytem leží ve vynucené množině, která je ve vybrané
+  třídě své komponenty: pokryt právě jednou. Prvky bez výskytu nejsou (krok 1). $X$ je tedy exaktní pokrytí
+  (a má automaticky $|U|/3$ množin, viz úloha 10.3 b).
+
+
+  "Správnost (exaktní pokrytí $\Rightarrow$ $\ANO$).".notion Nechť $X$ je exaktní pokrytí. Krok 1 neodpoví $\NE$, protože
+  každý prvek je pokryt. Obarvíme vrcholy $H$ barvou „vybraná/nevybraná“ podle $X$. Pro každou hranu $\{S,S'\}$
+  s prvkem $u$ je v $X$ právě jedna ze $S,S'$, obarvení je tedy vlastní 2-obarvení; $H$ je bipartitní a v každé komponentě
+  je $X$ jednou z jejích dvou tříd (souvislý bipartitní graf má jen dvě 2-obarvení). Vynucené množiny jsou v $X$, leží
+  tedy všechny v této jedné třídě a krok 4 neodpoví $\NE$. Algoritmus odpoví $\ANO$.
+
+
+  "Čas.".notion Seznamy výskytů a graf $H$ ($|\mathcal S|$ vrcholů, nejvýše $|U|$ hran) sestrojíme jedním průchodem
+  množinami v čase $O(|U|+|\mathcal S|)$, prohledání do šířky a kontrola vynucených množin jsou také lineární.
+  Celkem $O(|U|+|\mathcal S|)$, tedy polynomiálně.
+
+
+  "Souvislosti.".notion Transpozicí z úlohy 10.4 je to $\prob{Exact Hitting Set}$ s množinami $B_u$ velikosti nejvýše 2,
+  tj. soustava podmínek „$y_S=1$“ a „$y_S+y_{S'}=1$“ – proto stačí 2-obarvení. Garey a Johnson uvádějí, že X3C je
+  NP-úplný už tehdy, leží-li každý prvek v nejvýše "třech".emphasize množinách "(nad rámec přednášky)".emphasize;
+  hranice mezi $\PP$ a NP-úplností tu leží mezi dvěma a třemi výskyty.

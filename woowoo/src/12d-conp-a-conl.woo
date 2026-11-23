@@ -1,0 +1,103 @@
+
+
+.Section Doplňky jazyků: coNP a coNL
+  label: ch-prostor-doplnky-jazyku-conp-a-conl
+
+
+.Definition:
+  title: 'Doplněk jazyka, třída coNP'
+  label: def-conp
+
+  Doplněk jazyka $Q$ je $\overline Q=\Sigma^*\setminus Q$. Pak
+
+  .equation:
+
+    \coNP=\{\,Q\mid \overline Q\in\NP\,\},
+
+  obdobně $\coNL$, … pro každou třídu.
+
+
+Příklady v $\coNP$: $\prob{UNSAT}$ (je $\varphi$ nesplnitelná?), $\prob{TAUT}$ (je $\varphi$ tautologie?); platí
+$\varphi\in\prob{TAUT}\iff\lnot\varphi\in\prob{UNSAT}$.
+
+
+.Figure:
+  label: ch-prostor-fig-doplnek-sat
+
+  !tikz:
+    filename: 12d-conp-a-conl-01
+    options: 'x=1cm,y=1cm'
+
+    \fill[black!5,draw=black!60,thick,rounded corners=6pt] (0,0) rectangle (7,3);
+    \node[font=\small] at (0.45,2.65) {$\Sigma^*$};
+    \fill[defc!10,draw=defc,thick,rounded corners=4pt] (0.4,0.3) rectangle (5.0,2.3);
+    \node[font=\scriptsize,defc] at (2.7,2.05) {formule};
+    \fill[acc!25,draw=acc!80!black,thick,rounded corners=3pt] (0.6,0.5) rectangle (2.6,1.8);
+    \node[font=\scriptsize,align=center] at (1.6,1.15) {\prob{SAT}\\ \ANO};
+    \fill[rej!12,draw=rej,thick,rounded corners=3pt] (2.8,0.5) rectangle (4.8,1.8);
+    \node[font=\scriptsize,align=center] at (3.8,1.15) {\prob{UNSAT}\\ \NE};
+    \node[font=\scriptsize,align=center] at (6.0,1.3) {není\\ formule\\ \NE};
+    \draw[decorate,decoration={brace,mirror,amplitude=4pt},rej] (2.8,0.2)--(6.9,0.2) node[midway,below=4pt,font=\scriptsize]{$\overline{\prob{SAT}}$};
+
+  .caption:
+
+    Pozor: $\overline{\prob{SAT}}\neq\prob{UNSAT}$ – doplněk obsahuje i vstupy, které nejsou formulí. Ty ale
+    poznáme v polynomiálním čase, takže na rozdílu nezáleží.
+
+
+.Warning:
+  title: 'Častá chyba'
+
+  $\coNP$ "není".emphasize „vše, co není v $\NP$“ – je to třída "doplňků".emphasize jazyků z $\NP$. Obě třídy obsahují např. celé
+  $\PP$.
+
+
+"Doplněk a nedeterminismus.".notion "Deterministicky".emphasize stačí prohodit přijímající a odmítající stav
+$\Rightarrow$ $\PP$, $\LL$, $\PSPACE$ jsou uzavřené na doplněk. "Nedeterministicky".emphasize stroj přijme, existuje-li
+přijímající větev; doplněk chce, aby "všechny".emphasize větve odmítly. Prohození stavů nefunguje:
+
+
+.Figure:
+  label: ch-prostor-fig-prohozeni-stavu
+
+  !tikz:
+    filename: 12d-conp-a-conl-02
+    options: 'x=1cm,y=1cm,lf/.style={circle,draw=black!60,thick,minimum size=5mm,inner sep=0pt,font=\scriptsize},ok/.style={lf,fill=acc!30,label={[font=\scriptsize,acc!70!black]center:\checkmark}},ko/.style={lf,fill=rej!20,label={[font=\scriptsize,rej]center:$\times$}}'
+
+    \ndtree{0cm}{ko}{ko}{ok}{ko}
+    \ndtree{6cm}{ok}{ok}{ko}{ok}
+    \node[font=\scriptsize] at (1.5,-0.6) {původní stroj: přijme};
+    \node[font=\scriptsize] at (7.5,-0.6) {prohozený: přijme taky -- nepřijímá $\overline Q$};
+    \draw[->,very thick,gr] (3.6,0.8)--node[above,font=\scriptsize]{prohoď stavy}(5.6,0.8);
+
+  .caption:
+
+    Nedeterministický stroj s jedinou přijímající větví. Po prohození stavů má tři přijímající větve – slovo
+    přijme znovu.
+
+
+.Concept:
+  title: 'Pohled přes certifikáty'
+
+  $\NP$: krátký certifikát pro odpověď ANO; $\coNP$: krátký certifikát pro odpověď NE (u $\prob{UNSAT}$ by to byl krátký
+  důkaz nesplnitelnosti – a ten neumíme). Platí $\PP\subseteq\NP\cap\coNP$; otázka $\NP\overset{?}{=}\coNP$ je
+  otevřená (věříme, že ne).
+
+
+.Theorem:
+  title: 'Immerman & Szelepcsényi, 1987'
+  label: thm-immerman
+
+  $\NL=\coNL$.
+
+
+V logaritmickém prostoru umíme nedeterministicky ověřit nejen to, že cesta existuje, ale i to, že
+"neexistuje".emphasize. Důkaz (tzv. "inductive counting".emphasize: postupně spočítáme, kolik vrcholů je dosažitelných do
+$i$ kroků) je chytrý a vynecháme ho.
+
+
+.Concept:
+  title: 'Kontrast, který stojí za zapamatování'
+
+  Prostor se chová „přátelštěji“ než čas: $\NL=\coNL$ umíme dokázat (a $\PSPACE=\NPSPACE$ je Savitch), zatímco
+  $\NP=\coNP$ i $\PP=\NP$ jsou po desetiletí otevřené.

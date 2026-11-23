@@ -1,0 +1,39 @@
+.Section Anatomie redukcí: gadgety a rigidita
+  label: ch-is-anatomie-redukci
+
+
+Redukce stavíme z "gadgetů".notion – lokálních struktur (podgrafů, rovnic, podmínek), které simulují
+chování prvků původního problému (proměnných, klauzulí).
+
+
+.Figure:
+  label: fig-is-dva-smery
+
+  !tikz:
+    filename: 08b-anatomie-redukci-01
+
+    \node[blokd,minimum width=30mm,minimum height=12mm] (z) {řešení\\ zdrojového problému};
+    \node[blokd,minimum width=30mm,minimum height=12mm,right=40mm of z] (c) {řešení\\ cílového problému};
+    \draw[->,very thick,acc!70!black] ($(z.east)+(0,0.25)$) -- node[above,font=\small,align=center]{($\Rightarrow$) „nasypat“\\ \footnotesize většinou snadné} ($(c.west)+(0,0.25)$);
+    \draw[<-,very thick,intc] ($(z.east)+(0,-0.25)$) -- node[below,font=\small,align=center]{\footnotesize potřebuje rigiditu gadgetů\\ ($\Leftarrow$) „přečíst“} ($(c.west)+(0,-0.25)$);
+
+  .caption:
+
+    Dva směry důkazu korektnosti.
+
+
+.itemize:
+
+  .item:
+
+    "Dopředná implikace (zdroj $\Rightarrow$ cíl):".notion instanci jsme připravili tak, abychom do ní
+    známé řešení prostě „nasypali“. Ověřujeme jen, že gadgety jsou dost prostorné a jejich napojení
+    nevytvoří spor.
+
+  .item:
+
+    "Zpětná implikace (cíl $\Rightarrow$ zdroj):".notion máme "nějaké".emphasize, často neznámé řešení cílového
+    problému. Opíráme se o "rigiditu".notion gadgetů – musíme dokázat, že je řešení nemohlo „obelstít“.
+    Typicky ukážeme, že každé řešení má velmi specifickou strukturu (např. vybere právě jeden vrchol
+    z každé hrany a trojúhelníku), nebo ho "BÚNO".notion (bez újmy na obecnosti) lokální úpravou převedeme
+    do standardního tvaru, aniž by přestalo být platné. Z~něj pak řešení zdroje snadno přečteme.

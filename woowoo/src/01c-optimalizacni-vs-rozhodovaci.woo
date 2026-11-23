@@ -1,0 +1,224 @@
+.Section Optimalizační vs. rozhodovací problémy
+  label: ch-ts-optimalizacni-vs-rozhodovaci-problemy
+
+
+Lidem jsou přirozené "optimalizační".emphasize problémy („najdi nejkratší cestu“, „najdi maximální
+tok“). Turingův stroj by ale musel na pásku vypsat složitý výstup. Teorii proto stavíme na
+"rozhodovacích".emphasize problémech s výstupem ANO/NE.
+
+
+.Concept:
+  title: 'Recept na převod'
+
+  K instanci přidáme "práh".notion $k$ a otázku „najdi nejlepší řešení“ nahradíme otázkou
+  „"existuje".emphasize řešení s hodnotou lepší než $k$?“. Vstup rozšíříme o zápis čísla $k$.
+
+
+.Definition:
+  title: 'Problém Obchodní cestující (TSP)'
+  label: prob-tsp
+
+  "Vstup:".notion úplný graf $G=(V,E)$, váhy $w\colon E\to\N$ (a práh $k\in\N$).
+
+
+  "Optimalizační verze:".notion najdi hamiltonovskou kružnici s minimální celkovou váhou.
+
+
+  "Rozhodovací verze:".notion existuje v $G$ hamiltonovská kružnice váhy nejvýše $k$?
+
+
+.Figure:
+  label: fig-tsp
+
+  !tikz:
+    filename: 01c-optimalizacni-vs-rozhodovaci-01
+
+    \tspnodes
+    \begin{scope}[on background layer]
+    \tspe{A}{C}{12}{efaint}\tspe{A}{D}{15}{efaint}\tspe{B}{E}{14}{efaint}
+    \tspe{B}{C}{10}{efaint}\tspe{D}{E}{9}{efaint}
+    \tspe{A}{B}{5}{esel}\tspe{B}{D}{4}{esel}\tspe{D}{C}{3}{esel}\tspe{C}{E}{6}{esel}\tspe{E}{A}{4}{esel}
+    \end{scope}
+
+  .caption:
+
+    Optimum $A\to B\to D\to C\to E\to A$ má délku $5+4+3+6+4=22$. Rozhodovací otázka
+    „existuje kružnice délky $\le 25$?“ má odpověď $\ANO$, otázka „$\le 21$?“ odpověď $\NE$.
+
+
+Podobně u $\prob{Kliky}$: optimalizační verze hledá největší úplný podgraf, rozhodovací se
+ptá „obsahuje $G$ kliku velikosti alespoň $k$?“.
+
+
+.Subsection Od rozhodnutí k optimu: binární vyhledávání
+  label: ch-ts-od-rozhodnuti-k-optimu-binarni-vyhledavani
+
+
+.Remark:
+  title: 'Redukce s orákulem: $\prob{TSP}$ – hodnota optima $\to$ $\prob{TSP}$ – rozhodovací verze'
+  label: red-tspopt
+
+  Optimum najdeme binárním vyhledáváním přes práh $k$: stačí $\lceil\log_2\mathrm{MAX}\rceil$ dotazů „existuje kružnice délky $\le k$?“.
+
+
+Máme-li „černou skříňku“ (API), která rychle odpovídá na rozhodovací otázku, umíme najít
+i "hodnotu".emphasize optima – binárním vyhledáváním přes práh $k$.
+
+
+.Figure:
+
+  !tikz:
+    filename: 01c-optimalizacni-vs-rozhodovaci-02
+    options: 'x=1.2mm'
+
+    \draw[thick,->] (0,0) -- (106,0) node[right]{$k$};
+    \foreach \x in {0,25,50,75,100} {\draw (\x,0.12) -- (\x,-0.12) node[above=2pt,font=\scriptsize]{\x};}
+    \def\rw#1#2#3#4{\fill[defc!14] (#1,{-0.55*#3-0.15}) rectangle (#2,{-0.55*#3-0.5});
+       \node[font=\scriptsize,anchor=west] at (104,{-0.55*#3-0.33}) {#4};}
+    \rw{0}{100}{1}{start: optimum leží v $[0,100]$}
+    \draw[rej,very thick] (50,-0.6) -- (50,-1.15);
+    \rw{50}{100}{2}{$k=50$: \NE\ $\Rightarrow$ opt $>50$}
+    \draw[acc,very thick] (75,-1.15) -- (75,-1.7);
+    \rw{50}{75}{3}{$k=75$: \ANO\ $\Rightarrow$ opt $\le 75$}
+    \draw[rej,very thick] (63,-1.7) -- (63,-2.25);
+    \rw{63}{75}{4}{$k=63$: \NE\ $\Rightarrow$ opt $\in(63,75]$}
+    \node[font=\scriptsize] at (69,-2.75) {$\vdots$};
+
+  .caption:
+
+    Každý dotaz na API rozpůlí interval, kde může ležet optimum.
+
+
+.Corollary:
+  title: 'Rozhodovací a optimalizační verze jsou „stejně těžké“'
+  label: cor-binsearch
+
+  Leží-li optimum v rozsahu $0,\dots,\mathrm{MAX}$, stačí $\lceil\log_2 \mathrm{MAX}\rceil$ volání
+  rozhodovacího API. Jsou-li váhy zapsány binárně, je $\log_2 \mathrm{MAX}$ nejvýše
+  polynomiální ve velikosti vstupu, takže z hlediska polynomiálního času o nic nepřicházíme.
+
+
+.Subsection Od optima k řešení: samo-redukovatelnost (proseminář 1)
+  label: ch-ts-od-optima-k-reseni-samo-redukovatelnost
+
+
+.Remark:
+  title: 'Redukce s orákulem: $\prob{TSP}$ – nalezení kružnice $\to$ $\prob{TSP}$ – rozhodovací verze'
+  label: red-tspsearch
+
+  Hrany po jedné mažeme a orákulem s prahem $W$ (přesné optimum) hlídáme, že optimální kružnice v grafu zůstává.
+
+
+Víme, že optimum je $W=22$. Ale "kudy".emphasize máme jet? API odpovídá jen ANO/NE. Řešení
+z něj vytáhneme technikou "self-reducibility".notion (samo-redukovatelnost):
+
+
+.centered:
+
+  !tikz:
+    filename: 01c-optimalizacni-vs-rozhodovaci-03
+    options: 'node distance=12mm'
+
+    \node[blok,text width=30mm] (in) {upravený graf $G'$\\ a práh $W$};
+    \node[draw,thick,fill=black!80,text=white,rounded corners=2pt,minimum width=34mm,minimum height=13mm,
+          align=center,right=of in,font=\sffamily\small] (bb) {černá skříňka\\\scriptsize „existuje kružnice $\le W$?“};
+    \node[bloka,right=12mm of bb,yshift=5mm] (y) {ANO};
+    \node[blokr,right=12mm of bb,yshift=-5mm] (n) {NE};
+    \draw[flow] (in) -- (bb);
+    \draw[flow] (bb.east) -- (y.west);
+    \draw[flow] (bb.east) -- (n.west);
+    \node[note,below=1mm of bb,text width=60mm,align=flush center] {Uvnitř může být i ten nejhloupější\\ exponenciální algoritmus.\\ Zajímá nás jen odpověď.};
+
+
+.enumerate:
+
+  .item:
+
+    Vezmi libovolnou dosud nezpracovanou hranu $e\in E$ a dočasně ji smaž ($G' = G - e$).
+
+  .item:
+
+    Zeptej se API: „existuje v $G'$ hamiltonovská kružnice délky $\le W$?“
+
+  .item:
+
+    $\ANO$: hrana $e$ k dosažení optima "není potřeba".emphasize – necháme ji smazanou natrvalo.
+
+  .item:
+
+    $\NE$: hrana $e$ je "kritická".emphasize – vrátíme ji a označíme jako součást řešení.
+
+  .item:
+
+    Opakuj, dokud v grafu nezbude přesně $|V|$ hran.
+
+
+.Figure:
+
+  !tikz:
+    filename: 01c-optimalizacni-vs-rozhodovaci-04
+    options: 'scale=0.62,every node/.style={transform shape}'
+
+    \begin{scope}
+      \tspnodes
+      \begin{scope}[on background layer]
+      \tspe{A}{C}{12}{ebad}\tspe{A}{D}{15}{e}\tspe{B}{E}{14}{e}\tspe{B}{C}{10}{e}\tspe{D}{E}{9}{e}
+      \tspe{A}{B}{5}{e}\tspe{B}{D}{4}{e}\tspe{D}{C}{3}{e}\tspe{C}{E}{6}{e}\tspe{E}{A}{4}{e}
+      \end{scope}
+      \node[font=\Large\sffamily,align=center] at (0,-3.1) {smaž A--C?\\ \ANO\ $\Rightarrow$ pryč};
+    \end{scope}
+    \begin{scope}[xshift=6.3cm]
+      \tspnodes
+      \begin{scope}[on background layer]
+      \tspe{A}{D}{15}{e}\tspe{B}{E}{14}{e}\tspe{B}{C}{10}{e}\tspe{D}{E}{9}{e}
+      \tspe{A}{B}{5}{esel}\tspe{B}{D}{4}{e}\tspe{D}{C}{3}{e}\tspe{C}{E}{6}{e}\tspe{E}{A}{4}{e}
+      \end{scope}
+      \node[font=\Large\sffamily,align=center] at (0,-3.1) {smaž A--B?\\ \NE\ $\Rightarrow$ vrátit, je v optimu};
+    \end{scope}
+    \begin{scope}[xshift=12.6cm]
+      \tspnodes
+      \begin{scope}[on background layer]
+      \tspe{A}{D}{15}{e}\tspe{B}{E}{14}{e}\tspe{B}{C}{10}{e}\tspe{D}{E}{9}{ebad}
+      \tspe{A}{B}{5}{esel}\tspe{B}{D}{4}{e}\tspe{D}{C}{3}{e}\tspe{C}{E}{6}{e}\tspe{E}{A}{4}{e}
+      \end{scope}
+      \node[font=\Large\sffamily,align=center] at (0,-3.1) {smaž D--E?\\ \ANO\ $\Rightarrow$ pryč};
+    \end{scope}
+    \begin{scope}[xshift=18.9cm]
+      \tspnodes
+      \begin{scope}[on background layer]
+      \tspe{A}{B}{5}{esel}\tspe{B}{D}{4}{esel}\tspe{D}{C}{3}{esel}\tspe{C}{E}{6}{esel}\tspe{E}{A}{4}{esel}
+      \end{scope}
+      \node[font=\Large\sffamily,align=center] at (0,-3.1) {\dots A--D, B--C, B--E pryč\\ zbylo $|V|=5$ hran};
+    \end{scope}
+
+  .caption:
+
+    Extrakce optimální kružnice mazáním hran (dotaz vždy $\mathrm{TSP}(G',22)$).
+    Červeně čárkovaně je hrana, kterou právě zkoušíme smazat.
+
+
+.Warning:
+  title: 'Musíme znát přesné optimum'
+
+  Spustíme-li algoritmus s prahem $W=25$ místo $22$, může se stát následující. V grafu je kromě
+  optima (22) ještě kružnice délky 24. Zkusíme smazat hranu $e$, která leží "jen".emphasize na optimu.
+  API vidí suboptimální kružnici (24), která $e$ nepotřebuje, a odpoví $\ANO$. Hranu $e$ trvale
+  zahodíme – a optimum je navždy zničeno.
+
+
+  .centered:
+
+    !tikz:
+      filename: 01c-optimalizacni-vs-rozhodovaci-05
+      options: 'scale=0.85'
+
+      \foreach \i in {0,...,5} {\node[vs] (o\i) at ({60*\i}:1.3) {};}
+      \foreach \i [evaluate=\i as \j using {int(mod(\i+1,6))}] in {0,...,5} {\draw[esel] (o\i) -- (o\j);}
+      \draw[ebad,line width=2.2pt] (o0) -- (o1) node[midway,right,font=\scriptsize,text=rej]{$e$};
+      \draw[intc,very thick,dashed,rounded corners=6pt] (o1) .. controls (0.2,2.4) and (2.4,1.6) .. (o0);
+      \node[font=\scriptsize,acc!70!black] at (0,0) {optimum 22};
+      \node[font=\scriptsize,intc] at (2.4,1.9) {kružnice 24};
+
+
+  Dostaneme sice platnou kružnici délky $\le 25$, ale ne tu nejlepší. Proto nejprve
+  binárním vyhledáváním zjistíme přesné optimum $W$ a teprve pak extrahujeme řešení.

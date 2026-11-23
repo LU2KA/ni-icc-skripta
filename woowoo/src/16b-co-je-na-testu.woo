@@ -1,0 +1,194 @@
+.Section Co je na zápočtovém testu
+  label: ch-test-co-je-na-testu
+
+
+Vše v tomto oddílu pochází ze stránek předmětu (stránka „Hodnocení“ a ukázkový průběžný test) ve stavu
+"k 20. listopadu 2026".notion. Kdyby se tam něco změnilo, platí stránky předmětu, ne skripta.
+
+
+.Subsection Formát
+  label: ch-test-format
+
+
+.itemize:
+
+  .item:
+
+    Zápočtový test se píše "mimo kontaktní výuku".emphasize v druhé polovině semestru. Stránka předmětu
+    k termínu uvádí: „Psát bychom chtěli mezi "23. listopadem a 4. prosincem".notion.“
+
+  .item:
+
+    Na vypracování je "70 minut".notion.
+
+  .item:
+
+    Test má "4 úlohy".notion pevně daných typů (tabulka níže), "celkem 30 bodů".notion.
+    "Hranice pro zápočet je 10 bodů".notion.
+
+  .item:
+
+    Body lze sledovat v systému Grades (Klasifikace).
+
+  .item:
+
+    Zkouška je potom "ústní".notion; seznam témat bude zveřejněn.
+
+
+.Table:
+  label: tab-test-typy
+
+  .table:
+    columns: 'cp{9.5cm}cl'
+
+    .row:
+      head: true
+
+      typ
+
+      zadání podle stránky předmětu
+
+      body
+
+      postup
+
+    .row:
+
+      1
+
+      Nalezněte Turingův stroj požadovaných vlastností pro zadaný jazyk. Požadované vlastnosti mohou být například mimo jiné požadavek na čas, prostor, (ne)determinismus.
+
+      6
+
+      .reference:ch-test-postup-ts
+
+    .row:
+
+      2
+
+      Self-redukce problému (tj. pomocí rozhodovací verze nalezněte konkrétní řešení problému).
+
+      6
+
+      .reference:ch-test-postup-self-redukce
+
+    .row:
+
+      3
+
+      Formulujte daný problém jako ILP nebo SAT úlohu.
+
+      6
+
+      .reference:ch-test-postup-ilp-sat
+
+    .row:
+
+      4
+
+      Pro daný problém ukažte, že je NP-těžký (úplný) redukcí z vhodného problému.
+
+      12
+
+      .reference:ch-test-postup-np
+
+  .caption:
+
+    Čtyři typy úloh zápočtového testu (znění převzaté ze stránky „Hodnocení“) a odkaz na postup na papíře v oddílu
+    .reference:ch-test-postupy-na-papire.
+
+
+.Subsection Co říká hlavička ukázkového testu
+  label: ch-test-hlavicka-testu
+
+
+Ukázkový test začíná instrukcemi, které je dobré znát předem:
+
+.itemize:
+
+  .item:
+
+    „Odpovědi zdůvodňujte; samotný výsledek bez zdůvodnění nestačí.“ Holý stroj, model nebo redukce bez
+    argumentu, proč fungují, tedy plný počet bodů nedostanou.
+
+  .item:
+
+    „Na přednášce probrané NP-úplné problémy ($\prob{SAT}$, $\prob{3-SAT}$, Nezávislá množina, Vrcholové
+    pokrytí, Klika, 3-barvení, Hamiltonovská cesta/kružnice, $\prob{Subset Sum}$, …) můžete použít bez důkazu.“
+    V úloze 4 tedy stačí jedna redukce "z".emphasize některého z nich; jejich NP-úplnost se znovu nedokazuje.
+
+
+Jak vypadají jednotlivé úlohy v ukázkovém testu (celý test s řešením je v příloze .reference:ch-ukazkovy):
+
+.description:
+
+  .ditem:
+    bullet: 'Úloha 1:'
+
+    jazyk $\{a^ib^jc^k\mid k=i+j\}$; a) deterministický dvoupáskový stroj v čase $O(n)$ s myšlenkou, významem
+    stavů (fází) a odhadem času, b) deterministický stroj se vstupní páskou jen pro čtení a pracovním prostorem
+    $O(\log n)$ se zdůvodněním prostoru; formální přechodovou funkci nepožaduje.
+
+  .ditem:
+    bullet: 'Úloha 2:'
+
+    orákulum pro kliku velikosti alespoň $k$; a) spočítat $\omega(G)$, b) najít největší kliku; u obou
+    počet dotazů vzhledem k $n$ a zdůvodnění správnosti.
+
+  .ditem:
+    bullet: 'Úloha 3:'
+
+    rozvrh zkoušek jako ILP; chce proměnné s významem, všechna omezení s tím, co která skupina zajišťuje,
+    účelovou funkci a velikost programu (počet proměnných a omezení).
+
+  .ditem:
+    bullet: 'Úloha 4:'
+
+    NP-úplnost problému Jádro orientovaného grafu, s nápovědou „převádějte z problému $\prob{3-SAT}$“.
+
+
+.Subsection Co k jednotlivým typům studovat
+  label: ch-test-co-studovat
+
+
+Podrobný seznam všech řešených úloh daného typu je v příloze .reference:ch-typove; tady je jen hlavní linka.
+
+.description:
+
+  .ditem:
+    bullet: 'Typ 1 (Turingův stroj):'
+
+    kapitola .reference:ch-ts (definice TS, více pásek a palindromy v $O(n)$, cvičení 1), kapitola .reference:ch-cas
+    (čas, lineární zrychlení – proč nezáleží na konstantách), kapitola .reference:ch-np (nedeterministické stroje,
+    .reference:cv-2-1 a .reference:cv-2-2), kapitola .reference:ch-prostor (vstupní páska jen pro čtení,
+    třídy $\LL$ a $\NL$, oddíl .reference:ch-prostor-logaritmicky-prostor-l-a-nl). Úlohy: oddíl .reference:ch-typove-typ-1-turinguv-stroj.
+
+  .ditem:
+    bullet: 'Typ 2 (self-redukce):'
+
+    kapitola .reference:ch-ts (binární vyhledávání optima a samo-redukovatelnost u TSP, oddíl
+    .reference:ch-ts-od-optima-k-reseni-samo-redukovatelnost), .reference:cv-2-4 (klika) a .reference:cv-3-1
+    (3-barvení), oddíl .reference:ch-graf-redukce-s-orakulem-a-vycislitelnost. Úlohy: oddíl .reference:ch-typove-typ-2-self-redukce.
+
+  .ditem:
+    bullet: 'Typ 3 (ILP nebo SAT):'
+
+    oddíl .reference:ch-cisla-ilp (tři základní modelovací vzory), kapitoly .reference:ch-resice-sat a
+    .reference:ch-resice-ilp s cvičeními 7 a 8. Úlohy: oddíl .reference:ch-typove-typ-3-formulace-jako-ilp-nebo-sat.
+
+  .ditem:
+    bullet: 'Typ 4 (NP-těžkost):'
+
+    kapitola .reference:ch-redukce (definice redukce, směr redukce), recept v oddílu
+    .reference:ch-cook-mapa-redukci-a-recept-na-dukaz-np-uplnosti, katalog redukcí v kapitolách .reference:ch-sat až
+    .reference:ch-cisla s cvičeními 3 a 4, „podezřelé redukce“ v oddílu .reference:sec-podezrele a graf redukcí
+    v příloze .reference:ch-graf. Úlohy: oddíl .reference:ch-typove-typ-4-np-tezkost.
+
+
+.Remark:
+  title: 'Body a čas'
+
+  Úloha 4 má dvojnásobek bodů (12 z 30), ale čas je jen 70 minut na všechny čtyři úlohy, tedy průměrně
+  necelých 18 minut na úlohu. Postupy v oddílu .reference:ch-test-postupy-na-papire jsou proto psané tak, aby se
+  daly projít bez váhání: co napsat, v jakém pořadí a na co nezapomenout. Hranice 10 bodů je méně než body za
+  úlohu 4 samotnou. (Rozvržení času je doporučení skript, stránky předmětu k němu nic neříkají.)

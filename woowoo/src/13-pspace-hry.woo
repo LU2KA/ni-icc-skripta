@@ -1,0 +1,41 @@
+.Chapter PSPACE-úplnost a hry
+  label: ch-pspace
+
+
+Zdroje: přednáška 6 (3. část), proseminář 6.
+
+
+.Concept:
+  title: 'Proč to děláme'
+
+  Už víme, jak spolu souvisejí prostorové a časové třídy (kapitola .reference:ch-prostor). Podobně jako u $\NP$ teď
+  i v $\PSPACE$ hledáme „reprezentační“ problém, na který se dá všechno ostatní z $\PSPACE$ redukovat. Tím problémem je
+  $\prob{TQBF}$ (kvantifikované booleovské formule); z něj pak redukcí dostaneme $\PSPACE$-úplnost hry
+  $\prob{Generalized Geography}$. Na kvantifikovanou formuli se lze dívat jako na hru dvou hráčů, a proto $\PSPACE$
+  přirozeně popisuje složitost her.
+
+
+.Definition:
+  title: 'PSPACE-úplnost'
+  label: def-pspaceuplny
+
+  Problém $X$ je "$\PSPACE$-úplný".emphasize, pokud
+
+  .enumerate:
+
+    .item:
+
+      $X\in\PSPACE$ a
+
+    .item:
+
+      pro každý problém $Y\in\PSPACE$ existuje polynomiální redukce $Y\redp X$ ("$\PSPACE$-těžkost".emphasize).
+
+
+.Warning:
+  title: 'Redukce zůstávají polynomiální v čase'
+
+  Redukce stále musí běžet v polynomiálním "čase".emphasize (a tím pádem i prostoru). Kdybychom povolili redukce v
+  polynomiálním prostoru, mohla by redukce problém rovnou vyřešit a vydat pevnou ANO/NE-instanci – ztratili bychom
+  schopnost rozlišovat jemné rozdíly ve složitosti. Důsledek: je-li $\PSPACE$-úplný problém v $\PP$ (resp. $\NP$), pak
+  $\PP=\PSPACE$ (resp. $\NP=\PSPACE$).

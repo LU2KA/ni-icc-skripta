@@ -1,0 +1,19 @@
+.Chapter Nezávislé množiny, kliky a pokrytí
+  label: ch-is
+
+
+Zdroje: proseminář 3, cvičení 3.
+
+
+.Concept:
+  title: 'Proč to děláme'
+
+  Po logických problémech přicházejí první „nelogické“ NP-úplné problémy: nezávislá množina, vrcholové pokrytí,
+  zasažení množin a klika. NP-těžkost $\prob{IS}$ dokážeme redukcí z $\prob{3-SAT}$ a ostatní problémy z něj získáme
+  krátkými redukcemi (doplněk množiny, zobecnění, doplněk grafu). Všechny redukce mají stejnou kostru jako recept
+  na konci kapitoly .reference:ch-cook: konstrukce v polynomiálním čase a obě implikace. Na těchto redukcích je
+  vidět, jak fungují gadgety a proč zpětná implikace potřebuje jejich rigiditu. Kapitolu uzavírá cvičení 3
+  s řešenými polynomiálními redukcemi.
+
+
+Obě implikace stručně: $\Rightarrow$ nasypat řešení, $\Leftarrow$ přečíst řešení.

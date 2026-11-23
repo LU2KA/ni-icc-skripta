@@ -1,0 +1,133 @@
+
+
+.Section PSPACE a hry
+  label: ch-pspace-pspace-a-hry
+
+
+.Concept:
+  title: 'QBF jako hra dvou hráčů'
+
+  Na $\exists x_1\forall x_2\exists x_3\dots\varphi$ se lze dívat jako na hru:
+
+  .itemize:
+
+    .item:
+
+      "Hráč $\exists$".notion se snaží dokázat, že $\varphi$ je pravdivá; vybírá hodnoty svých proměnných
+      ($x_1,x_3,\dots$).
+
+    .item:
+
+      "Hráč $\forall$".notion se snaží dokázat, že $\varphi$ je nepravdivá; vybírá $x_2,x_4,\dots$
+
+  Formule je pravdivá $\iff$ hráč $\exists$ má "vítěznou strategii".emphasize. Otázka „má hráč 1 vítěznou strategii bez
+  ohledu na to, jak hraje hráč 2?“ je pro hry s polynomiálně dlouhou partií typicky $\PSPACE$-úplná.
+
+
+.Subsection Proč věříme, že PSPACE je větší než NP?
+  label: ch-pspace-proc-verime-ze-pspace-je-vetsi-nez-np
+
+
+Ukázali jsme $\NP\subseteq\PSPACE$. Je inkluze ostrá? Nevíme – ale máme dobrý důvod se domnívat, že ano.
+
+.itemize:
+
+  .item:
+
+    $\prob{SAT}\in\NP$: splňující ohodnocení je "krátký certifikát".emphasize – stačí vypsat $n$ bitů a ověřit.
+
+  .item:
+
+    $\prob{QBF}$: „důkazem“ pravdivosti je celá vítězná strategie – strom reakcí na všechny tahy protihráče.
+    Ten má exponenciální velikost.
+
+Neformálně: $\NP$ = problémy s krátkým důkazem; $\PSPACE$ = problémy, kde řešení může vyžadovat celou strategii bez
+krátkého zápisu. Proto věříme $\NP\subsetneq\PSPACE$ (důkaz ale nemáme). Jak taková strategie vypadá, ukazuje
+obr. .reference:fig-qbf-strategie.
+
+
+.Figure:
+  label: fig-qbf-strategie
+
+  !tikz:
+    filename: 13b-pspace-a-hry-02
+    options: 'x=1cm,y=1cm,qn/.style={circle,draw,thick,minimum size=6mm,inner sep=0pt,font=\scriptsize},qE/.style={qn,fill=defc!15},qA/.style={qn,fill=intc!20},q0/.style={qn,fill=rej!20},q1/.style={qn,fill=acc!30},se/.style={line width=2pt,draw=acc!80!black},ne/.style={thick,draw=black!30}'
+
+    \node[qE] (r) at (3.15,0) {$\exists$};
+    \node[qA] (a0) at (1.35,-1.2) {$\forall$}; \node[qA] (a1) at (4.95,-1.2) {$\forall$};
+    \foreach \i/\x in {0/0.45,1/2.25,2/4.05,3/5.85} \node[qE] (e\i) at (\x,-2.4) {$\exists$};
+    \foreach \i/\w in {0/0,1/0,2/0,3/1,4/1,5/0,6/0,7/1} \node[q\w] (l\i) at ({0.9*\i},-3.6) {\w};
+    \draw[ne] (r)--node[left,font=\tiny]{0}(a0);
+    \draw[se] (r)--node[right,font=\tiny]{1}(a1);
+    \draw[ne] (a0)--(e0); \draw[ne] (a0)--(e1);
+    \draw[se] (a1)--node[left,font=\tiny]{0}(e2); \draw[se] (a1)--node[right,font=\tiny]{1}(e3);
+    \foreach \i/\a/\b in {0/0/1,1/2/3} {\draw[ne] (e\i)--(l\a); \draw[ne] (e\i)--(l\b);}
+    \draw[se] (e2)--node[left,font=\tiny]{0}(l4); \draw[ne] (e2)--(l5);
+    \draw[ne] (e3)--(l6); \draw[se] (e3)--node[right,font=\tiny]{1}(l7);
+    \foreach \y/\lab in {0/{$x_1$},-1.2/{$x_2$},-2.4/{$x_3$},-3.6/{$\varphi$}} \node[font=\scriptsize,anchor=east] at (-0.5,\y) {\lab};
+    \node[font=\scriptsize,align=left,anchor=west] at (7.2,-0.6) {$\varphi=(x_1\lor x_2)\land(\lnot x_2\lor x_3)\land(x_2\lor\lnot x_3)$};
+    \node[font=\scriptsize,align=left,anchor=west] at (7.2,-1.9) {\textcolor{acc!70!black}{\textbf{strategie hráče $\exists$:}}\\ $x_1:=1$, \ $x_3:=x_2$ (reaguje na tah $\forall$)};
+    \node[font=\scriptsize,align=left,anchor=west] at (7.2,-3.2) {v uzlu $\exists$ jedna hrana, v uzlu $\forall$ obě\\ $\Rightarrow$ při $k$ tazích hráče $\forall$ má strategie $2^k$ listů};
+
+  .caption:
+
+    Herní strom formule $\exists x_1\forall x_2\exists x_3:\varphi$ a vítězná strategie hráče $\exists$ (zeleně):
+    všechny její listy mají $\varphi=1$ (levá hrana = hodnota 0, pravá = 1). "Všimni si:".emphasize u $\prob{SAT}$ by certifikát byla jedna cesta (jedno
+    ohodnocení), tady je to celý podstrom – na každý tah soupeře musí být připravena odpověď.
+    "(nad rámec přednášky)".emphasize Konkrétní formule je vlastní příklad.
+
+
+.Subsection Složitost her
+  label: ch-pspace-slozitost-her
+
+
+Ptáme se: „Má hráč z aktuální pozice vítěznou strategii?“ Výzkumníci z MIT (E. Demaine a spol.) mapují hry do
+tříd složitosti podle dvou os: počtu hráčů a délky hry.
+
+
+.Figure:
+  label: ch-pspace-fig-slozitost-her
+
+  !tikz:
+    filename: 13b-pspace-a-hry-01
+    options: 'x=1cm,y=1cm,gc/.style={draw,thick,rounded corners=3pt,align=center,font=\scriptsize,text width=44mm,minimum height=15mm}'
+
+    \node[font=\scriptsize\bfseries,align=center,anchor=south] at (2.4,0.85) {polynomiálně dlouhá hra};
+    \node[font=\scriptsize\bfseries,align=center,anchor=south] at (7.4,0.85) {hra může trvat\\exponenciálně dlouho};
+    \node[font=\scriptsize\bfseries,rotate=90] at (-0.6,0) {1 hráč};
+    \node[font=\scriptsize\bfseries,rotate=90] at (-0.6,-1.9) {2 hráči};
+    \node[gc,draw=intc,fill=intc!12] at (2.4,0) {\textbf{\NP-úplné}\\ hlavolamy bez cyklení\\ (skládání, hledání cesty)};
+    \node[gc,draw=thmc,fill=thmc!10] at (7.4,0) {\textbf{\PSPACE-úplné}\\ tahy lze vracet\\ (Rush Hour, Sokoban)};
+    \node[gc,draw=thmc,fill=thmc!10] at (2.4,-1.9) {\textbf{\PSPACE-úplné}\\ ohraničený počet tahů\\ (Hex, Reversi, piškvorky, geografie)};
+    \node[gc,draw=rej,fill=rej!8] at (7.4,-1.9) {\textbf{\EXP-úplné}\\ (zobecněné šachy, dáma, Go\\ s japonskými pravidly ko)};
+
+  .caption:
+
+    Zlaté (neformální) pravidlo složitosti her.
+
+
+"Posuvné hlavolamy (1 hráč).".notion "Rush Hour".emphasize (Bláznivá křižovatka – vyjet s červeným autem
+z parkoviště posouváním ostatních) a "Sokoban".emphasize (skladník tlačí bedny na cílová políčka) jsou $\PSPACE$-úplné.
+Proč $\PSPACE$? Tahy lze „vracet“ (šoupat bloky tam a zpět), cesta k řešení tak může být exponenciálně dlouhá, ačkoli
+paměť na uložení desky je polynomiální – jde o dosažitelnost v grafu konfigurací.
+
+
+"Deskové hry pro dva s ohraničenou délkou.".notion "Reversi/Othello".emphasize: v každém tahu přibude kámen, hra na
+desce $n\times n$ skončí za $O(n^2)$ tahů. "Hex".emphasize: hráči propojují protilehlé strany hexové sítě, opět žádné
+nekonečné smyčky.
+
+
+"Piškvorky.".notion Gomoku na desce $15\times15$ je konečný problém (vyřešený: začínající vyhrává); piškvorky na
+papíře okraje nemají. Složitost má smysl až pro "zobecněné".emphasize piškvorky na desce $n\times n$.
+
+.itemize:
+
+  .item:
+
+    "V $\PSPACE$:".notion každý tah přidá kámen $\Rightarrow$ hra skončí po nejvýše $n^2$ tazích; hledání vítězné
+    strategie = prohledávání herního stromu do hloubky $n^2$ s pamětí (pozice + zásobník) polynomiální.
+
+  .item:
+
+    "$\PSPACE$-těžké:".notion rozhodnout, zda má první hráč vítěznou strategii, je $\PSPACE$-úplné – stejně jako
+    QBF (Reisch, 1980).

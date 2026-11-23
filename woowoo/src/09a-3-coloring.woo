@@ -1,0 +1,658 @@
+.Section 3-Coloring
+  label: ch-zoo-3-coloring
+
+
+.Definition:
+  title: 'Problém 3-Coloring (3-barvení)'
+  label: prob-3col
+
+  "Vstup:".notion neorientovaný graf $G=(V,E)$.
+
+
+  "Otázka:".notion lze vrcholy obarvit třemi barvami tak, aby žádná hrana nespojovala dva
+  vrcholy stejné barvy?
+
+
+$\prob{3-Coloring}\in\NP$: certifikátem je obarvení, každou hranu zkontrolujeme. Zbývá
+NP-těžkost: z formule $\Phi$ v 3-CNF sestrojíme graf $G_\Phi$, který je 3-obarvitelný
+"právě když".emphasize je $\Phi$ splnitelná.
+
+
+.Remark:
+  title: 'Redukce: $\prob{3-SAT} \redp \prob{3-Coloring}$'
+  label: red-3col
+
+  formule $\Phi$ $\;\longmapsto\;$ graf $G_\Phi$
+
+
+.Subsection Konstrukce $G_\Phi$
+  label: ch-zoo-konstrukce-g-phi
+
+
+"1. Paleta.".notion Trojúhelník na vrcholech $T$ (True), $F$ (False) a $B$ (Base).
+V každém 3-obarvení dostanou tři různé barvy – slouží jako "referenční barvy".emphasize pro
+zbytek grafu. Barvy proto pojmenujeme podle těchto vrcholů.
+
+
+"2. Gadgety proměnných.".notion Pro každou proměnnou $x_i$ vrcholy $x_i$ a $\neg x_i$,
+spojené hranou navzájem a oba s $B$. Ani jeden tedy nemá barvu $B$ a mají různé barvy:
+jeden je $T$, druhý $F$ – "binární volba".notion.
+
+
+.Figure:
+
+  !tikz:
+    filename: 09a-3-coloring-01
+
+    \node[chZlv,fill=chZT] (T) at (-0.8,2.2) {$T$};
+    \node[chZlv,fill=chZF] (F) at (0.8,2.2) {$F$};
+    \node[chZlv,fill=chZB] (B) at (0,1.2) {$B$};
+    \draw[e] (T)--(F)--(B)--(T);
+    \foreach \i/\vx/\vn/\cx/\cn in {1/-3.6/-2.6/T/F,2/-1.0/0/F/T,3/1.6/2.6/T/F} {
+      \node[chZlv,fill=chZ\cx] (x\i) at (\vx,-0.4) {$x_{\i}$};
+      \node[chZlv,fill=chZ\cn] (n\i) at (\vn,-0.4) {$\neg x_{\i}$};
+      \draw[e] (x\i)--(n\i);
+      \draw[efaint,draw=black!40] (B)--(x\i) (B)--(n\i);}
+    \node[note,anchor=west] at (3.4,1.6) {paleta: tři různé barvy};
+    \node[note,anchor=west] at (3.4,-0.4) {$x_i$ a $\neg x_i$ dostanou $T$ a $F$};
+    \node[font=\scriptsize] at (0,-1.2) {ohodnocení $x_1=1$, $x_2=0$, $x_3=1$};
+
+  .caption:
+
+    Paleta a gadgety proměnných. Hrana do $B$ zakazuje barvu $B$, hrana $x_i\neg x_i$ vynutí opačné barvy.
+
+
+"3. Klauzulový gadget („prasátko“).".notion Pro každou klauzuli $(\ell_1\vee\ell_2\vee\ell_3)$
+přidáme šest nových vrcholů $a,b,c,d,e,o$: dva trojúhelníky $abc$ a $deo$ propojené hranou $cd$.
+„Uši“ $\ell_1,\ell_2,\ell_3$ jsou "přímo vrcholy literálů".emphasize z gadgetů proměnných
+($\ell_1$–$a$, $\ell_2$–$b$, $\ell_3$–$e$). Výstup $o$ („ocásek“) spojíme s $B$ i $F$.
+
+
+.Figure:
+
+  !tikz:
+    filename: 09a-3-coloring-02
+    options: 'scale=1.25'
+
+    \node[chZlv] (l1) at (0,2.5) {$\ell_1$};
+    \node[chZlv] (l2) at (1.6,2.5) {$\ell_2$};
+    \node[chZlv] (l3) at (2.7,2.5) {$\ell_3$};
+    \node[chZlv,minimum size=5.5mm] (a) at (0.45,1.75) {$a$};
+    \node[chZlv,minimum size=5.5mm] (b) at (1.15,1.75) {$b$};
+    \node[chZlv,minimum size=5.5mm] (c) at (0.8,1.15) {$c$};
+    \node[chZlv,minimum size=5.5mm] (d) at (1.5,0.55) {$d$};
+    \node[chZlv,minimum size=5.5mm] (e) at (2.2,0.55) {$e$};
+    \node[chZlv,minimum size=5.5mm,fill=chZT] (o) at (1.85,-0.1) {$o$};
+    \node[chZlv,fill=chZB] (B) at (0.5,-0.6) {$B$};
+    \node[chZlv,fill=chZF] (F) at (3.2,-0.6) {$F$};
+    \draw[e] (l1)--(a) (l2)--(b) (a)--(b) (a)--(c) (b)--(c) (c)--(d) (l3)--(e) (d)--(e) (d)--(o) (e)--(o);
+    \draw[tB,thick,dashed] (o)--(B);
+    \draw[tF,thick,dashed] (o)--(F);
+    \begin{scope}[on background layer]
+      \fill[intc!12,rounded corners=4pt] (0.1,0.85) rectangle (1.5,2.05);
+      \fill[intc!12,rounded corners=4pt] (1.15,-0.4) rectangle (2.55,0.85);
+    \end{scope}
+    \node[note,anchor=west] at (3.3,1.6) {horní trojúhelník: kombinuje $\ell_1,\ell_2$};
+    \node[note,anchor=west] at (3.3,0.45) {dolní trojúhelník: kombinuje $c$ a $\ell_3$};
+    \node[note,anchor=west] at (3.6,-0.6) {$o$ sousedí s $B$ a $F$ $\Rightarrow$ $o$ má barvu $T$};
+
+  .caption:
+
+    Prasátko pro klauzuli $(\ell_1\vee\ell_2\vee\ell_3)$. Úkol gadgetu: nejít obarvit,
+    pokud jsou všechny tři literály $F$.
+
+
+.Figure:
+
+  !tikz:
+    filename: 09a-3-coloring-03
+    options: 'scale=1.0'
+
+    \node[chZlv,fill=chZT] (T) at (-0.6,4.0) {$T$};
+    \node[chZlv,fill=chZF] (F) at (0.8,4.0) {$F$};
+    \node[chZlv,fill=chZB] (B) at (0.1,3.1) {$B$};
+    \draw[e] (T)--(F)--(B)--(T);
+    \foreach \n/\x/\t in {x1/-3/{x_1},n1/-2/{\neg x_1},x2/-0.7/{x_2},n2/0.3/{\neg x_2},x3/1.6/{x_3},n3/2.6/{\neg x_3}}
+       {\node[chZlv,minimum size=8mm,font=\scriptsize] (\n) at (\x,1.9) {$\t$};
+        \draw[black!25] (B)--(\n);}
+    \draw[e] (x1)--(n1) (x2)--(n2) (x3)--(n3);
+    \node[chZv] (a) at (-2.5,0.9) {};
+    \node[chZv] (b) at (-1.1,0.9) {};
+    \node[chZv] (c) at (-1.8,0.3) {};
+    \node[chZv] (d) at (-0.6,-0.4) {};
+    \node[chZv] (ee) at (0.5,-0.4) {};
+    \node[chZv,fill=chZT] (o) at (-0.05,-1.1) {};
+    \draw[thmc,very thick] (x1)--(a) (n2)--(b) (x3)--(ee);
+    \draw[e] (a)--(b)--(c)--(a) (c)--(d) (d)--(ee)--(o)--(d);
+    \draw[black,dashed,thick] (o) to[out=0,in=-60,looseness=1.3] (3.6,1.5) to[out=120,in=10] (F);
+    \draw[black,dashed,thick] (o) to[out=10,in=-70,looseness=1.2] (3.2,1.6) to[out=110,in=0] (B);
+    \node[font=\scriptsize] at (-0.05,-1.5) {výstup $o$};
+
+  .caption:
+
+    Celý $G_\Phi$ pro jedinou klauzuli $(x_1\vee\neg x_2\vee x_3)$. Fialové hrany napojují uši
+    na vrcholy literálů. Celkem má $G_\Phi$ "$3+2n+6m$ vrcholů".notion (paleta, $2$ na proměnnou,
+    $6$ na klauzuli) – konstrukce je polynomiální.
+
+
+.Subsection Lemma o trojúhelníku
+  label: ch-zoo-lemma-o-trojuhelniku
+
+
+Klíčem k analýze prasátka je chování jednoho trojúhelníku se dvěma „vstupy“: vrcholy $a,b,c$
+tvoří trojúhelník, $a$ sousedí se vstupem $\ell_1$ a $b$ se vstupem $\ell_2$; $c$ je „výstup“.
+
+
+.Lemma:
+  title: 'O trojúhelníku'
+  label: lem-trojuhelnik
+
+  .enumerate:
+
+    .item:
+
+      Mají-li vstupy stejnou barvu, má výstup $c$ nutně "tutéž".emphasize barvu.
+
+    .item:
+
+      Mají-li vstupy různé barvy, lze $c$ obarvit "libovolnou".emphasize ze tří barev.
+
+
+.Proof:
+
+  (1) Je-li $\ell_1$ i $\ell_2$ barvy $X$, ani $a$, ani $b$ nemá barvu $X$, a protože $a\ne b$,
+  vyčerpají $a,b$ obě zbylé barvy. Na $c$ zbývá jen $X$.
+  (2) Viz obrázek: pro každou volbu barvy $c$ dobarvíme $a,b$.
+
+
+.Figure:
+
+  !tikz:
+    filename: 09a-3-coloring-04
+    options: 'scale=0.95'
+
+    \newcommand{\tri}[6]{% x, l1, l2, a, b, c
+      \begin{scope}[xshift=#1 cm]
+      \node[chZv,minimum size=4.5mm,fill=chZ#2,label={[font=\scriptsize]above:$\ell_1$}] (p) at (0,1.6) {};
+      \node[chZv,minimum size=4.5mm,fill=chZ#3,label={[font=\scriptsize]above:$\ell_2$}] (q) at (1.6,1.6) {};
+      \node[chZv,minimum size=4.5mm,fill=chZ#4,label={[font=\scriptsize]left:$a$}] (a) at (0.35,0.9) {};
+      \node[chZv,minimum size=4.5mm,fill=chZ#5,label={[font=\scriptsize]right:$b$}] (b) at (1.25,0.9) {};
+      \node[chZv,minimum size=4.5mm,fill=chZ#6,label={[font=\scriptsize]below:$c$}] (c) at (0.8,0.2) {};
+      \draw[e] (p)--(a) (q)--(b) (a)--(b)--(c)--(a);
+      \end{scope}}
+    \tri{0}{F}{F}{T}{B}{F}
+    \node[font=\small\bfseries] at (0.8,-0.6) {stejné vstupy};
+    \node[font=\scriptsize] at (0.8,-1.0) {$\Rightarrow c$ = barva vstupů};
+    \draw[gr,thick] (2.5,-1.1) -- (2.5,2.2);
+    \tri{3.4}{T}{F}{F}{B}{T}
+    \tri{6.0}{T}{F}{B}{T}{F}
+    \tri{8.6}{T}{F}{F}{T}{B}
+    \node[font=\small\bfseries] at (6.8,-0.6) {různé vstupy};
+    \node[font=\scriptsize] at (6.8,-1.0) {$\Rightarrow c$ smí mít libovolnou barvu};
+    \node[font=\scriptsize,anchor=west] at (10.6,1.2) {\textcolor{tT}{$\bullet$}\,$T$};
+    \node[font=\scriptsize,anchor=west] at (10.6,0.8) {\textcolor{tF}{$\bullet$}\,$F$};
+    \node[font=\scriptsize,anchor=west] at (10.6,0.4) {\textcolor{tB}{$\bullet$}\,$B$};
+
+  .caption:
+
+    Lemma o trojúhelníku. Barva $F$ „propadne“ dolů jen tehdy, jsou-li oba vstupy $F$.
+
+
+.Concept:
+  title: 'Trojúhelník jako hradlo OR'
+
+  Interpretujeme-li $T$ jako 1 a $F$ jako 0: pokud je aspoň jeden vstup $T$, smíme výstup
+  nastavit na $T$; pokud jsou oba vstupy $F$, výstup je vynuceně $F$. Prasátko jsou dvě taková
+  „hradla“ za sebou: $(\ell_1\vee\ell_2)\vee\ell_3$.
+
+
+.Subsection Analýza prasátka
+  label: ch-zoo-analyza-prasatka
+
+
+"Aspoň jeden vstup je $T$.".notion Výstup $o$ má vždy barvu $T$ (sousedí s $B$ i $F$). Pro
+každou ze sedmi kombinací vstupů s aspoň jedním $T$ lze gadget dobarvit:
+
+
+.Figure:
+
+  !tikz:
+    filename: 09a-3-coloring-05
+    options: 'scale=0.62,every node/.append style={transform shape}'
+
+    \begin{scope}[xshift=0cm,yshift=0cm]\chZpig{T}{T}{T}{F}{B}{T}{F}{B}{T}\node[font=\Large] at (1.3,3.2) {$TTT$};\end{scope}
+    \begin{scope}[xshift=4cm,yshift=0cm]\chZpig{T}{T}{F}{F}{B}{T}{F}{B}{T}\node[font=\Large] at (1.3,3.2) {$TTF$};\end{scope}
+    \begin{scope}[xshift=8cm,yshift=0cm]\chZpig{T}{F}{T}{F}{T}{B}{F}{B}{T}\node[font=\Large] at (1.3,3.2) {$TFT$};\end{scope}
+    \begin{scope}[xshift=12cm,yshift=0cm]\chZpig{T}{F}{F}{F}{T}{B}{F}{B}{T}\node[font=\Large] at (1.3,3.2) {$TFF$};\end{scope}
+    \begin{scope}[xshift=2cm,yshift=-3.9cm]\chZpig{F}{T}{T}{T}{F}{B}{F}{B}{T}\node[font=\Large] at (1.3,3.2) {$FTT$};\end{scope}
+    \begin{scope}[xshift=6cm,yshift=-3.9cm]\chZpig{F}{T}{F}{T}{F}{B}{F}{B}{T}\node[font=\Large] at (1.3,3.2) {$FTF$};\end{scope}
+    \begin{scope}[xshift=10cm,yshift=-3.9cm]\chZpig{F}{F}{T}{T}{B}{F}{B}{F}{T}\node[font=\Large] at (1.3,3.2) {$FFT$};\end{scope}
+
+  Barvy: $\textcolor{tT}{\bullet}\,T$ $\quad$ $\textcolor{tF}{\bullet}\,F$ $\quad$ $\textcolor{tB}{\bullet}\,B$.
+  Popisek = barvy uší $\ell_1\ell_2\ell_3$; dole je výstup $o$ (vždy $T$).
+
+  .caption:
+
+    Všech sedm „splněných“ vstupů lze dobarvit.
+
+
+"Vstup $FFF$ vede ke sporu.".notion
+
+
+.Figure:
+
+  !tikz:
+    filename: 09a-3-coloring-06
+    options: 'scale=1.25'
+
+    \node[chZlv,fill=chZF,minimum size=5.5mm] (l1) at (0,2.5) {$\ell_1$};
+    \node[chZlv,fill=chZF,minimum size=5.5mm] (l2) at (1.6,2.5) {$\ell_2$};
+    \node[chZlv,fill=chZF,minimum size=5.5mm] (l3) at (2.7,2.5) {$\ell_3$};
+    \node[chZlv,minimum size=5.5mm,left color=chZT,right color=chZB] (a) at (0.45,1.75) {$a$};
+    \node[chZlv,minimum size=5.5mm,left color=chZT,right color=chZB] (b) at (1.15,1.75) {$b$};
+    \node[chZlv,minimum size=5.5mm,fill=chZF] (c) at (0.8,1.15) {$c$};
+    \node[chZlv,minimum size=5.5mm,fill=chZF] (d) at (1.5,0.55) {$d$};
+    \node[chZlv,minimum size=5.5mm,fill=chZB] (e) at (2.2,0.55) {$e$};
+    \node[chZlv,minimum size=5.5mm,fill=chZT] (o) at (1.85,-0.1) {$o$};
+    \draw[e] (l1)--(a) (l2)--(b) (a)--(b) (a)--(c) (b)--(c) (l3)--(e) (d)--(e) (d)--(o) (e)--(o);
+    \draw[rej,line width=2.4pt] (c)--(d);
+    \node[rej,font=\Large\bfseries] at (0.85,0.55) {$\times$};
+
+  .enumerate:
+
+    .item:
+
+      $a,b$ sousedí s ušima barvy $F$ $\Rightarrow$ $\{a,b\}=\{T,B\}$ $\Rightarrow$ $c=F$
+      (lemma o trojúhelníku, část 1).
+
+    .item:
+
+      Výstup $o=T$ a $\ell_3=F$ $\Rightarrow$ $e=B$ $\Rightarrow$ $d$ sousedí s $e=B$ a $o=T$,
+      tedy $d=F$.
+
+    .item:
+
+      Ale $c$ a $d$ jsou sousedé a oba mají barvu $F$. "Spor!".notion
+
+  .caption:
+
+    Při $\ell_1=\ell_2=\ell_3=F$ nelze prasátko 3-obarvit.
+
+
+.Subsection Korektnost redukce
+  label: ch-zoo-korektnost-redukce
+
+
+.Theorem:
+  label: thm-3sat3col
+
+  $\Phi$ je splnitelná $\iff$ $G_\Phi$ je 3-obarvitelný. Tedy $\prob{3-SAT}\redp\prob{3-Coloring}$
+  a $\prob{3-Coloring}$ je NP-úplný.
+
+
+.Proof:
+
+  "($\Rightarrow$)".notion Paletu obarvíme $T,F,B$ podle jmen. Vrcholy literálů obarvíme podle
+  splňujícího ohodnocení ($T$ = pravdivý, $F$ = nepravdivý). V každé klauzuli je aspoň jeden
+  literál $T$, takže podle analýzy (sedm případů) lze každé prasátko dobarvit.
+
+
+  "($\Leftarrow$)".notion Mějme 3-obarvení. Paleta je trojúhelník, má tři různé barvy – pojmenujeme
+  je podle vrcholů $T,F,B$. Vrcholy literálů sousedí s $B$, mají tedy barvu $T$ nebo $F$; gadget
+  proměnné zajišťuje, že $x$ a $\neg x$ mají opačné barvy. Položme $x=1$, právě když má vrchol $x$
+  barvu $T$ – ohodnocení je konzistentní. Výstup každého prasátka sousedí s $F$ i $B$, má tedy
+  barvu $T$, a podle analýzy proto do žádné klauzule nevstupují samé $F$. Každá klauzule obsahuje
+  pravdivý literál, $\Phi$ je splněna.
+
+
+.Subsection Aplikace: rozvrhování zkoušek
+  label: ch-zoo-aplikace-rozvrhovani-zkousek
+
+
+.Definition:
+  title: 'Problém Rozvrh zkoušek'
+  label: prob-rozvrh
+
+  "Vstup:".notion množina předmětů, studenti se svými zápisy předmětů, číslo $k$ (počet termínů).
+
+
+  "Otázka:".notion lze každému předmětu přidělit jeden z $k$ termínů tak, aby žádný student
+  neměl dvě zkoušky ve stejném termínu?
+
+
+"Graf konfliktů:".notion vrcholy jsou předměty, hrana spojuje dva předměty, které má zapsané
+nějaký společný student. Rozvrh s $k$ termíny je přesně obarvení grafu konfliktů $k$ barvami.
+
+
+.Warning:
+  title: 'Správný směr redukce'
+
+  Pozorování „rozvrh = barvení“ dává jen $\prob{Rozvrh}\redp k\text{-}\prob{Coloring}$ – „umíme-li
+  barvit, umíme rozvrhovat“. To o těžkosti rozvrhu "nic".emphasize neříká! Pro NP-těžkost potřebujeme
+  opačný směr: $\prob{3-Coloring}\redp\prob{Rozvrh}$.
+
+
+.Remark:
+  title: 'Redukce: $\prob{3-Coloring} \redp \prob{Rozvrh zkoušek}$'
+  label: red-rozvrh
+
+  graf $G$ $\;\longmapsto\;$ předměty $V$, studenti $E$, $k=3$
+
+
+"Konstrukce.".notion Z grafu $G=(V,E)$: každý vrchol $v$ je předmět, každá hrana $\{u,v\}$
+je jeden student zapsaný právě na $u$ a $v$, a $k=3$. Graf konfliktů této instance je přesně $G$.
+
+
+.Figure:
+
+  !tikz:
+    filename: 09a-3-coloring-07
+
+    \node[chZlv,fill=chZT] (A) at (0,1.6) {A};
+    \node[chZlv,fill=chZF] (B) at (1.6,1.6) {B};
+    \node[chZlv,fill=chZB] (C) at (1.6,0) {C};
+    \node[chZlv,fill=chZF] (D) at (0,0) {D};
+    \draw[e] (A)--(B)--(C)--(D)--(A) (A)--(C);
+
+  .table:
+    columns: 'll'
+
+    .row:
+      head: true
+
+      student
+
+      předměty
+
+    .row:
+
+      $s_{AB}$
+
+      A, B
+
+    .row:
+
+      $s_{BC}$
+
+      B, C
+
+    .row:
+
+      $s_{CD}$
+
+      C, D
+
+    .row:
+
+      $s_{DA}$
+
+      D, A
+
+    .row:
+
+      $s_{AC}$
+
+      A, C
+
+  .table:
+    columns: 'll'
+
+    .row:
+      head: true
+
+      termín
+
+      zkoušky
+
+    .row:
+
+      "pondělí".notion
+
+      A
+
+    .row:
+
+      "úterý".notion
+
+      B, D
+
+    .row:
+
+      "středa".notion
+
+      C
+
+  .caption:
+
+    Graf $\to$ instance rozvrhu. 3-obarvení grafu je přímo rozvrh se třemi termíny.
+
+
+.Subsection Kdy je barvení snadné: intervalové grafy
+  label: ch-zoo-kdy-je-barveni-snadne-intervalove-grafy
+
+
+.Definition:
+  title: 'Intervalový graf'
+  label: def-intgraf
+
+  Vrcholy jsou intervaly na přímce, hrana spojuje dva intervaly, které se překrývají.
+
+
+Příklady z praxe: "učebny".notion (přednášky s pevným časem jsou intervaly, učebny jsou barvy)
+a "alokace registrů".notion v lineárním kódu bez skoků (proměnná je „živá“ od přiřazení po
+poslední použití – interval; registry jsou barvy).
+
+
+.Figure:
+
+  !tikz:
+    filename: 09a-3-coloring-08
+    options: 'x=2.2cm'
+
+    \draw[->,thick,black!60] (0.7,0) -- (4.8,0) node[right,font=\small]{čas};
+    \draw[dashed,gr] (2.0,0) -- (2.0,3.55) node[above,font=\scriptsize,black]{3 najednou: $\omega=3$};
+    \foreach \lab/\s/\t/\y/\c/\k in {a/1/2.1/3.0/tF/1,b/1.5/3.0/2.25/tT/2,e/1.8/2.4/1.5/tB/3,c/2.2/3.6/0.75/tF/1,d/3.2/4.4/2.25/tT/2} {
+      \draw[\c,line width=4pt,line cap=round] (\s,\y) -- (\t,\y);
+      \node[font=\small,above,fill=white,inner sep=1pt] at ({(\s+\t)/2},\y+0.1) {$\lab$ \scriptsize(barva \k)};}
+
+  .caption:
+
+    Hladové barvení v pořadí začátků $a,b,e,c,d$ dá barvy $1,2,3,1,2$.
+    červená=1, zelená=2, modrá=3.
+
+
+.Theorem:
+  title: 'Hladové barvení intervalů je optimální'
+  label: thm-greedyint
+
+  Projdeme intervaly podle začátku a každému přiřadíme nejmenší barvu, kterou nemá žádný už
+  obarvený překrývající se interval. Tento algoritmus použije přesně $\omega$ barev, kde $\omega$
+  je největší počet intervalů, které se překrývají v jednom bodě.
+
+
+.Proof:
+
+  "Méně než $\omega$ nestačí:".emphasize $\omega$ intervalů přes jeden bod tvoří kliku.
+  "Hladový nepoužije víc:".emphasize dostane-li interval $I$ barvu $c$, mají barvy $1,\dots,c-1$
+  překrývající se intervaly, které začaly "dřív".emphasize. Všechny tedy obsahují začátek $I$,
+  a v tomto bodě se překrývá aspoň $c$ intervalů (včetně $I$). Proto $c\le\omega$.
+
+
+.Concept:
+  title: 'Těžkost závisí na struktuře vstupu'
+
+  Obecný graf konfliktů je těžký, intervalový snadný. Je-li váš „rozvrh“ ve skutečnosti
+  časová osa, NP-úplnost obecného barvení vás nemusí trápit.
+
+
+.Subsection Rovinné 3-barvení
+  label: ch-zoo-rovinne-3-barveni
+
+
+.Definition:
+  title: 'Problém Planar 3-Coloring'
+  label: prob-planar
+
+  "Vstup:".notion rovinný graf $G$.
+
+
+  "Otázka:".notion je $G$ 3-obarvitelný?
+
+
+.centered:
+
+  !tikz:
+    filename: 09a-3-coloring-09
+    options: 'node distance=4mm'
+
+    \node[bloka,text width=34mm] (b2) {\textbf{2 barvy}\\\footnotesize snadné pro každý graf\\ (test bipartitnosti)};
+    \node[blokr,text width=34mm,right=of b2] (b3) {\textbf{3 barvy}\\\footnotesize NP-úplné i pro\\ rovinné grafy};
+    \node[bloka,text width=34mm,right=of b3] (b4) {\textbf{4 barvy}\\\footnotesize rovinné: vždy ANO\\ (věta o 4 barvách)};
+
+
+.Theorem:
+  title: 'Garey, Johnson, Stockmeyer 1976'
+  label: thm-gjs
+
+  $\prob{Planar 3-Coloring}$ je NP-úplný.
+
+
+.Remark:
+  title: 'Redukce: $\prob{3-Coloring} \redp \prob{Planar 3-Coloring}$'
+  label: red-planar
+
+  graf $G$ $\;\longmapsto\;$ rovinný graf $G'$ s gadgety křížení
+
+
+"Idea:".notion $\prob{3-Coloring}\redp\prob{Planar 3-Coloring}$ – graf nakreslíme do roviny
+a každé křížení hran nahradíme "gadgetem pro křížení".emphasize.
+
+
+.Lemma:
+  title: 'Gadget pro křížení'
+  label: lem-krizeni
+
+  V každém 3-obarvení gadgetu je $\mathrm{barva}(x)=\mathrm{barva}(x')$ a
+  $\mathrm{barva}(y)=\mathrm{barva}(y')$. Naopak každé takové obarvení terminálů
+  (i pro $x=y$, i pro $x\neq y$) lze do gadgetu doplnit. Gadget je rovinný a terminály
+  $x,y,x',y'$ leží na vnější stěně v tomto pořadí.
+
+
+.Figure:
+  label: fig-krizeni
+
+  !tikz:
+    filename: 09a-3-coloring-10
+    options: 'scale=0.62'
+
+    \chZcross{white,white,white,white,white,white,white,white,white,white,white,white,white}
+    \node[font=\small,above=1pt] at (y.north) {$y$};
+    \node[font=\small,left=1pt] at (x.west) {$x$};
+    \node[font=\small,right=1pt] at (xp.east) {$x'$};
+    \node[font=\small,below=1pt] at (yp.south) {$y'$};
+    \chZcross[xshift=8cm]{chZo,chZc,chZp,chZc,chZp,chZp,chZc,chZp,chZc,chZo,chZo,chZo,chZo}
+    \node[font=\small] at (8,-3.6) {$x=y$};
+    \chZcross[xshift=15cm]{chZp,chZo,chZc,chZo,chZc,chZp,chZp,chZp,chZp,chZc,chZo,chZo,chZc}
+    \node[font=\small] at (15,-3.6) {$x\neq y$};
+
+  .caption:
+
+    Gadget pro křížení (13 vrcholů) a jeho dvě obarvení. Až na permutaci barev
+    žádná jiná neexistují.
+
+
+.Proof:
+  title: 'Náznak důkazu'
+
+  Střed a čtyři vrcholy kolem něj tvoří "kolo".emphasize $W_4$: střed má jednu barvu, obvodový
+  4-cyklus se tak musí obarvit zbylými dvěma střídavě – "protější".emphasize vrcholy kosočtverce mají
+  stejnou barvu. Trojúhelníky u terminálů pak tyto barvy „propagují“ ven: v obou možných
+  obarveních vyjde $x=x'$ a $y=y'$. (Tvrzení lemmatu jsme ověřili i počítačem přes všech $3^{13}$
+  obarvení.)
+
+
+.Figure:
+
+  !tikz:
+    filename: 09a-3-coloring-11
+
+    \node[chZlv] (u) at (0,1.5) {$u$};
+    \node[chZlv] (v) at (3,-1.5) {$v$};
+    \node[chZlv] (w) at (0,-1.5) {$w$};
+    \node[chZlv] (z) at (3,1.5) {$z$};
+    \draw[e,draw=defc,line width=1.5pt] (u)--(v); \draw[e,draw=thmc,line width=1.5pt] (w)--(z);
+    \fill[rej] (1.5,0) circle (2.5pt) node[right=4pt,font=\scriptsize,rej]{křížení};
+    \draw[->,very thick,gr] (4,0) -- (5,0);
+    \begin{scope}[xshift=8.2cm,scale=0.5]
+      \chZcross{white,white,white,white,white,white,white,white,white,white,white,white,defc!25}
+    \end{scope}
+    \node[chZlv,fill=defc!25,minimum size=6mm] at (x) {$u$};
+    \node[chZlv,fill=thmc!25,minimum size=6mm] at (yp) {$w$};
+    \node[font=\scriptsize,left=1mm of x] {$x{=}u$};
+    \node[font=\scriptsize,below=3mm of yp] {$y'{=}w$};
+    \node[chZlv] (v2) at ($(xp)+(1.6,-1.2)$) {$v$};
+    \node[chZlv] (z2) at ($(y)+(1.6,0.6)$) {$z$};
+    \node[font=\scriptsize,right=0.5mm of xp] {$x'$};
+    \node[font=\scriptsize,left=0.5mm of y] {$y$};
+    \draw[e,draw=defc,line width=1.5pt] (xp)--(v2) node[midway,below left,font=\scriptsize]{hrana $x'v$};
+    \draw[e,draw=thmc,line width=1.5pt] (y)--(z2) node[midway,below right,font=\scriptsize]{hrana $yz$};
+
+  .caption:
+
+    Nahrazení křížení. Terminál $x$ ztotožníme s $u$ a $x'$ spojíme hranou s $v$ (analogicky $y'=w$ a hrana $yz$). Protože
+    $\mathrm{barva}(x')=\mathrm{barva}(u)$, hrana $x'v$ vynutí $\mathrm{barva}(u)\neq\mathrm{barva}(v)$ –
+    přesně jako původní hrana $uv$.
+
+
+"Více křížení na jedné hraně.".notion Gadgety řetězíme za sebou ($x'$ jednoho je $x$ dalšího, obr. .reference:fig-krizeni-retez).
+Křížení je nejvýše $|E|^2$, konstrukce je polynomiální, a podle lemmatu je $G$ 3-obarvitelný
+právě tehdy, když je nový (rovinný) graf 3-obarvitelný.
+
+
+.Figure:
+  label: fig-krizeni-retez
+
+  !tikz:
+    filename: 09a-3-coloring-12
+
+    % puvodni kresba: hrana uv krizi w1z1 a w2z2
+    \node[chZlv,fill=defc!25] (u0) at (0,0) {$u$};
+    \node[chZlv,fill=defc!25] (v0) at (3.4,0) {$v$};
+    \node[chZlv,fill=thmc!25] (w10) at (1.1,1.5) {$w_1$};
+    \node[chZlv,fill=thmc!25] (z10) at (1.1,-1.5) {$z_1$};
+    \node[chZlv,fill=thmc!25] (w20) at (2.3,1.5) {$w_2$};
+    \node[chZlv,fill=thmc!25] (z20) at (2.3,-1.5) {$z_2$};
+    \draw[e,draw=defc,line width=1.5pt] (u0)--(v0);
+    \draw[e,draw=thmc,line width=1.5pt] (w10)--(z10) (w20)--(z20);
+    \fill[rej] (1.1,0) circle (2.5pt) (2.3,0) circle (2.5pt);
+    \node[font=\scriptsize,rej] at (1.7,-2.3) {2 křížení};
+    \draw[->,very thick,gr] (4.2,0) -- (5.1,0);
+    % dva retezene gadgety (x' prvniho = x druheho)
+    \begin{scope}[xshift=7.4cm,scale=0.5]
+      \chZcross{white,white,white,white,white,white,white,white,white,white,white,white,white}
+    \end{scope}
+    \coordinate (xa) at (x); \coordinate (ya) at (y); \coordinate (ypa) at (yp); \coordinate (xpa) at (xp);
+    \begin{scope}[xshift=10cm,scale=0.5]
+      \chZcross{white,white,white,white,white,white,white,white,white,white,white,white,white}
+    \end{scope}
+    \coordinate (yb) at (y); \coordinate (ypb) at (yp); \coordinate (xpb) at (xp);
+    \node[chZlv,fill=defc!25,minimum size=6mm] at (xa) {$u$};
+    \node[chZlv,fill=thmc!25,minimum size=6mm] at (ya) {$w_1$};
+    \node[chZlv,fill=thmc!25,minimum size=6mm] at (yb) {$w_2$};
+    \node[chZlv,fill=thmc!25] (z1) at ($(ypa)+(0,-1.1)$) {$z_1$};
+    \node[chZlv,fill=thmc!25] (z2) at ($(ypb)+(0,-1.1)$) {$z_2$};
+    \node[chZlv,fill=defc!25] (v1) at ($(xpb)+(1.2,0)$) {$v$};
+    \draw[e,draw=thmc,line width=1.5pt] (ypa)--(z1) (ypb)--(z2);
+    \draw[e,draw=defc,line width=1.5pt] (xpb)--(v1);
+    \draw[gr,thin] ($(xpa)+(0,-0.14)$) -- ($(xpa)+(0,-0.85)$);
+    \node[font=\scriptsize,below=0pt] at ($(xpa)+(0,-0.85)$) {$x'_1=x_2$};
+    \node[font=\scriptsize,below=1pt] at ($(xpb)+(0.15,-0.1)$) {$x'_2$};
+
+  .caption:
+
+    Hrana $uv$ kříží hrany $w_1z_1$ a $w_2z_2$, nahradíme ji řetězem dvou gadgetů. Terminál $x$ prvního gadgetu
+    je $u$, jeho $x'$ je zároveň terminál $x$ druhého a $x'$ druhého spojíme hranou s $v$. U $i$-tého gadgetu
+    je terminál $y$ přímo $w_i$ a $y'$ spojíme hranou se $z_i$.
+    "Všimni si:".emphasize barva $u$ se po řetězu přenese až do $x'_2$, takže hrana $x'_2v$ vynutí
+    $\mathrm{barva}(u)\neq\mathrm{barva}(v)$; stejně $y'$ nese barvu $w_i$. (Ověřeno počítačem: obarvení
+    $u,v,w_i,z_i$ jde doplnit právě tehdy, když je vlastní pro hrany $uv$, $w_1z_1$, $w_2z_2$.)

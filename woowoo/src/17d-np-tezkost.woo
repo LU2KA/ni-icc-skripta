@@ -1,0 +1,847 @@
+.Section Typ 4: Důkaz NP-těžkosti redukcí
+  label: ch-typove-typ-4-np-tezkost
+
+
+Úloha 4 testu: „Pro daný problém ukažte, že je NP-těžký (úplný) redukcí z vhodného problému.“ (12 bodů).
+Podle hlavičky ukázkového testu lze na přednášce probrané NP-úplné problémy použít bez důkazu. Postup na papíře je
+v oddílu .reference:ch-test-postup-np.
+
+
+.Subsection Kde to ve skriptech je
+  label: ch-typove-np-kde
+
+
+.description:
+
+  .ditem:
+    bullet: 'Základy:'
+
+    definice .reference:def-redukce a .reference:def-nphard, lemma .reference:lem-redvlast (tranzitivita, směr
+    redukce) v kapitole .reference:ch-redukce; recept v oddílu .reference:ch-cook-mapa-redukci-a-recept-na-dukaz-np-uplnosti;
+    gadgety a rigidita v oddílu .reference:ch-is-anatomie-redukci.
+
+  .ditem:
+    bullet: 'Z 3-SAT s gadgety:'
+
+    "$\prob{3-SAT} \redp \prob{IS}$"#red-is (trojúhelník za klauzuli, hrany mezi opačnými literály – nejbližší vzor k typové úloze 4.1),
+    "$\prob{3-SAT} \redp \prob{3-Coloring}$"#red-3col (gadget proměnné a klauzule), "$\prob{3-SAT} \redp \prob{NAE-3-SAT}$"#red-nae4, "$\prob{3-SAT} \redp \prob{MAPF}$"#red-mapf, "$\prob{3-SAT} \redp \prob{X3C}$"#red-x3c,
+    "$\prob{3-SAT} \redp \prob{DHP}$"#red-dhp (hamiltonovská cesta), "$\prob{3-SAT} \redp \prob{ILP}$"#red-ilpsat; úloha 4 ukázkového testu ("jádro grafu"#ut-4).
+
+  .ditem:
+    bullet: 'Mezi variantami SAT:'
+
+    "$\prob{SAT} \redp \prob{3-SAT}$"#red-sat3sat (rozbití dlouhé klauzule), "$\prob{NAE-3-SAT} \redp \prob{Pozitivní NAE-3-SAT}$"#red-poznae (odstranění negací),
+    "$\prob{3-Coloring} \redp \prob{1-in-3 SAT}$"#red-1in3, "$\prob{1-in-3 SAT} \redp \prob{Subset Sum}$"#red-subsetsum (1-in-3 SAT na čísla po cifrách).
+
+  .ditem:
+    bullet: 'Výběr podmnožiny v grafu:'
+
+    "$\prob{IS} \redp \prob{VC}$"#red-vc (doplněk množiny), "$\prob{IS} \redp \prob{Clique}$"#red-clique (doplněk grafu), "$\prob{VC} \redp \prob{Hitting Set}$"#red-hs (zobecnění),
+    a cvičení 3 a 4: .reference:cv-3-2 (Subgraph Isomorphism – specializace, $H=K_k$), .reference:cv-3-3
+    (Half-Clique – doplnění grafu na správnou velikost), .reference:cv-3-4 (Set Cover), .reference:cv-3-5
+    (Feedback Vertex Set – hrany nahradit trojúhelníky, lokální náhrada), .reference:cv-3-6 (Dominating Set –
+    vrchol za hranu).
+
+  .ditem:
+    bullet: 'Barvení, řezy:'
+
+    "$\prob{3-Coloring} \redp \prob{Rozvrh zkoušek}$"#red-rozvrh, "$\prob{3-Coloring} \redp \prob{Planar 3-Coloring}$"#red-planar (gadget křížení), "$\prob{NAE-3-SAT} \redp \prob{(vážený) MaxCut}$"#red-wmaxcut a "$\prob{vážený MaxCut} \redp \prob{MaxCut}$"#red-maxcut
+    (od vah k jednoduchým grafům), .reference:cv-4-4 (MaxCut na MAX-2-SAT), .reference:cv-4-5 (NAE-3-SAT na
+    3-barvení).
+
+  .ditem:
+    bullet: 'Cesty a kružnice:'
+
+    "$\prob{DHP} \redp \prob{UHP}$"#red-uhp (orientovaná na neorientovanou – rozdělení vrcholu na tři), "$\prob{DHP} \redp \prob{HC}$"#red-hc,
+    "$\prob{HC} \redp \prob{TSP}$"#red-tsp, "$\prob{(U)HP} \redp \prob{Longest Path}$"#red-longpath (zobecnění s parametrem), "$\prob{Vertex Cover} \redp \prob{Steiner Tree}$"#red-steiner.
+
+  .ditem:
+    bullet: 'Čísla:'
+
+    "$\prob{Subset Sum} \redp \prob{Partition}$"#red-partition (doplňková čísla – vzor pro typovou úlohu 4.3), "$\prob{Subset Sum} \redp \prob{Knapsack}$"#red-knapsack,
+    "$\prob{3-Partition} \redp \prob{Bin Packing}$"#red-binpacking (ze silně NP-úplného 3-Partition); chybné „podezřelé“ redukce a jejich opravy
+    v oddílu .reference:sec-podezrele ("$\prob{Subset Sum} \redp \prob{Weighted Exact Path}$"#red-wexactpath, "$\prob{Knapsack} \redp \prob{Restricted Shortest Path}$"#red-rsp, "$\prob{3-Partition} \redp \prob{Balanced Split}$"#red-balsplit).
+
+  .ditem:
+    bullet: 'Přehled:'
+
+    graf všech redukcí v příloze .reference:ch-graf s jednovětou nápovědou ke každé redukci.
+
+  .ditem:
+    bullet: 'Úlohy navíc:'
+
+    krátké redukce k procvičení jsou v oddílech „Úlohy navíc“ kapitol .reference:ch-sat ("7.4"#un-7-4 až
+    "7.7"#un-7-7), .reference:ch-is ("8.4"#un-8-4 až "8.7"#un-8-7), .reference:ch-zoo ("9.4"#un-9-4,
+    "9.5"#un-9-5, "9.7"#un-9-7), .reference:ch-x3c ("10.3"#un-10-3 až "10.7"#un-10-7) a .reference:ch-cisla
+    ("11.3"#un-11-3 až "11.5"#un-11-5, "11.7"#un-11-7, "11.8"#un-11-8); jednovětý trik ke každé z nich je
+    v oddílu .reference:ch-graf-redukce-z-uloh-navic.
+
+
+.Subsection Řešené úlohy: NP-těžkost
+  label: ch-typove-np-ulohy
+
+
+.Exercise:
+  title: 'Typová úloha 4.1 [12 bodů]'
+  label: typ-4-1
+
+  "Cesta se zakázanými dvojicemi.".notion Je dán orientovaný graf $G=(V,A)$, vrcholy $s,t\in V$ a množina
+  "zakázaných dvojic".emphasize $P\subseteq\binom V2$. Orientovaná cesta (bez opakování vrcholů) je
+  "přípustná".emphasize, pokud z žádné dvojice $\{u,v\}\in P$ neobsahuje oba vrcholy.
+
+
+  Problém $\prob{Path with Forbidden Pairs}$ (PFP): existuje v $G$ přípustná orientovaná cesta z $s$ do $t$?
+
+
+  Například v grafu $s\to u\to t$, $s\to w\to t$ s $P=\{\{s,u\}\}$ přípustná cesta existuje ($s,w,t$); přidáme-li
+  do $P$ i $\{w,t\}$, neexistuje.
+
+
+  Dokažte, že problém PFP je NP-úplný. "Nápověda: převádějte z problému 3-SAT.".emphasize
+
+
+.Solution:
+
+  "Redukce:".notion $\prob{3-SAT} \redp \prob{PFP}$, formule $\Phi$ $\mapsto$ $(G_\Phi,\ s,\ t,\ P_\Phi)$.
+
+
+  "1. PFP je v $\NP$.".notion Certifikát je posloupnost vrcholů $v_0=s,v_1,\dots,v_r=t$ ($r<|V|$). Ověříme,
+  že se vrcholy neopakují, že $(v_{i-1},v_i)\in A$ pro všechna $i$ a že pro žádnou dvojici z $P$ nejsou oba vrcholy
+  na cestě. Vše v čase $O(|V|^2+|A|+|P|)$.
+
+
+  "2. Konstrukce.".notion Nechť $\Phi=C_1\land\dots\land C_m$, kde $C_j=(\ell_{j,1}\lor\ell_{j,2}\lor\ell_{j,3})$.
+  (Má-li klauzule méně literálů, má i méně vrcholů; nic dalšího se nemění.)
+
+  .itemize:
+
+    .item:
+
+      Vrcholy: $s$, $t$ a pro každý "výskyt".emphasize literálu vrchol $u_{j,a}$ ($j=1,\dots,m$, $a=1,2,3$),
+      který reprezentuje literál $\ell_{j,a}$. Vrcholy klauzule $C_j$ tvoří $j$-tou „vrstvu“.
+
+    .item:
+
+      Hrany: $s\to u_{1,a}$ pro všechna $a$; $u_{j,a}\to u_{j+1,b}$ pro všechna $j<m$ a všechna $a,b$;
+      $u_{m,a}\to t$ pro všechna $a$.
+
+    .item:
+
+      Zakázané dvojice: $\{u_{j,a},u_{j',b}\}\in P_\Phi$, právě když jsou literály $\ell_{j,a}$ a $\ell_{j',b}$
+      "opačné".emphasize ($x_i$ a $\lnot x_i$).
+
+
+  .centered:
+
+    !tikz:
+      filename: 17d-np-tezkost-01
+      options: 'x=1cm,y=1cm'
+
+      \node[typlit] (s) at (0,0) {$s$};
+      \node[typlit] (t) at (9,0) {$t$};
+      \foreach \j/\x in {1/2.25,2/4.5,3/6.75} \node[font=\scriptsize\sffamily,gr] at (\x,2.55) {$C_\j$};
+      \node[typlitsel] (u11) at (2.25,1.7) {$x_1$};
+      \node[typlit] (u12) at (2.25,0) {$x_2$};
+      \node[typlit] (u13) at (2.25,-1.7) {$\lnot x_3$};
+      \node[typlit] (u21) at (4.5,1.7) {$\lnot x_1$};
+      \node[typlitsel] (u22) at (4.5,0) {$\lnot x_2$};
+      \node[typlit] (u23) at (4.5,-1.7) {$x_3$};
+      \node[typlitsel] (u31) at (6.75,1.7) {$x_1$};
+      \node[typlit] (u32) at (6.75,0) {$\lnot x_2$};
+      \node[typlit] (u33) at (6.75,-1.7) {$x_3$};
+      \foreach \a in {1,2,3} {\draw[typarc,draw=black!25] (s)--(u1\a); \draw[typarc,draw=black!25] (u3\a)--(t);
+        \foreach \b in {1,2,3} {\draw[typarc,draw=black!25] (u1\a)--(u2\b); \draw[typarc,draw=black!25] (u2\a)--(u3\b);}}
+      \draw[typarcsel] (s)--(u11); \draw[typarcsel] (u11)--(u22); \draw[typarcsel] (u22)--(u31); \draw[typarcsel] (u31)--(t);
+      \draw[typpair] (u11) to[bend left=25] (u21);
+      \draw[typpair] (u21) to[bend left=25] (u31);
+      \draw[typpair] (u12) to[bend left=20] (u22);
+      \draw[typpair] (u12) to[bend right=28] (u32);
+      \draw[typpair] (u13) to[bend right=25] (u23);
+      \draw[typpair] (u13) to[bend right=35] (u33);
+
+
+  Obrázek: $\Phi=(x_1\lor x_2\lor\lnot x_3)\land(\lnot x_1\lor\lnot x_2\lor x_3)\land(x_1\lor\lnot x_2\lor x_3)$.
+  Šedé šipky jsou hrany, červené čárkované spojnice zakázané dvojice (opačné literály). Zeleně přípustná cesta
+  pro ohodnocení $x_1=1$, $x_2=0$, $x_3=1$: v každé klauzuli jde přes jeden pravdivý literál.
+
+
+  "3. Polynomialita.".notion $|V|=3m+2$, $|A|=3+9(m-1)+3=9(m-1)+6$ a $|P_\Phi|\le\binom{3m}2$. Konstrukce projde
+  všechny dvojice výskytů literálů, tedy čas $O(m^2)$.
+
+
+  "Pozorování.".notion Graf je vrstvený: z $s$ vedou hrany jen do vrstvy 1, z vrstvy $j$ jen do vrstvy $j+1$
+  a z vrstvy $m$ jen do $t$. Každá cesta z $s$ do $t$ je proto tvaru $s,u_{1,a_1},u_{2,a_2},\dots,u_{m,a_m},t$:
+  "vybere z každé klauzule právě jeden literál".emphasize.
+
+
+  "4. ($\Rightarrow$)".notion Nechť ohodnocení $\sigma$ splňuje $\Phi$. V každé klauzuli $C_j$ zvolíme pravdivý
+  literál $\ell_{j,a_j}$ a vezmeme cestu $s,u_{1,a_1},\dots,u_{m,a_m},t$; je to cesta v $G_\Phi$. Kdyby obsahovala
+  zakázanou dvojici, byly by dva vybrané literály opačné, a přitom oba pravdivé při $\sigma$ – spor. Cesta je přípustná.
+
+
+  "5. ($\Leftarrow$)".notion Nechť existuje přípustná cesta z $s$ do $t$. Podle pozorování vybírá literály
+  $\ell_{1,a_1},\dots,\ell_{m,a_m}$, po jednom z každé klauzule, a protože je přípustná, žádné dva z nich nejsou
+  opačné. Položme $\sigma(x_i)=1$, je-li mezi vybranými $x_i$, $\sigma(x_i)=0$, je-li mezi nimi $\lnot x_i$,
+  a jinak libovolně; to je dobře definované, protože $x_i$ a $\lnot x_i$ vybrané současně nejsou. Každý vybraný
+  literál je pravdivý, takže každá klauzule je splněná a $\Phi$ je splnitelná.
+
+
+  "6. Závěr.".notion $\prob{3-SAT}$ je NP-úplný a $\prob{3-SAT}\redp\prob{PFP}$, tedy PFP je NP-těžký; spolu
+  s bodem 1 je NP-úplný. (Bez zakázaných dvojic je to obyčejná dosažitelnost, řešitelná prohledáním grafu
+  v polynomiálním čase – těžkost přinášejí právě dvojice.)
+
+
+.Exercise:
+  title: 'Typová úloha 4.2 [12 bodů]'
+  label: typ-4-2
+
+  "Kostra s omezeným stupněm.".notion Problém $\prob{Deg-3 Spanning Tree}$: je dán souvislý neorientovaný graf $G$;
+  má $G$ kostru (podgraf, který je stromem a obsahuje všechny vrcholy), v níž má "každý vrchol stupeň nejvýše 3".notion?
+
+
+  Dokažte, že problém je NP-úplný. "Nápověda: převádějte z problému Hamiltonovská cesta.".emphasize
+
+
+.Solution:
+
+  "Redukce:".notion $\prob{Hamiltonovská cesta} \redp \prob{Deg-3 Spanning Tree}$, graf $G$ $\mapsto$ graf $G'$
+  (ke každému vrcholu přivěsíme nový list).
+
+
+  "1. Problém je v $\NP$.".notion Certifikát je množina $n-1$ hran (kde $n$ je počet vrcholů). Ověříme, že jsou
+  to hrany $G$, že tvoří souvislý graf na všech vrcholech (prohledáním; souvislý graf s $n-1$ hranami je strom)
+  a že žádný vrchol nemá v této množině víc než 3 hrany. Vše polynomiálně.
+
+
+  "2. Konstrukce.".notion Pro $G=(V,E)$ s $n$ vrcholy a $m$ hranami sestrojíme $G'=(V\cup V',\ E\cup E')$, kde
+  $V'=\{v'\mid v\in V\}$ jsou nové vrcholy a $E'=\{\{v,v'\}\mid v\in V\}$: ke každému vrcholu $v$ přivěsíme list $v'$.
+  (Problém Hamiltonovská cesta smíme brát pro souvislé grafy: nesouvislý graf hamiltonovskou cestu nemá a redukce
+  na něj může vypsat pevnou $\NE$-instanci, např. hvězdu $K_{1,4}$.)
+
+
+  .centered:
+
+    !tikz:
+      filename: 17d-np-tezkost-02
+
+      \begin{scope}
+        \node[v] (a) at (0,1.4) {$a$}; \node[v] (b) at (1.4,1.4) {$b$};
+        \node[v] (c) at (1.4,0) {$c$}; \node[v] (d) at (0,0) {$d$};
+        \draw[esel] (a)--(b) (b)--(c) (c)--(d);
+        \draw[e] (d)--(a) (a)--(c);
+        \node[font=\small] at (0.7,-0.8) {$G$: cesta $a,b,c,d$};
+      \end{scope}
+      \draw[flow] (2.4,0.7)--(3.6,0.7);
+      \begin{scope}[xshift=5.2cm]
+        \node[v] (a) at (0,1.4) {$a$}; \node[v] (b) at (1.4,1.4) {$b$};
+        \node[v] (c) at (1.4,0) {$c$}; \node[v] (d) at (0,0) {$d$};
+        \node[v,fill=intc!15] (a1) at (-1.1,2.3) {$a'$}; \node[v,fill=intc!15] (b1) at (2.5,2.3) {$b'$};
+        \node[v,fill=intc!15] (c1) at (2.5,-0.9) {$c'$}; \node[v,fill=intc!15] (d1) at (-1.1,-0.9) {$d'$};
+        \draw[esel] (a)--(b) (b)--(c) (c)--(d) (a)--(a1) (b)--(b1) (c)--(c1) (d)--(d1);
+        \draw[e] (d)--(a) (a)--(c);
+        \node[font=\small] at (0.7,-1.6) {$G'$: kostra se stupni $2,3,3,2$};
+      \end{scope}
+
+
+  "3. Polynomialita.".notion $G'$ má $2n$ vrcholů a $m+n$ hran, sestrojíme ho v lineárním čase.
+
+
+  "4. ($\Rightarrow$)".notion Nechť $v_1,v_2,\dots,v_n$ je hamiltonovská cesta v $G$. Její hrany tvoří kostru
+  grafu $G$ (souvislá, $n-1$ hran, bez kružnice). Přidáním všech hran $\{v,v'\}$ vznikne kostra $T'$ grafu $G'$
+  (každý list $v'$ se připojí jedinou hranou, kružnice nevznikne). Stupně v $T'$: vnitřní vrcholy cesty
+  $2+1=3$, koncové $1+1=2$, listy $v'$ mají $1$. Všechny jsou nejvýše 3.
+
+
+  "5. ($\Leftarrow$)".notion Nechť $T'$ je kostra $G'$ se stupni nejvýše 3. Vrchol $v'$ má v $G'$ jediného souseda
+  $v$, a protože kostra obsahuje všechny vrcholy a je souvislá, musí obsahovat hranu $\{v,v'\}$; $v'$ je v ní list.
+  Odebráním všech listů $v'$ dostaneme strom $T$ na množině $V$, který používá jen hrany $G$ (odebrání listu
+  stromu nechá strom). Každý vrchol $v$ ztratil přesně hranu $\{v,v'\}$, takže $\deg_T(v)=\deg_{T'}(v)-1\le 2$.
+  Strom se všemi stupni nejvýše 2 je cesta, a protože obsahuje všechny vrcholy $V$, je to hamiltonovská cesta v $G$.
+  (Pro $n=1$ je tvrzení triviální.)
+
+
+  "6. Závěr.".notion Hamiltonovská cesta je NP-úplná, tedy $\prob{Deg-3 Spanning Tree}$ je NP-těžký a podle bodu 1
+  NP-úplný.
+
+
+  "Proč gadget.".notion Kdyby horní mez stupně byla součástí vstupu, stačila by identita s mezí 2 (kostra se
+  stupni nejvýše 2 je přímo hamiltonovská cesta). Pro pevnou mez 3 musí redukce každému vrcholu „spotřebovat“
+  jeden stupeň – to dělá přivěšený list, který v kostře být musí. Pro mez $d\ge3$ by se přivěsilo $d-2$ listů.
+
+
+.Exercise:
+  title: 'Typová úloha 4.3 [12 bodů]'
+  label: typ-4-3
+
+  "Rozvrh na dva stroje.".notion Je dáno $n$ úloh s délkami $p_1,\dots,p_n\in\N$ (zapsanými binárně) a termín
+  $D\in\N$. Lze úlohy rozdělit na dva stejné stroje tak, aby součet délek úloh na každém stroji byl nejvýše $D$
+  (oba stroje skončí do termínu $D$)?
+
+
+  Dokažte, že tento problém je NP-úplný. "Nápověda: převádějte z problému Subset Sum.".emphasize
+
+
+.Solution:
+
+  "Redukce:".notion $\prob{Subset Sum} \redp \prob{Rozvrh na dva stroje}$, instance $(a_1,\dots,a_n;\ T)$ $\mapsto$
+  $(a_1,\dots,a_n,\ d;\ D)$ s vyrovnávací úlohou $d=|S-2T|$ a termínem $D=\max(T,S-T)$, kde $S=\sum_i a_i$.
+
+
+  "1. Problém je v $\NP$.".notion Certifikát je rozdělení úloh na stroje ($n$ bitů); sečteme délky na obou strojích
+  a porovnáme s $D$, polynomiálně v délce binárního zápisu.
+
+
+  "2. Konstrukce.".notion Je dána instance $\prob{Subset Sum}$ $(a_1,\dots,a_n;\ T)$, $S=\sum_i a_i$.
+
+  .itemize:
+
+    .item:
+
+      Je-li $T>S$, odpověď je $\NE$; vypíšeme pevnou $\NE$-instanci: jedna úloha délky 1 a $D=0$.
+
+    .item:
+
+      Je-li $2T\le S$: úlohy $a_1,\dots,a_n$ a navíc úloha $d=S-2T$, termín $D=S-T$.
+
+    .item:
+
+      Je-li $2T>S$: úlohy $a_1,\dots,a_n$ a navíc úloha $d=2T-S$, termín $D=T$.
+
+  (Je-li $d=0$, úlohu $d$ nepřidáváme.) V obou hlavních případech je celková délka všech úloh $S+d=2D$, takže
+  rozvrh do termínu $D$ existuje, právě když jde úlohy rozdělit na dvě části s "přesně".emphasize stejným součtem $D$.
+  Je to stejná myšlenka „doplňkových čísel“ jako v redukci "$\prob{Subset Sum} \redp \prob{Partition}$"#red-partition.
+
+
+  "3. Polynomialita.".notion Výstup má $n+1$ čísel, každé nejvýše $2\max(S,T)$, tedy s binárním zápisem o $O(1)$
+  bitů delším než vstupní čísla; spočítáme ho sčítáním a odčítáním v polynomiálním čase.
+
+
+  "4. ($\Rightarrow$)".notion Nechť $I\subseteq\{1,\dots,n\}$ má $\sum_{i\in I}a_i=T$.
+
+  .itemize:
+
+    .item:
+
+      $2T\le S$: na stroj 1 dáme úlohy z $I$ a úlohu $d$: $T+(S-2T)=S-T=D$; na stroj 2 zbytek: $S-T=D$.
+
+    .item:
+
+      $2T>S$: na stroj 1 dáme úlohy z $I$: $T=D$; na stroj 2 zbytek a úlohu $d$: $(S-T)+(2T-S)=T=D$.
+
+
+  .centered:
+
+    !tikz:
+      filename: 17d-np-tezkost-03
+      options: 'x=0.75cm,y=1cm'
+
+      % a=(2,5,6,7), T=8, S=20, d=S-2T=4, D=S-T=12; I={2,6}
+      \def\job#1#2#3#4#5{\draw[thick,fill=#5,rounded corners=1pt] (#1,#2-0.32) rectangle (#1+#3,#2+0.32);
+        \node[font=\small] at (#1+#3/2,#2) {#4};}
+      \node[font=\small,anchor=east] at (-0.3,1.2) {stroj 1};
+      \node[font=\small,anchor=east] at (-0.3,0) {stroj 2};
+      \job{0}{1.2}{2}{$2$}{acc!25}
+      \job{2}{1.2}{6}{$6$}{acc!25}
+      \job{8}{1.2}{4}{$d=4$}{warnc!25}
+      \job{0}{0}{5}{$5$}{defc!12}
+      \job{5}{0}{7}{$7$}{defc!12}
+      \draw[thick,black!60] (0,-0.6)--(13,-0.6);
+      \foreach \t in {0,2,...,12} {\draw[black!60] (\t,-0.6)--(\t,-0.7); \node[font=\scriptsize] at (\t,-0.95) {$\t$};}
+      \draw[rej,very thick,dashed] (12,-0.6)--(12,1.75) node[above,font=\small]{$D=12$};
+      \draw[decorate,decoration={brace,amplitude=4pt},acc!70!black] (0,1.6)--(8,1.6) node[midway,above=4pt,font=\scriptsize]{$I$: součet $T=8$};
+
+  Příklad "(nad rámec přednášky)".emphasize: $\prob{Subset Sum}$ s čísly $2,5,6,7$ a $T=8$, tedy $S=20$, $2T\le S$,
+  $d=S-2T=4$ a $D=S-T=12$. Podmnožina $I=\{2,6\}$ dá rozvrh z bodu 4, oba stroje skončí přesně v čase $D$.
+  "Všimni si:".emphasize celková délka $S+d=24=2D$ nenechá žádnou volnou chvíli, takže každý přípustný rozvrh
+  má na stroji s úlohou $d$ čísla se součtem $D-d=T$ – to je bod 5.
+
+
+  "5. ($\Leftarrow$)".notion Nechť existuje rozvrh, kde oba stroje skončí do $D$. Celková délka je $2D$, takže
+  každý stroj má přesně $D$. Jsme v jednom z hlavních případů ($T\le S$, jinak by výstupem byla $\NE$-instance,
+  která rozvrh nemá: úloha délky 1 se do $D=0$ nevejde).
+
+  .itemize:
+
+    .item:
+
+      $2T\le S$: na stroji s úlohou $d$ (pokud $d=0$, na libovolném) mají úlohy $a_i$ součet $D-d=(S-T)-(S-2T)=T$.
+
+    .item:
+
+      $2T>S$: na stroji "bez".emphasize úlohy $d$ mají úlohy $a_i$ součet $D=T$.
+
+  V obou případech jsme našli podmnožinu čísel $a_i$ se součtem $T$.
+
+
+  "6. Závěr.".notion $\prob{Subset Sum}$ je NP-úplný, tedy rozvrh na dva stroje je NP-těžký a podle bodu 1 NP-úplný.
+
+
+  "Poznámka.".notion Problém je jen "slabě".emphasize NP-úplný: dynamickým programováním přes dosažitelné součty
+  (jako ve větě .reference:thm-ssdp) ho vyřešíme v čase $O(n\cdot D)$, tedy pseudopolynomiálně. Proto je důležité,
+  že délky jsou zapsané binárně; redukce čísla nezvětšuje víc než konstantně krát.
+
+
+.Exercise:
+  title: 'Typová úloha 4.4 [12 bodů]'
+  label: typ-4-4
+
+  "Zpětnovazební množina hran.".notion Je dán orientovaný graf $G=(V,A)$ a číslo $k$. Množina hran $F\subseteq A$
+  je "zpětnovazební".emphasize, pokud graf $(V,A\setminus F)$ neobsahuje žádný orientovaný cyklus.
+
+
+  Problém $\prob{Feedback Arc Set}$ (FAS): existuje zpětnovazební množina hran $F$ s $|F|\le k$?
+
+
+  Například orientovaný cyklus $u\to v\to w\to u$ má zpětnovazební množinu velikosti 1 (libovolnou jeho hranu),
+  kdežto graf s hranami $u\to v$, $v\to u$, $v\to w$, $w\to v$ potřebuje dvě hrany.
+
+
+  Dokažte, že problém FAS je NP-úplný. "Nápověda: převádějte z problému Vrcholové pokrytí.".emphasize
+
+
+.Solution:
+  label: red-typ-4-4
+
+  "Redukce:".notion $\prob{Vertex Cover} \redp \prob{FAS}$, instance $(G,c)$ $\mapsto$ $(D_G,\ k=c)$: každý vrchol
+  $v$ rozdělíme na hranu $v^{\mathrm{in}}\to v^{\mathrm{out}}$ a každou hranu $\{u,v\}$ nahradíme dvojicí hran
+  $u^{\mathrm{out}}\to v^{\mathrm{in}}$, $v^{\mathrm{out}}\to u^{\mathrm{in}}$.
+
+
+  "1. FAS je v $\NP$.".notion Certifikát je množina hran $F$ (nejvýše $|A|$ hran). Ověříme, že $F\subseteq A$
+  a $|F|\le k$, a že graf $(V,A\setminus F)$ je acyklický: topologickým uspořádáním (opakovaně odebíráme vrchol
+  bez vstupních hran) nebo prohledáním do hloubky, které hledá zpětnou hranu. Vše v čase $O(|V|+|A|)$.
+
+
+  "2. Konstrukce.".notion Je dán neorientovaný graf $G=(V,E)$ s $n$ vrcholy a $m$ hranami a číslo $c$. Orientovaný
+  graf $D_G$ má:
+
+  .itemize:
+
+    .item:
+
+      Vrcholy: pro každé $v\in V$ dva vrcholy $v^{\mathrm{in}}$ a $v^{\mathrm{out}}$.
+
+    .item:
+
+      "Vnitřní hrany:".notion pro každé $v\in V$ hranu $v^{\mathrm{in}}\to v^{\mathrm{out}}$. Ta bude
+      zastupovat vrchol $v$: odebrat ji znamená „vzít $v$ do pokrytí“.
+
+    .item:
+
+      "Spojovací hrany:".notion pro každou hranu $\{u,v\}\in E$ dvě hrany $u^{\mathrm{out}}\to v^{\mathrm{in}}$
+      a $v^{\mathrm{out}}\to u^{\mathrm{in}}$.
+
+  Parametr zůstává: $k=c$.
+
+
+  .centered:
+
+    !tikz:
+      filename: 17d-np-tezkost-04
+      options: 'x=1cm,y=1cm'
+
+      \tikzset{gio/.style={typlit,minimum size=10mm,font=\footnotesize},
+        gcut/.style={->,draw=rej,very thick,dashed}}
+      \node[font=\small,anchor=east] at (-1,2.6) {$G$};
+      \node[font=\small,anchor=east] at (-1,0) {$D_G$};
+      \node[v] (Ga) at (0,2.6) {$a$}; \node[vsel] (Gb) at (2.8,2.6) {$b$};
+      \node[vsel] (Gc) at (5.6,2.6) {$c$}; \node[v] (Gd) at (8.4,2.6) {$d$};
+      \draw[e] (Ga)--(Gb)--(Gc)--(Gd);
+      \foreach \n/\x in {a/0,b/2.8,c/5.6,d/8.4} {
+        \node[gio] (\n1) at (\x,1) {$\n^{\mathrm{in}}$};
+        \node[gio] (\n2) at (\x,-1) {$\n^{\mathrm{out}}$};}
+      \draw[typarc] (a1)--(a2); \draw[typarc] (d1)--(d2);
+      \draw[gcut] (b1)--(b2); \draw[gcut] (c1)--(c2);
+      \foreach \u/\v in {a/b,b/c,c/d} {\draw[typarc] (\u2)--(\v1); \draw[typarc] (\v2)--(\u1);}
+      \node[font=\scriptsize,rej] at (2.8,-1.8) {odebrat};
+      \node[font=\scriptsize,rej] at (5.6,-1.8) {odebrat};
+
+
+  Obrázek: cesta $a,b,c,d$ a graf $D_G$ pod ní (vrchol $v$ nahoře, jeho dvojice $v^{\mathrm{in}}$,
+  $v^{\mathrm{out}}$ pod ním). Každá hrana $G$ dává v $D_G$ cyklus délky 4, např.
+  $a^{\mathrm{in}}\to a^{\mathrm{out}}\to b^{\mathrm{in}}\to b^{\mathrm{out}}\to a^{\mathrm{in}}$. Vrcholové
+  pokrytí $\{b,c\}$ (zeleně) určuje zpětnovazební množinu: obě červené čárkované vnitřní hrany. Po jejich
+  odebrání žádný cyklus nezbude.
+
+
+  "3. Polynomialita.".notion $D_G$ má $2n$ vrcholů a $n+2m$ hran; sestrojíme ho jedním průchodem vrcholů a hran,
+  v čase $O(n+m)$.
+
+
+  "Pozorování (tvar cyklů).".notion Z vrcholu $v^{\mathrm{in}}$ vede jediná hrana, a to vnitřní hrana do
+  $v^{\mathrm{out}}$; z $v^{\mathrm{out}}$ vedou jen spojovací hrany do $u^{\mathrm{in}}$ pro sousedy $u$ vrcholu
+  $v$. Každý orientovaný cyklus v $D_G$ proto střídá vnitřní a spojovací hrany a má tvar
+  $v_1^{\mathrm{in}}\to v_1^{\mathrm{out}}\to v_2^{\mathrm{in}}\to v_2^{\mathrm{out}}\to\dots\to v_r^{\mathrm{out}}\to v_1^{\mathrm{in}}$,
+  kde po sobě jdoucí vrcholy $v_i,v_{i+1}$ (i $v_r,v_1$) jsou v $G$ sousední. Hrana $v^{\mathrm{out}}\to v^{\mathrm{in}}$
+  neexistuje (graf nemá smyčky), takže $r\ge 2$: "každý cyklus obsahuje vnitřní hrany dvou sousedních vrcholů".emphasize
+  $v_1,v_2$. Naopak každá hrana $\{u,v\}\in E$ dává cyklus
+  $u^{\mathrm{in}}\to u^{\mathrm{out}}\to v^{\mathrm{in}}\to v^{\mathrm{out}}\to u^{\mathrm{in}}$.
+
+
+  "4. ($\Rightarrow$)".notion Nechť $C$ je vrcholové pokrytí $G$, $|C|\le c$. Položme
+  $F=\{v^{\mathrm{in}}\to v^{\mathrm{out}}\mid v\in C\}$, tedy $|F|=|C|\le k$. Kdyby graf $D_G$ bez hran $F$
+  obsahoval cyklus, obsahoval by podle pozorování vnitřní hrany dvou sousedních vrcholů $v_1,v_2$. Hranu
+  $\{v_1,v_2\}$ ale pokrývá $C$, takže $v_1\in C$ nebo $v_2\in C$ a příslušná vnitřní hrana je v $F$ – spor.
+  $F$ je tedy zpětnovazební.
+
+
+  "5. ($\Leftarrow$)".notion Nechť $F$ je zpětnovazební množina v $D_G$, $|F|\le k$. Nejdřív ji
+  "normalizujeme".emphasize: každou spojovací hranu $u^{\mathrm{out}}\to v^{\mathrm{in}}$ z $F$ nahradíme vnitřní
+  hranou $v^{\mathrm{in}}\to v^{\mathrm{out}}$. Vzniklá množina $F'$ je opět zpětnovazební: cyklus, který procházel
+  hranou $u^{\mathrm{out}}\to v^{\mathrm{in}}$, pokračuje z $v^{\mathrm{in}}$ jedinou možnou hranou
+  $v^{\mathrm{in}}\to v^{\mathrm{out}}$, a ta je v $F'$; cyklus, který zasahovala vnitřní hrana z $F$, zasahuje
+  i $F'$. Přitom $|F'|\le|F|$ (náhrady mohou splynout). $F'$ obsahuje jen vnitřní hrany; položme
+  $C=\{v\mid v^{\mathrm{in}}\to v^{\mathrm{out}}\in F'\}$, $|C|=|F'|\le k=c$. Pro každou hranu $\{u,v\}\in E$
+  musí $F'$ zasáhnout cyklus $u^{\mathrm{in}}\to u^{\mathrm{out}}\to v^{\mathrm{in}}\to v^{\mathrm{out}}\to u^{\mathrm{in}}$;
+  jeho jediné vnitřní hrany jsou hrany vrcholů $u$ a $v$, takže $u\in C$ nebo $v\in C$. $C$ je vrcholové pokrytí
+  velikosti nejvýše $c$.
+
+
+  "6. Závěr.".notion $\prob{Vertex Cover}$ je NP-úplný a $\prob{Vertex Cover}\redp\prob{FAS}$, tedy FAS je NP-těžký;
+  spolu s bodem 1 je NP-úplný.
+
+
+  "Proč gadget.".notion Kdybychom každou hranu $\{u,v\}$ jen zorientovali oběma směry ($u\to v$, $v\to u$), musela
+  by zpětnovazební množina rozbít každý 2-cyklus zvlášť a odpověď by byla vždy přesně $m$ (stačí nechat hrany
+  ve směru libovolného pořadí vrcholů) – žádná informace o pokrytí. Rozdělení vrcholu na vnitřní hranu převádí
+  „výběr vrcholu“ na „výběr hrany“; stejný trik používá redukce "$\prob{DHP} \redp \prob{UHP}$"#red-uhp.
+
+
+.Exercise:
+  title: 'Typová úloha 4.5 [12 bodů]'
+  label: typ-4-5
+
+  "Řídká množina.".notion Je dán neorientovaný graf $G=(V,E)$ a číslo $k$. Množina $S\subseteq V$ je
+  "řídká".emphasize, pokud každý vrchol z $S$ má v $S$ nejvýše jednoho souseda (podgraf indukovaný množinou $S$
+  má všechny stupně nejvýše 1, je to párování a izolované vrcholy).
+
+
+  Problém $\prob{Řídká množina}$ (anglicky "dissociation set".emphasize): existuje v $G$ řídká množina $S$
+  s $|S|\ge k$?
+
+
+  Například cesta $a,b,c$ má řídkou množinu $\{a,b\}$ velikosti 2, ale žádnou velikosti 3 (vrchol $b$ by měl
+  dva sousedy).
+
+
+  Dokažte, že problém $\prob{Řídká množina}$ je NP-úplný. "Nápověda: převádějte z problému Nezávislá množina.".emphasize
+
+
+.Solution:
+  label: red-typ-4-5
+
+  "Redukce:".notion $\prob{IS} \redp \prob{Řídká množina}$, instance $(G,k)$ $\mapsto$ $(G',\ k'=n+k)$, kde $G'$
+  vznikne z $G$ přivěšením nového listu $v'$ ke každému vrcholu $v$.
+
+
+  "1. Problém je v $\NP$.".notion Certifikát je množina $S$. Ověříme $|S|\ge k$ a pro každý vrchol $v\in S$ spočítáme
+  sousedy v $S$ (průchod seznamem sousedů s polem příslušnosti do $S$); jsou-li všechny počty nejvýše 1, přijmeme.
+  Čas $O(|V|+|E|)$.
+
+
+  "2. Konstrukce.".notion Pro $G=(V,E)$ s $n$ vrcholy a $m$ hranami sestrojíme $G'=(V\cup V',\ E\cup E')$, kde
+  $V'=\{v'\mid v\in V\}$ jsou nové vrcholy a $E'=\{\{v,v'\}\mid v\in V\}$, a položíme $k'=n+k$. (Je-li $k>n$,
+  je $k'>2n$ a obě instance jsou $\NE$; nic zvláštního řešit nemusíme.)
+
+
+  .centered:
+
+    !tikz:
+      filename: 17d-np-tezkost-05
+
+      \begin{scope}
+        \node[v] (a) at (0,1.4) {$a$}; \node[vsel] (b) at (1.4,1.4) {$b$};
+        \node[v] (c) at (1.4,0) {$c$}; \node[vsel] (d) at (0,0) {$d$};
+        \draw[e] (a)--(b) (b)--(c) (c)--(d) (d)--(a) (a)--(c);
+        \node[font=\small] at (0.7,-0.8) {$G$: IS $\{b,d\}$, $k=2$};
+      \end{scope}
+      \draw[flow] (2.4,0.7)--(3.6,0.7);
+      \begin{scope}[xshift=5.2cm]
+        \node[v] (a) at (0,1.4) {$a$}; \node[vsel] (b) at (1.4,1.4) {$b$};
+        \node[v] (c) at (1.4,0) {$c$}; \node[vsel] (d) at (0,0) {$d$};
+        \node[vsel] (a1) at (-1.1,2.3) {$a'$}; \node[vsel] (b1) at (2.5,2.3) {$b'$};
+        \node[vsel] (c1) at (2.5,-0.9) {$c'$}; \node[vsel] (d1) at (-1.1,-0.9) {$d'$};
+        \draw[e] (a)--(b) (b)--(c) (c)--(d) (d)--(a) (a)--(c) (a)--(a1) (c)--(c1);
+        \draw[esel] (b)--(b1) (d)--(d1);
+        \node[font=\small] at (0.7,-1.6) {$G'$: řídká $\{b,d,a',b',c',d'\}$, $k'=4+2=6$};
+      \end{scope}
+
+
+  Obrázek: zeleně nezávislá množina $\{b,d\}$ v $G$ a z ní řídká množina v $G'$ (všechny listy a $b$, $d$). Zeleně
+  vytažené hrany jsou jediné hrany uvnitř řídké množiny: každý vybraný vrchol $G$ má za jediného souseda svůj list.
+
+
+  "3. Polynomialita.".notion $G'$ má $2n$ vrcholů a $m+n$ hran, sestrojíme ho v čase $O(n+m)$; číslo $k'=n+k$
+  spočítáme sčítáním.
+
+
+  "4. ($\Rightarrow$)".notion Nechť $S$ je nezávislá množina v $G$, $|S|\ge k$. Položme $S'=S\cup V'$, tedy
+  $|S'|=|S|+n\ge n+k$. List $v'$ má v $G'$ jediného souseda $v$, takže má v $S'$ nejvýše jednoho souseda. Vrchol
+  $v\in S$ má v $G'$ sousedy: své sousedy v $G$ (ti nejsou v $S$, protože $S$ je nezávislá, a nejsou v $V'$) a list
+  $v'$. V $S'$ má tedy právě jednoho souseda. $S'$ je řídká.
+
+
+  "5. ($\Leftarrow$)".notion Nechť $S'$ je řídká množina v $G'$, $|S'|\ge n+k$. Nemusí obsahovat všechny listy
+  (např. $\{a,b,c',d'\}$ v obrázku je řídká), proto ji nejdřív "normalizujeme".emphasize. Postupně pro každý
+  vrchol $v\in V$ s $v'\notin S'$:
+
+  .itemize:
+
+    .item:
+
+      je-li $v\in S'$, nahradíme $v$ listem $v'$;
+
+    .item:
+
+      jinak list $v'$ přidáme.
+
+  Odebrání vrcholu žádný počet sousedů nezvýší. Přidaný list $v'$ má jediného souseda $v$, který v množině v tu
+  chvíli není (a už do ní nepřibude), takže $v'$ má v množině 0 sousedů a nikomu jinému počet sousedů nestoupne.
+  Množina tedy zůstane řídká a její velikost neklesne. Výsledná řídká množina $S''$ obsahuje všechny listy
+  a $|S''|\ge|S'|\ge n+k$. Položme $S=S''\cap V$; pak $|S|=|S''|-n\ge k$. Každý $v\in S$ má v $S''$ souseda $v'$,
+  a protože smí mít jen jednoho, žádný jeho soused z $G$ v $S''$ není. Tedy $S$ je nezávislá množina v $G$ velikosti
+  alespoň $k$.
+
+
+  "6. Závěr.".notion $\prob{IS}$ je NP-úplný a $\prob{IS}\redp\prob{Řídká množina}$, tedy $\prob{Řídká množina}$
+  je NP-těžký; spolu s bodem 1 NP-úplný.
+
+
+  "Proč gadget.".notion Identita $(G,k)\mapsto(G,k)$ nefunguje: jediná hrana $\{u,v\}$ má nezávislou množinu
+  velikosti 1, ale řídkou velikosti 2. Přivěšený list „spotřebuje“ jediného povoleného souseda každého vybraného
+  vrcholu $G$, takže vybrané vrcholy $G$ už spolu sousedit nesmějí. Je to stejný trik jako v
+  "typové úloze 4.2"#typ-4-2, kde list spotřebuje jeden stupeň v kostře.
+
+
+.Exercise:
+  title: 'Typová úloha 4.6 [12 bodů]'
+  label: typ-4-6
+
+  "Společné slovo automatů.".notion Je dáno $m$ deterministických konečných automatů $A_1,\dots,A_m$ nad abecedou
+  $\{0,1\}$ (každý zadaný množinou stavů, tabulkou přechodové funkce, počátečním stavem a množinou přijímacích
+  stavů) a číslo $n$ zapsané "unárně".notion, tedy jako slovo $1^n$.
+
+
+  Problém $\prob{Společné slovo}$: existuje slovo $w\in\{0,1\}^n$ (délky přesně $n$), které přijímají všechny
+  automaty $A_1,\dots,A_m$?
+
+
+  Například automat „slovo končí na 1“ a automat „slovo má sudý počet jedniček“ mají pro $n=2$ společné slovo
+  $11$, pro $n=1$ žádné.
+
+
+  Dokažte, že problém $\prob{Společné slovo}$ je NP-úplný, a vysvětlete, kde se použije, že $n$ je zadané unárně.
+  "Nápověda: převádějte z problému 3-SAT; slovo délky $n$ čtěte jako ohodnocení $n$ proměnných a každé klauzuli přiřaďte jeden automat.".emphasize
+
+
+.Solution:
+  label: red-typ-4-6
+
+  "Redukce:".notion $\prob{3-SAT} \redp \prob{Společné slovo}$, formule $\Phi$ ($n$ proměnných, $m$ klauzulí)
+  $\mapsto$ $(A_1,\dots,A_m;\ 1^n)$, kde automat $A_j$ přijme slovo $w$ délky $n$, právě když ohodnocení
+  $x_i=w_i$ splňuje klauzuli $C_j$.
+
+
+  "1. Problém je v $\NP$.".notion Certifikát je slovo $w\in\{0,1\}^n$. Ověřovatel zkontroluje délku a pustí každý
+  automat $A_j$ na $w$: $n$ kroků, v každém jedno vyhledání v tabulce přechodů. Celkem $m\cdot n$ kroků, tedy
+  polynomiálně vzhledem k délce vstupu. "Tady je potřeba unární zápis:".notion vstup obsahuje $1^n$, takže
+  $n$ je nejvýše délka vstupu a certifikát je polynomiálně dlouhý. Kdyby bylo $n$ zapsané binárně, mohlo by být
+  exponenciálně velké vzhledem k délce vstupu a slovo $w$ by jako certifikát nestačilo – tento důkaz příslušnosti
+  do $\NP$ by neprošel.
+
+
+  "2. Konstrukce.".notion Nechť $\Phi=C_1\land\dots\land C_m$ nad proměnnými $x_1,\dots,x_n$. (Proměnné, které se
+  ve $\Phi$ nevyskytují, předem vynecháme a zbylé přečíslujeme, takže $n\le 3m$; jinak by mohl být index proměnné
+  zapsaný binárně krátký a slovo $1^n$ exponenciálně dlouhé.) Slovo
+  $w=w_1\dots w_n\in\{0,1\}^n$ chápeme jako ohodnocení $\sigma_w(x_i)=w_i$. Pro klauzuli $C_j$ sestrojíme automat
+  $A_j=(Q_j,\{0,1\},\delta_j,q_{0,0},F_j)$:
+
+  .itemize:
+
+    .item:
+
+      Stavy $q_{i,b}$ pro $i=0,\dots,n$ a $b\in\{0,1\}$ a past $r$, celkem $2n+3$ stavů. Význam: „přečetl jsem
+      $i$ symbolů a $b=1$, právě když už je některý literál $C_j$ s proměnnou mezi $x_1,\dots,x_i$ pravdivý“.
+
+    .item:
+
+      Přechody pro $i=1,\dots,n$, $b\in\{0,1\}$ a $a\in\{0,1\}$: $\delta_j(q_{i-1,b},a)=q_{i,b'}$, kde $b'=1$,
+      pokud $b=1$, nebo $x_i\in C_j$ a $a=1$, nebo $\lnot x_i\in C_j$ a $a=0$; jinak $b'=0$.
+
+    .item:
+
+      Dále $\delta_j(q_{n,b},a)=r$ a $\delta_j(r,a)=r$ (delší slova skončí v pasti).
+
+    .item:
+
+      Přijímací stavy $F_j=\{q_{n,1}\}$.
+
+  Výstupem redukce jsou automaty $A_1,\dots,A_m$ a slovo $1^n$.
+
+
+  .centered:
+
+    !tikz:
+      filename: 17d-np-tezkost-06
+      options: 'x=1cm,y=1cm'
+
+      \tikzset{stq/.style={st,minimum size=11mm,font=\footnotesize},
+        trs/.style={tr,draw=acc!70!black,very thick}}
+      \node[stq,initial,initial text=] (q00) at (0,0) {$q_{0,0}$};
+      \node[stq] (q10) at (2.6,0) {$q_{1,0}$};
+      \node[stq] (q20) at (5.2,0) {$q_{2,0}$};
+      \node[stq] (q30) at (7.8,0) {$q_{3,0}$};
+      \node[stq] (q40) at (10.4,0) {$q_{4,0}$};
+      \node[stq] (q11) at (2.6,-2.3) {$q_{1,1}$};
+      \node[stq] (q21) at (5.2,-2.3) {$q_{2,1}$};
+      \node[stq] (q31) at (7.8,-2.3) {$q_{3,1}$};
+      \node[stacc,minimum size=11mm,font=\footnotesize] (q41) at (10.4,-2.3) {$q_{4,1}$};
+      \foreach \x/\i in {1.3/1,3.9/2,6.5/3,9.1/4} \node[font=\scriptsize\sffamily,gr] at (\x,1.0) {čte $x_\i$};
+      \node[font=\scriptsize,anchor=east] at (-1.3,0) {$b=0$};
+      \node[font=\scriptsize,anchor=east] at (-1.3,-2.3) {$b=1$};
+      \draw[tr] (q00)--node[lab,above]{$0$}(q10);
+      \draw[trs] (q00)--node[lab,below left]{$1$}(q11);
+      \draw[tr] (q10)--node[lab,above]{$1$}(q20);
+      \draw[trs] (q10)--node[lab,below left]{$0$}(q21);
+      \draw[tr] (q20)--node[lab,above]{$0,1$}(q30);
+      \draw[tr] (q30)--node[lab,above]{$0$}(q40);
+      \draw[trs] (q30)--node[lab,below left]{$1$}(q41);
+      \draw[tr] (q11)--node[lab,below]{$0,1$}(q21);
+      \draw[tr] (q21)--node[lab,below]{$0,1$}(q31);
+      \draw[tr] (q31)--node[lab,below]{$0,1$}(q41);
+
+
+  Automat pro klauzuli $C=(x_1\lor\lnot x_2\lor x_4)$ a $n=4$. Zeleně přechody, kterými se klauzule splní
+  (proměnná $x_3$ v $C$ není, proto oba její přechody vedou ve stejném řádku). Nedosažitelný stav $q_{0,1}$
+  a past $r$, do které vedou všechny přechody ze stavů $q_{4,b}$, nejsou nakreslené. Ze 16 slov délky 4 automat
+  odmítne právě $0100$ a $0110$ – to jsou ohodnocení, při nichž je $C$ nepravdivá.
+
+
+  "Invariant.".notion Pro $i\le n$ je $A_j$ po přečtení $w_1\dots w_i$ ve stavu $q_{i,b}$, kde $b=1$, právě když
+  $C_j$ obsahuje literál s proměnnou z $x_1,\dots,x_i$, který je při $\sigma_w$ pravdivý. Indukcí podle $i$: pro
+  $i=0$ je automat v $q_{0,0}$ a žádný takový literál není; krok $i-1\to i$ přesně odpovídá definici $b'$
+  (přibude literál $x_i$ nebo $\lnot x_i$, je-li v $C_j$ a pravdivý při $w_i$). Pro $i=n$ dostáváme:
+  "$A_j$ přijme slovo $w$ délky $n$, právě když $\sigma_w$ splňuje $C_j$".emphasize.
+
+
+  "3. Polynomialita.".notion Každý automat má $2n+3$ stavů a $2(2n+3)$ přechodů, všech $m$ automatů tedy
+  $O(mn)$ přechodů; slovo $1^n$ má délku $n\le 3m$. Konstrukce projde pro každou klauzuli všechny proměnné, čas
+  $O(mn)$, polynomiální ve velikosti formule.
+
+
+  "4. ($\Rightarrow$)".notion Nechť ohodnocení $\sigma$ splňuje $\Phi$. Položme $w=\sigma(x_1)\dots\sigma(x_n)$,
+  slovo délky $n$ s $\sigma_w=\sigma$. Ohodnocení splňuje každou klauzuli $C_j$, takže podle invariantu každý
+  automat $A_j$ slovo $w$ přijme.
+
+
+  "5. ($\Leftarrow$)".notion Nechť slovo $w$ délky $n$ přijímají všechny automaty. Podle invariantu ohodnocení
+  $\sigma_w$ splňuje každou klauzuli $C_j$, tedy celou formuli $\Phi$, a ta je splnitelná.
+
+
+  "6. Závěr.".notion $\prob{3-SAT}$ je NP-úplný a $\prob{3-SAT}\redp\prob{Společné slovo}$, tedy
+  $\prob{Společné slovo}$ je NP-těžký; s bodem 1 NP-úplný. (Konstrukce nikde nevyužila, že klauzule mají tři
+  literály, a funguje i pro klauzule s opakovanou proměnnou.)
+
+
+  "Proč víc automatů.".notion Jediný automat ($m=1$) problém neztíží: slovo délky $n$, které přijímá, najdeme
+  dynamickým programováním přes dvojice (stav, počet přečtených symbolů) v polynomiálním čase. Těžkost vzniká až
+  z požadavku, aby slovo přijaly "všechny".emphasize automaty zároveň – každý hlídá jednu klauzuli.
+
+
+.Exercise:
+  title: 'Typová úloha 4.7 [12 bodů]'
+  label: typ-4-7
+
+  "Vyvážené rozdělení.".notion Je dáno $2N$ kladných celých čísel $b_1,\dots,b_{2N}$ (zapsaných binárně).
+
+
+  Problém $\prob{Vyvážené rozdělení}$: lze čísla rozdělit na dvě skupiny "po $N$ číslech".notion se stejným součtem?
+
+
+  Například čísla $1,2,3,4$ lze rozdělit na $\{1,4\}$ a $\{2,3\}$. Čísla $1,1,1,3$ vyváženě rozdělit nelze:
+  součet 3 má jen skupina $\{3\}$ a skupina $\{1,1,1\}$, a ty mají různý počet prvků.
+
+
+  Dokažte, že problém $\prob{Vyvážené rozdělení}$ je NP-úplný. "Nápověda: převádějte z problému Partition.".emphasize
+
+
+.Solution:
+  label: red-typ-4-7
+
+  "Redukce:".notion $\prob{Partition} \redp \prob{Vyvážené rozdělení}$, instance $(a_1,\dots,a_n)$ $\mapsto$
+  $(a_1+1,\dots,a_n+1,\ 1,\dots,1)$ s $n$ jedničkami, tedy $2N=2n$ čísel.
+
+
+  "1. Problém je v $\NP$.".notion Certifikát je množina $N$ indexů (první skupina). Ověříme počet a porovnáme
+  součty obou skupin; sčítání binárních čísel je polynomiální v délce vstupu.
+
+
+  "2. Konstrukce.".notion Je dána instance $\prob{Partition}$, kladná čísla $a_1,\dots,a_n$ se součtem $S$.
+  "Myšlenka:".notion přidáme $n$ nul. Nuly nemění součty, ale dovolí dorovnat počty: skupinu s $j$ čísly
+  doplníme $n-j$ nulami, druhou skupinu s $n-j$ čísly zbylými $j$ nulami. Zadání ale chce kladná čísla, proto
+  všech $2n$ čísel posuneme o 1:
+  $b_i=a_i+1$ pro $i=1,\dots,n$ a $b_{n+i}=1$ (posunutá nula) pro $i=1,\dots,n$; $N=n$. Posun nezmění,
+  která rozdělení mají stejné součty: obě skupiny mají přesně $n$ čísel, takže se součet každé zvětší přesně o $n$.
+
+
+  .centered:
+
+    !tikz:
+      filename: 17d-np-tezkost-07
+      options: 'x=0.75cm,y=1cm'
+
+      % a=(3,1,1,2,1), S=8, I={a1,a2}={3,1}; b=(4,2,2,3,2,1,1,1,1,1), soucet 18, skupiny po 5 se souctem 9
+      \def\blk#1#2#3#4#5{\draw[thick,fill=#5,rounded corners=1pt] (#1,#2-0.32) rectangle (#1+#3,#2+0.32);
+        \node[font=\small] at (#1+#3/2,#2) {#4};}
+      \node[font=\small,anchor=east] at (-0.3,1.2) {skupina 1};
+      \node[font=\small,anchor=east] at (-0.3,0) {skupina 2};
+      \blk{0}{1.2}{4}{$3{+}1$}{acc!25}
+      \blk{4}{1.2}{2}{$1{+}1$}{acc!25}
+      \blk{6}{1.2}{1}{$1$}{intc!25}
+      \blk{7}{1.2}{1}{$1$}{intc!25}
+      \blk{8}{1.2}{1}{$1$}{intc!25}
+      \blk{0}{0}{2}{$1{+}1$}{defc!12}
+      \blk{2}{0}{3}{$2{+}1$}{defc!12}
+      \blk{5}{0}{2}{$1{+}1$}{defc!12}
+      \blk{7}{0}{1}{$1$}{intc!25}
+      \blk{8}{0}{1}{$1$}{intc!25}
+      \draw[thick,black!60] (0,-0.6)--(10,-0.6);
+      \foreach \t in {0,1,...,9} {\draw[black!60] (\t,-0.6)--(\t,-0.7); \node[font=\scriptsize] at (\t,-0.95) {$\t$};}
+      \draw[rej,very thick,dashed] (9,-0.6)--(9,1.75) node[above,font=\small]{$9$};
+      \node[font=\small,anchor=west] at (9.4,1.2) {5 čísel};
+      \node[font=\small,anchor=west] at (9.4,0) {5 čísel};
+
+
+  Příklad: $\prob{Partition}$ s čísly $3,1,1,2,1$ ($S=8$) a rozdělením $\{3,1\}$ / $\{1,2,1\}$, které má různé
+  počty prvků (2 a 3). Po posunu ($a_i+1$, zeleně a modře) a přidání pěti jedniček (oranžově) dostane první
+  skupina $5-2=3$ jedničky a druhá $5-3=2$. Obě skupiny mají 5 čísel a součet $9=S/2+n$.
+
+
+  "3. Polynomialita.".notion Výstup má $2n$ čísel, každé nejvýše $\max_i a_i+1$, tedy s binárním zápisem nejvýše
+  o bit delším; spočítáme ho v čase lineárním v délce vstupu.
+
+
+  "4. ($\Rightarrow$)".notion Nechť $I\subseteq\{1,\dots,n\}$ má $\sum_{i\in I}a_i=\sum_{i\notin I}a_i=S/2$
+  a $|I|=j$. Do skupiny 1 dáme čísla $b_i$, $i\in I$, a $n-j$ jedniček; do skupiny 2 čísla $b_i$, $i\notin I$
+  (je jich $n-j$), a zbylých $j$ jedniček. Jedniček je dohromady $n$, jak má být, a obě skupiny mají $n$ čísel.
+  Součty: skupina 1 má $\sum_{i\in I}(a_i+1)+(n-j)=S/2+j+n-j=S/2+n$, skupina 2 má
+  $\sum_{i\notin I}(a_i+1)+j=S/2+(n-j)+j=S/2+n$. Rozdělení je vyvážené.
+
+
+  "5. ($\Leftarrow$)".notion Nechť $B_1,B_2$ je vyvážené rozdělení, každá skupina má $n$ čísel a součty jsou
+  stejné. Každé číslo je „původní hodnota $+1$“ (u přidaných jedniček je původní hodnota 0). Označme
+  $I=\{i\le n\mid b_i\in B_1\}$. Pak součet $B_1$ je $\sum_{i\in I}a_i+n$ a součet $B_2$ je $\sum_{i\notin I}a_i+n$
+  (obě skupiny mají $n$ čísel, každé přispívá jedničkou navíc). Z rovnosti součtů plyne
+  $\sum_{i\in I}a_i=\sum_{i\notin I}a_i$, takže $I$ a jeho doplněk jsou řešením $\prob{Partition}$.
+
+
+  "6. Závěr.".notion $\prob{Partition}$ je NP-úplný (redukce "$\prob{Subset Sum} \redp \prob{Partition}$"#red-partition),
+  tedy $\prob{Vyvážené rozdělení}$ je NP-těžký a podle bodu 1 NP-úplný.
+
+
+  "Proč doplňovat.".notion Identita nefunguje: čísla $1,1,1,3$ ze zadání mají řešení $\prob{Partition}$, ale ne
+  vyvážené rozdělení, protože skupiny se stejným součtem mají různý počet prvků; při lichém počtu čísel (např.
+  $1,1,2$) by výstup dokonce nebyl instancí $\prob{Vyvážené rozdělení}$. Bez
+  posunu by zase výstup obsahoval nuly, které zadání nedovoluje. Problém je stejně jako typová úloha 4.3 jen
+  "slabě".emphasize NP-úplný: dynamické programování přes dvojice (počet vybraných čísel, součet) ho vyřeší
+  v pseudopolynomiálním čase.

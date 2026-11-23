@@ -1,0 +1,349 @@
+.Section Úloha 1: Turingův stroj
+  label: ch-ukazkovy-uloha-1-turinguv-stroj
+
+
+.Exercise:
+  title: 'Úloha 1: Turingův stroj [6 bodů]'
+  label: ut-1
+
+  Uvažujte jazyk
+
+  .equation:
+
+    L = \{\, a^i b^j c^k \mid i, j, k \ge 0,\ k = i + j \,\}.
+
+  Např. $aabccc \in L$, $\varepsilon \in L$, $abc \notin L$, $acb \notin L$.
+
+  .enumerate:
+    type: a
+
+    .item:
+
+      Popište "deterministický dvoupáskový".notion Turingův stroj, který rozhoduje $L$ v čase $\mathcal{O}(n)$.
+      Uveďte myšlenku, význam stavů (nebo fází výpočtu) a odhad času.
+
+    .item:
+
+      Popište "deterministický".notion Turingův stroj se vstupní páskou pouze pro čtení, který rozhoduje
+      $L$ s "pracovním prostorem".notion $\mathcal{O}(\log n)$. Zdůvodněte odhad prostoru.
+      "(Formální přechodovou funkci nepožadujeme.)".emphasize
+
+
+.Solution:
+
+  "a) Dvoupáskový stroj v čase $O(n)$".notion
+
+
+  "Myšlenka.".notion Vstup přečteme jedinkrát zleva doprava. Za každé přečtené $a$ i $b$ zapíšeme na druhou
+  pásku jednu čárku $\sharp$, takže po bloku $a^ib^j$ je tam $i+j$ čárek (unární počítadlo). Pak hlava 2
+  začne couvat a každé $c$ „umaže“ (spáruje) jednu čárku. Slovo je v $L$, právě když čárky a symboly $c$ dojdou
+  současně. Pořadí $a^*b^*c^*$ hlídají stavy: z fáze „čtu $a$“ lze přejít jen do fáze „čtu $b$“ a odtud jen do
+  fáze „čtu $c$“, nikdy zpět.
+
+
+  "Pásky.".notion Páska 1 nese vstup; stroj ji nepřepisuje a hlava 1 jde jen doprava. Páska 2 je na začátku
+  prázdná; ve fázích $q_a,q_b$ na ni hlava 2 píše čárky a jde doprava, ve fázi $q_c$ jde doleva.
+
+
+  "Stavy a jejich význam.".notion
+
+  .description:
+
+    .ditem:
+      bullet: '$q_a$ (počáteční):'
+
+      čteme úvodní blok $a$; na pásce 2 je tolik čárek, kolik $a$ už bylo přečteno, hlava 2 stojí na první
+      volné buňce za nimi.
+
+    .ditem:
+      bullet: '$q_b$:'
+
+      čteme blok $b$ (už přišlo aspoň jedno $b$, takže další $a$ je chyba pořadí); na pásce 2 je
+      $i$ čárek a k nim jedna za každé dosud přečtené $b$.
+
+    .ditem:
+      bullet: '$q_c$:'
+
+      čteme blok $c$; hlava 2 stojí na poslední dosud nespárované čárce (nebo na $\blank$ vlevo od všech
+      čárek, když jsou všechny spárované).
+
+    .ditem:
+      bullet: '$\qA$, $\qR$:'
+
+      přijetí a zamítnutí.
+
+
+  "Přechodová funkce".notion $\delta(q,s_1,s_2)=(q',s_1',s_2',D_1,D_2)$, kde $s_1,s_2$ jsou symboly pod
+  hlavami 1 a 2:
+
+  .table:
+    columns: 'lll'
+
+    .row:
+      head: true
+
+      stav
+
+      přechod
+
+      význam
+
+    .row:
+
+      $q_a$
+
+      $\delta(q_a,a,\blank)=(q_a,a,\sharp,\Rgt,\Rgt)$
+
+      započítej $a$
+
+    .row:
+
+      ~
+
+      $\delta(q_a,b,\blank)=(q_b,b,\sharp,\Rgt,\Rgt)$
+
+      první $b$: započítej, přejdi do $q_b$
+
+    .row:
+
+      ~
+
+      $\delta(q_a,x,\blank)=(q_c,x,\blank,\Stay,\Lft)$ pro $x\in\{c,\blank\}$
+
+      konec bloku $a^ib^j$, hlava 2 na poslední čárku
+
+    .row:
+
+      $q_b$
+
+      $\delta(q_b,b,\blank)=(q_b,b,\sharp,\Rgt,\Rgt)$
+
+      započítej $b$
+
+    .row:
+
+      ~
+
+      $\delta(q_b,x,\blank)=(q_c,x,\blank,\Stay,\Lft)$ pro $x\in\{c,\blank\}$
+
+      konec bloku $a^ib^j$
+
+    .row:
+
+      ~
+
+      $\delta(q_b,a,\blank)=(\qR,\dots)$
+
+      $a$ za $b$: špatné pořadí
+
+    .row:
+
+      $q_c$
+
+      $\delta(q_c,c,\sharp)=(q_c,c,\sharp,\Rgt,\Lft)$
+
+      $c$ spáruj s jednou čárkou
+
+    .row:
+
+      ~
+
+      $\delta(q_c,\blank,\blank)=(\qA,\dots)$
+
+      vše spárováno: přijmi
+
+    .row:
+
+      ~
+
+      $\delta(q_c,c,\blank)=(\qR,\dots)$
+
+      víc $c$ než $a$ a $b$ dohromady
+
+    .row:
+
+      ~
+
+      $\delta(q_c,\blank,\sharp)=(\qR,\dots)$
+
+      méně $c$ než $a$ a $b$
+
+    .row:
+
+      ~
+
+      $\delta(q_c,x,y)=(\qR,\dots)$ pro $x\in\{a,b\}$
+
+      $a$ nebo $b$ za $c$: špatné pořadí
+
+  Všechny ostatní (nedosažitelné) kombinace vedou do $\qR$.
+
+
+  .centered:
+
+    !tikz:
+      filename: 18a-turinguv-stroj-03
+
+      \node[st,initial,initial text=] (qa) at (0,0) {$q_a$};
+      \node[st] (qb) at (6.4,0) {$q_b$};
+      \node[st] (qc) at (6.4,-3.8) {$q_c$};
+      \node[stacc] (acc) at (0,-3.8) {\qA};
+      \draw[tr] (qa) edge[loop above] node[lab]{$(a,\blank)/(a,\sharp),\ \Rgt,\Rgt$} (qa);
+      \draw[tr] (qa) -- node[lab,above]{$(b,\blank)/(b,\sharp),\ \Rgt,\Rgt$} (qb);
+      \draw[tr] (qb) edge[loop above] node[lab]{$(b,\blank)/(b,\sharp),\ \Rgt,\Rgt$} (qb);
+      \draw[tr] (qa) -- node[lab,below left,pos=0.5]{$(x,\blank)/(x,\blank),\ \Stay,\Lft$} (qc);
+      \draw[tr] (qb) -- node[lab,right]{$(x,\blank)/(x,\blank),\ \Stay,\Lft$} (qc);
+      \draw[tr] (qc) edge[loop right] node[lab,right]{$(c,\sharp)/(c,\sharp),\ \Rgt,\Lft$} (qc);
+      \draw[tr] (qc) -- node[lab,below]{$(\blank,\blank)$} (acc);
+      \node[note,anchor=north,text width=60mm,align=center] at (3.2,-4.45) {$x\in\{c,\blank\}$; nevypsané situace vedou do $\qR$};
+
+  Stavový diagram stroje z části a), totéž co tabulka výše. "Všimni si:".emphasize z $q_b$ nevede
+  přechod zpět do $q_a$ a z $q_c$ do žádného z nich – tvar $a^*b^*c^*$ hlídají stavy, počty hlídají
+  čárky na pásce 2.
+
+
+  .centered:
+
+    !tikz:
+      filename: 18a-turinguv-stroj-01
+
+      \def\row#1#2#3#4#5#6{%
+        \node[font=\small\sffamily\bfseries,anchor=east] at (-0.4,#1+0.9) {#2};
+        \node[font=\scriptsize,anchor=east] at (-0.2,#1+0.35) {páska 1};
+        \tmtape{0}{#1+0.35}{_,a,a,b,c,c,c,_}{#3}
+        \node[font=\scriptsize,anchor=east] at (-0.2,#1-0.95) {páska 2};
+        \tmtape{0}{#1-0.95}{#4}{#5}
+        \node[note,anchor=west,text width=62mm,align=left] at (6.0,#1-0.3) {\hyphenpenalty=10000\relax #6\par};}
+      \row{0}{Start}{2}{_,_,_,_,_,_,_,_}{2}{$q_a$: obě hlavy na začátku slova, páska 2 prázdná.}
+      \row{-3.0}{Po $a^ib^j$}{5}{_,*,*,*,_,_,_,_}{4}{$q_a$, $q_b$ zapsaly $i+j=3$ čárky. Na prvním $c$ přechod do $q_c$ s pohybem $(\Stay,\Lft)$: hlava 2 na poslední čárce.}
+      \row{-6.0}{Fáze $q_c$}{7}{_,*,*,*,_,_,_,_}{2}{Dvě $c$ spárována: hlava 1 jde $\Rgt$, hlava 2 jde~$\Lft$.}
+      \row{-9.0}{Konec}{8}{_,*,*,*,_,_,_,_}{1}{Pod oběma hlavami $\blank$: čárky i $c$ došly současně $\Rightarrow$ $\qA$.}
+
+  Výpočet stroje z části a) na vstupu $aabccc$. Hlava 1 se nikdy nevrací.
+
+
+  "Proč stroj rozhoduje $L$.".notion Je-li vstup tvaru $a^ib^jc^k$, projde stroj stavy $q_a$, ($q_b$), $q_c$,
+  zapíše $i+j$ čárek a v $q_c$ jich spáruje $\min(k,i+j)$. Při $k=i+j$ skončí na $(\blank,\blank)$ a přijme;
+  při $k>i+j$ narazí na $(c,\blank)$, při $k<i+j$ na $(\blank,\sharp)$ a zamítne. Není-li vstup tvaru
+  $a^*b^*c^*$, objeví se v něm $a$ za $b$ (to zachytí $q_b$) nebo $a$ či $b$ za $c$ (to zachytí $q_c$), pokud
+  stroj nezamítl už dřív. Prázdné slovo: $(q_a,\blank,\blank)\to q_c$, hlava 2 se posune na $\blank$, a
+  $(q_c,\blank,\blank)\to\qA$, tedy $\varepsilon\in L$ je přijato. Na příkladech ze zadání: $aabccc$ přijme,
+  $abc$ zamítne na $(\blank,\sharp)$, $acb$ zamítne v $q_c$ na symbolu $b$.
+
+
+  "Odhad času.".notion Každý krok výpočtu kromě nejvýše dvou (přechod do $q_c$ a poslední krok do $\qA$/$\qR$)
+  posune hlavu 1 o buňku doprava a hlava 1 se nikdy nevrací. Na vstupu délky $n$ tedy stroj udělá nejvýše
+  $n+2$ kroků, čas je $O(n)$.
+
+
+  "b) Logaritmický pracovní prostor".notion
+
+
+  "Model.".notion Stroj má vstupní pásku jen pro čtení (do prostoru se nepočítá) a pracovní pásku, jejíž
+  navštívené buňky se počítají (definice $\LL$ v kapitole .reference:ch-prostor).
+
+
+  "Myšlenka.".notion Čárky z části a) by zabraly až $n$ buněk. Místo nich si pamatujeme jediné číslo
+  $d=(\text{počet přečtených }a\text{ a }b)-(\text{počet přečtených }c)$ zapsané "binárně".emphasize na
+  pracovní pásce. Pořadí $a^*b^*c^*$ hlídá řídicí jednotka: fáze $A$, $B$, $C$ je součást vnitřního stavu
+  (stejně jako stavy $q_a,q_b,q_c$ v části a), tedy konečný automat), na pásku se nic nepíše.
+
+
+  "Algoritmus.".notion Na začátku $d=0$, fáze $A$. Hlava na vstupní pásce jde postupně po symbolech $s$:
+
+  .itemize:
+
+    .item:
+
+      $s=a$: je-li fáze $B$ nebo $C$, zamítni; jinak $d:=d+1$.
+
+    .item:
+
+      $s=b$: je-li fáze $C$, zamítni; jinak fáze $:=B$ a $d:=d+1$.
+
+    .item:
+
+      $s=c$: fáze $:=C$; je-li $d=0$, zamítni (víc $c$ než $a$ a $b$); jinak $d:=d-1$.
+
+    .item:
+
+      $s=\blank$ (konec vstupu): přijmi, právě když $d=0$.
+
+
+  "Čítač na pásce.".notion V buňce 0 pracovní pásky je zarážka $\triangleright$, za ní bity čísla $d$,
+  "nejnižší bit vlevo".emphasize. Přičtení 1: od nejnižšího bitu přepisuj $1\to0$ a jdi doprava, první $0$
+  nebo $\blank$ přepiš na $1$. Odečtení 1: přepisuj $0\to1$, první $1$ přepiš na $0$; dojde-li hlava na
+  $\blank$, bylo $d=0$. Test $d=0$: projdi bity, žádný není $1$. Po každé operaci se hlava vrátí k zarážce.
+
+
+  .centered:
+
+    !tikz:
+      filename: 18a-turinguv-stroj-02
+
+      \node[font=\scriptsize,anchor=east] at (-0.2,1.5) {vstup (jen čtení)};
+      \tmtape{0}{1.5}{_,a,a,b,c,c,c,_}{6}
+      \draw[decorate,decoration={brace,amplitude=4pt}] (0.7,1.95)--(4.9,1.95) node[midway,above=4pt,font=\scriptsize]{$n$ buněk -- nepočítá se};
+      \node[font=\scriptsize,anchor=east] at (-0.2,0) {pracovní};
+      \fill[warnc!8,draw=warnc,thick,rounded corners] (-0.05,0.45) rectangle (2.15,-0.45);
+      \tmtape{0}{0}{$\triangleright$,0,1,_}{2}
+      \draw[decorate,decoration={brace,amplitude=4pt,mirror}] (0.7,-1.0)--(2.1,-1.0) node[midway,below=4pt,font=\scriptsize]{$\le\lfloor\log_2 n\rfloor+1$ bitů};
+      \node[note,anchor=west,text width=58mm,align=left] at (3.3,0) {Přečteno $aabc$, fáze $C$ ve stavu řídicí jednotky. Čítač $d=3-1=2$ je zapsán $0,1$ (nejnižší bit vlevo).};
+
+  Stroj z části b) uprostřed výpočtu na $aabccc$. Do prostoru se počítá jen orámovaná část pracovní pásky.
+
+
+  "Proč stroj rozhoduje $L$.".notion Invariant: po přečtení předpony $u$ tvaru $a^*b^*c^*$ je
+  $d=|u|_a+|u|_b-|u|_c\ge 0$. Chybné pořadí zachytí fáze. Má-li vstup tvar $a^ib^jc^k$, čtou se všechna $c$
+  až po všech $a$ a $b$; $d$ by kleslo pod nulu, právě když $k>i+j$ (pak stroj zamítne), a na konci je
+  $d=i+j-k$, takže stroj přijme, právě když $k=i+j$. Pro $\varepsilon$ je hned $s=\blank$ a $d=0$: přijme.
+
+
+  "Odhad prostoru.".notion Vždy platí $0\le d\le i+j\le n$, takže $d$ má nejvýše $\lfloor\log_2 n\rfloor+1$
+  bitů. Pracovní páska tedy použije nejvýše $\lfloor\log_2 n\rfloor+3$ buněk (zarážka, bity a jedna buňka
+  $\blank$ za nimi, kterou čte přenos nebo test nuly), to je $O(\log n)$. Nic dalšího se na pracovní pásku
+  nepíše: pozice ve vstupu je dána polohou hlavy na vstupní pásce (ta se nepočítá) a fáze $A/B/C$ je ve
+  vnitřním stavu, kterých je konečně mnoho nezávisle na $n$. Kontrola tvaru tedy žádný prostor navíc nestojí.
+  (Čas tohoto stroje je $O(n\log n)$: každá operace s čítačem trvá $O(\log n)$ kroků. Na čas se úloha b)
+  neptá.)
+
+
+  "Varianta.".notion Stejně dobře lze mít dva binární čítače, $p$ = počet $a$ a $b$ a $q$ = počet $c$, a na
+  konci je porovnat bit po bitu. Každý je nejvýš $n$, tedy oba mají $O(\log n)$ bitů.
+
+
+.Remark:
+  title: 'Co se boduje / na co si dát pozor'
+
+  Zadání u a) výslovně chce tři věci: "myšlenku".emphasize, "význam stavů nebo fází".emphasize a
+  "odhad času".emphasize. Doporučujeme napsat všechny tři zvlášť a čitelně; samotná tabulka $\delta$ bez
+  vysvětlení nebo samotná myšlenka bez stavů je neúplná odpověď. U b) zadání chce hlavně
+  "zdůvodnění prostoru".emphasize, formální $\delta$ nepožaduje.
+
+  .itemize:
+
+    .item:
+
+      Nezapomeň na kontrolu tvaru $a^*b^*c^*$: slovo $acb$ má správné počty, a přesto není v $L$. A ověř
+      okrajový případ $\varepsilon$.
+
+    .item:
+
+      Čas zdůvodni konkrétně („hlava 1 se nikdy nevrací, každý krok ji posune“). Jednopáskové párování
+      jako u stroje pro $a^nb^n$ v kapitole .reference:ch-ts běží v $O(n^2)$, to by nestačilo – proto jsou
+      dvě pásky.
+
+    .item:
+
+      U b) je typická chyba zkopírovat vstup nebo psát unární čárky na pracovní pásku: to je $\Theta(n)$
+      prostoru. Stejně chybné je značkovat symboly na vstupní pásce – ta je jen pro čtení.
+
+    .item:
+
+      Prostor zdůvodni číslem: hodnota čítače je nejvýš $n$, binárně tedy $\lfloor\log_2 n\rfloor+1$ bitů;
+      vstupní páska se nepočítá; fáze je ve stavu.
+
+  Teorie: definice TS a stroj pro $a^nb^n$ v kapitole .reference:ch-ts (definice .reference:def-dts),
+  dvoupáskové palindromy (příklad .reference:ex-palin), dvoupáskový stroj pro $a^nb^n$ v lineárním čase
+  (.reference:cv-1-2), třídy $\LL$ a $\NL$ a stroj se vstupní páskou v kapitole .reference:ch-prostor
+  (definice .reference:def-lnl).

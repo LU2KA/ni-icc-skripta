@@ -1,0 +1,264 @@
+.Section Úloha 4: NP-úplnost
+  label: ch-ukazkovy-uloha-4-np-uplnost
+
+
+.Exercise:
+  title: 'Úloha 4: NP-úplnost [12 bodů]'
+  label: ut-4
+
+  "Jádro orientovaného grafu.".notion Nechť $G = (V, A)$ je orientovaný graf. Množina $K \subseteq V$ je
+  "jádro".notion, pokud
+
+  .itemize:
+
+    .item:
+
+      $K$ je "nezávislá".emphasize: mezi žádnými dvěma vrcholy $K$ nevede hrana (v žádném směru), a
+
+    .item:
+
+      $K$ je "absorbující".emphasize: z každého vrcholu $v \notin K$ vede hrana do nějakého vrcholu $K$.
+
+
+  Problém $\prob{Jádro}$: je dán orientovaný graf $G$; má $G$ jádro?
+
+
+  Například orientovaná cesta $u \to v \to w$ má jádro $\{u, w\}$, kdežto orientovaná kružnice
+  $u \to v \to w \to u$ jádro nemá.
+
+
+  Dokažte, že problém $\prob{Jádro}$ je NP-úplný. "Nápověda: převádějte z problému 3-SAT.".emphasize
+
+
+.Solution:
+  label: red-ut-jadro
+
+  "Redukce:".notion $\prob{3-SAT} \redp \prob{Jádro}$, instance formule $\Phi$ ($n$ proměnných, $m$ klauzulí)
+  $\mapsto$ orientovaný graf $G_\Phi$ ($2n+3m$ vrcholů).
+
+
+  "Plán".notion (recept z kapitoly .reference:ch-cook): (1) $\prob{Jádro}\in\NP$; (2) konstrukce $G_\Phi$
+  v polynomiálním čase; (3) $\Phi$ je splnitelná $\iff$ $G_\Phi$ má jádro, obě implikace. NP-úplnost
+  $\prob{3-SAT}$ smíme podle záhlaví testu použít bez důkazu.
+
+
+  "1. $\prob{Jádro}\in\NP$".notion
+
+
+  Certifikát je množina $K\subseteq V$ (nejvýše $|V|$ vrcholů). Ověřovatel si vrcholy $K$ označí v poli,
+  pro každou hranu $(u,v)\in A$ zkontroluje, že neleží oba konce v $K$ (nezávislost), a pro každý vrchol
+  $v\notin K$ projde jeho výstupní hrany a hledá hranu do $K$ (absorpce). To je čas $O(|V|+|A|)$. Graf má
+  jádro, právě když existuje certifikát, který ověřovatel přijme.
+
+
+  "2. Konstrukce $G_\Phi$".notion
+
+
+  Nechť $\Phi=C_1\wedge\dots\wedge C_m$ nad proměnnými $x_1,\dots,x_n$, kde $C_j=(\ell_{j,1}\vee\ell_{j,2}\vee\ell_{j,3})$.
+
+  .itemize:
+
+    .item:
+
+      "Gadget proměnné $x_i$:".notion dva "literálové vrcholy".emphasize $x_i$ a $\neg x_i$ a hrany
+      $x_i\to\neg x_i$ a $\neg x_i\to x_i$ (orientovaný 2-cyklus).
+
+    .item:
+
+      "Gadget klauzule $C_j$:".notion tři vrcholy $c_j^1,c_j^2,c_j^3$ a hrany
+      $c_j^1\to c_j^2\to c_j^3\to c_j^1$ (orientovaný trojúhelník).
+
+    .item:
+
+      "Propojení:".notion pro každé $r\in\{1,2,3\}$ a každý literál $\ell$ klauzule $C_j$ hrana
+      $c_j^r\to\ell$, tedy "z vrcholu trojúhelníku do literálového vrcholu".emphasize (9 hran na klauzuli).
+
+  Jiné hrany graf nemá. Má $2n+3m$ vrcholů a nejvýše $2n+3m+9m=2n+12m$ hran a sestrojíme ho v čase
+  $O(n+m)$, tedy polynomiálně.
+
+
+  "Co gadgety dělají (intuice).".notion Rozhodující je, kam vedou "výstupní".emphasize hrany, protože jen ty
+  mohou vrchol mimo $K$ absorbovat. Literálový vrchol $\ell$ má jedinou výstupní hranu, do svého doplňku:
+  hrany z trojúhelníků do něj jen vstupují. Proto 2-cyklus nutí vzít do jádra právě jeden z $x_i,\neg x_i$ –
+  to je volba pravdivostní hodnoty. Trojúhelník sám o sobě jádro nemá (příklad ze zadání); v $G_\Phi$ se ukáže,
+  že žádný jeho vrchol v jádru být nemůže, takže všechny tři musí absorbovat zvenku nějaký pravdivý literál
+  jejich klauzule. Proto hrany vedou z trojúhelníku do literálů: absorbovat potřebují vrcholy trojúhelníku.
+
+  .centered:
+
+    !tikz:
+      filename: 18d-np-uplnost-01
+
+      \node[font=\scriptsize\sffamily\bfseries] at (0.75,1.0) {2-cyklus: jádro $\{x\}$};
+      \node[chUin] (a1) at (0,0) {$x$};
+      \node[chUlit] (b1) at (1.5,0) {$\neg x$};
+      \draw[chUa] (a1) to[bend left=28] (b1);
+      \draw[chUabs] (b1) to[bend left=28] (a1);
+      \node[font=\scriptsize\sffamily\bfseries] at (4.25,1.0) {nebo jádro $\{\neg x\}$};
+      \node[chUlit] (a2) at (3.5,0) {$x$};
+      \node[chUin] (b2) at (5.0,0) {$\neg x$};
+      \draw[chUabs] (a2) to[bend left=28] (b2);
+      \draw[chUa] (b2) to[bend left=28] (a2);
+      \node[font=\scriptsize\sffamily\bfseries] at (8.0,1.0) {trojúhelník: jádro nemá};
+      \node[chUcl] (t1) at (8.0,0.25) {$c^1$};
+      \node[chUcl] (t2) at (8.85,-1.1) {$c^2$};
+      \node[chUcl] (t3) at (7.15,-1.1) {$c^3$};
+      \draw[chUa] (t1)--(t2);
+      \draw[chUa] (t2)--(t3);
+      \draw[chUa] (t3)--(t1);
+      \node[note,text width=40mm] at (8.0,-2.0) {vezmu-li $c^1$, nemůže do $K$ ani $c^2$, ani $c^3$, a $c^2$ pak nemá kam absorbovat};
+
+  Zeleně vrcholy jádra a hrany, které do nich absorbují.
+
+
+  "3a. $\Phi$ splnitelná $\Rightarrow$ $G_\Phi$ má jádro".notion
+
+
+  Nechť ohodnocení $\alpha$ splňuje $\Phi$. Položme $K=$ množina literálových vrcholů pravdivých při $\alpha$
+  (pro každé $i$ právě jeden z $x_i,\neg x_i$), žádný vrchol trojúhelníku.
+
+  .itemize:
+
+    .item:
+
+      "Nezávislost:".notion mezi literálovými vrcholy vedou jen hrany $x_i\leftrightarrow\neg x_i$ a z každé
+      dvojice je v $K$ jen jeden vrchol; každá další hrana má konec v trojúhelníku, a ten v $K$ není.
+
+    .item:
+
+      "Absorpce literálu:".notion nepravdivý literálový vrchol $\ell\notin K$ má hranu do $\neg\ell$, který je
+      pravdivý, tedy v $K$.
+
+    .item:
+
+      "Absorpce trojúhelníku:".notion $\alpha$ splňuje $C_j$, takže $C_j$ obsahuje pravdivý literál $\ell\in K$,
+      a z každého z $c_j^1,c_j^2,c_j^3$ vede hrana do $\ell$.
+
+  $K$ je tedy jádro.
+
+
+  "3b. $G_\Phi$ má jádro $\Rightarrow$ $\Phi$ splnitelná".notion
+
+
+  Nechť $K$ je jádro $G_\Phi$.
+
+  .enumerate:
+
+    .item:
+
+      "Žádný vrchol trojúhelníku není v $K$.".notion Předpokládejme $c_j^r\in K$ a označme $c_j^{r+1}$
+      jeho následníka a $c_j^{r+2}$ předchůdce v trojúhelníku (indexy modulo 3). Z nezávislosti: $c_j^{r+1}\notin K$
+      (hrana $c_j^r\to c_j^{r+1}$), $c_j^{r+2}\notin K$ (hrana $c_j^{r+2}\to c_j^r$) a žádný literálový vrchol
+      klauzule $C_j$ není v $K$ (hrany $c_j^r\to\ell$). Vrchol $c_j^{r+1}\notin K$ ale má výstupní hrany jen
+      do $c_j^{r+2}$ a do literálových vrcholů $C_j$ – žádný z nich není v $K$, takže $c_j^{r+1}$ není
+      absorbován. Spor.
+
+    .item:
+
+      "Z každé dvojice $x_i,\neg x_i$ je v $K$ právě jeden.".notion Oba ne, vede mezi nimi hrana. Kdyby
+      nebyl ani jeden, $x_i\notin K$ by musel mít výstupní hranu do $K$, jeho jediná výstupní hrana ale vede
+      do $\neg x_i\notin K$. Spor.
+
+    .item:
+
+      "Ohodnocení.".notion Položme $\alpha(x_i)=1\iff x_i\in K$. Podle bodu 2 je literálový vrchol $\ell$
+      v $K$, právě když je literál $\ell$ při $\alpha$ pravdivý.
+
+    .item:
+
+      "Každá klauzule je splněná.".notion Podle bodu 1 je $c_j^1\notin K$, takže má výstupní hranu do $K$.
+      Do $c_j^2$ to není (bod 1), zbývají literálové vrcholy $C_j$: některý literál $\ell$ klauzule $C_j$ je
+      v $K$, tedy pravdivý, a $C_j$ je splněná.
+
+  Tedy $\alpha$ splňuje $\Phi$.
+
+
+  "Závěr.".notion Redukce je polynomiální a zachovává odpověď, takže $\prob{3-SAT}\redp\prob{Jádro}$ a
+  $\prob{Jádro}$ je NP-těžký; spolu s bodem 1 je NP-úplný. Důkaz nikde nepoužil, že literály v klauzuli jsou
+  různé, takže funguje i pro klauzule s opakovaným literálem nebo s $x$ i $\neg x$ zároveň.
+
+
+  "Příklad.".notion $\Phi=(x_1\vee\neg x_2\vee x_3)\wedge(\neg x_1\vee x_2\vee\neg x_3)$ a splňující
+  ohodnocení $x_1=1$, $x_2=1$, $x_3=0$. Jádro je $K=\{x_1,x_2,\neg x_3\}$.
+
+  .centered:
+
+    !tikz:
+      filename: 18d-np-uplnost-02
+
+      \chUpair{0}{0}{x1}{$x_1$}{$\neg x_1$}{chUin}{chUlit}
+      \chUpair{3.4}{0}{x2}{$x_2$}{$\neg x_2$}{chUin}{chUlit}
+      \chUpair{6.8}{0}{x3}{$x_3$}{$\neg x_3$}{chUlit}{chUin}
+      \chUtri{3.4}{3.6}{p}{1}
+      \begin{scope}[yscale=-1]
+        \chUtri{4.9}{3.6}{q}{2}
+      \end{scope}
+      \begin{scope}[on background layer]
+        \foreach \s in {pa,pb,pc} {
+          \draw[chUabs] (\s) -- (x1p);
+          \draw[chUc] (\s) -- (x2n);
+          \draw[chUc] (\s) -- (x3p);}
+        \foreach \s in {qa,qb,qc} {
+          \draw[chUcc] (\s) -- (x1n);
+          \draw[chUabs] (\s) -- (x2p);
+          \draw[chUabs] (\s) -- (x3n);}
+      \end{scope}
+      \node[font=\scriptsize,defc,anchor=west] at (5.0,4.4) {$C_1=(x_1\vee\neg x_2\vee x_3)$};
+      \node[font=\scriptsize,thmc,anchor=west] at (6.5,-4.4) {$C_2=(\neg x_1\vee x_2\vee\neg x_3)$};
+
+  Graf $G_\Phi$ ($2\cdot3+3\cdot2=12$ vrcholů, $2\cdot3+12\cdot2=30$ hran). Zeleně jádro
+  $K=\{x_1,x_2,\neg x_3\}$ a hrany, kterými jsou vrcholy trojúhelníků absorbovány; nepravdivé literálové
+  vrcholy absorbuje jejich 2-cyklus. Trojúhelník $C_2$ je kreslen pod literály jen kvůli přehlednosti.
+
+
+.Warning:
+  title: 'Typické chyby'
+
+  .itemize:
+
+    .item:
+
+      "Opačný směr redukce.".notion $\prob{Jádro}\redp\prob{3-SAT}$ o těžkosti jádra nic neříká. Převádí se
+      "ze".emphasize známého NP-úplného problému "na".emphasize nový.
+
+    .item:
+
+      "Opačně orientované propojovací hrany".notion ($\ell\to c_j^r$). Vrcholy trojúhelníku pak nemají žádnou
+      výstupní hranu ven a trojúhelník jádro nikdy nemá: graf je vždy NE-instance, i pro splnitelnou $\Phi$.
+
+    .item:
+
+      "Jen jedna implikace.".notion Obvykle se zapomíná 3b, a v ní hlavně krok „žádný vrchol trojúhelníku
+      není v $K$“ – bez něj nelze tvrdit, že trojúhelník absorbuje pravdivý literál.
+
+    .item:
+
+      "Chybí $\prob{Jádro}\in\NP$ nebo velikost konstrukce.".notion NP-úplnost = NP-těžkost "a".emphasize
+      příslušnost do $\NP$; u redukce je třeba říct, že je polynomiální.
+
+
+.Remark:
+  title: 'Co se boduje / na co si dát pozor'
+
+  Úloha je za 12 bodů, nejvíc z celého testu. Zadání chce "důkaz NP-úplnosti".emphasize; podle receptu
+  z kapitoly .reference:ch-cook to znamená čtyři části, které doporučujeme v odpovědi viditelně oddělit:
+  příslušnost do $\NP$ (certifikát a ověření), konstrukci (gadgety a "směr".emphasize všech hran),
+  polynomialitu a obě implikace. Začni jednou větou, co se na co převádí (hlavička redukce), a malým obrázkem
+  gadgetů – ušetří to hodně slov.
+
+  .itemize:
+
+    .item:
+
+      U implikace „jádro $\Rightarrow$ splnitelnost“ musíš z libovolného jádra "vyčíst".emphasize ohodnocení
+      a ukázat, že je korektní (bod 2: právě jeden z $x_i,\neg x_i$) a splňující (bod 4).
+
+    .item:
+
+      Ověř konstrukci na příkladech ze zadání: 2-cyklus má dvě jádra, orientovaný trojúhelník žádné, cesta
+      $u\to v\to w$ jádro $\{u,w\}$. Pomůže to i chytit špatně orientované hrany.
+
+  Teorie: recept na důkaz NP-úplnosti v kapitole .reference:ch-cook; stejný princip „gadget proměnné nutí
+  volbu, gadget klauzule ji kontroluje“ mají .reference:red-is a
+  .reference:red-3col v kapitolách .reference:ch-is a
+  .reference:ch-zoo. Další úlohy tohoto typu jsou v příloze .reference:ch-typove.

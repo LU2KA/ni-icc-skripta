@@ -1,0 +1,31 @@
+% Styly a makra grafu redukci (kapitola 14 predlohy) -- opsano z ../skripta/kapitoly/14-graf-redukci.tex
+\tikzset{
+  gr0/.style={draw,rounded corners=3pt,thick,align=center,font=\sffamily\footnotesize\bfseries,
+              inner sep=3pt,minimum height=7mm,text width=17mm},
+  gvyp/.style={gr0,draw=thmc,fill=thmc!12},
+  glog/.style={gr0,draw=defc,fill=defc!12},
+  ggraf/.style={gr0,draw=exc,fill=exc!14},
+  gmno/.style={gr0,draw=intc,fill=intc!18},
+  gapp/.style={gr0,draw=gr,fill=black!6,font=\sffamily\footnotesize\itshape},
+  rd/.style={->,thick,draw=black!70},
+  rdc/.style={->,thick,draw=cvc,dashed},
+  rdb/.style={->,thick,draw=gr,densely dotted},
+  kap/.style={font=\sffamily\tiny\bfseries,fill=white,inner sep=1pt,text=black!75,
+              draw=black!25,rounded corners=1pt},
+  kapc/.style={kap,text=cvc,draw=cvc!40},
+}
+
+% klikaci plocha pres cely uzel (pruhledny obdelnik velikosti uzlu s odkazem)
+\newcommand{\glinksize}[1]{\pgfpointdiff{\pgfpointanchor{#1}{south west}}{\pgfpointanchor{#1}{north east}}%
+  \pgfgetlastxy{\glw}{\glh}}
+\newcommand{\glink}[2]{\glinksize{#1}%
+  \node[inner sep=0pt,outer sep=0pt] at (#1.center) {\hyperlink{#2}{\phantom{\rule{\glw}{\glh}}}};}
+\newcommand{\glinkr}[2]{\glinksize{#1}%
+  \node[inner sep=0pt,outer sep=0pt] at (#1.center) {\hyperref[#2]{\phantom{\rule{\glw}{\glh}}}};}
+
+\tikzset{
+  gnum/.style={gr0,draw=rej!75!black,fill=rej!8},
+  gimp/.style={gr0,draw=black!45,fill=black!4,text=black!60,dashed},
+  gpsp/.style={gr0,draw=sumc,fill=sumc!12},
+}
+

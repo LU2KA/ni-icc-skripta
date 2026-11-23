@@ -1,0 +1,240 @@
+.Section Cvičení 4: Polynomiální redukce II
+  label: sec-cv4
+
+
+.Exercise:
+  title: 'Cvičení 4.1–4.3'
+  label: cv-4-1
+
+  Dokažte, že $\prob{Set Cover}$, $\prob{Feedback Vertex Set}$ a $\prob{Dominating Set}$ jsou NP-úplné.
+
+
+.Solution:
+
+  Zadání je totožné s cvičeními 3.4–3.6 v kapitole .reference:ch-is:
+  "Set Cover"#red-setcover ($\prob{VC}\redp$, univerzum = hrany),
+  "Feedback Vertex Set"#red-fvs (hrana $\to$ trojúhelník),
+  "Dominating Set"#red-domset (vrchol za hranu, pozor na izolované vrcholy).
+
+
+.Exercise:
+  title: 'Cvičení 4.4'
+  label: cv-4-4
+
+  Dokažte, že $\prob{MAX-2-SAT}$ je NP-úplný: je dána formule $\varphi$ v CNF, jejíž každá klauzule obsahuje
+  nejvýše dva literály, a číslo $k$. Existuje ohodnocení proměnných, které splní alespoň $k$ klauzulí formule $\varphi$?
+
+
+.Solution:
+  label: red-max2sat
+
+  "Redukce:".notion $\prob{MaxCut} \redp \prob{MAX-2-SAT}$, instance $(G,k)$ $\mapsto$ $(\varphi_G,\ |E|+k)$.
+
+
+  "V $\NP$:".notion certifikát je ohodnocení; splněné klauzule spočítáme a porovnáme s $k$.
+
+
+  "Konstrukce:".notion každý vrchol $v$ grafu $G=(V,E)$ je proměnná ("pravda".emphasize = strana $A$ řezu,
+  "nepravda".emphasize = strana $B$). Za každou hranu $\{u,v\}$ přidáme "dvě".emphasize klauzule
+
+  .equation:
+
+    (u\lor v)\ \land\ (\lnot u\lor\lnot v).
+
+
+  .table:
+    columns: 'cc|cc|c'
+
+    .row:
+      head: true
+
+      $u$
+
+      $v$
+
+      $u\lor v$
+
+      $\lnot u\lor\lnot v$
+
+      splněno
+
+    .row:
+
+      0
+
+      0
+
+      0
+
+      1
+
+      1
+
+    .row:
+
+      0
+
+      1
+
+      1
+
+      1
+
+      "2".notion
+
+    .row:
+
+      1
+
+      0
+
+      1
+
+      1
+
+      "2".notion
+
+    .row:
+
+      1
+
+      1
+
+      1
+
+      0
+
+      1
+
+
+  Hrana dává vždy aspoň jednu splněnou klauzuli a "dvě".emphasize právě tehdy, když leží $u$ a $v$ na
+  různých stranách, tedy když je hrana "přeříznutá".notion. Pro každé ohodnocení (= rozdělení $V=A\cup B$):
+
+  .equation:
+
+    \#\text{splněných klauzulí} = |E| + \mathrm{cut}(A,B).
+
+
+  .centered:
+
+    !tikz:
+      filename: 09d-cviceni-4-01
+
+      \fill[acc!8,rounded corners] (-0.6,-0.6) rectangle (0.6,2.0);
+      \fill[rej!7,rounded corners] (1.6,-0.6) rectangle (2.8,2.0);
+      \node[font=\scriptsize,acc!70!black] at (0,2.25) {$A$: pravda};
+      \node[font=\scriptsize,rej] at (2.2,2.25) {$B$: nepravda};
+      \node[v] (a) at (0,1.4) {$a$}; \node[v] (c) at (0,0) {$c$};
+      \node[v] (b) at (2.2,1.4) {$b$}; \node[v] (d) at (2.2,0) {$d$};
+      \draw[esel] (a)--(b) (c)--(d) (a)--(d) (b)--(c);
+      \draw[e] (a)--(c);
+      \node[anchor=west,font=\small,align=left] at (3.4,0.7) {$4$ přeříznuté hrany ($ab, cd, ad, bc$) + 1 nepřeříznutá ($ac$)\\
+         $a=c=1$, $b=d=0$ splní $|E|+\mathrm{cut}=5+4=9$ z $10$ klauzulí;\\
+         nesplněná je jen $(\lnot a\lor\lnot c)$.};
+
+
+  "Korektnost:".notion $G$ má řez velikosti $\ge k$ $\iff$ existuje ohodnocení splňující $\ge|E|+k$ klauzulí
+  – v obou směrech stačí ztotožnit ohodnocení s rozdělením vrcholů a použít rovnost výše. Konstrukce má
+  $2|E|$ klauzulí, je tedy polynomiální. Protože $\prob{MaxCut}$ je NP-úplný (oddíl o MaxCutu výše), je
+  $\prob{MAX-2-SAT}$ NP-úplný.
+
+
+  "Pozor: 2-SAT vs. MAX-2-SAT.".notion
+  $\prob{2-SAT}$ („jsou splnitelné "všechny".emphasize klauzule?“) je v $\PP$ (graf implikací a silně souvislé
+  komponenty). Jakmile ale chceme splnit „aspoň $k$“ z nich, problém je NP-úplný. Stejný kontrast
+  jako u 2-barvení (snadné) a 3-barvení (těžké).
+
+
+.Exercise:
+  title: 'Cvičení 4.5'
+  label: cv-4-5
+
+  Na přednášce jste viděli redukci $\prob{3-SAT}\redp\prob{3-Coloring}$. Navrhněte jednodušší redukci
+  $\prob{NAE-3-SAT}\redp\prob{3-Coloring}$.
+
+
+.Solution:
+  label: red-nae3col
+
+  "Redukce:".notion $\prob{NAE-3-SAT} \redp \prob{3-Coloring}$, instance formule $\Phi$ $\mapsto$ graf $G_\Phi$ ($1+2n+3m$ vrcholů).
+
+
+  "Konstrukce:".notion
+
+  .enumerate:
+
+    .item:
+
+      jeden vrchol $N$ („neutrální“ barva),
+
+    .item:
+
+      pro každou proměnnou $x$ vrcholy $x$ a $\lnot x$ spojené hranou a oba spojené s $N$
+      – dostanou tedy dvě "zbylé".emphasize barvy, každý jinou: binární volba,
+
+    .item:
+
+      pro každou klauzuli $(\ell_1,\ell_2,\ell_3)$ trojúhelník $c_1c_2c_3$ a hrany $c_j\ell_j$.
+
+
+  .centered:
+
+    !tikz:
+      filename: 09d-cviceni-4-02
+      options: 'x=1.05cm,y=1cm'
+
+      \node[v,fill=tB!45] (N) at (3.8,3.1) {$N$};
+      \foreach \n/\x/\c/\l in {x1/0/tT/x_1,nx1/1.1/tF/\lnot x_1,x2/2.6/tT/x_2,nx2/3.7/tF/\lnot x_2,x3/5.2/tF/x_3,nx3/6.3/tT/\lnot x_3}
+         {\node[v,fill=\c!45,minimum size=7.5mm,font=\scriptsize] (\n) at (\x,1.5) {$\l$};}
+      \begin{scope}[on background layer]
+        \foreach \n in {x1,nx1,x2,nx2,x3,nx3} {\draw[efaint] (N)--(\n);}
+      \end{scope}
+      \draw[e] (x1)--(nx1) (x2)--(nx2) (x3)--(nx3);
+      % klauzule C1 = NAE(x1, -x2, x3)
+      \node[v,fill=tF!45,font=\scriptsize] (a1) at (0.6,-0.4) {$c_1$};
+      \node[v,fill=tB!45,font=\scriptsize] (a2) at (2.0,-0.4) {$c_2$};
+      \node[v,fill=tT!45,font=\scriptsize] (a3) at (1.3,-1.6) {$c_3$};
+      \draw[e] (a1)--(a2)--(a3)--(a1);
+      \draw[thmc,thick,densely dashed] (a1)--(x1) (a2)--(nx2) (a3) to[out=0,in=-110] (x3);
+      % klauzule C2 = NAE(-x1, x2, x3)
+      \node[v,fill=tT!45,font=\scriptsize] (b1) at (4.8,-0.4) {$c_1$};
+      \node[v,fill=tF!45,font=\scriptsize] (b2) at (6.2,-0.4) {$c_2$};
+      \node[v,fill=tB!45,font=\scriptsize] (b3) at (5.5,-1.6) {$c_3$};
+      \draw[e] (b1)--(b2)--(b3)--(b1);
+      \draw[thmc,thick,densely dashed] (b1) to[out=150,in=-60] (nx1) (b2) to[out=150,in=-30] (x2) (b3) to[out=20,in=-80] (x3);
+      \node[font=\scriptsize] at (1.3,-2.25) {$\mathrm{NAE}(x_1,\lnot x_2,x_3)$};
+      \node[font=\scriptsize] at (5.5,-2.25) {$\mathrm{NAE}(\lnot x_1,x_2,x_3)$};
+      \node[anchor=west,font=\small,align=left] at (7.3,0.6) {$x_1=x_2=1$, $x_3=0$:\\
+         \tikz\fill[tT!45,draw=black!50] (0,0) circle (1mm); pravda,
+         \tikz\fill[tF!45,draw=black!50] (0,0) circle (1mm); nepravda,\\
+         \tikz\fill[tB!45,draw=black!50] (0,0) circle (1mm); barva vrcholu $N$};
+
+
+  "Klíčové pozorování:".notion vrcholy $c_1,c_2,c_3$ trojúhelníku musí dostat všechny tři barvy a $c_j$
+  nesmí mít barvu svého literálu $\ell_j$.
+
+  .itemize:
+
+    .item:
+
+      Mají-li "všechny tři".emphasize literály stejnou barvu (např. pravda), žádný z $c_j$ ji nesmí mít –
+      trojúhelník pak má k dispozici jen dvě barvy: "spor".notion.
+
+    .item:
+
+      Nemají-li všechny stejnou barvu (např. pravda, nepravda, nepravda), trojúhelník lze dobarvit:
+      $c_1$ (u pravdivého) dostane nepravdu, zbylé dva dostanou pravdu a barvu $N$ (tak, jak je to
+      na obrázku). Stejně pro všechny ostatní smíšené kombinace.
+
+
+  "Korektnost.".notion ($\Rightarrow$) Z NAE-ohodnocení obarvíme $N$ třetí barvou, literály podle hodnoty a
+  každý trojúhelník podle pozorování. ($\Leftarrow$) Ve 3-obarvení mají $x$ a $\lnot x$ dvě různé barvy
+  různé od barvy $N$; jednu z nich prohlásíme za „pravdu“. Kdyby nějaká klauzule měla všechny literály
+  stejné, nešel by její trojúhelník obarvit – ohodnocení je tedy NAE-splňující.
+
+
+  "Intuice: Proč je to jednodušší než $\prob{3-SAT}\redp\prob{3-Coloring}$?".notion
+  NAE je "symetrické".emphasize vůči prohození pravdy a nepravdy – a 3-obarvení je symetrické vůči
+  prohození barev. Nepotřebujeme proto vědět, která barva je „pravda“: odpadá paleta $T,F,B$ i „prasátko“,
+  které muselo rozlišovat samé $F$ od ostatních vstupů. Stačí jeden trojúhelník, který zakáže obě
+  „extrémní“ kombinace najednou.

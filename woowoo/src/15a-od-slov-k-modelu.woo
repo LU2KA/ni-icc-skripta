@@ -1,0 +1,378 @@
+.Section Od slov k modelu
+  label: ch-resice-ilp-od-slov-k-modelu
+
+
+Přednáška začíná úlohou, ve které ještě není nic celočíselného. Na ní je vidět, z čeho se každý model skládá:
+"co volíme".emphasize, "co musí platit".emphasize a "co je lepší".emphasize.
+
+
+.Subsection Vaříme zdravě a levně: lineární program
+  label: ch-resice-ilp-varime-zdrave-a-levne
+
+
+"Zadání.".notion Inspekce v restauraci „U Neurvalce“ zjistila nedostatek vitamínů A, C a vlákniny. Hospodský přidá
+k porci přílohu z mrkve, zelí a nakládaných okurek. Jak nařízení splnit co nejlevněji? (Příklad je z knihy
+J. Matoušek: Lineární programování: úvod pro informatiky, oddíl 2.1.)
+
+
+.table:
+  columns: 'lcccc'
+
+  .row:
+    head: true
+
+    na 1 kg
+
+    mrkev
+
+    zelí
+
+    okurky
+
+    na 1 porci aspoň
+
+  .row:
+
+    vitamín A [mg]
+
+    35
+
+    0,5
+
+    0,5
+
+    0,5
+
+  .row:
+
+    vitamín C [mg]
+
+    60
+
+    300
+
+    10
+
+    15
+
+  .row:
+
+    vláknina [g]
+
+    30
+
+    20
+
+    10
+
+    4
+
+  .row:
+
+    cena [Kč]
+
+    15
+
+    10
+
+    3
+
+    ~
+
+
+Odpovědi na tři otázky ze slajdu: "volíme".emphasize množství každé přísady na porci, "platit musí".emphasize tři
+minimální dávky, "lepší".emphasize je levnější. Proměnné $x_M,x_Z,x_O\ge 0$ jsou kilogramy mrkve, zelí a okurek na
+jednu porci:
+
+.align:
+
+  \min\ & 15x_M+10x_Z+3x_O && \text{(cena)}\\
+  & 35x_M+0{,}5x_Z+0{,}5x_O\ge 0{,}5 && \text{(vitamín A)}\\
+  & 60x_M+300x_Z+10x_O\ge 15 && \text{(vitamín C)}\\
+  & 30x_M+20x_Z+10x_O\ge 4 && \text{(vláknina)}\\
+  & x_M,\ x_Z,\ x_O\ge 0 .
+
+
+Jednotky sedí: koeficient v řádku vitamínu A je „mg na kg“, proměnná je v kg, takže součin je v mg na porci.
+Proměnné jsou reálné, je to tedy "lineární program".emphasize (LP), ne ILP.
+
+
+"Výsledek.".notion Optimum je asi 9,5 g mrkve, 38 g zelí a 295 g okurek za 1,41 Kč na porci. Přesně
+$x_M=\tfrac{179}{18790}$, $x_Z=\tfrac{719}{18790}$, $x_O=\tfrac{5541}{18790}$ kg a cena $\tfrac{13249}{9395}\approx1{,}410$ Kč;
+všechna tři omezení platí s rovností. (Slajd uvádí zaokrouhleně 1,40 Kč a 290 g okurek; přesné hodnoty jsme
+přepočítali.) Složení přílohy ukazuje obr. .reference:ch-resice-ilp-fig-dieta.
+
+
+.Figure:
+  label: ch-resice-ilp-fig-dieta
+
+  !tikz:
+    filename: 15a-od-slov-k-modelu-03
+    options: 'x=0.025cm,y=0.6cm'
+
+    \foreach \y/\n/\g/\lab/\cc in {2/mrkev/9.53/{9,5 g}/intc, 1/zelí/38.27/{38 g}/exc, 0/okurky/294.89/{295 g}/defc} {
+      \node[font=\footnotesize,anchor=east] at (-6,\y) {\n};
+      \fill[\cc!30,draw=\cc] (0,\y-0.3) rectangle (\g,\y+0.3);
+      \node[font=\footnotesize,anchor=west] at (\g+5,\y) {\lab};}
+    \draw[osa] (0,-0.7)--(345,-0.7) node[right,font=\scriptsize]{g na porci};
+    \foreach \v in {0,100,200,300} {\draw (\v,-0.62)--(\v,-0.78); \node[font=\scriptsize,below] at (\v,-0.78) {\v};}
+    \draw[gr,dashed] (100,-0.7)--(100,2.6) node[above,font=\scriptsize,text=black!60]{$x_O\le0{,}1$};
+    \node[font=\footnotesize,anchor=west,draw=warnc,fill=warnc!8,rounded corners=2pt] at (170,2) {cena $1{,}41$ Kč};
+
+  .caption:
+
+    Optimum LP pro jednu porci (slajd 3; gramy zaokrouhlené z přesných hodnot výše). "Všimni si:".emphasize skoro
+    celou přílohu tvoří okurky – jsou nejlevnější a model o chuti nic neví. Čárkovaně hranice 100 g okurek
+    z omezení $x_O\le0{,}1$ navrženého v rámečku níže.
+
+
+.Warning:
+  title: 'Model ví jen to, co do něj napíšeme'
+
+  Řešení je matematicky správné, a přesto by další inspekcí neprošlo: skoro třetina kila nakládaných okurek
+  k jedné porci není jídlo. Model o chuti, o rozumné velikosti přílohy ani o soli nic neví. Chceme-li to, musíme
+  to do modelu přidat jako další omezení (třeba $x_O\le 0{,}1$).
+
+
+.Subsection ILP: definice a terminologie
+  label: ch-resice-ilp-ilp-definice-a-terminologie
+
+
+Definici ILP jako rozhodovacího problému známe z kapitoly .reference:ch-cisla (definice .reference:prob-ilp).
+Přednáška 8 ji píše v optimalizačním tvaru:
+
+
+.Definition:
+  title: 'Celočíselné lineární programování (ILP)'
+  label: ch-resice-ilp-def-ilp
+
+  .equation:
+
+    \max\ c^{T}x\quad\text{za podmínek}\quad Ax\le b,\quad x\in\mathbb Z^{n}.
+
+  Omezení i účelová funkce jsou "lineární".emphasize, proměnné "celočíselné".emphasize.
+
+
+  "Varianty:".notion
+
+  .itemize:
+
+    .item:
+
+      "0/1-ILP".notion: $x\in\{0,1\}^n$ – každá proměnná je rozhodnutí ano/ne;
+
+    .item:
+
+      "MIP / MILP".notion (mixed integer linear programming): celočíselné jsou jen "některé".emphasize proměnné,
+      ostatní jsou reálné.
+
+
+.Definition:
+  title: 'Přípustné řešení, optimální řešení, optimum'
+  label: ch-resice-ilp-def-terminologie
+
+  "Přípustné řešení".notion je $x$, které splňuje všechna omezení. "Optimální řešení".notion je nejlepší přípustné
+  řešení – je to "bod".emphasize a může jich být víc. "Optimum".notion $\mathrm{OPT}(I)$ je jeho hodnota na instanci $I$
+  – je to "číslo".emphasize.
+
+
+.Example:
+  title: 'Malé ILP ze slajdu'
+  label: ch-resice-ilp-ex-male-ilp
+
+  $\max\ 3x+2y$ při $x+y\le 4$, $2x+y\le 5$, $x,y\ge 0$ celá.
+
+  .enumerate:
+
+    .item:
+
+      Bod $(2,1)$ je "přípustné řešení".notion: $2+1=3\le4$, $4+1=5\le5$. Jeho hodnota je $3\cdot2+2\cdot1=8$.
+
+    .item:
+
+      Bod $(1,3)$ je "optimální řešení".notion: $1+3=4\le 4$, $2+3=5\le5$, hodnota $3+6=9$. Žádný jiný celočíselný bod
+      nemá víc (přípustných celočíselných bodů je 11, prošli jsme všechny); $\mathrm{OPT}=9$.
+
+    .item:
+
+      Bod $(2,2)$ přípustný není: $2\cdot2+2=6>5$.
+
+
+.Figure:
+  label: ch-resice-ilp-fig-male-ilp
+
+  !tikz:
+    filename: 15a-od-slov-k-modelu-01
+    options: 'x=1.4cm,y=1.4cm'
+
+    \fill[defc!10] (0,0)--(2.5,0)--(1,3)--(0,4)--cycle;
+    \draw[defc,thick] (2.5,0)--(1,3)--(0,4);
+    \chQaxes{3.6}{4.7}
+    \foreach \x in {0,...,3} \foreach \y in {0,...,4} {
+      \pgfmathparse{(\x+\y<=4) && (2*\x+\y<=5) ? 1 : 0}
+      \ifnum\pgfmathresult=1 \node[ipt] at (\x,\y) {}; \else \node[ipto] at (\x,\y) {}; \fi}
+    \draw[intc,thick,dashed] (-0.2,4.8)--(3.2,-0.3);
+    \node[intc!80!black,font=\footnotesize,anchor=west] at (2.0,1.75) {$3x+2y=9$};
+    \node[ilpopt] at (1,3) {};
+    \node[defc,font=\footnotesize,anchor=south west] at (1.05,3.05) {$(1,3)$: OPT $=9$};
+    \draw[exc,very thick] (2,1) circle (4pt);
+    \node[exc!80!black,font=\footnotesize,anchor=north east] at (1.9,0.92) {$(2,1)$: 8};
+    \node[font=\footnotesize,defc] at (0.6,1.2) {$P$};
+    \node[font=\scriptsize,below] at (1,0) {1}; \node[font=\scriptsize,below] at (2,0) {2}; \node[font=\scriptsize,below] at (3,0) {3};
+    \node[font=\scriptsize,left] at (0,1) {1}; \node[font=\scriptsize,left] at (0,2) {2}; \node[font=\scriptsize,left] at (0,3) {3}; \node[font=\scriptsize,left] at (0,4) {4};
+
+  .caption:
+
+    Přípustná množina malého ILP: tmavé body jsou celočíselná přípustná řešení, světle modrá oblast jsou přípustná
+    řešení s reálnými $x,y$. "Všimni si:".emphasize čárkovaná přímka hodnoty 9 se oblasti dotýká jen v bodě $(1,3)$.
+    Tady je vrchol oblasti náhodou celočíselný; v oddíle .reference:ch-resice-ilp-lp-relaxace-a-dualita uvidíme, že
+    to tak být nemusí.
+
+
+.Subsection Metodika: čtyři kroky
+  label: ch-resice-ilp-metodika-ctyri-kroky
+
+
+Na slovní úlohu se ILP nevyskytuje samo, musíme ho postavit. Přednáška dává pevný postup:
+
+
+.Procedure:
+  title: 'Od slov k modelu (4 kroky)'
+  label: ch-resice-ilp-proc-metodika
+
+  .enumerate:
+
+    .item:
+
+      "Rozhodnutí $\to$ proměnné:".notion co vlastně volíme?
+
+    .item:
+
+      "Podmínky $\to$ nerovnice:".notion co musí platit?
+
+    .item:
+
+      "Cíl $\to$ účelová funkce:".notion co je „lepší“?
+
+    .item:
+
+      "Kontrola:".notion jednotky, krajní případy, malá instance.
+
+
+  Nejtěžší je "krok 1".notion: zadání proměnné neříká. Špatná volba znamená žádný model, nebo obrovský model.
+
+
+"Zadání (batoh).".notion Jdeme na výlet. Máme několik předmětů, každý má svou váhu a cenu. Batoh unese nanejvýš
+$W$ kilogramů. Které předměty si vzít, aby byla jejich celková cena co největší? Je to optimalizační verze
+problému $\prob{Knapsack}$ z kapitoly .reference:ch-cisla (definice .reference:prob-knapsack).
+
+
+.Figure:
+  label: ch-resice-ilp-fig-batoh
+
+  !tikz:
+    filename: 15a-od-slov-k-modelu-02
+    options: 'x=0.7cm,y=0.7cm'
+
+    \draw[thick,fill=defc!10] (0,2.4) rectangle (2,3.0); \node[font=\scriptsize] at (1,2.7) {1};
+    \node[font=\scriptsize,anchor=west] at (4.3,2.7) {$w=2,\ c=3$};
+    \draw[thick,fill=defc!10] (0,1.6) rectangle (3,2.2); \node[font=\scriptsize] at (1.5,1.9) {2};
+    \node[font=\scriptsize,anchor=west] at (4.3,1.9) {$w=3,\ c=4$};
+    \draw[thick,fill=defc!10] (0,0.8) rectangle (4,1.4); \node[font=\scriptsize] at (2,1.1) {3};
+    \node[font=\scriptsize,anchor=west] at (4.3,1.1) {$w=4,\ c=5$};
+    \draw[very thick] (0,0.45)--(0,-0.1)--(6,-0.1)--(6,0.45);
+    \node[font=\scriptsize,below] at (3,-0.1) {batoh $W=6$};
+    \begin{scope}[xshift=7cm]
+      \draw[thick,fill=acc!15] (0,1.2) rectangle (2,1.8); \node[font=\scriptsize] at (1,1.5) {1};
+      \draw[thick,fill=acc!15] (2,1.2) rectangle (6,1.8); \node[font=\scriptsize] at (4,1.5) {3};
+      \draw[very thick] (0,1.9)--(0,1.1)--(6,1.1)--(6,1.9);
+      \node[font=\scriptsize,align=center] at (3,0.4) {$x=(1,0,1)$: váha $6\le 6$, cena $8$};
+    \end{scope}
+
+  .caption:
+
+    Instance batohu ze slajdu (vlevo) a její optimální řešení (vpravo): předměty 1 a 3 batoh přesně zaplní.
+
+
+.Subsection Batoh jako ILP
+  label: ch-resice-ilp-batoh-jako-ilp
+
+
+Každou větu zadání přeložíme zvlášť:
+
+
+.table:
+  columns: 'lll'
+
+  .row:
+    head: true
+
+    krok
+
+    slovy
+
+    v ILP
+
+  .row:
+
+    1. proměnné
+
+    „Který předmět si vzít?“
+
+    $x_i\in\{0,1\}$ … vezmu předmět $i$?
+
+  .row:
+
+    2. omezení
+
+    „Batoh unese nanejvýš $W$ kg.“
+
+    $\sum_i w_ix_i\le W$
+
+  .row:
+
+    3. cíl
+
+    „Celková cena co největší.“
+
+    $\max \sum_i c_ix_i$
+
+
+"Krok 4 – kontrola na instanci".notion $w=(2,3,4)$, $c=(3,4,5)$, $W=6$. Jednotky: $w_ix_i$ jsou kilogramy, $c_ix_i$
+koruny. Krajní případy: $x=(0,0,0)$ je přípustné (prázdný batoh), $x=(1,1,1)$ ne ($9>6$). Projdeme všech 8 vektorů
+$x$: přípustné jsou $(0,0,0)$, $(1,0,0)$, $(0,1,0)$, $(0,0,1)$, $(1,1,0)$ s cenou 7 a $(1,0,1)$ s váhou $6\le6$
+a cenou 8; $(0,1,1)$ váží 7. Tedy $x=(1,0,1)$ a $\mathrm{OPT}(I)=8$.
+
+
+.Remark:
+  title: 'ILP vs. SAT'
+
+  Podmínka s čísly („váha nanejvýš $W$“) je v ILP "jedna nerovnice".notion. SAT by ji musel rozepsat do mnoha klauzulí
+  (zakázat každou příliš těžkou kombinaci předmětů, nebo zakódovat sčítačku). To je hlavní důvod, proč se úlohy
+  s kapacitami, náklady a počty modelují v ILP a čistě logické úlohy v SATu.
+
+
+.Warning:
+  title: 'Typické chyby'
+
+  .itemize:
+
+    .item:
+
+      "Chybí obor proměnných.".notion Bez $x_i\in\{0,1\}$ (nebo $x_i\in\mathbb Z$) jde o LP a řešení může vzít
+      čtvrtinu předmětu (viz oddíl .reference:ch-resice-ilp-lp-relaxace-a-dualita).
+
+    .item:
+
+      "Proměnná bez významu.".notion Ke každé proměnné patří věta, co znamená (vezmu $i$? kolik kg?). Bez ní nejde
+      zkontrolovat, že nerovnice říkají to, co mají.
+
+    .item:
+
+      "Nesedí jednotky.".notion Sčítat kilogramy s korunami nebo mg na kg s mg na porci je chyba v modelu, ne
+      v aritmetice.
+
+    .item:
+
+      "Přeskočená kontrola.".notion Krok 4 odhalí většinu chyb: dosaď ručně jedno rozumné a jedno nesmyslné řešení
+      a ověř, že první model připustí a druhé ne.

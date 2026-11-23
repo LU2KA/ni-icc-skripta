@@ -1,0 +1,5851 @@
+
+<!doctype html>
+<html lang="cs" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Skripta NI-ICC (Úvod do výpočetní složitosti, FIT ČVUT)">
+      
+      
+      
+      
+        <link rel="prev" href="ch-cook-mapa-redukci-a-recept-na-dukaz-np-uplnosti.html">
+      
+      
+        <link rel="next" href="../ch-sat/index.html">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.1">
+    
+    
+      
+        <title>6.4 Úlohy navíc - NI-ICC – skripta</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+        <script src="https://unpkg.com/iframe-worker/shim"></script>
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+<script>
+(function () {
+  try {
+    var m = new URLSearchParams(location.search).get("mode");
+    var nav = performance.getEntriesByType && performance.getEntriesByType("navigation")[0];
+    if ((m === "dark" || m === "light") && !(nav && nav.type === "reload")) {
+      var scope = new URL("..", location);
+      localStorage.setItem(scope.pathname + ".__palette", JSON.stringify(m === "dark"
+        ? { index: 1, color: { media: "", scheme: "slate", primary: "custom", accent: "custom" } }
+        : { index: 0, color: { media: "", scheme: "default", primary: "custom", accent: "custom" } }));
+    }
+  } catch (e) {}
+})();
+</script>
+
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#64-ulohy-navic" class="md-skip">
+          Přeskočit obsah
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Záhlaví">
+    <a href="../index.html" title="NI-ICC – skripta" class="md-header__button md-logo" aria-label="NI-ICC – skripta" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            NI-ICC – skripta
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              6.4 Úlohy navíc
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Přepnout na tmavý režim"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Přepnout na tmavý režim" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Přepnout na světlý režim"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Přepnout na světlý režim" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Hledat" placeholder="Hledat" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Vyhledávání">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Vyčistit" aria-label="Vyčistit" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializace vyhledávání
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Karty" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../index.html" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Úvod
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../ch-ts/index.html" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Model a vyčíslitelnost
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../ch-cas/index.html" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Časová složitost
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../ch-redukce/index.html" class="md-tabs__link">
+          
+  
+  
+    
+  
+  NP-úplnost
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../ch-prostor/index.html" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Prostorová složitost
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../ch-resice-sat/index.html" class="md-tabs__link">
+          
+  
+  
+    
+  
+  SAT a ILP v praxi
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../ch-test/index.html" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Test a přehledy
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigace" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../index.html" title="NI-ICC – skripta" class="md-nav__button md-logo" aria-label="NI-ICC – skripta" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    NI-ICC – skripta
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../index.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Úvod
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model a vyčíslitelnost
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Model a vyčíslitelnost
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../ch-ts/index.html" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1 Problémy a Turingův stroj
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_1" id="__nav_2_1_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    1 Problémy a Turingův stroj
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-ts/ch-ts-o-cem-je-tento-kurz.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1.1 O čem je tento kurz
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-ts/ch-ts-co-vlastne-pocitame-abecedy-jazyky-problemy.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1.2 Co vlastně počítáme: abecedy, jazyky, problémy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-ts/ch-ts-optimalizacni-vs-rozhodovaci-problemy.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1.3 Optimalizační vs. rozhodovací problémy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-ts/ch-ts-turinguv-stroj.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1.4 Turingův stroj
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-ts/ch-ts-univerzalni-turinguv-stroj.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1.5 Univerzální Turingův stroj
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-ts/sec-cv1.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1.6 Cvičení 1: Turingovy stroje
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-ts/ch-ts-ulohy-navic.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1.7 Úlohy navíc
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../ch-vycisl/index.html" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2 Vyčíslitelnost
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    2 Vyčíslitelnost
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-vycisl/ch-vycisl-nepocitatelna-funkce-uc.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2.1 Nepočitatelná funkce UC – diagonalizace
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-vycisl/ch-vycisl-problem-zastaveni.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2.2 Problém zastavení
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-vycisl/ch-vycisl-hilbertuv-10-problem.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2.3 Hilbertův 10. problém
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-vycisl/ch-vycisl-ulohy-navic.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2.4 Úlohy navíc
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Časová složitost
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Časová složitost
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../ch-cas/index.html" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3 Časová složitost: třídy P a EXP
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_1" id="__nav_3_1_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    3 Časová složitost: třídy P a EXP
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-cas/ch-cas-linearni-zrychleni.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3.1 Lineární zrychlení: proč nás nezajímají konstanty
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-cas/ch-cas-asymptoticka-notace.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3.2 Asymptotická notace
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-cas/ch-cas-tridy-p-a-exp.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3.3 Třídy P a EXP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-cas/ch-cas-prvni-obyvatel-exp.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3.4 První obyvatel EXP: obchodní cestující
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-cas/ch-cas-deterministicka-casova-hierarchie.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3.5 Deterministická časová hierarchie
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-cas/ch-cas-ulohy-navic.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3.6 Úlohy navíc
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../ch-np/index.html" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4 Nedeterminismus a třída NP
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    4 Nedeterminismus a třída NP
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-np/ch-np-od-determinismu-k-nedeterminismu.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4.1 Od determinismu k nedeterminismu
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-np/ch-np-asymetrie-prijimani.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4.2 Asymetrie přijímání
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-np/ch-np-guess-verify-jak-ndts-pouzivat.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4.3 Guess & Verify: jak NDTS používat
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-np/ch-np-tridy-nedeterministicke-casove-slozitosti.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4.4 Třídy nedeterministické časové složitosti
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-np/ch-np-od-hadani-k-overovani-certifikaty.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4.5 Od hádání k ověřování: certifikáty
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-np/ch-np-problem-p-vs-np.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4.6 Problém P = NP?
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-np/ch-np-jak-navrhovat-nedeterministicke-stroje.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4.7 Jak navrhovat nedeterministické stroje
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-np/sec-cv2.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4.8 Cvičení 2: Nedeterminismus a certifikáty
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-np/ch-np-ulohy-navic.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4.9 Úlohy navíc
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NP-úplnost
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    NP-úplnost
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_1" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../ch-redukce/index.html" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5 Redukce a NP-úplnost
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4_1" id="__nav_4_1_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    5 Redukce a NP-úplnost
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-redukce/ch-redukce-jak-porovnat-slozitost-dvou-problemu.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5.1 Jak porovnat složitost dvou problémů
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-redukce/ch-redukce-np-tezkost-a-np-uplnost.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5.2 NP-těžkost a NP-úplnost
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-redukce/ch-redukce-k-cemu-je-to-v-praxi-dobre.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5.3 K čemu je to v praxi dobré
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-redukce/ch-redukce-ulohy-navic.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5.4 Úlohy navíc
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_2" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="index.html" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6 Cook–Levinova věta
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4_2" id="__nav_4_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    6 Cook–Levinova věta
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="ch-cook-cook-levinova-veta.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6.1 Cook–Levinova věta
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="ch-cook-karpuv-strom-princip-stafety.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6.2 Karpův strom: princip štafety
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="ch-cook-mapa-redukci-a-recept-na-dukaz-np-uplnosti.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6.3 Mapa redukcí a recept na důkaz NP-úplnosti
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6.4 Úlohy navíc
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="ch-cook-ulohy-navic.html" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6.4 Úlohy navíc
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Obsah">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Obsah
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#ch-cook-ulohy-navic-rozcvicka" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.4.1 Rozcvička
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ch-cook-ulohy-navic-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.4.2 Na úrovni testu
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ch-cook-ulohy-navic-tezsi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.4.3 Těžší úloha
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../ch-sat/index.html" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7 Varianty problému SAT
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4_3" id="__nav_4_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    7 Varianty problému SAT
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-sat/ch-sat-sat-3-sat.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7.1 SAT ≤p 3-SAT
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-sat/ch-sat-nae-3-sat-not-all-equal.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7.2 NAE-3-SAT: Not-All-Equal
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-sat/ch-sat-ulohy-navic.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7.3 Úlohy navíc
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../ch-is/index.html" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8 Nezávislé množiny, kliky a pokrytí
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4_4" id="__nav_4_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    8 Nezávislé množiny, kliky a pokrytí
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-is/ch-is-nezavisla-mnozina.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8.1 Nezávislá množina
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-is/ch-is-anatomie-redukci.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8.2 Anatomie redukcí: gadgety a rigidita
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-is/ch-is-vertex-cover.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8.3 Vertex Cover a IS: doplněk množiny
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-is/ch-is-vc-hitting-set.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8.4 VC Set: zobecnění
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-is/ch-is-is-clique.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8.5 IS: doplněk grafu
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-is/sec-cv3.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8.6 Cvičení 3: Polynomiální redukce
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-is/ch-is-ulohy-navic.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8.7 Úlohy navíc
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../ch-zoo/index.html" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    9 Barvení, řezy a plánování agentů
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4_5" id="__nav_4_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    9 Barvení, řezy a plánování agentů
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-zoo/ch-zoo-3-coloring.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    9.1 3-Coloring
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-zoo/ch-zoo-maxcut.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    9.2 MaxCut
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-zoo/ch-zoo-mapf-hledani-cest-pro-vice-agentu.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    9.3 MAPF: hledání cest pro více agentů
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-zoo/sec-cv4.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    9.4 Cvičení 4: Polynomiální redukce II
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-zoo/ch-zoo-ulohy-navic.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    9.5 Úlohy navíc
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../ch-x3c/index.html" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10 Přesná pokrytí: 1-in-3 SAT a X3C
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4_6" id="__nav_4_6_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    10 Přesná pokrytí: 1-in-3 SAT a X3C
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-x3c/ch-x3c-1-in-3-sat.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10.1 1-in-3 SAT
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-x3c/ch-x3c-exact-cover.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10.2 Exact Cover by 3-Sets (proseminář 4)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-x3c/ch-x3c-shrnuti.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10.3 Shrnutí: katalog NP-úplných problémů
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-x3c/ch-x3c-ulohy-navic.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10.4 Úlohy navíc
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../ch-cisla/index.html" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    11 Cesty, rovnice, sítě a čísla
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4_7" id="__nav_4_7_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    11 Cesty, rovnice, sítě a čísla
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-cisla/ch-cisla-hamiltonovska-cesta.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    11.1 Hamiltonovská cesta
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-cisla/ch-cisla-ilp.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    11.2 Celočíselné lineární programování (ILP)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-cisla/ch-cisla-steineruv-strom.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    11.3 Steinerův strom
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-cisla/ch-cisla-ciselne-problemy.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    11.4 Číselné problémy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-cisla/sec-podezrele.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    11.5 Podezřelé redukce z batohu (proseminář 5)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-cisla/sec-cv5.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    11.6 Cvičení 5: Pseudopolynomiální algoritmy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-cisla/ch-cisla-shrnuti-kapitoly.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    11.7 Shrnutí kapitoly
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-cisla/ch-cisla-ulohy-navic.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    11.8 Úlohy navíc
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prostorová složitost
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Prostorová složitost
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_1" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../ch-prostor/index.html" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    12 Prostorová složitost
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5_1" id="__nav_5_1_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    12 Prostorová složitost
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-prostor/ch-prostor-prostorove-tridy.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    12.1 Prostorové třídy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-prostor/ch-prostor-savitchova-veta.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    12.2 Savitchova věta
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-prostor/ch-prostor-logaritmicky-prostor-l-a-nl.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    12.3 Logaritmický prostor: L a NL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-prostor/ch-prostor-doplnky-jazyku-conp-a-conl.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    12.4 Doplňky jazyků: coNP a coNL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-prostor/ch-prostor-2-sat-je-v-p.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    12.5 2-SAT je v P (a dokonce v NL)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-prostor/ch-prostor-shrnuti.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    12.6 Shrnutí kapitoly
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-prostor/ch-prostor-ulohy-navic.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    12.7 Úlohy navíc
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../ch-pspace/index.html" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    13 PSPACE-úplnost a hry
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    13 PSPACE-úplnost a hry
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-pspace/ch-pspace-tqbf.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    13.1 TQBF: kvantifikované booleovské formule
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-pspace/ch-pspace-pspace-a-hry.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    13.2 PSPACE a hry
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-pspace/sec-geografie.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    13.3 Generalized Geography je PSPACE-úplná (proseminář 6)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-pspace/ch-pspace-velky-obraz.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    13.4 Velký obraz
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-pspace/ch-pspace-shrnuti.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    13.5 Shrnutí kapitoly
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-pspace/ch-pspace-ulohy-navic.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    13.6 Úlohy navíc
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SAT a ILP v praxi
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    SAT a ILP v praxi
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_1" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../ch-resice-sat/index.html" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    14 SAT: algoritmy, kódování a řešiče
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6_1" id="__nav_6_1_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    14 SAT: algoritmy, kódování a řešiče
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-resice-sat/ch-resice-sat-snadne-varianty-satu.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    14.1 Snadné varianty SATu
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-resice-sat/ch-resice-sat-jak-funguji-sat-resice.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    14.2 Jak fungují SAT řešiče: DPLL a CDCL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-resice-sat/ch-resice-sat-redukce-do-sat.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    14.3 Redukce do SAT: kódování problémů
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-resice-sat/ch-resice-sat-tseitinova-transformace.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    14.4 Tseitinova transformace
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-resice-sat/ch-resice-sat-smt.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    14.5 Kdy přestane stačit čistý SAT: SMT
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-resice-sat/ch-resice-sat-sat-resic-v-praxi.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    14.6 SAT řešič v praxi: Schurova čísla
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-resice-sat/ch-resice-sat-cviceni-7.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    14.7 Cvičení 7: Enkódování do SAT
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-resice-sat/ch-resice-sat-shrnuti-kapitoly.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    14.8 Shrnutí kapitoly
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-resice-sat/ch-resice-sat-ulohy-navic.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    14.9 Úlohy navíc
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../ch-resice-ilp/index.html" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    15 (I)LP: modelování, řešiče a optimalizace
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6_2" id="__nav_6_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    15 (I)LP: modelování, řešiče a optimalizace
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-resice-ilp/ch-resice-ilp-od-slov-k-modelu.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    15.1 Od slov k modelu
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-resice-ilp/ch-resice-ilp-modelovaci-triky.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    15.2 Modelovací triky
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-resice-ilp/ch-resice-ilp-tsp-a-sklady.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    15.3 Dva větší modely: obchodní cestující a sklady
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-resice-ilp/ch-resice-ilp-lp-relaxace-a-dualita.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    15.4 LP relaxace a dualita
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-resice-ilp/ch-resice-ilp-sila-formulace.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    15.5 Síla formulace
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-resice-ilp/ch-resice-ilp-branch-and-bound.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    15.6 Branch & Bound
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-resice-ilp/ch-resice-ilp-rezy-a-separace.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    15.7 Řezy a separace
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-resice-ilp/ch-resice-ilp-resice-v-praxi.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    15.8 Řešiče v praxi
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-resice-ilp/ch-resice-ilp-cviceni-8.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    15.9 Cvičení 8: Modelování v ILP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-resice-ilp/ch-resice-ilp-shrnuti-kapitoly.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    15.10 Shrnutí kapitoly
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-resice-ilp/ch-resice-ilp-ulohy-navic.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    15.11 Úlohy navíc
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Test a přehledy
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Test a přehledy
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_1" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../ch-test/index.html" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    A Zápočtový test a jak číst skripta
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7_1" id="__nav_7_1_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    A Zápočtový test a jak číst skripta
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-test/ch-test-jak-cist-skripta.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    A.1 Jak číst tato skripta
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-test/ch-test-co-je-na-testu.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    A.2 Co je na zápočtovém testu
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-test/ch-test-postupy-na-papire.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    A.3 Postupy na papíře
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../ch-typove/index.html" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    B Typové úlohy k zápočtovému testu
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7_2" id="__nav_7_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    B Typové úlohy k zápočtovému testu
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-typove/ch-typove-typ-1-turinguv-stroj.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    B.1 Typ 1: Turingův stroj
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-typove/ch-typove-typ-2-self-redukce.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    B.2 Typ 2: Self-redukce
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-typove/ch-typove-typ-3-formulace-jako-ilp-nebo-sat.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    B.3 Typ 3: Formulace jako ILP nebo SAT
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-typove/ch-typove-typ-4-np-tezkost.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    B.4 Typ 4: Důkaz NP-těžkosti redukcí
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../ch-ukazkovy/index.html" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    C Ukázkový zápočtový test s řešením
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7_3" id="__nav_7_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    C Ukázkový zápočtový test s řešením
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-ukazkovy/ch-ukazkovy-uloha-1-turinguv-stroj.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    C.1 Úloha 1: Turingův stroj
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-ukazkovy/ch-ukazkovy-uloha-2-self-redukce.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    C.2 Úloha 2: Self-redukce
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-ukazkovy/ch-ukazkovy-uloha-3-formulace-jako-ilp.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    C.3 Úloha 3: Formulace jako ILP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-ukazkovy/ch-ukazkovy-uloha-4-np-uplnost.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    C.4 Úloha 4: NP-úplnost
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../ch-graf/index.html" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    D Graf všech redukcí
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7_4" id="__nav_7_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    D Graf všech redukcí
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-graf/ch-graf-prehled-redukci-a-jejich-klicovych-myslenek.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    D.1 Přehled redukcí a jejich klíčových myšlenek
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch-graf/ch-graf-redukce-s-orakulem-a-vycislitelnost.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    D.2 Redukce s orákulem a vyčíslitelnost
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Obsah">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Obsah
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#ch-cook-ulohy-navic-rozcvicka" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.4.1 Rozcvička
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ch-cook-ulohy-navic-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.4.2 Na úrovni testu
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ch-cook-ulohy-navic-tezsi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.4.3 Těžší úloha
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="64-ulohy-navic">6.4 Úlohy navíc<a class="headerlink" href="#64-ulohy-navic" title="Permanent link">&para;</a></h1>
+<div class="woo">
+<p>Úlohy procvičují důkaz Cook–Levinovy věty „zevnitř“: převod dláždění na formuli (oddíl <a href="ch-cook-cook-levinova-veta.html#ch-cook-dlazdickovani-sat">6.1.3</a>), dlaždice a výpočetní tabulku konkrétního stroje (oddíl <a href="ch-cook-cook-levinova-veta.html#ch-cook-l-dlazdickovani-vypocetni-tabulka">6.1.2</a>), velikost formule, roli nedeterminismu a polynomiálního času a nakonec práci s mapou redukcí podle receptu z oddílu <a href="ch-cook-mapa-redukci-a-recept-na-dukaz-np-uplnosti.html">6.3</a>.</p>
+<div class="admonition warning woo-warning"><p class="admonition-title">Neoficiální úlohy</p><p>Úlohy v tomto oddílu <strong>nejsou</strong> oficiální zadání předmětu. Jsou to procvičovací úlohy navíc k látce kapitoly; dláždění, tabulky, počty proměnných a klauzulí i počty splňujících ohodnocení byly přepočítány programem (simulace strojů a hrubou silou vyčíslená dláždění a formule na všech vstupech do délky 5), úlohy 6.6 a 6.7 jsou úvahové a byly odvozeny ručně (6.7 navíc zkontrolována výpočtem tranzitivního uzávěru).</p></div>
+</div>
+
+<h2 id="ch-cook-ulohy-navic-rozcvicka">6.4.1 Rozcvička<a class="headerlink" href="#ch-cook-ulohy-navic-rozcvicka" title="Permanent link">&para;</a></h2>
+<div class="woo">
+<div class="admonition question woo-exercise" id="un-6-1"><p class="admonition-title">Úloha 6.1 (formule pro malé dláždění)</p><p>Máme tři typy dlaždic z příkladu <a href="ch-cook-cook-levinova-veta.html#ex-dlazdice33">6.4</a> (backtracking na mřížce <span class="woo-nobr"><span class="arithmatex">\(3\times3\)</span>;</span> barvy v pořadí horní, pravá, spodní, levá hrana): A = (červená, šedá, modrá, zelená), B = (červená, oranžová, červená, šedá), D = (modrá, šedá, modrá, zelená). Plocha má rozměr <span class="woo-nobr"><span class="arithmatex">\(2\times2\)</span>,</span> pozice značíme <span class="woo-nobr"><span class="arithmatex">\((x,y)\)</span>,</span> kde <span class="arithmatex">\(x\in\{0,1\}\)</span> je sloupec zleva a <span class="arithmatex">\(y\in\{0,1\}\)</span> řádek shora. Okraje: nahoře obě hrany červené, vlevo obě zelené, vpravo obě oranžové, dole vlevo modrá a vpravo červená.</p>
+<div class="woo-centered"><img class="woo-fig" src="../figures/06z-ulohy-navic-01.svg" width="385" height="147" alt="Obrázek: Úloha 6.1 (formule pro malé dláždění)" loading="lazy"></div>
+<p>Dlaždice A, B, D a plocha s předbarvenými okraji.</p>
+<ol type="a"><li>Sestavte formuli <span class="arithmatex">\(\varphi\)</span> z redukce <a href="ch-cook-cook-levinova-veta.html#red-sat"><span class="arithmatex">\(\prob{Dlaždičkování}\redp\prob{SAT}\)</span></a>: kolik má proměnných a kolik klauzulí každého ze čtyř typů? Typ 4 vypište celý.</li><li>Najděte všechna splňující ohodnocení <span class="arithmatex">\(\varphi\)</span> a přečtěte z nich dláždění.</li><li>Změníme pravý dolní okraj z červené na modrou. Ukažte na klauzulích, že formule je nesplnitelná.</li></ol></div>
+<details class="success woo-solution"><summary>Řešení</summary><p><strong>a) Proměnné.</strong> <span class="arithmatex">\(u^{(x,y)}_i\)</span> pro 4 pozice a 3 typy <span class="woo-nobr"><span class="arithmatex">\(i\in\{A,B,D\}\)</span>,</span> tedy <span class="arithmatex">\(4\cdot3=12\)</span> proměnných.</p>
+<p><strong>Typ 1</strong> (alespoň jeden typ): jedna klauzule <span class="arithmatex">\(\bigl(u^{(x,y)}_A\lor u^{(x,y)}_B\lor u^{(x,y)}_D\bigr)\)</span> na pozici, celkem 4.</p>
+<p><strong>Typ 2</strong> (nejvýše jeden typ): na každé pozici <span class="arithmatex">\(\binom32=3\)</span> klauzule <span class="woo-nobr"><span class="arithmatex">\((\lnot u_A\lor\lnot u_B)\)</span>,</span> <span class="woo-nobr"><span class="arithmatex">\((\lnot u_A\lor\lnot u_D)\)</span>,</span> <span class="woo-nobr"><span class="arithmatex">\((\lnot u_B\lor\lnot u_D)\)</span>,</span> celkem 12.</p>
+<p><strong>Typ 3</strong> (sousedé pasují). Vodorovně leží <span class="arithmatex">\(p\)</span> vlevo vedle <span class="arithmatex">\(q\)</span> správně, jen když pravá hrana <span class="arithmatex">\(p\)</span> = levá hrana <span class="woo-nobr"><span class="arithmatex">\(q\)</span>.</span> Pravé hrany: A šedá, B oranžová, D šedá; levé hrany: A zelená, B šedá, D zelená. Pasují jen dvojice <span class="arithmatex">\((A,B)\)</span> a <span class="woo-nobr"><span class="arithmatex">\((D,B)\)</span>,</span> zbylých <span class="arithmatex">\(9-2=7\)</span> dvojic je zakázaných. Svisle leží <span class="arithmatex">\(p\)</span> nad <span class="arithmatex">\(q\)</span> správně, jen když spodní hrana <span class="arithmatex">\(p\)</span> = horní hrana <span class="woo-nobr"><span class="arithmatex">\(q\)</span>.</span> Spodní: A modrá, B červená, D modrá; horní: A červená, B červená, D modrá. Pasují <span class="woo-nobr"><span class="arithmatex">\((A,D)\)</span>,</span> <span class="woo-nobr"><span class="arithmatex">\((D,D)\)</span>,</span> <span class="woo-nobr"><span class="arithmatex">\((B,A)\)</span>,</span> <span class="woo-nobr"><span class="arithmatex">\((B,B)\)</span>,</span> zakázaných je 5. Vodorovně sousedících dvojic pozic jsou 2, svisle také 2, takže klauzulí typu 3 je <span class="woo-nobr"><span class="arithmatex">\(2\cdot7+2\cdot5=24\)</span>,</span> např. <span class="arithmatex">\(\bigl(\lnot u^{(0,0)}_A\lor\lnot u^{(0,1)}_A\bigr)\)</span> (A nad A: modrá <span class="arithmatex">\(\ne\)</span> červená).</p>
+<p><strong>Typ 4</strong> (okraje). Každá pozice plochy <span class="arithmatex">\(2\times2\)</span> je rohová a sousedí se dvěma okraji:</p>
+<ul><li><span class="woo-nobr"><span class="arithmatex">\((0,0)\)</span>,</span> nahoře červená, vlevo zelená: A sedí, B má vlevo šedou, D nahoře modrou <span class="arithmatex">\(\Rightarrow\)</span> <span class="woo-nobr"><span class="arithmatex">\((\lnot u^{(0,0)}_B)\)</span>,</span> <span class="woo-nobr"><span class="arithmatex">\((\lnot u^{(0,0)}_D)\)</span>;</span></li><li><span class="woo-nobr"><span class="arithmatex">\((1,0)\)</span>,</span> nahoře červená, vpravo oranžová: sedí jen B <span class="arithmatex">\(\Rightarrow\)</span> <span class="woo-nobr"><span class="arithmatex">\((\lnot u^{(1,0)}_A)\)</span>,</span> <span class="woo-nobr"><span class="arithmatex">\((\lnot u^{(1,0)}_D)\)</span>;</span></li><li><span class="woo-nobr"><span class="arithmatex">\((0,1)\)</span>,</span> vlevo zelená, dole modrá: A i D sedí, B má vlevo šedou <span class="arithmatex">\(\Rightarrow\)</span> <span class="woo-nobr"><span class="arithmatex">\((\lnot u^{(0,1)}_B)\)</span>;</span></li><li><span class="woo-nobr"><span class="arithmatex">\((1,1)\)</span>,</span> vpravo oranžová, dole červená: sedí jen B <span class="arithmatex">\(\Rightarrow\)</span> <span class="woo-nobr"><span class="arithmatex">\((\lnot u^{(1,1)}_A)\)</span>,</span> <span class="woo-nobr"><span class="arithmatex">\((\lnot u^{(1,1)}_D)\)</span>.</span></li></ul>
+<p>Celkem 7 klauzulí typu 4 a formule má <span class="arithmatex">\(4+12+24+7=47\)</span> klauzulí.</p>
+<p><strong>b) Řešení.</strong> Jednotkové klauzule typu 4 spolu s klauzulí typu 1 na téže pozici vynutí <span class="woo-nobr"><span class="arithmatex">\(u^{(0,0)}_A=1\)</span>,</span> <span class="arithmatex">\(u^{(1,0)}_B=1\)</span> a <span class="woo-nobr"><span class="arithmatex">\(u^{(1,1)}_B=1\)</span>.</span> Na pozici <span class="arithmatex">\((0,1)\)</span> zbývá A nebo D; klauzule typu 3 <span class="arithmatex">\(\bigl(\lnot u^{(0,0)}_A\lor\lnot u^{(0,1)}_A\bigr)\)</span> vylučuje A, takže <span class="woo-nobr"><span class="arithmatex">\(u^{(0,1)}_D=1\)</span>.</span> Klauzule typu 2 pak vynutí, že všech ostatních 8 proměnných je 0. Ohodnocení je tím určeno jednoznačně a splňuje i všechny klauzule typu 3, protože odpovídá správnému dláždění: nahoře A, B, dole D, B (A–B: šedá = šedá, D–B: šedá = šedá, A nad D: modrá = modrá, B nad B: červená = červená). Formule má tedy <em>právě jedno</em> splňující ohodnocení a plocha právě jedno dláždění. (Ověřeno i hrubou silou přes všech <span class="arithmatex">\(2^{12}\)</span> ohodnocení.)</p>
+<p><strong>c)</strong> Na pozici <span class="arithmatex">\((1,1)\)</span> je teď okraj vpravo oranžový a dole modrý. A má vpravo šedou, B má dole červenou, D má vpravo šedou, proto vzniknou tři jednotkové klauzule <span class="woo-nobr"><span class="arithmatex">\((\lnot u^{(1,1)}_A)\)</span>,</span> <span class="woo-nobr"><span class="arithmatex">\((\lnot u^{(1,1)}_B)\)</span>,</span> <span class="woo-nobr"><span class="arithmatex">\((\lnot u^{(1,1)}_D)\)</span>.</span> Spolu s klauzulí typu 1 <span class="arithmatex">\(\bigl(u^{(1,1)}_A\lor u^{(1,1)}_B\lor u^{(1,1)}_D\bigr)\)</span> už jen tyto čtyři klauzule nelze splnit současně, takže <span class="arithmatex">\(\varphi\)</span> je nesplnitelná – přesně jako dláždění, na pozici <span class="arithmatex">\((1,1)\)</span> žádná dlaždice nepasuje.</p></details>
+<div class="admonition question woo-exercise" id="un-6-2"><p class="admonition-title">Úloha 6.2 (dlaždice z přechodové funkce)</p><p>Jednopáskový stroj <span class="arithmatex">\(M\)</span> nad <span class="arithmatex">\(\Sigma=\{a,b\}\)</span> s páskovou abecedou <span class="arithmatex">\(\Gamma=\{a,b,X,\blank\}\)</span> má tyto přechody (jiné nemá; kde přechod chybí, stroj odmítne):</p>
+<table><tbody><tr><td style="text-align:left"><span class="arithmatex">\(\delta(q_0,a)=(q_1,X,\Rgt)\)</span></td><td style="text-align:left"><span class="arithmatex">\(\delta(q_2,a)=(q_2,\blank,\Lft)\)</span></td></tr><tr><td style="text-align:left"><span class="arithmatex">\(\delta(q_1,a)=(q_1,a,\Rgt)\)</span></td><td style="text-align:left"><span class="arithmatex">\(\delta(q_2,b)=(q_2,\blank,\Lft)\)</span></td></tr><tr><td style="text-align:left"><span class="arithmatex">\(\delta(q_1,b)=(q_1,b,\Rgt)\)</span></td><td style="text-align:left"><span class="arithmatex">\(\delta(q_2,X)=(q_A,\blank,\Stay)\)</span></td></tr><tr><td style="text-align:left"><span class="arithmatex">\(\delta(q_1,\blank)=(q_2,\blank,\Lft)\)</span></td><td style="text-align:left"><span class="arithmatex">\(\delta(q_A,\blank)=(q_A,\blank,\Stay)\)</span></td></tr></tbody></table>
+<p>Stroj si první <span class="arithmatex">\(a\)</span> přepíše na značku <span class="woo-nobr"><span class="arithmatex">\(X\)</span>,</span> dojede na konec slova, vrací se a maže, a na značce <span class="arithmatex">\(X\)</span> ji smaže a přijme – je to <em>vychovaný</em> stroj pro jazyk slov začínajících písmenem <span class="woo-nobr"><span class="arithmatex">\(a\)</span>.</span> Dlaždice zapisujeme jako na obr. <a href="ch-cook-cook-levinova-veta.html#ch-cook-fig-dlazdice-z-prechodu">6.4</a>: <span class="woo-nobr"><span class="arithmatex">\([\,\text{horní}\mid\text{pravá}\mid\text{spodní}\mid\text{levá}\,]\)</span>,</span> svislé hrany nesou symbol nebo dvojici (stav, symbol), boční hrany předávaný stav nebo <span class="woo-nobr"><span class="arithmatex">\(-\)</span>.</span></p>
+<ol type="a"><li>Které z šesti dlaždic na obrázku patří do sady dlaždic sestrojené ze stroje <span class="woo-nobr"><span class="arithmatex">\(M\)</span>?</span> U každé zdůvodněte.</li><li>Vypište celou sadu dlaždic a určete její velikost <span class="woo-nobr"><span class="arithmatex">\(t\)</span>.</span></li></ol>
+<div class="woo-centered"><img class="woo-fig" src="../figures/06z-ulohy-navic-02.svg" width="567" height="106" alt="Obrázek: Úloha 6.2 (dlaždice z přechodové funkce)" loading="lazy"></div>
+<p>Kandidáti (1)–(6): horní hrana = čas <span class="woo-nobr"><span class="arithmatex">\(t\)</span>,</span> spodní hrana = čas <span class="woo-nobr"><span class="arithmatex">\(t+1\)</span>.</span></p></div>
+<details class="success woo-solution"><summary>Řešení</summary><p><strong>a)</strong> Dlaždice vzniknou třemi způsoby (oddíl <a href="ch-cook-cook-levinova-veta.html#ch-cook-l-dlazdickovani-vypocetni-tabulka">6.1.2</a>): přepis <span class="arithmatex">\([c\mid-\mid c\mid-]\)</span> pro každý symbol <span class="woo-nobr"><span class="arithmatex">\(c\in\Gamma\)</span>;</span> jedna dlaždice čtení/zápisu pro každý přechod; a „přijímací“ dlaždice <span class="arithmatex">\([d\mid-\mid(r,d)\mid r]\)</span> (stav <span class="arithmatex">\(r\)</span> přišel zleva) resp. <span class="arithmatex">\([d\mid r\mid(r,d)\mid-]\)</span> (stav <span class="arithmatex">\(r\)</span> přišel zprava) pro každý symbol <span class="arithmatex">\(d\)</span> a každý stav <span class="woo-nobr"><span class="arithmatex">\(r\)</span>,</span> do kterého vede pohyb doprava resp. doleva.</p>
+<ol><li><span class="arithmatex">\([(q_1,b)\mid q_1\mid b\mid-]\)</span> <strong>patří</strong>: je to dlaždice přechodu <span class="arithmatex">\(\delta(q_1,b)=(q_1,b,\Rgt)\)</span> – hlava čte <span class="woo-nobr"><span class="arithmatex">\(b\)</span>,</span> zapíše <span class="arithmatex">\(b\)</span> a stav <span class="arithmatex">\(q_1\)</span> předá pravým okrajem doprava.</li><li><span class="arithmatex">\([(q_1,b)\mid-\mid(q_1,b)\mid-]\)</span> <strong>nepatří</strong>: znamenala by krok na místě <span class="woo-nobr"><span class="arithmatex">\((q_1,b,\Stay)\)</span>,</span> takový přechod <span class="arithmatex">\(M\)</span> nemá (<span class="arithmatex">\(M\)</span> v <span class="arithmatex">\(q_1\)</span> na <span class="arithmatex">\(b\)</span> jde doprava).</li><li><span class="arithmatex">\([a\mid q_2\mid(q_2,a)\mid-]\)</span> <strong>patří</strong>: přijímací dlaždice – hlava byla vpravo a pohybem doleva přišla do stavu <span class="arithmatex">\(q_2\)</span> (do <span class="arithmatex">\(q_2\)</span> vedou přechody s <span class="woo-nobr"><span class="arithmatex">\(\Lft\)</span>),</span> na políčku je <span class="woo-nobr"><span class="arithmatex">\(a\)</span>.</span></li><li><span class="arithmatex">\([b\mid-\mid a\mid-]\)</span> <strong>nepatří</strong>: bez hlavy se symbol jen opisuje, <span class="arithmatex">\(b\)</span> se nesmí změnit na <span class="woo-nobr"><span class="arithmatex">\(a\)</span>.</span></li><li><span class="arithmatex">\([(q_2,X)\mid-\mid(q_A,\blank)\mid-]\)</span> <strong>patří</strong>: přechod <span class="arithmatex">\(\delta(q_2,X)=(q_A,\blank,\Stay)\)</span> – zápis i nový stav zůstávají v téže buňce.</li><li><span class="arithmatex">\([a\mid-\mid(q_2,a)\mid q_2]\)</span> <strong>nepatří</strong>: stav <span class="arithmatex">\(q_2\)</span> by přišel zleva, tedy po pohybu <em>doprava</em> do <span class="woo-nobr"><span class="arithmatex">\(q_2\)</span>.</span> Do <span class="arithmatex">\(q_2\)</span> ale vedou jen přechody s <span class="woo-nobr"><span class="arithmatex">\(\Lft\)</span>,</span> taková přijímací dlaždice se nevyrábí.</li></ol>
+<p><strong>b)</strong> Celá sada:</p>
+<ul><li>přepis (4): <span class="woo-nobr"><span class="arithmatex">\([a\mid-\mid a\mid-]\)</span>,</span> <span class="woo-nobr"><span class="arithmatex">\([b\mid-\mid b\mid-]\)</span>,</span> <span class="woo-nobr"><span class="arithmatex">\([X\mid-\mid X\mid-]\)</span>,</span> <span class="woo-nobr"><span class="arithmatex">\([\blank\mid-\mid\blank\mid-]\)</span>;</span></li><li>čtení/zápis (8, jedna na přechod): <span class="woo-nobr"><span class="arithmatex">\([(q_0,a)\mid q_1\mid X\mid-]\)</span>,</span> <span class="woo-nobr"><span class="arithmatex">\([(q_1,a)\mid q_1\mid a\mid-]\)</span>,</span> <span class="woo-nobr"><span class="arithmatex">\([(q_1,b)\mid q_1\mid b\mid-]\)</span>,</span> <span class="woo-nobr"><span class="arithmatex">\([(q_1,\blank)\mid-\mid\blank\mid q_2]\)</span>,</span> <span class="woo-nobr"><span class="arithmatex">\([(q_2,a)\mid-\mid\blank\mid q_2]\)</span>,</span> <span class="woo-nobr"><span class="arithmatex">\([(q_2,b)\mid-\mid\blank\mid q_2]\)</span>,</span> <span class="woo-nobr"><span class="arithmatex">\([(q_2,X)\mid-\mid(q_A,\blank)\mid-]\)</span>,</span> <span class="woo-nobr"><span class="arithmatex">\([(q_A,\blank)\mid-\mid(q_A,\blank)\mid-]\)</span>;</span></li><li>příjem zleva, stav <span class="arithmatex">\(q_1\)</span> (4): <span class="arithmatex">\([d\mid-\mid(q_1,d)\mid q_1]\)</span> pro <span class="woo-nobr"><span class="arithmatex">\(d\in\{a,b,X,\blank\}\)</span>;</span></li><li>příjem zprava, stav <span class="arithmatex">\(q_2\)</span> (4): <span class="arithmatex">\([d\mid q_2\mid(q_2,d)\mid-]\)</span> pro <span class="woo-nobr"><span class="arithmatex">\(d\in\{a,b,X,\blank\}\)</span>.</span></li></ul>
+<p>Celkem <span class="arithmatex">\(t=|\Gamma|+|\delta|+4+4=4+8+4+4=20\)</span> typů. Některé se v žádném výpočtu nepoužijí (třeba <span class="woo-nobr"><span class="arithmatex">\([X\mid-\mid(q_1,X)\mid q_1]\)</span>),</span> konstrukce je ale vyrábí mechanicky pro všechna <span class="woo-nobr"><span class="arithmatex">\(d\)</span>,</span> aniž zkoumá dosažitelnost; na správnosti to nic nemění. Hlavně: <span class="arithmatex">\(t\)</span> závisí jen na <span class="woo-nobr"><span class="arithmatex">\(M\)</span>,</span> ne na vstupu.</p></details>
+<div class="admonition question woo-exercise" id="un-6-3"><p class="admonition-title">Úloha 6.3 (výpočetní tabulka)</p><p>Vezměte stroj <span class="arithmatex">\(M\)</span> z úlohy <a href="ch-cook-ulohy-navic.html#un-6-2">Úloha 6.2 (dlaždice z přechodové funkce)</a>.</p>
+<ol type="a"><li>Kolik kroků udělá <span class="arithmatex">\(M\)</span> na slově délky <span class="arithmatex">\(n\ge1\)</span> začínajícím <span class="woo-nobr"><span class="arithmatex">\(a\)</span>?</span> Ukažte, že <span class="arithmatex">\(p(n)=2n+1\)</span> je časová mez <span class="woo-nobr"><span class="arithmatex">\(M\)</span>.</span></li><li>Sestavte výpočetní tabulku pro <span class="woo-nobr"><span class="arithmatex">\(x=ab\)</span>:</span> řádky <span class="woo-nobr"><span class="arithmatex">\(t=0,\dots,p(2)\)</span>,</span> sloupce pozice <span class="woo-nobr"><span class="arithmatex">\(-p(2),\dots,p(2)\)</span>.</span></li><li>V každém řádku dláždění (krok <span class="woo-nobr"><span class="arithmatex">\(t\to t+1\)</span>)</span> určete, na kterých pozicích leží jiná dlaždice než přepis a která. Kolik dlaždic má celé dláždění a kolik z nich je přepisových?</li></ol></div>
+<details class="success woo-solution"><summary>Řešení</summary><p><strong>a)</strong> Slovo <span class="arithmatex">\(x_1\dots x_n\)</span> s <span class="woo-nobr"><span class="arithmatex">\(x_1=a\)</span>:</span> krok 1 přepíše <span class="arithmatex">\(x_1\)</span> na <span class="arithmatex">\(X\)</span> a hlava je na pozici 1; dalšími <span class="arithmatex">\(n-1\)</span> kroky přejde v <span class="arithmatex">\(q_1\)</span> přes <span class="arithmatex">\(x_2,\dots,x_n\)</span> a po kroku <span class="arithmatex">\(n\)</span> stojí na pozici <span class="arithmatex">\(n\)</span> na <span class="woo-nobr"><span class="arithmatex">\(\blank\)</span>.</span> Krok <span class="arithmatex">\(n+1\)</span> ji vrátí na pozici <span class="arithmatex">\(n-1\)</span> ve stavu <span class="woo-nobr"><span class="arithmatex">\(q_2\)</span>,</span> kroky <span class="arithmatex">\(n+2,\dots,2n\)</span> smažou pozice <span class="arithmatex">\(n-1,\dots,1\)</span> a hlava je po kroku <span class="arithmatex">\(2n\)</span> na pozici 0 na <span class="woo-nobr"><span class="arithmatex">\(X\)</span>.</span> Krok <span class="arithmatex">\(2n+1\)</span> smaže <span class="arithmatex">\(X\)</span> a přejde do <span class="woo-nobr"><span class="arithmatex">\(q_A\)</span>.</span> Přijímající výpočet má tedy přesně <span class="arithmatex">\(2n+1\)</span> kroků a končí v jediné přijímací konfiguraci (prázdná páska, hlava na 0). Začíná-li slovo <span class="arithmatex">\(b\)</span> nebo je prázdné, <span class="arithmatex">\(M\)</span> hned odmítne (přechod <span class="arithmatex">\(\delta(q_0,b)\)</span> ani <span class="arithmatex">\(\delta(q_0,\blank)\)</span> není). Žádná větev tedy nemá víc než <span class="arithmatex">\(2n+1\)</span> kroků a <span class="arithmatex">\(p(n)=2n+1\)</span> je mez.</p>
+<p><strong>b)</strong> Pro <span class="arithmatex">\(n=2\)</span> je <span class="woo-nobr"><span class="arithmatex">\(p=5\)</span>,</span> tabulka má <span class="arithmatex">\(p+1=6\)</span> řádků a <span class="arithmatex">\(2p+1=11\)</span> sloupců (pozice <span class="arithmatex">\(-5\)</span> až <span class="woo-nobr"><span class="arithmatex">\(5\)</span>):</span></p>
+<div class="woo-centered"><img class="woo-fig" src="../figures/06z-ulohy-navic-03.svg" width="479" height="225" alt="Obrázek: Úloha 6.3 (výpočetní tabulka)" loading="lazy"></div>
+<p>Výpočetní tabulka stroje <span class="arithmatex">\(M\)</span> na <span class="woo-nobr"><span class="arithmatex">\(x=ab\)</span>.</span> Žlutě buňka s hlavou (stav, symbol).</p>
+<p>Řádky po řadě: <span class="woo-nobr"><span class="arithmatex">\((q_0,a)\,b\)</span>;</span> <span class="woo-nobr"><span class="arithmatex">\(X\,(q_1,b)\)</span>;</span> <span class="woo-nobr"><span class="arithmatex">\(X\,b\,(q_1,\blank)\)</span>;</span> <span class="woo-nobr"><span class="arithmatex">\(X\,(q_2,b)\)</span>;</span> <span class="woo-nobr"><span class="arithmatex">\((q_2,X)\)</span>;</span> <span class="arithmatex">\((q_A,\blank)\)</span> (ostatní buňky <span class="woo-nobr"><span class="arithmatex">\(\blank\)</span>).</span> Poslední řádek je přesně předepsaný spodní okraj.</p>
+<p><strong>c)</strong> Dláždění má <span class="arithmatex">\(p=5\)</span> řádků po <span class="arithmatex">\(11\)</span> dlaždicích, tj. <span class="arithmatex">\(55\)</span> dlaždic. Jiné než přepisové (pozice v závorce):</p>
+<ul><li>krok <span class="woo-nobr"><span class="arithmatex">\(0\to1\)</span>:</span> <span class="arithmatex">\([(q_0,a)\mid q_1\mid X\mid-]\)</span> (0) a <span class="arithmatex">\([b\mid-\mid(q_1,b)\mid q_1]\)</span> (1);</li><li>krok <span class="woo-nobr"><span class="arithmatex">\(1\to2\)</span>:</span> <span class="arithmatex">\([(q_1,b)\mid q_1\mid b\mid-]\)</span> (1) a <span class="arithmatex">\([\blank\mid-\mid(q_1,\blank)\mid q_1]\)</span> (2);</li><li>krok <span class="woo-nobr"><span class="arithmatex">\(2\to3\)</span>:</span> <span class="arithmatex">\([b\mid q_2\mid(q_2,b)\mid-]\)</span> (1) a <span class="arithmatex">\([(q_1,\blank)\mid-\mid\blank\mid q_2]\)</span> (2);</li><li>krok <span class="woo-nobr"><span class="arithmatex">\(3\to4\)</span>:</span> <span class="arithmatex">\([X\mid q_2\mid(q_2,X)\mid-]\)</span> (0) a <span class="arithmatex">\([(q_2,b)\mid-\mid\blank\mid q_2]\)</span> (1);</li><li>krok <span class="woo-nobr"><span class="arithmatex">\(4\to5\)</span>:</span> <span class="arithmatex">\([(q_2,X)\mid-\mid(q_A,\blank)\mid-]\)</span> (0) – pohyb na místě, přijímací dlaždice není potřeba.</li></ul>
+<p>Nepřepisových dlaždic je <span class="woo-nobr"><span class="arithmatex">\(2+2+2+2+1=9\)</span>,</span> přepisových <span class="woo-nobr"><span class="arithmatex">\(55-9=46\)</span>.</span> Při pohybu hlavy leží v řádku vždy dvě nepřepisové dlaždice vedle sebe – obě nesou na společné hraně předávaný stav. (Program potvrdil, že jiné dláždění této mřížky neexistuje.)</p></details>
+</div>
+
+<h2 id="ch-cook-ulohy-navic-test">6.4.2 Na úrovni testu<a class="headerlink" href="#ch-cook-ulohy-navic-test" title="Permanent link">&para;</a></h2>
+<div class="woo">
+<div class="admonition question woo-exercise" id="un-6-4"><p class="admonition-title">Úloha 6.4 (velikost formule)</p><p>Pro stroj <span class="arithmatex">\(M\)</span> z úlohy <a href="ch-cook-ulohy-navic.html#un-6-2">Úloha 6.2 (dlaždice z přechodové funkce)</a> (<span class="arithmatex">\(t=20\)</span> typů dlaždic, <span class="woo-nobr"><span class="arithmatex">\(p(n)=2n+1\)</span>)</span> a vstup délky <span class="arithmatex">\(n\)</span> složíme obě redukce <span class="woo-nobr"><span class="arithmatex">\(L(M)\redp\prob{Dlaždičkování}\redp\prob{SAT}\)</span>.</span></p>
+<ol type="a"><li>Vyjádřete jako funkci <span class="arithmatex">\(n\)</span> rozměry mřížky, počet pozic, počet proměnných a počet klauzulí typu 1 a 2; pro typy 3 a 4 dejte horní odhad.</li><li>Dosaďte <span class="woo-nobr"><span class="arithmatex">\(n=10\)</span>.</span></li><li>Zdůvodněte, proč je celá redukce polynomiální, a co se změní pro obecný NDTS s časem <span class="woo-nobr"><span class="arithmatex">\(p(n)\)</span>.</span></li></ol></div>
+<details class="success woo-solution"><summary>Řešení</summary><p><strong>a)</strong> Mřížka má šířku <span class="arithmatex">\(W=2p+1=4n+3\)</span> a výšku <span class="arithmatex">\(H=p=2n+1\)</span> dlaždic (řádek dlaždic = jeden krok; horní okraj je konfigurace v čase 0, spodní v čase <span class="woo-nobr"><span class="arithmatex">\(p\)</span>).</span> Počet pozic <span class="woo-nobr"><span class="arithmatex">\(N=W\cdot H=(4n+3)(2n+1)=8n^2+10n+3\)</span>.</span></p>
+<ul><li>proměnné: <span class="woo-nobr"><span class="arithmatex">\(t\cdot N=20N\)</span>;</span></li><li>typ 1: jedna na pozici, <span class="woo-nobr"><span class="arithmatex">\(N\)</span>;</span></li><li>typ 2: <span class="arithmatex">\(\binom t2=190\)</span> na pozici, <span class="woo-nobr"><span class="arithmatex">\(190N\)</span>;</span></li><li>typ 3: vodorovně sousedních dvojic pozic je <span class="woo-nobr"><span class="arithmatex">\((W-1)H\)</span>,</span> svisle <span class="woo-nobr"><span class="arithmatex">\(W(H-1)\)</span>,</span> dohromady <span class="woo-nobr"><span class="arithmatex">\(2N-W-H\)</span>;</span> na každou dvojici nejvýše <span class="arithmatex">\(t^2=400\)</span> zakázaných kombinací, tedy nejvýše <span class="woo-nobr"><span class="arithmatex">\(400(2N-W-H)\)</span>;</span></li><li>typ 4: okrajových pozic je <span class="woo-nobr"><span class="arithmatex">\(2W+2H-4=12n+4\)</span>,</span> na každé nejvýše <span class="arithmatex">\(t=20\)</span> nepasujících dlaždic, tedy nejvýše <span class="woo-nobr"><span class="arithmatex">\(20(12n+4)\)</span>.</span></li></ul>
+<p><strong>b)</strong> <span class="woo-nobr"><span class="arithmatex">\(n=10\)</span>:</span> <span class="woo-nobr"><span class="arithmatex">\(W=43\)</span>,</span> <span class="woo-nobr"><span class="arithmatex">\(H=21\)</span>,</span> <span class="woo-nobr"><span class="arithmatex">\(N=903\)</span>.</span> Proměnných <span class="woo-nobr"><span class="arithmatex">\(18\,060\)</span>;</span> typ 1: <span class="woo-nobr"><span class="arithmatex">\(903\)</span>;</span> typ 2: <span class="woo-nobr"><span class="arithmatex">\(171\,570\)</span>;</span> typ 3: nejvýše <span class="woo-nobr"><span class="arithmatex">\(400\cdot(1806-64)=696\,800\)</span>;</span> typ 4: nejvýše <span class="woo-nobr"><span class="arithmatex">\(20\cdot124=2\,480\)</span>.</span> Celkem nejvýše <span class="arithmatex">\(871\,753\)</span> klauzulí. (Přesný počet spočítaný programem pro tuto sadu dlaždic a slovo <span class="arithmatex">\(x\)</span> začínající <span class="woo-nobr"><span class="arithmatex">\(a\)</span>:</span> typ 3 má <span class="arithmatex">\(493\,894\)</span> a typ 4 <span class="arithmatex">\(1\,694\)</span> klauzulí, celkem <span class="woo-nobr"><span class="arithmatex">\(668\,061\)</span>.</span> Pro <span class="arithmatex">\(x\)</span> začínající <span class="arithmatex">\(b\)</span> je typ 4 o jednu klauzuli větší – dvojici <span class="arithmatex">\((q_0,b)\)</span> nemá nahoře žádná dlaždice.)</p>
+<p><strong>c)</strong> Počet klauzulí je <span class="woo-nobr"><span class="arithmatex">\(O(N t^2)=O(n^2)\)</span>,</span> protože <span class="arithmatex">\(t=20\)</span> je <em>konstanta</em> – závisí jen na stroji <span class="woo-nobr"><span class="arithmatex">\(M\)</span>,</span> ne na vstupu. Každá klauzule má nejvýše <span class="arithmatex">\(t\)</span> literálů a každý literál zapíšeme <span class="arithmatex">\(O(\log N)\)</span> bity, celá formule má tedy <span class="arithmatex">\(O(n^2\log n)\)</span> bitů. Vytvoříme ji jednoduchými cykly přes pozice a dvojice typů, tedy v čase polynomiálním v délce výstupu, a tím i v <span class="woo-nobr"><span class="arithmatex">\(n\)</span>.</span> Okraje vypíšeme z <span class="arithmatex">\(x\)</span> v čase <span class="woo-nobr"><span class="arithmatex">\(O(p(n))\)</span>.</span> Pro obecný NDTS s časem <span class="arithmatex">\(p(n)\)</span> vyjde <span class="arithmatex">\(N=(2p(n)+1)\,p(n)=O(p(n)^2)\)</span> pozic a <span class="arithmatex">\(O(p(n)^2)\)</span> klauzulí s konstantou závislou na <span class="arithmatex">\(M\)</span> – stále polynom v <span class="woo-nobr"><span class="arithmatex">\(n\)</span>,</span> protože <span class="arithmatex">\(p\)</span> je polynom.</p></details>
+<div class="admonition question woo-exercise" id="un-6-5"><p class="admonition-title">Úloha 6.5 (kde je nedeterminismus)</p><p>Nedeterministický stroj <span class="arithmatex">\(N\)</span> nad <span class="arithmatex">\(\{a,b\}\)</span> přijímá slova, která obsahují aspoň jedno <span class="woo-nobr"><span class="arithmatex">\(a\)</span>:</span> hlava jde doprava ve stavu <span class="arithmatex">\(g\)</span> („ještě jsem nevybral“) a na některém <span class="arithmatex">\(a\)</span> se může rozhodnout přejít do stavu <span class="arithmatex">\(f\)</span> („toto je moje <span class="woo-nobr"><span class="arithmatex">\(a\)</span>“).</span> Na konci slova se ve stavu <span class="arithmatex">\(c\)</span> vrací, maže a na značce <span class="arithmatex">\(X\)</span> (pozice 0) přijme. Přechody:</p>
+<ul><li><span class="woo-nobr"><span class="arithmatex">\(\delta(q_0,a)=\{(g,X,\Rgt),(f,X,\Rgt)\}\)</span>,</span> <span class="woo-nobr"><span class="arithmatex">\(\delta(q_0,b)=\{(g,X,\Rgt)\}\)</span>,</span></li><li><span class="woo-nobr"><span class="arithmatex">\(\delta(g,a)=\{(g,a,\Rgt),(f,a,\Rgt)\}\)</span>,</span> <span class="woo-nobr"><span class="arithmatex">\(\delta(g,b)=\{(g,b,\Rgt)\}\)</span>,</span> <span class="woo-nobr"><span class="arithmatex">\(\delta(g,\blank)=\emptyset\)</span>,</span></li><li><span class="woo-nobr"><span class="arithmatex">\(\delta(f,a)=\{(f,a,\Rgt)\}\)</span>,</span> <span class="woo-nobr"><span class="arithmatex">\(\delta(f,b)=\{(f,b,\Rgt)\}\)</span>,</span> <span class="woo-nobr"><span class="arithmatex">\(\delta(f,\blank)=\{(c,\blank,\Lft)\}\)</span>,</span></li><li><span class="woo-nobr"><span class="arithmatex">\(\delta(c,a)=\{(c,\blank,\Lft)\}\)</span>,</span> <span class="woo-nobr"><span class="arithmatex">\(\delta(c,b)=\{(c,\blank,\Lft)\}\)</span>,</span> <span class="woo-nobr"><span class="arithmatex">\(\delta(c,X)=\{(q_A,\blank,\Stay)\}\)</span>,</span> <span class="woo-nobr"><span class="arithmatex">\(\delta(q_A,\blank)=\{(q_A,\blank,\Stay)\}\)</span>.</span></li></ul>
+<ol type="a"><li>Ukažte, že každá větev výpočtu na slově délky <span class="arithmatex">\(n\)</span> má nejvýše <span class="arithmatex">\(2n+1\)</span> kroků, a určete, kolik přijímajících větví má výpočet na slově <span class="woo-nobr"><span class="arithmatex">\(w\)</span>.</span></li><li>Kde přesně se nedeterminismus <span class="arithmatex">\(N\)</span> projeví v sadě dlaždic? Která místa dláždění pro <span class="arithmatex">\(w=aba\)</span> se mohou lišit?</li><li>Kolik splňujících ohodnocení má formule <span class="arithmatex">\(\varphi_w\)</span> (složení obou redukcí s <span class="woo-nobr"><span class="arithmatex">\(p(n)=2n+1\)</span>)?</span> Kolik by jich mohl mít deterministický stroj, např. <span class="arithmatex">\(M\)</span> z úlohy <a href="ch-cook-ulohy-navic.html#un-6-2">Úloha 6.2 (dlaždice z přechodové funkce)</a>? Kde ve formuli „je“ nedeterminismus?</li></ol></div>
+<details class="success woo-solution"><summary>Řešení</summary><p><strong>a)</strong> V <span class="woo-nobr"><span class="arithmatex">\(q_0\)</span>,</span> <span class="arithmatex">\(g\)</span> a <span class="arithmatex">\(f\)</span> jde hlava jen doprava. Větev, která do <span class="arithmatex">\(f\)</span> nikdy nepřejde, dojde po <span class="arithmatex">\(n\)</span> krocích ve stavu <span class="arithmatex">\(g\)</span> na <span class="arithmatex">\(\blank\)</span> na pozici <span class="arithmatex">\(n\)</span> a odmítne. Větev, která přejde do <span class="woo-nobr"><span class="arithmatex">\(f\)</span>,</span> dojde po <span class="arithmatex">\(n\)</span> krocích na pozici <span class="arithmatex">\(n\)</span> ve stavu <span class="woo-nobr"><span class="arithmatex">\(f\)</span>;</span> krok <span class="arithmatex">\(n+1\)</span> ji vrátí na pozici <span class="arithmatex">\(n-1\)</span> ve stavu <span class="woo-nobr"><span class="arithmatex">\(c\)</span>,</span> kroky <span class="arithmatex">\(n+2,\dots,2n\)</span> smažou pozice <span class="arithmatex">\(n-1,\dots,1\)</span> a krok <span class="arithmatex">\(2n+1\)</span> smaže <span class="arithmatex">\(X\)</span> a přijme. Každá větev má tedy nejvýše <span class="arithmatex">\(2n+1\)</span> kroků a přijímající právě <span class="woo-nobr"><span class="arithmatex">\(2n+1\)</span>.</span> Přijímající větev je jednoznačně určena tím, <em>na kterém</em> <span class="arithmatex">\(a\)</span> přejde z <span class="arithmatex">\(g\)</span> (resp. <span class="woo-nobr"><span class="arithmatex">\(q_0\)</span>)</span> do <span class="arithmatex">\(f\)</span> – potom už je výpočet deterministický. Přijímajících větví je proto přesně <span class="arithmatex">\(\#_a(w)\)</span> (počet výskytů <span class="arithmatex">\(a\)</span> ve <span class="woo-nobr"><span class="arithmatex">\(w\)</span>).</span></p>
+<p><strong>b)</strong> Nedeterminismus znamená, že pod jednou horní barvou může ležet víc dlaždic čtení/zápisu. Pod horní barvou <span class="arithmatex">\((q_0,a)\)</span> pasují dvě: <span class="arithmatex">\([(q_0,a)\mid g\mid X\mid-]\)</span> a <span class="woo-nobr"><span class="arithmatex">\([(q_0,a)\mid f\mid X\mid-]\)</span>;</span> pod <span class="arithmatex">\((g,a)\)</span> také dvě: <span class="arithmatex">\([(g,a)\mid g\mid a\mid-]\)</span> a <span class="woo-nobr"><span class="arithmatex">\([(g,a)\mid f\mid a\mid-]\)</span>.</span> Zvolená dlaždice pošle boční hranou jiný stav, a tím určí i přijímací dlaždici souseda vpravo (<span class="arithmatex">\([d\mid-\mid(g,d)\mid g]\)</span> nebo <span class="woo-nobr"><span class="arithmatex">\([d\mid-\mid(f,d)\mid f]\)</span>).</span> Pro <span class="arithmatex">\(w=aba\)</span> (<span class="woo-nobr"><span class="arithmatex">\(p=7\)</span>)</span> se volí v kroku <span class="arithmatex">\(0\to1\)</span> (pozice 0 a 1) a v kroku <span class="arithmatex">\(2\to3\)</span> (pozice 2 a 3). Obě přijímající větve se v čase 3 sejdou ve stejné konfiguraci <span class="woo-nobr"><span class="arithmatex">\(X\,b\,a\,(f,\blank)\)</span>,</span> jejich dláždění se proto liší jen v prvních třech řádcích (kroky <span class="arithmatex">\(0\to1\)</span> až <span class="woo-nobr"><span class="arithmatex">\(2\to3\)</span>,</span> kde nesou stav <span class="arithmatex">\(g\)</span> resp. <span class="woo-nobr"><span class="arithmatex">\(f\)</span>)</span> a od kroku <span class="arithmatex">\(3\to4\)</span> jsou stejná; větve ukazuje obrázek.</p>
+<div class="woo-centered"><img class="woo-fig" src="../figures/06z-ulohy-navic-04.svg" width="453" height="218" alt="Obrázek: Úloha 6.5 (kde je nedeterminismus)" loading="lazy"></div>
+<p>Strom výpočtu <span class="arithmatex">\(N\)</span> na <span class="woo-nobr"><span class="arithmatex">\(aba\)</span>:</span> dvě přijímající větve (vybráno první, resp. druhé <span class="woo-nobr"><span class="arithmatex">\(a\)</span>)</span> a jedna odmítající.</p>
+<p><strong>c)</strong> Tvrdíme, že splňujících ohodnocení <span class="arithmatex">\(\varphi_w\)</span> je přesně tolik, kolik je přijímajících výpočtů délky <span class="woo-nobr"><span class="arithmatex">\(p\)</span>,</span> tedy <span class="woo-nobr"><span class="arithmatex">\(\#_a(w)\)</span>;</span> pro <span class="arithmatex">\(w=aba\)</span> dvě. Důkaz ve dvou krocích:</p>
+<ol><li><strong>Ohodnocení = dláždění.</strong> Klauzule typu 1 a 2 vynutí na každé pozici právě jednu dlaždici a klauzule typu 3 a 4 pak říkají přesně „sousedé a okraje pasují“. Splňující ohodnocení a správná dláždění si tedy odpovídají vzájemně jednoznačně.</li><li><strong>Dláždění = přijímající výpočet.</strong> Indukcí po řádcích: horní hrany řádku tvoří konfiguraci s jedinou hlavou. Přijímací dlaždice s <span class="arithmatex">\(g\)</span> nebo <span class="arithmatex">\(f\)</span> vyžaduje levého souseda, který tento stav posílá doprava – to umí jen dlaždice s hlavou (stavy <span class="arithmatex">\(g,f\)</span> se předávají jen doprava, <span class="arithmatex">\(c\)</span> jen doleva; symetricky přijímací dlaždice s <span class="arithmatex">\(c\)</span> potřebuje pravého souseda s hlavou, který posílá <span class="arithmatex">\(c\)</span> doleva). Proto řádek tvoří přepisové dlaždice, jedna dlaždice čtení/zápisu pod hlavou (její výběr = výběr přechodu) a při pohybu přijímací dlaždice souseda ve směru pohybu. Spodní hrany řádku jsou pak přesně následná konfigurace. Dláždění tedy odpovídá posloupnosti <span class="arithmatex">\(p\)</span> přechodů ze startu do předepsané koncové konfigurace a naopak; různé volby dávají různá dláždění.</li></ol>
+<p>Pro <span class="arithmatex">\(p=2n+1\)</span> jsou to přesně přijímající větve z a), tedy <span class="arithmatex">\(\#_a(w)\)</span> ohodnocení (pro <span class="arithmatex">\(w\)</span> bez <span class="arithmatex">\(a\)</span> žádné – formule je nesplnitelná). Pro deterministický <span class="arithmatex">\(M\)</span> je přechod pod hlavou vždy jediný, dláždění je nejvýše jedno a <span class="arithmatex">\(\varphi_x\)</span> má <em>nejvýše jedno</em> splňující ohodnocení.</p>
+<p>Ve formuli <em>není</em> žádná zvláštní klauzule pro nedeterminismus: klauzule jen zakazují nepasující sousedy. Nedeterminismus se skrývá v otázce <span class="arithmatex">\(\prob{SAT}\)</span> „<em>existuje</em> ohodnocení?“ – volba ohodnocení je volba větve výpočtu. (Ověřeno programem pro všechna <span class="woo-nobr"><span class="arithmatex">\(w\in\{a,b\}^{\le5}\)</span>:</span> počet dláždění = počet přijímajících větví <span class="woo-nobr"><span class="arithmatex">\(=\#_a(w)\)</span>.</span> Redukci zachovávající počet řešení se říká <em>úsporná</em>, angl. parsimonious – <em>(nad rámec přednášky)</em>.)</p></details>
+<div class="admonition question woo-exercise" id="un-6-6"><p class="admonition-title">Úloha 6.6 (proč polynomiální čas)</p><p>Student tvrdí: „Stejnou konstrukcí převedu výpočet libovolného deterministického stroje s časem <span class="arithmatex">\(2^n\)</span> na formuli. Tedy každý jazyk z <span class="arithmatex">\(\EXP\)</span> se redukuje na <span class="arithmatex">\(\prob{SAT}\)</span> a <span class="arithmatex">\(\prob{SAT}\)</span> je EXP-těžký.“</p>
+<ol type="a"><li>Které části důkazu Cook–Levinovy věty pro takový stroj platí dál a která selže? Kolik pozic má mřížka pro <span class="woo-nobr"><span class="arithmatex">\(n=50\)</span>,</span> porovnejte se strojem s časem <span class="woo-nobr"><span class="arithmatex">\(n^2\)</span>.</span></li><li>Co by plynulo, kdyby tvrzení studenta bylo pravdivé?</li></ol></div>
+<details class="success woo-solution"><summary>Řešení</summary><p><strong>a)</strong> Platí dál všechno „kvalitativní“: sada dlaždic je konečná a závisí jen na stroji (počet typů nezávisí na čase výpočtu), okraje jsou počáteční a (vychovaná) přijímací konfigurace a mřížka jde vydláždit, právě když stroj přijme – lemma <a href="ch-cook-cook-levinova-veta.html#lem-lredtiling">6.5</a> i převod na klauzule fungují pro libovolnou časovou mez. Selže jediná věc, <em>polynomialita</em>: mřížka má <span class="arithmatex">\((2T+1)\cdot T\)</span> pozic pro čas <span class="woo-nobr"><span class="arithmatex">\(T\)</span>,</span> pro <span class="arithmatex">\(T=2^n\)</span> tedy <span class="arithmatex">\((2^{n+1}+1)\,2^n\)</span> pozic a formule má <span class="arithmatex">\(\Omega(4^n)\)</span> klauzulí. Redukce ji ani nestihne vypsat v polynomiálním čase. Pro <span class="woo-nobr"><span class="arithmatex">\(n=50\)</span>:</span> <span class="arithmatex">\(T=2^{50}\approx1{,}13\cdot10^{15}\)</span> a pozic je <span class="woo-nobr"><span class="arithmatex">\((2^{51}+1)\cdot2^{50}\approx2{,}5\cdot10^{30}\)</span>;</span> pro čas <span class="arithmatex">\(n^2=2500\)</span> jen <span class="woo-nobr"><span class="arithmatex">\(5001\cdot2500=12\,502\,500\)</span>.</span> Polynomiální čas je v důkazu použit právě třikrát: tabulka je polynomiálně velká, formule je tedy polynomiálně velká, a redukce ji vytvoří v polynomiálním čase (spočte <span class="arithmatex">\(p(|x|)\)</span> a vypíše okraje). Exponenciální „redukce“ nedokazuje nic – v exponenciálním čase by redukce úlohu rovnou vyřešila.</p>
+<p><strong>b)</strong> Bylo by <span class="woo-nobr"><span class="arithmatex">\(\EXP\subseteq\NP\)</span>:</span> pro <span class="arithmatex">\(L\in\EXP\)</span> a <span class="arithmatex">\(L\redp\prob{SAT}\)</span> rozhodneme <span class="arithmatex">\(L\)</span> nedeterministicky v polynomiálním čase (spočteme <span class="arithmatex">\(f(x)\)</span> a ověříme uhodnuté ohodnocení). S <span class="arithmatex">\(\NP\subseteq\EXP\)</span> by platilo <span class="woo-nobr"><span class="arithmatex">\(\NP=\EXP\)</span>,</span> a protože <span class="arithmatex">\(\PP\subsetneq\EXP\)</span> (důsledek <a href="../ch-cas/ch-cas-deterministicka-casova-hierarchie.html#cor-pexp">3.8</a> věty o hierarchii), plynulo by <span class="woo-nobr"><span class="arithmatex">\(\PP\neq\NP\)</span>.</span> Tak laciný důkaz otázky <span class="arithmatex">\(\PP\)</span> vs. <span class="arithmatex">\(\NP\)</span> zjevně neexistuje – chyba je právě v polynomialitě.</p></details>
+<div class="admonition question woo-exercise" id="un-6-7"><p class="admonition-title">Úloha 6.7 (mapa redukcí)</p><p>O problémech <span class="arithmatex">\(A,\dots,G\)</span> víme jen toto: <span class="arithmatex">\(\prob{SAT}\)</span> je NP-úplný; <span class="woo-nobr"><span class="arithmatex">\(A\in\NP\)</span>;</span> <span class="woo-nobr"><span class="arithmatex">\(C\in\PP\)</span>;</span> a platí redukce (šipka <span class="arithmatex">\(X\to Y\)</span> znamená <span class="woo-nobr"><span class="arithmatex">\(X\redp Y\)</span>)</span> na obrázku.</p>
+<div class="woo-centered"><img class="woo-fig" src="../figures/06z-ulohy-navic-05.svg" width="364" height="174" alt="Obrázek: Úloha 6.7 (mapa redukcí)" loading="lazy"></div>
+<p>Známé redukce: <span class="woo-nobr"><span class="arithmatex">\(\prob{SAT}\to A\)</span>,</span> <span class="woo-nobr"><span class="arithmatex">\(A\to B\)</span>,</span> <span class="woo-nobr"><span class="arithmatex">\(C\to A\)</span>,</span> <span class="woo-nobr"><span class="arithmatex">\(B\to D\)</span>,</span> <span class="woo-nobr"><span class="arithmatex">\(D\to\prob{SAT}\)</span>,</span> <span class="woo-nobr"><span class="arithmatex">\(E\to C\)</span>,</span> <span class="woo-nobr"><span class="arithmatex">\(F\to\prob{SAT}\)</span>,</span> <span class="woo-nobr"><span class="arithmatex">\(B\to G\)</span>.</span></p>
+<ol type="a"><li>U každého z <span class="arithmatex">\(A,\dots,G\)</span> rozhodněte, co z faktů plyne: NP-úplný / NP-těžký (o <span class="arithmatex">\(\NP\)</span> nic nevíme) / v <span class="arithmatex">\(\NP\)</span> / v <span class="woo-nobr"><span class="arithmatex">\(\PP\)</span>.</span> Zdůvodněte.</li><li>Plyne <span class="woo-nobr"><span class="arithmatex">\(D\redp A\)</span>?</span> Plyne <span class="arithmatex">\(C\)</span> je NP-těžký?</li><li>Co by plynulo, kdybychom navíc dokázali <span class="woo-nobr"><span class="arithmatex">\(A\redp C\)</span>?</span> A co kdyby <span class="woo-nobr"><span class="arithmatex">\(G\redp F\)</span>?</span></li></ol></div>
+<details class="success woo-solution"><summary>Řešení</summary><p>Použijeme tři pravidla. (1) Tranzitivita: z cesty šipek <span class="arithmatex">\(X\to\dots\to Y\)</span> plyne <span class="arithmatex">\(X\redp Y\)</span> (lemma <a href="../ch-redukce/ch-redukce-jak-porovnat-slozitost-dvou-problemu.html#lem-redvlast">5.2</a>). (2) Štafeta (oddíl <a href="ch-cook-karpuv-strom-princip-stafety.html">6.2</a>): je-li <span class="woo-nobr"><span class="arithmatex">\(\prob{SAT}\redp X\)</span>,</span> je <span class="arithmatex">\(X\)</span> NP-těžký, protože <span class="arithmatex">\(L\redp\prob{SAT}\redp X\)</span> pro každé <span class="woo-nobr"><span class="arithmatex">\(L\in\NP\)</span>.</span> (3) Je-li <span class="arithmatex">\(X\redp Y\)</span> a <span class="woo-nobr"><span class="arithmatex">\(Y\in\NP\)</span>,</span> je <span class="woo-nobr"><span class="arithmatex">\(X\in\NP\)</span>:</span> verifikátor pro <span class="arithmatex">\(X\)</span> spočte <span class="arithmatex">\(f(x)\)</span> (polynomiální délky) a pustí na něj verifikátor <span class="arithmatex">\(Y\)</span> s certifikátem pro <span class="woo-nobr"><span class="arithmatex">\(f(x)\)</span>.</span> Totéž pro <span class="arithmatex">\(\PP\)</span> (lemma <a href="../ch-redukce/ch-redukce-jak-porovnat-slozitost-dvou-problemu.html#lem-redvlast">5.2</a>, bod 2).</p>
+<p><strong>a)</strong></p>
+<ul><li><span class="woo-nobr"><span class="arithmatex">\(A\)</span>:</span> <span class="arithmatex">\(\prob{SAT}\to A\)</span> dává NP-těžkost, <span class="arithmatex">\(A\in\NP\)</span> je dáno <span class="arithmatex">\(\Rightarrow\)</span> <strong>NP-úplný</strong>.</li><li><span class="woo-nobr"><span class="arithmatex">\(B\)</span>:</span> <span class="arithmatex">\(\prob{SAT}\to A\to B\)</span> dává NP-těžkost; <span class="arithmatex">\(B\to D\to\prob{SAT}\)</span> a <span class="arithmatex">\(\prob{SAT}\in\NP\)</span> dává <span class="arithmatex">\(B\in\NP\)</span> <span class="arithmatex">\(\Rightarrow\)</span> <strong>NP-úplný</strong>.</li><li><span class="woo-nobr"><span class="arithmatex">\(D\)</span>:</span> <span class="arithmatex">\(\prob{SAT}\to A\to B\to D\)</span> (těžký), <span class="arithmatex">\(D\to\prob{SAT}\)</span> (<span class="woo-nobr"><span class="arithmatex">\(\in\NP\)</span>)</span> <span class="arithmatex">\(\Rightarrow\)</span> <strong>NP-úplný</strong>.</li><li><span class="woo-nobr"><span class="arithmatex">\(G\)</span>:</span> <span class="arithmatex">\(\prob{SAT}\to A\to B\to G\)</span> <span class="arithmatex">\(\Rightarrow\)</span> <strong>NP-těžký</strong>; z <span class="arithmatex">\(G\)</span> žádná šipka nevede, o <span class="arithmatex">\(G\in\NP\)</span> nevíme nic.</li><li><span class="woo-nobr"><span class="arithmatex">\(C\)</span>:</span> <strong>v <span class="arithmatex">\(\PP\)</span></strong> (dáno). Šipka <span class="arithmatex">\(C\to A\)</span> jde <em>ze</em> <span class="woo-nobr"><span class="arithmatex">\(C\)</span>,</span> říká jen, že <span class="arithmatex">\(C\)</span> není těžší než <span class="arithmatex">\(A\)</span> – o těžkosti <span class="arithmatex">\(C\)</span> neříká nic.</li><li><span class="woo-nobr"><span class="arithmatex">\(E\)</span>:</span> <span class="arithmatex">\(E\to C\)</span> a <span class="arithmatex">\(C\in\PP\)</span> <span class="arithmatex">\(\Rightarrow\)</span> <strong><span class="arithmatex">\(E\in\PP\)</span></strong>.</li><li><span class="woo-nobr"><span class="arithmatex">\(F\)</span>:</span> <span class="arithmatex">\(F\to\prob{SAT}\)</span> <span class="arithmatex">\(\Rightarrow\)</span> <strong><span class="arithmatex">\(F\in\NP\)</span></strong>; do <span class="arithmatex">\(F\)</span> žádná šipka nevede, o těžkosti nic nevíme.</li></ul>
+<p><strong>b)</strong> <span class="arithmatex">\(D\redp A\)</span> ano: <span class="woo-nobr"><span class="arithmatex">\(D\to\prob{SAT}\to A\)</span>.</span> Obecně se všechny NP-úplné problémy (<span class="woo-nobr"><span class="arithmatex">\(\prob{SAT},A,B,D\)</span>)</span> redukují každý na každý. <span class="arithmatex">\(C\)</span> NP-těžký <em>neplyne</em>: to by vyžadovalo šipku (cestu) <em>do</em> <span class="arithmatex">\(C\)</span> z NP-těžkého problému. Je-li <span class="woo-nobr"><span class="arithmatex">\(\PP\neq\NP\)</span>,</span> <span class="arithmatex">\(C\)</span> NP-těžký není (jinak <span class="woo-nobr"><span class="arithmatex">\(\prob{SAT}\redp C\in\PP\)</span>).</span></p>
+<p><strong>c)</strong> S <span class="arithmatex">\(A\redp C\)</span> máme <span class="woo-nobr"><span class="arithmatex">\(\prob{SAT}\redp A\redp C\in\PP\)</span>,</span> tedy <span class="arithmatex">\(\prob{SAT}\in\PP\)</span> a podle věty <a href="../ch-redukce/ch-redukce-np-tezkost-a-np-uplnost.html#thm-gral">5.4</a> <span class="woo-nobr"><span class="arithmatex">\(\PP=\NP\)</span>.</span> S <span class="arithmatex">\(G\redp F\)</span> máme <span class="woo-nobr"><span class="arithmatex">\(G\to F\to\prob{SAT}\)</span>,</span> tedy <span class="arithmatex">\(G\in\NP\)</span> a <span class="arithmatex">\(G\)</span> je NP-úplný; navíc <span class="woo-nobr"><span class="arithmatex">\(\prob{SAT}\to A\to B\to G\to F\)</span>,</span> takže i <span class="arithmatex">\(F\)</span> je NP-těžký, a protože <span class="woo-nobr"><span class="arithmatex">\(F\in\NP\)</span>,</span> je NP-úplný.</p></details>
+</div>
+
+<h2 id="ch-cook-ulohy-navic-tezsi">6.4.3 Těžší úloha<a class="headerlink" href="#ch-cook-ulohy-navic-tezsi" title="Permanent link">&para;</a></h2>
+<div class="woo">
+<div class="admonition question woo-exercise" id="un-6-8"><p class="admonition-title">Úloha 6.8 (proč boční barva potřebuje směr)</p><p><em>(nad rámec přednášky)</em> Přednáška ukazuje dlaždice jen pro pohyb doprava a boční hrany v ní nesou jen předávaný stav <span class="arithmatex">\(r\)</span> (obr. <a href="ch-cook-cook-levinova-veta.html#ch-cook-fig-dlazdice-z-prechodu">6.4</a>); skripta pro pohyb doleva používají stejnou barvu <span class="arithmatex">\(r\)</span> (obr. <a href="ch-cook-cook-levinova-veta.html#ch-cook-fig-dva-kroky-dlazdicemi">6.5</a>). Úloha ukazuje technický detail, který přednáška přeskakuje: takto doslovně vzatá konstrukce může selhat a je potřeba ji drobně upravit. Cook–Levinovu větu to neohrožuje. Vezměme vychovaný stroj <span class="arithmatex">\(K\)</span> nad <span class="arithmatex">\(\{a\}\)</span> s páskovou abecedou <span class="arithmatex">\(\{a,\blank\}\)</span> a přechody</p>
+<div class="arithmatex">\begin{gather*}\delta(q_0,a)=(q_1,\blank,\Stay),\quad \delta(q_1,\blank)=(q_2,\blank,\Stay),\quad \delta(q_2,\blank)=(q_3,\blank,\Rgt),\\ \delta(q_3,\blank)=(q_4,\blank,\Lft),\quad \delta(q_4,\blank)=(q_A,\blank,\Stay),\quad \delta(q_A,\blank)=(q_A,\blank,\Stay),\\ \delta(r,a)=(r,\blank,\Rgt),\quad \delta(r,\blank)=(r,\blank,\Lft).\end{gather*}</div>
+<p>Stav <span class="arithmatex">\(r\)</span> je ze startu nedosažitelný (aby byl příklad co nejmenší), konstrukce dlaždic ale vyrábí dlaždice ze <em>všech</em> přechodů.</p>
+<ol type="a"><li>Ukažte, že <span class="arithmatex">\(K\)</span> přijímá jen slovo <span class="arithmatex">\(a\)</span> (v čase 5), slovo <span class="arithmatex">\(aa\)</span> tedy nepřijme, a že <span class="arithmatex">\(p(n)=5\)</span> je časová mez <span class="woo-nobr"><span class="arithmatex">\(K\)</span>.</span></li><li>Ukažte, že s barvami „jen stav“ lze mřížku pro <span class="arithmatex">\(x=aa\)</span> a <span class="arithmatex">\(p=5\)</span> přesto vydláždit. Kde je chyba v argumentu „dláždění <span class="arithmatex">\(\Rightarrow\)</span> výpočet“?</li><li>Opravte konstrukci a dokažte, že po opravě každý řádek dláždění odpovídá jednomu kroku výpočtu.</li></ol></div>
+<details class="success woo-solution"><summary>Řešení</summary><p><strong>a)</strong> Na slově <span class="woo-nobr"><span class="arithmatex">\(a\)</span>:</span> <span class="arithmatex">\((q_0,a)\to(q_1,\blank)\to(q_2,\blank)\)</span> na pozici 0, krok 3 jde doprava na pozici 1 ve stavu <span class="arithmatex">\(q_3\)</span> na <span class="woo-nobr"><span class="arithmatex">\(\blank\)</span>,</span> krok 4 zpět ve stavu <span class="woo-nobr"><span class="arithmatex">\(q_4\)</span>,</span> krok 5 přejde do <span class="arithmatex">\(q_A\)</span> – prázdná páska, hlava na 0, čas 5. Na slově <span class="arithmatex">\(aa\)</span> dojde hlava v kroku 3 ve stavu <span class="arithmatex">\(q_3\)</span> na pozici 1, kde je <span class="woo-nobr"><span class="arithmatex">\(a\)</span>;</span> přechod <span class="arithmatex">\(\delta(q_3,a)\)</span> není, stroj odmítne. Slovo <span class="arithmatex">\(a^k\)</span> pro <span class="arithmatex">\(k\ge2\)</span> odmítne stejně, prázdné slovo hned (<span class="arithmatex">\(\delta(q_0,\blank)\)</span> není). Do <span class="arithmatex">\(q_A\)</span> stroj vstupuje jen s prázdnou páskou a hlavou na 0, je tedy vychovaný. Výpočet má nejvýše 5 kroků (na <span class="arithmatex">\(a\)</span> přesně 5, na <span class="woo-nobr"><span class="arithmatex">\(a^k\)</span>,</span> <span class="woo-nobr"><span class="arithmatex">\(k\ge2\)</span>,</span> tři, na prázdném slově žádný; v <span class="arithmatex">\(q_A\)</span> už jen stojí), takže <span class="arithmatex">\(p(n)=5\)</span> je časová mez.</p>
+<p><strong>b)</strong> Stav <span class="arithmatex">\(r\)</span> je cílem pohybu doprava i doleva, proto sada obsahuje obě přijímací dlaždice <span class="arithmatex">\([d\mid r\mid(r,d)\mid-]\)</span> (příjem zprava) i <span class="arithmatex">\([d\mid-\mid(r,d)\mid r]\)</span> (příjem zleva). Položíme-li je vedle sebe, na společné hraně je barva <span class="arithmatex">\(r\)</span> z obou stran – pasují, a <em>z ničeho vzniknou dvě hlavy</em>. Obráceně dlaždice <span class="arithmatex">\([(r,a)\mid r\mid\blank\mid-]\)</span> (pohyb doprava) a vpravo od ní <span class="arithmatex">\([(r,\blank)\mid-\mid\blank\mid r]\)</span> (pohyb doleva) dvě hlavy „zničí“. Pro <span class="woo-nobr"><span class="arithmatex">\(x=aa\)</span>,</span> <span class="arithmatex">\(p=5\)</span> to dá dláždění (pozice 1 a 2, ostatní dlaždice jsou přepisy, pod skutečnou hlavou na pozici 0 leží přechody <span class="arithmatex">\(q_0\to q_1\to q_2\)</span> na místě):</p>
+<div class="woo-centered"><img class="woo-fig" src="../figures/06z-ulohy-navic-06.svg" width="418" height="153" alt="Obrázek: Úloha 6.8 (proč boční barva potřebuje směr)" loading="lazy"></div>
+<p>První dva řádky „falešného“ dláždění pro <span class="woo-nobr"><span class="arithmatex">\(x=aa\)</span>.</span> V čase 2 je páska prázdná a skutečná hlava je stále na pozici 0 ve stavu <span class="woo-nobr"><span class="arithmatex">\(q_2\)</span>.</span></p>
+<p>Dál pokračuje dláždění přesně jako výpočet <span class="arithmatex">\(K\)</span> na slově <span class="woo-nobr"><span class="arithmatex">\(a\)</span>:</span> krok 3 doprava na prázdnou pozici 1, krok 4 zpět, krok 5 do <span class="woo-nobr"><span class="arithmatex">\(q_A\)</span>.</span> Spodní okraj (čas 5) sedí, takže formule je splnitelná, ačkoli <span class="arithmatex">\(aa\notin L(K)\)</span> – redukce by odpověděla špatně. Chyba v argumentu: „řádek dlaždic = jeden krok“ předpokládá, že přijímací dlaždice leží jen vedle hlavy. Barva <span class="arithmatex">\(r\)</span> na boční hraně ale neříká, <em>kterým směrem</em> stav jde, takže ji „vyrobí“ i přijímací dlaždice souseda. (Program našel pro <span class="arithmatex">\(aa\)</span> a <span class="arithmatex">\(p=5\)</span> právě jedno takové dláždění; skutečný výpočet žádný.)</p>
+<p><strong>c) Oprava.</strong> Boční barva nese stav <em>i se směrem</em>: <span class="arithmatex">\(r^{\to}\)</span> (stav jde doprava) a <span class="arithmatex">\({}^{\leftarrow}r\)</span> (stav jde doleva). Dlaždice pohybu doprava je <span class="woo-nobr"><span class="arithmatex">\([(q,a)\mid r^{\to}\mid b\mid-]\)</span>,</span> příjem zleva <span class="woo-nobr"><span class="arithmatex">\([d\mid-\mid(r,d)\mid r^{\to}]\)</span>,</span> pohyb doleva <span class="woo-nobr"><span class="arithmatex">\([(q,a)\mid-\mid b\mid{}^{\leftarrow}r]\)</span>,</span> příjem zprava <span class="woo-nobr"><span class="arithmatex">\([d\mid{}^{\leftarrow}r\mid(r,d)\mid-]\)</span>;</span> přepisové a dlaždice na místě beze změny. Počet typů se nemění.</p>
+<p><strong>Tvrzení.</strong> Nesou-li horní hrany řádku konfiguraci s jedinou hlavou (pozice <span class="woo-nobr"><span class="arithmatex">\(h\)</span>,</span> stav <span class="woo-nobr"><span class="arithmatex">\(q\)</span>,</span> symbol <span class="woo-nobr"><span class="arithmatex">\(a\)</span>),</span> pak spodní hrany nesou následnou konfiguraci pro jeden přechod z <span class="arithmatex">\(\delta(q,a)\)</span> a každý přechod takový řádek dává.</p>
+<ol><li>Barvu <span class="arithmatex">\(r^{\to}\)</span> má na pravé hraně jen dlaždice pohybu doprava, na levé hraně jen příjem zleva; barvu <span class="arithmatex">\({}^{\leftarrow}r\)</span> na levé hraně jen pohyb doleva, na pravé jen příjem zprava. Dlaždice pohybu mají nahoře dvojici (stav, symbol), leží tedy jen na pozici <span class="woo-nobr"><span class="arithmatex">\(h\)</span>.</span></li><li>Příjem zleva na pozici <span class="arithmatex">\(i\)</span> potřebuje na pozici <span class="arithmatex">\(i-1\)</span> pravou hranu <span class="woo-nobr"><span class="arithmatex">\(r^{\to}\)</span>,</span> tedy dlaždici pohybu doprava, tedy <span class="woo-nobr"><span class="arithmatex">\(i-1=h\)</span>.</span> Symetricky příjem zprava jen na <span class="woo-nobr"><span class="arithmatex">\(h-1\)</span>.</span> Na pozicích <span class="woo-nobr"><span class="arithmatex">\(\ne h\)</span>,</span> kde neleží příjem, zbývá jediná dlaždice s horní barvou <span class="arithmatex">\(d\)</span> a oběma bočními <span class="woo-nobr"><span class="arithmatex">\(-\)</span>:</span> přepis.</li><li>Na pozici <span class="arithmatex">\(h\)</span> leží dlaždice některého přechodu <span class="woo-nobr"><span class="arithmatex">\((r,b,D)\in\delta(q,a)\)</span>.</span> Pro <span class="arithmatex">\(D=\Rgt\)</span> musí na <span class="arithmatex">\(h+1\)</span> ležet příjem zleva se stavem <span class="arithmatex">\(r\)</span> (jen ten má levou hranu <span class="woo-nobr"><span class="arithmatex">\(r^{\to}\)</span>),</span> pro <span class="arithmatex">\(D=\Lft\)</span> na <span class="arithmatex">\(h-1\)</span> příjem zprava, pro <span class="arithmatex">\(D=\Stay\)</span> nic. Spodní hrany: na <span class="arithmatex">\(h\)</span> symbol <span class="arithmatex">\(b\)</span> (resp. <span class="arithmatex">\((r,b)\)</span> při <span class="woo-nobr"><span class="arithmatex">\(\Stay\)</span>),</span> na <span class="arithmatex">\(h\pm1\)</span> dvojice <span class="woo-nobr"><span class="arithmatex">\((r,d)\)</span>,</span> jinde beze změny – následná konfigurace s jedinou hlavou.</li></ol>
+<p>Indukcí od horního okraje (jedna hlava) dostaneme, že dláždění odpovídá posloupnosti <span class="arithmatex">\(p\)</span> kroků výpočtu, která končí v předepsané přijímací konfiguraci, a naopak každý takový výpočet dává dláždění. To je přesně lemma <a href="ch-cook-cook-levinova-veta.html#lem-lredtiling">6.5</a>. (Ověřeno programem: s barvami se směrem je pro <span class="arithmatex">\(K\)</span> a <span class="arithmatex">\(aa\)</span> dláždění 0 a na 3000 náhodných malých nedeterministických strojích (přes 70 000 kombinací stroj, vstup, <span class="woo-nobr"><span class="arithmatex">\(p\)</span>)</span> je počet dláždění vždy roven počtu přijímajících výpočtů délky <span class="woo-nobr"><span class="arithmatex">\(p\)</span>.)</span></p>
+<p><strong>Proč to nevadilo v úlohách <a href="ch-cook-ulohy-navic.html#un-6-2">Úloha 6.2 (dlaždice z přechodové funkce)</a> až <a href="ch-cook-ulohy-navic.html#un-6-5">Úloha 6.5 (kde je nedeterminismus)</a>:</strong> tam se každý stav předává jen jedním směrem (<span class="woo-nobr"><span class="arithmatex">\(q_1\)</span>,</span> <span class="woo-nobr"><span class="arithmatex">\(g\)</span>,</span> <span class="arithmatex">\(f\)</span> doprava; <span class="woo-nobr"><span class="arithmatex">\(q_2\)</span>,</span> <span class="arithmatex">\(c\)</span> doleva), takže barva stavu směr nese implicitně. Přesně: vede-li do každého stavu pohyb jen jedním směrem, je jednoduchá konstrukce totožná s opravenou, a tedy správná. Vede-li do některého stavu pohyb doprava i doleva, mohou vzniknout dvojice z b); zda to pokazí odpověď, záleží na stroji a vstupu. Takové stavy má většina strojů, které se po pásce vracejí. Místo značení barev lze stejně dobře upravit stroj: každý stav <span class="arithmatex">\(r\)</span> rozdělíme na kopii, do níž vedou pohyby doprava, a kopii pro pohyby doleva a na místě (obě kopie mají stejné přechody jako <span class="woo-nobr"><span class="arithmatex">\(r\)</span>);</span> pak se každý stav předává jen jedním směrem a jednoduchá konstrukce funguje. Cook–Levinovu větu to tedy neohrožuje, jde jen o detail, jak dlaždice přesně zapsat.</p></details>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Zpět na začátek
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Zápatí" >
+        
+          
+          <a href="ch-cook-mapa-redukci-a-recept-na-dukaz-np-uplnosti.html" class="md-footer__link md-footer__link--prev" aria-label="Předchozí: 6.3 Mapa redukcí a recept na důkaz NP-úplnosti">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Předchozí
+              </span>
+              <div class="md-ellipsis">
+                6.3 Mapa redukcí a recept na důkaz NP-úplnosti
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../ch-sat/index.html" class="md-footer__link md-footer__link--next" aria-label="Další: 7 Varianty problému SAT">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Další
+              </span>
+              <div class="md-ellipsis">
+                7 Varianty problému SAT
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.indexes", "navigation.footer", "navigation.top", "toc.follow", "search.highlight", "search.suggest"], "search": "../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Zkop\u00edrov\u00e1no do schr\u00e1nky", "clipboard.copy": "Kop\u00edrovat do schr\u00e1nky", "search.result.more.one": "1 dal\u0161\u00ed na t\u00e9to str\u00e1nce", "search.result.more.other": "# v\u00edce na t\u00e9to str\u00e1nce", "search.result.none": "Nenalezeny \u017e\u00e1dn\u00e9 dokumenty", "search.result.one": "Nalezen\u00fd dokument: 1", "search.result.other": "Nalezen\u00e9 dokumenty: #", "search.result.placeholder": "Pi\u0161te co se m\u00e1 vyhledat", "search.result.term.missing": "Chyb\u011bj\u00edc\u00ed", "select.version": "Vyberte verzi"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.a5f9d56c.min.js"></script>
+      
+        <script src="../javascripts/mathjax-config.js"></script>
+      
+        <script src="../javascripts/tex-svg-full.js"></script>
+      
+        <script src="../javascripts/woo.js"></script>
+      
+    
+  </body>
+</html>

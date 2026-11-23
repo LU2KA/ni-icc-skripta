@@ -1,0 +1,280 @@
+
+
+.Section 2-SAT je v P (a dokonce v NL)
+  label: ch-prostor-2-sat-je-v-p
+
+
+Jako aplikaci uvidíme, že $\prob{2-SAT}$ (každá klauzule má nejvýš dva literály) je polynomiální – na rozdíl od
+$\prob{3-SAT}$u. Potřebujeme slovník z grafových algoritmů (BI-AG2).
+
+
+.Subsection Připomenutí: silně souvislé komponenty
+  label: ch-prostor-pripomenuti-silne-souvisle-komponenty
+
+
+.Definition:
+  title: 'Silná souvislost, kondenzace'
+  label: def-scc
+
+  Nechť $G=(V,E)$ je orientovaný graf. Vrcholy $u,v$ jsou "silně propojené".emphasize ($u\sim v$), pokud vede orientovaná
+  cesta z $u$ do $v$ i z $v$ do $u$. Relace $\sim$ je ekvivalence (cesta délky 0; symetrie z definice; skládání cest);
+  její třídy jsou "silně souvislé komponenty".emphasize (SCC).
+
+
+  "Kondenzace".emphasize $G$: vrcholy jsou SCC, hrana $C\to C'$ ($C\neq C'$), pokud v $G$ vede hrana z nějakého $u\in C$ do
+  nějakého $v\in C'$. "Topologické uspořádání".emphasize $\prec$ je lineární uspořádání vrcholů, v němž každá hrana vede
+  „doprava“; existuje právě pro acyklické grafy (DAG).
+
+
+Kondenzace je vždy DAG (cyklus mezi komponentami by je slil do jedné). SCC, kondenzaci i topologické uspořádání
+umíme v lineárním čase (Tarjan, Kosaraju; DFS).
+
+
+.Figure:
+  label: ch-prostor-fig-scc-kondenzace
+
+  !tikz:
+    filename: 12e-2-sat-01
+    options: 'x=1cm,y=1cm'
+
+    \begin{scope}[on background layer]
+      \fill[defc!12,rounded corners=8pt] (-0.5,-0.5) rectangle (2.5,1.9);
+      \fill[intc!15,rounded corners=8pt] (3.3,-0.5) rectangle (5.2,1.9);
+      \fill[acc!15,rounded corners=8pt] (6.0,0.2) rectangle (7.0,1.2);
+    \end{scope}
+    \node[v] (a) at (0,1.4) {a}; \node[v] (b) at (2,1.4) {b}; \node[v] (c) at (1,0) {c};
+    \node[v] (d) at (3.8,0.7) {d}; \node[v] (e) at (4.8,0.7) {e}; \node[v] (f) at (6.5,0.7) {f};
+    \draw[->,thick] (a)--(b); \draw[->,thick] (b)--(c); \draw[->,thick] (c)--(a);
+    \draw[->,thick] (b) to[bend left=10] (d); \draw[->,thick] (d) to[bend left=25] (e); \draw[->,thick] (e) to[bend left=25] (d);
+    \draw[->,thick] (e)--(f); \draw[->,thick] (c) to[bend right=20] (d);
+    \node[font=\scriptsize] at (3.2,-0.9) {SCC: $\{a,b,c\}$, $\{d,e\}$, $\{f\}$ -- z $f$ se nikam nedostaneme, proto je sám};
+    % kondenzace
+    \begin{scope}[xshift=8.4cm,yshift=0.7cm]
+      \node[blok,draw=defc,fill=defc!12,font=\scriptsize] (A) at (0,0) {$\{a,b,c\}$};
+      \node[blok,draw=intc,fill=intc!15,font=\scriptsize] (D) at (1.9,0) {$\{d,e\}$};
+      \node[blok,draw=acc,fill=acc!15,font=\scriptsize] (F) at (3.4,0) {$\{f\}$};
+      \draw[->,thick] (A)--(D); \draw[->,thick] (D)--(F);
+      \node[font=\scriptsize] at (1.7,-0.8) {kondenzace v pořadí $\prec$};
+    \end{scope}
+
+  .caption:
+
+    Silně souvislé komponenty a kondenzace (DAG).
+
+
+.Subsection Implikační graf
+  label: ch-prostor-implikacni-graf
+
+
+Každou klauzuli $(\ell_1\lor\ell_2)$ přepíšeme na dvě implikace:
+
+.equation:
+
+  (\ell_1\lor\ell_2)\equiv(\lnot\ell_1\Rightarrow\ell_2)\equiv(\lnot\ell_2\Rightarrow\ell_1).
+
+"Implikační graf".emphasize $G_\varphi$ má za vrcholy všech $2n$ literálů a za hrany implikace ($2m$ hran – za každou
+klauzuli dvě). Klauzuli $(\ell)$ s jediným literálem bereme jako $(\ell\lor\ell)$, tj. hranu $\lnot\ell\to\ell$.
+
+
+.Figure:
+  label: ch-prostor-fig-implikacni-graf
+
+  !tikz:
+    filename: 12e-2-sat-02
+    options: 'x=1.4cm,y=1.3cm,lt/.style={v,minimum size=8mm,font=\scriptsize}'
+
+    \node[lt] (n1) at (0,1) {$\lnot x_1$}; \node[lt] (n2) at (1,1) {$\lnot x_2$}; \node[lt] (n3) at (2,1) {$\lnot x_3$};
+    \node[lt] (p1) at (0,0) {$x_1$}; \node[lt] (p2) at (1,0) {$x_2$}; \node[lt] (p3) at (2,0) {$x_3$};
+    \draw[->,thick,defc] (n1)--(p2); \draw[->,thick,defc] (n2)--(p1);
+    \draw[->,thick,intc] (p2)--(p3); \draw[->,thick,intc] (n3)--(n2);
+    \node[font=\scriptsize,align=left,anchor=west] at (2.6,0.5) {$\varphi=\textcolor{defc}{(x_1\lor x_2)}\land\textcolor{intc}{(\lnot x_2\lor x_3)}$\\[2pt]
+       \textcolor{defc}{$\lnot x_1\to x_2$, $\lnot x_2\to x_1$}\\ \textcolor{intc}{$x_2\to x_3$, $\lnot x_3\to\lnot x_2$}};
+
+  .caption:
+
+    Implikační graf: 2 klauzule $\Rightarrow$ 4 hrany.
+
+
+.Lemma:
+  title: 'Šikmá symetrie (skew symmetry)'
+  label: lem-skew
+
+  Hrana $a\to b$ je v $G_\varphi$ právě tehdy, když je v něm i hrana $\lnot b\to\lnot a$ (obě vzniknou ze téže
+  klauzule). Důsledky: cesta $a\leadsto b$ znamená cestu $\lnot b\leadsto\lnot a$; SCC přicházejí v zrcadlových
+  párech $C\leftrightarrow\lnot C$.
+
+
+.Lemma:
+  title: 'Cesta = řetěz donucení'
+  label: lem-donuceni
+
+  Existuje-li v $G_\varphi$ cesta $a\leadsto b$, pak každé splňující přiřazení s $a=1$ má také $b=1$.
+
+
+.Proof:
+
+  Hrana $u\to v$ pochází z klauzule $(\lnot u\lor v)$, kterou nelze splnit s $u=1$ a $v=0$. Podél cesty se tedy hodnota 1
+  „přelévá“: $a=1\Rightarrow u=1\Rightarrow\dots\Rightarrow b=1$.
+
+
+.Figure:
+  label: fig-2sat-symetrie
+
+  !tikz:
+    filename: 12e-2-sat-04
+    options: 'x=1cm,y=1cm,lt/.style={v,minimum size=8mm,font=\scriptsize},ltT/.style={lt,fill=tT!25}'
+
+    % sikma symetrie
+    \node[font=\scriptsize\bfseries] at (1.4,1.85) {šikmá symetrie};
+    \node[lt] (a) at (0,1) {$a$}; \node[lt] (b) at (2.8,1) {$b$};
+    \node[lt] (nb) at (0,0) {$\lnot b$}; \node[lt] (na) at (2.8,0) {$\lnot a$};
+    \draw[->,thick,rej] (a)--(b); \draw[->,thick,rej] (nb)--(na);
+    \draw[dashed,black!50] (1.4,1.5)--(1.4,-0.5);
+    \node[font=\scriptsize,align=center] at (1.4,-0.95) {obě hrany z téže klauzule $(\lnot a\lor b)$};
+    % retez donuceni
+    \begin{scope}[xshift=5.6cm,yshift=0.5cm]
+      \node[font=\scriptsize\bfseries] at (3,1.35) {cesta = řetěz donucení};
+      \foreach \n/\x in {a/0,u/2,v/4,b/6} \node[ltT] (c\n) at (\x,0) {$\n$};
+      \draw[->,thick] (ca)--node[above,font=\tiny]{$(\lnot a\lor u)$}(cu);
+      \draw[->,thick] (cu)--node[above,font=\tiny]{$(\lnot u\lor v)$}(cv);
+      \draw[->,thick] (cv)--node[above,font=\tiny]{$(\lnot v\lor b)$}(cb);
+      \foreach \n in {a,u,v,b} \node[font=\scriptsize,tT!60!black,below=1pt] at (c\n.south) {$\n=1$};
+      \node[font=\scriptsize] at (3,-1.45) {$a=1\ \Rightarrow\ u=1\ \Rightarrow\ v=1\ \Rightarrow\ b=1$};
+    \end{scope}
+
+  .caption:
+
+    Vlevo: hrana $a\to b$ má vždy zrcadlovou dvojici $\lnot b\to\lnot a$. Vpravo: každá hrana $u\to v$ pochází
+    z klauzule $(\lnot u\lor v)$, která při $u=1$ vynutí $v=1$. "Všimni si:".emphasize hodnota 1 teče "po směru".emphasize
+    hran, hodnota 0 proti směru (to je zrcadlová cesta $\lnot b\leadsto\lnot a$).
+
+
+.Theorem:
+  title: 'O rozdílnosti komponent'
+  label: thm-2sat
+
+  Formule $\varphi$ v 2-CNF je splnitelná $\iff$ pro každou proměnnou $x$ leží $x$ a $\lnot x$ v různých silně
+  souvislých komponentách implikačního grafu.
+
+
+.Proof:
+
+  "($\Rightarrow$) Společná SCC je spor.".notion Leží-li $x$ a $\lnot x$ ve stejné SCC, existují cesty $x\leadsto\lnot x$
+  i $\lnot x\leadsto x$. Zkusíme-li $x:=1$, první cesta (lemma .reference:lem-donuceni) donutí $\lnot x=1$ – spor. Zkusíme-li
+  $x:=0$, je $\lnot x=1$ a druhá cesta donutí $x=1$ – spor. Formule je nesplnitelná.
+
+
+  "($\Leftarrow$) Konstrukce přiřazení.".notion Předpokládejme, že žádná proměnná nemá $x$ a $\lnot x$ ve společné
+  komponentě. Zafixujme topologické uspořádání $\prec$ kondenzace a položme
+
+  .equation:
+
+    \tau(x):=1\iff C_{\lnot x}\prec C_x\qquad(\text{„$\lnot x$ výš, $x$ níž“}).
+
+  Protože $C_x\neq C_{\lnot x}$ a $\prec$ je lineární, je pravidlo dobře definované; navíc pro libovolný literál $\ell$
+  platí $\tau(\ell)=1\iff C_{\lnot\ell}\prec C_\ell$. Hrana $u\to v$ dává $C_u\preceq C_v$ (buď $C_u=C_v$, nebo hrana
+  kondenzace, která jde v $\prec$ doprava).
+
+
+  Ukážeme, že každá klauzule $(a\lor b)$ je splněna. Pro spor nechť $\tau(a)=\tau(b)=0$. Pak
+
+  .table:
+    columns: 'll'
+    noheader: true
+
+    .row:
+
+      $C_a\prec C_{\lnot a}$
+
+      protože $\tau(a)=0$ (pravidlo pro $\tau$)
+
+    .row:
+
+      $C_{\lnot a}\preceq C_b$
+
+      klauzule dává hranu $\lnot a\to b$
+
+    .row:
+
+      $C_b\prec C_{\lnot b}$
+
+      protože $\tau(b)=0$
+
+    .row:
+
+      $C_{\lnot b}\preceq C_a$
+
+      klauzule dává hranu $\lnot b\to a$
+
+  a složením řádků shora dolů $C_a\prec C_a$ – spor. Tedy $\tau$ splňuje každou klauzuli.
+
+
+.Figure:
+  label: ch-prostor-fig-2sat-dukaz
+
+  !tikz:
+    filename: 12e-2-sat-03
+    options: 'x=1cm,y=1cm,lt/.style={v,minimum size=8mm,font=\scriptsize}'
+
+    \node[lt] (x) at (0,0) {$x$}; \node[lt] (u) at (1.8,0.9) {$u$};
+    \node[lt] (nx) at (3.6,0) {$\lnot x$}; \node[lt] (w) at (1.8,-0.9) {$v$};
+    \draw[->,thick,defc] (x)--(u); \draw[->,thick,defc] (u)--(nx);
+    \draw[->,thick,rej] (nx)--(w); \draw[->,thick,rej] (w)--(x);
+    \node[font=\scriptsize,defc] at (1.8,1.5) {cesta $x\leadsto\lnot x$};
+    \node[font=\scriptsize,rej] at (1.8,-1.5) {cesta $\lnot x\leadsto x$};
+    % pravidlo
+    \begin{scope}[xshift=6.5cm]
+      \node[blok,draw=intc,fill=intc!12,font=\scriptsize] (A) at (0,0) {$C_{\lnot x}\ni\lnot x$};
+      \node[blok,draw=acc,fill=acc!15,font=\scriptsize] (B) at (3,0) {$C_x\ni x$};
+      \draw[->,thick] (A)--node[above,font=\scriptsize]{$\prec$}(B);
+      \node[font=\scriptsize] at (1.5,-0.8) {$\Rightarrow\ \tau(x)=1$ (pozdější komponenta je pravdivá)};
+    \end{scope}
+
+  .caption:
+
+    Vlevo: $x$ a $\lnot x$ ve stejné SCC $\Rightarrow$ obě hodnoty vedou ke sporu. Vpravo: pravidlo pro $\tau$.
+
+
+.Corollary:
+  title: '2-SAT v lineárním čase'
+  label: cor-2satlin
+
+  Test splnitelnosti 2-CNF = test „nejsou $x,\lnot x$ ve stejné SCC?“ – a ten umíme lineárně. Splňující
+  ohodnocení dostaneme z topologického uspořádání kondenzace.
+
+
+.Subsection 2-SAT je v NL
+  label: ch-prostor-2-sat-je-v-nl
+
+
+Řečeno cestami: formule v 2-CNF je "nesplnitelná".emphasize $\iff$ pro nějakou proměnnou $x$ vedou v implikačním grafu
+cesty $x\leadsto\lnot x$ i $\lnot x\leadsto x$. Nedeterministický algoritmus pro $\prob{2-UNSAT}$:
+
+.enumerate:
+
+  .item:
+
+    Uhodni proměnnou $x$.
+
+  .item:
+
+    Uhodni cestu $x\leadsto\lnot x$ krok po kroku (pamatuj si jen aktuální literál a počítadlo $\le2n$).
+    Hranu $a\to b$ ověříme přímo ve vstupu: existuje klauzule $(\lnot a\lor b)$?
+
+  .item:
+
+    Stejně uhodni cestu $\lnot x\leadsto x$.
+
+Prostor: $x$, aktuální literál, počítadlo – $O(\log n)$. Tedy $\prob{2-UNSAT}\in\NL$, a proto
+
+.equation:
+
+  \prob{2-SAT}\in\coNL=\NL\subseteq\PP .
+
+
+.Concept:
+  title: 'Proč 2 ano a 3 ne?'
+
+  Dvojklauzule je implikace: jakmile nastavíme jeden literál na 0, druhý je "vynucen".emphasize. Rozhodnutí se šíří po
+  cestách a celá formule je graf. U trojklauzule nastavení jednoho literálu na 0 nic nevynutí – zbývají dvě
+  možnosti a vzniká větvení.

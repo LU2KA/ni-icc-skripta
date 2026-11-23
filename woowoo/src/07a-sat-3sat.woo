@@ -1,0 +1,125 @@
+.Section $\prob{SAT}\redp\prob{3-SAT}$
+  label: ch-sat-sat-3-sat
+  pdf_string: 'SAT ≤p 3-SAT'
+
+
+.Remark:
+  title: 'Redukce: $\prob{SAT} \redp \prob{3-SAT}$'
+  label: red-sat3sat
+
+  formule $\varphi$ v CNF $\;\longmapsto\;$ formule $\varphi'$ v 3-CNF
+
+
+"Cíl:".notion z libovolné formule v CNF vyrobit formuli, kde má každá klauzule "přesně 3".emphasize literály,
+aniž bychom změnili splnitelnost. Klauzule zpracujeme každou zvlášť:
+
+.itemize:
+
+  .item:
+
+    "krátké".notion ($k<3$): literál zopakujeme: $(\ell)\mapsto(\ell\lor\ell\lor\ell)$,
+    $(\ell_1\lor\ell_2)\mapsto(\ell_1\lor\ell_2\lor\ell_2)$;
+
+  .item:
+
+    "přesně 3".notion: necháme;
+
+  .item:
+
+    "dlouhé".notion ($k>3$): rozsekneme ji na kousky a „slepíme“ je "novými".emphasize pomocnými proměnnými:
+
+.equation:
+
+  (\ell_1\lor\ell_2\lor\dots\lor\ell_k)\ \longmapsto\
+  (\ell_1\lor\ell_2\lor z_1)\land(\lnot z_1\lor\ell_3\lor z_2)\land(\lnot z_2\lor\ell_4\lor z_3)\land\dots\land(\lnot z_{k-3}\lor\ell_{k-1}\lor\ell_k).
+
+Vznikne $k-2$ klauzulí a $k-3$ nových proměnných (pro každou klauzuli jiných) – velikost formule
+vzroste jen lineárně, redukce je polynomiální.
+
+
+.Figure:
+  label: ch-sat-fig-stafeta-pomocnych-promennych
+
+  !tikz:
+    filename: 07a-sat-3sat-01
+    options: 'node distance=4mm, c/.style={draw,thick,rounded corners=3pt,font=\small,inner sep=5pt,fill=white}'
+
+    \node[c] (c1) {$\ell_1\lor\ell_2\lor z_1$};
+    \node[c,right=of c1] (c2) {$\lnot z_1\lor\ell_3\lor z_2$};
+    \node[c,right=of c2] (c3) {$\lnot z_2\lor\ell_4\lor\ell_5$};
+    \node[c,above=12mm of c2,fill=defc!8,draw=defc] (orig) {$C=(\ell_1\lor\ell_2\lor\ell_3\lor\ell_4\lor\ell_5)$};
+    \draw[flow] (orig) -- (c2);
+    \node[font=\small] at ($(c1)!0.5!(c2)$) {$\land$};
+    \node[font=\small] at ($(c2)!0.5!(c3)$) {$\land$};
+    % pripad l3=1
+    \node[c,below=12mm of c1,fill=acc!10,draw=acc] (d1) {$\ell_1\lor\ell_2\lor\mathbf{1}$};
+    \node[c,right=of d1,fill=acc!10,draw=acc] (d2) {$\mathbf{0}\lor\mathbf{1}\lor 0$};
+    \node[c,right=of d2,fill=acc!10,draw=acc] (d3) {$\mathbf{1}\lor\ell_4\lor\ell_5$};
+    \node[font=\small,anchor=east,acc!70!black,align=right] at ($(d1.west)+(-0.1,0)$) {$\ell_3=1$:\\ $z_1=1,\ z_2=0$};
+    \foreach \i in {1,2,3} {\draw[->,thin,gr] (c\i) -- (d\i);}
+    % pripad vse 0
+    \node[c,below=10mm of d1,fill=rej!8,draw=rej] (e1) {$z_1$};
+    \node[c,below=10mm of d2,fill=rej!8,draw=rej] (e2) {$\lnot z_1\lor z_2$};
+    \node[c,below=10mm of d3,fill=rej!8,draw=rej] (e3) {$\lnot z_2$};
+    \node[font=\small,anchor=east,rej,align=right] at ($(e1.west)+(-0.1,0)$) {všechna $\ell_i=0$:};
+    \draw[->,thick,rej] (e1) -- node[above,font=\scriptsize]{$z_1=1$} (e2);
+    \draw[<-,thick,rej] (e2) -- node[above,font=\scriptsize]{$z_2=0$} (e3);
+    \node[font=\small\bfseries,rej] at ($(e2.south)+(0,-0.35)$) {$\lnot1\lor0=0$ \ spor!};
+
+  .caption:
+
+    Pomocné proměnné fungují jako „štafeta“, která pravdivost jednoho literálu rozešle do všech kousků.
+
+
+.Lemma:
+  title: 'Korektnost rozseknutí'
+  label: lem-3satkor
+
+  Klauzule $C=(\ell_1\lor\dots\lor\ell_k)$ je splněna ohodnocením $h$ $\iff$ $h$ lze rozšířit na $z_1,\dots,z_{k-3}$
+  tak, aby byly splněny všechny klauzule $C'$.
+
+
+.Proof:
+
+  ($\Rightarrow$) Nechť $\ell_i=1$. Nastavíme $z_j=1$ pro $j\le i-2$ a $z_j=0$ pro $j\ge i-1$. Klauzule
+  „nalevo“ od $\ell_i$ splní svůj literál $z_j=1$, klauzule „napravo“ splní $\lnot z_j=1$ a klauzuli
+  obsahující $\ell_i$ splní $\ell_i$ samo. (Pro $k=5$, $i=3$: $z_1=1$, $z_2=0$, viz obrázek.)
+
+
+  ($\Leftarrow$) Nechť jsou všechny $\ell_i=0$. První klauzule vynutí $z_1=1$, druhá pak $z_2=1$,
+  …, až $z_{k-3}=1$. Poslední klauzule $(\lnot z_{k-3}\lor\ell_{k-1}\lor\ell_k)$ je pak nepravdivá. Spor –
+  žádné rozšíření nesplní $C'$.
+
+
+Protože nové proměnné jsou pro každou klauzuli vlastní, rozšíření pro různé klauzule si nepřekážejí,
+a tedy $\varphi$ je splnitelná $\iff$ výsledná 3-CNF je splnitelná. $\prob{3-SAT} \in \NP$ zjevně,
+$\prob{3-SAT}$ je tedy NP-úplný.
+
+
+.Subsection Bonus: proč je Super Mario Bros. NP-těžký? (Aloupis a kol., 2012)
+  label: red-mario
+
+
+.Concept:
+  title: 'Level jako tištěný spoj'
+
+  Redukce ze $\prob{3-SAT}$u: herní mapa se použije jako obvod. Pomocí želv, propastí a rozbitných bloků lze
+  postavit "gadgety".emphasize – volbu hodnoty proměnné (skočit doleva/doprava, cesta zpět není), klauzuli
+  (místnost, kterou „odemkne“ aspoň jeden pravdivý literál) a křížení cest. Level lze dokončit (dojít
+  k vlajce) $\iff$ formule je splnitelná.
+
+
+  .centered:
+
+    !tikz:
+      filename: 07a-sat-3sat-02
+      options: 'node distance=5mm, g/.style={draw,thick,rounded corners=2pt,font=\scriptsize,align=center,minimum height=8mm,fill=white}'
+
+      \node[g,fill=acc!10] (s) {start};
+      \node[g,right=of s] (x1) {volba $x_1$\\ T / F};
+      \node[g,right=of x1] (x2) {volba $x_2$\\ T / F};
+      \node[g,right=of x2] (x3) {\dots};
+      \node[g,right=of x3,fill=intc!10] (cl) {kontrola klauzulí\\ $C_1,\dots,C_m$};
+      \node[g,right=of cl,fill=acc!10] (f) {vlajka};
+      \draw[flow] (s)--(x1); \draw[flow] (x1)--(x2); \draw[flow] (x2)--(x3); \draw[flow] (x3)--(cl); \draw[flow] (cl)--(f);
+      \draw[->,dashed,thick,thmc] (x1.south) to[out=-40,in=-140] node[below,font=\tiny]{„odemkni“ klauzule s $x_1$} (cl.south);

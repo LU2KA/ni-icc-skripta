@@ -1,0 +1,65 @@
+.Chapter (I)LP: modelování, řešiče a optimalizace
+  label: ch-resice-ilp
+
+
+Zdroje: přednáška 8, cvičení 8. Proseminář 8 (ILP řešič) tato kapitola nepokrývá, jeho podklady nemáme k dispozici.
+
+
+.Concept:
+  title: 'Proč to děláme'
+
+  V kapitole .reference:ch-cisla jsme ukázali, že celočíselné lineární programování (ILP) je NP-těžké: převedli jsme
+  na něj Vertex Cover, 3-SAT i 3-barvení (oddíl .reference:ch-cisla-ilp). Tato kapitola se dívá z druhé strany.
+  Když je ILP tak univerzální, jak do něj "přeložit".emphasize praktickou úlohu (modelování) a proč ji pak řešiče
+  v praxi zvládají, přestože jde o NP-těžký problém? Odpověď stojí na "mezi".emphasize: LP relaxace je řešitelná
+  v polynomiálním čase, přes dualitu dává certifikovaný odhad optima a branch & bound s řezy ji využívá k prořezávání.
+  Cvičení 8 pak trénuje přesně to, co chce úloha 3 zápočtového testu: formulovat zadaný problém jako ILP.
+
+
+Přednáška 8 má tři vrstvy a v tomto pořadí jde i kapitola:
+
+.enumerate:
+
+  .item:
+
+    "Modelování".notion (oddíly .reference:ch-resice-ilp-od-slov-k-modelu až .reference:ch-resice-ilp-tsp-a-sklady):
+    jak ze slovního zadání dostat proměnné, omezení a účelovou funkci a jaké triky převedou logiku, pevné náklady
+    nebo maximum na lineární nerovnice.
+
+  .item:
+
+    "Mez".notion (oddíly .reference:ch-resice-ilp-lp-relaxace-a-dualita a .reference:ch-resice-ilp-sila-formulace):
+    LP relaxace, dualita a integrality gap; proč na formulaci záleží, i když dvě formulace mají stejná celočíselná řešení.
+
+  .item:
+
+    "Řešič".notion (oddíly .reference:ch-resice-ilp-branch-and-bound až .reference:ch-resice-ilp-resice-v-praxi):
+    branch & bound, řezy, separace a branch & cut; co je uvnitř moderních řešičů a kdy po ILP sáhnout.
+
+
+.Figure:
+  label: ch-resice-ilp-fig-plan
+
+  !tikz:
+    filename: 15-ilp-resice-01
+    options: 'node distance=6mm and 13mm'
+
+    \node[blokd,text width=3.1cm] (m) {\textbf{zadání slovy}\\[1pt]{\scriptsize rozhodnutí, podmínky, cíl}};
+    \node[bloka,text width=3.1cm,right=of m] (i) {\textbf{ILP model}\\[1pt]{\scriptsize proměnné, omezení, cíl}};
+    \node[bloki,text width=3.1cm,right=of i] (r) {\textbf{řešič}\\[1pt]{\scriptsize B\&B, řezy, separace}};
+    \node[blokr,text width=3.1cm,right=of r] (o) {\textbf{řešení + důkaz}\\[1pt]{\scriptsize incumbent, mez, gap $=0$}};
+    \draw[flow] (m)--(i) node[midway,above,font=\scriptsize]{model};
+    \draw[flow] (i)--(r) node[midway,above,font=\scriptsize]{soubor};
+    \draw[flow] (r)--(o);
+    \node[note,below=4mm of r] (lp) {LP relaxace v $\PP$ $\Rightarrow$ mez na OPT};
+    \draw[flow,dashed] (lp)--(r);
+
+  .caption:
+
+    Cesta úlohy od zadání k dokázanému optimu. Oddíly o modelování se týkají prvních dvou rámečků, oddíly o mezi
+    a řešičích zbylých dvou.
+
+
+Úloha 3 zápočtového testu („Formulace jako ILP“) chce proměnné s významem, všechna omezení s tím, co která skupina
+zajišťuje, účelovou funkci a velikost programu. Postup na papíře je v rámečku na začátku oddílu .reference:ch-resice-ilp-cviceni-8,
+vzorové řešení úlohy z ukázkového testu je v příloze .reference:ch-ukazkovy.

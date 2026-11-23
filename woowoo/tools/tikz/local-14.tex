@@ -1,0 +1,62 @@
+% Makra a styly obrazku kapitoly 14 (SAT: algoritmy, kodovani a resice)
+\tikzset{
+  % literal / promenna jako vrchol (implikacni grafy, propagace)
+  lit/.style={circle,draw=defc!70,fill=white,thick,minimum size=8mm,inner sep=0pt,font=\small},
+  litT/.style={lit,draw=tT!80!black,fill=tT!22},
+  litF/.style={lit,draw=gr,fill=black!5,text=black!55},
+  litX/.style={lit,draw=rej,fill=rej!12,very thick},
+  litD/.style={lit,draw=intc!90!black,fill=hl!70},
+  % hradla a uzly spojeni (Horn, Tseitin)
+  junc/.style={circle,fill=black!70,inner sep=0pt,minimum size=1.6mm},
+  gate/.style={draw=defc,fill=defc!7,thick,rounded corners=2pt,minimum width=7mm,minimum height=7mm,inner sep=1pt,font=\small},
+  imp/.style={->,thick,draw=black!65},
+  impT/.style={->,very thick,draw=tT!80!black},
+  % mrizka promennych x_{v,c}, p_{v,i}, s_{i,j}
+  gcell/.style={draw=black!45,minimum width=8mm,minimum height=6.5mm,inner sep=0pt,font=\scriptsize,fill=white},
+  gcellT/.style={gcell,fill=tT!28},
+  gcellF/.style={gcell,fill=black!6,text=black!45},
+  % strom rozhodnuti DPLL
+  dn/.style={circle,draw=black!70,fill=white,thick,minimum size=6.5mm,inner sep=0pt,font=\small},
+  dconf/.style={dn,draw=rej,fill=rej!12,text=rej},
+  dok/.style={dn,draw=acc,fill=acc!12,text=acc},
+  dlab/.style={font=\scriptsize,inner sep=1pt,fill=white},
+}
+% \chSATdot{x}{y}{barva}{text}: barevne kolecko s cislem (Schuruv problem)
+\newcommand{\chSATdot}[4]{\node[circle,draw=black!70,fill=#3,thick,minimum size=6.5mm,inner sep=0pt,font=\small] at (#1,#2) {#4};}
+% \chSATcirc{a1}{b1}{a2}{b2}{g1}{g2}{g}: obvod (a1 AND b1) OR (a2 AND b2) s popisky vodicu
+% (prazdny argument = bez hodnoty); vystup vede do "= 1"
+\newcommand{\chSATcirc}[7]{%
+  \node[font=\small,anchor=east] (ia1) at (0,3.0) {$a_1$};
+  \node[font=\small,anchor=east] (ib1) at (0,2.2) {$b_1$};
+  \node[font=\small,anchor=east] (ia2) at (0,1.0) {$a_2$};
+  \node[font=\small,anchor=east] (ib2) at (0,0.2) {$b_2$};
+  \node[gate] (g1) at (1.7,2.6) {$\land$};
+  \node[gate] (g2) at (1.7,0.6) {$\land$};
+  \node[gate] (go) at (3.7,1.6) {$\lor$};
+  \node[font=\scriptsize,above=0pt of g1,defc] {$g_1$};
+  \node[font=\scriptsize,below=0pt of g2,defc] {$g_2$};
+  \node[font=\scriptsize,above=0pt of go,defc] {$g$};
+  \draw[imp] (ia1.east)--node[above,font=\scriptsize,pos=0.4]{#1}(g1.west|-0,2.8);
+  \draw[imp] (ib1.east)--node[below,font=\scriptsize,pos=0.4]{#2}(g1.west|-0,2.4);
+  \draw[imp] (ia2.east)--node[above,font=\scriptsize,pos=0.4]{#3}(g2.west|-0,0.8);
+  \draw[imp] (ib2.east)--node[below,font=\scriptsize,pos=0.4]{#4}(g2.west|-0,0.4);
+  \draw[imp] (g1.east)--node[above right,font=\scriptsize,pos=0.3,inner sep=1pt]{#5}(go.west|-0,1.8);
+  \draw[imp] (g2.east)--node[below right,font=\scriptsize,pos=0.3,inner sep=1pt]{#6}(go.west|-0,1.4);
+  \draw[->,very thick,tT!80!black] (go.east)--node[above,font=\scriptsize]{#7}++(1.0,0) node[right,font=\small,black] {$=1$};
+}
+% \chSATperm{n}{radky}{soucty radku}{soucty sloupcu}: matice p_{v,i} (radek = vrchol, sloupec = misto)
+% radky "r/{a,b,...}", soucty "r/s/barva" a "i/s/barva"; levy horni roh bunky v_1, i=1 je kolem (0.85,0)
+\newcommand{\chSATperm}[4]{%
+  \foreach \c in {1,...,#1} {\node[font=\footnotesize] at (\c*0.85,0.55) {$i{=}\c$};}
+  \node[font=\footnotesize] at ({(#1+1)*0.85},0.55) {$\Sigma$};
+  \node[font=\footnotesize,anchor=east] at (0.4,{-0.7*#1}) {$\Sigma$};
+  \foreach \r/\row in {#2} {
+    \node[font=\footnotesize,anchor=east] at (0.4,{-0.7*(\r-1)}) {$v_\r$};
+    \foreach \x [count=\c] in \row {
+      \ifnum\x=1 \node[gcellT,font=\footnotesize] at (\c*0.85,{-0.7*(\r-1)}) {1};
+      \else \node[gcellF,font=\footnotesize] at (\c*0.85,{-0.7*(\r-1)}) {0}; \fi
+    }
+  }
+  \foreach \r/\s/\col in {#3} {\node[font=\footnotesize\bfseries,text=\col] at ({(#1+1)*0.85},{-0.7*(\r-1)}) {\s};}
+  \foreach \c/\s/\col in {#4} {\node[font=\footnotesize\bfseries,text=\col] at (\c*0.85,{-0.7*#1}) {\s};}
+}

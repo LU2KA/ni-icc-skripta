@@ -1,0 +1,336 @@
+.Section Branch & Bound
+  label: ch-resice-ilp-branch-and-bound
+
+
+Zaokrouhlit LP řešení nestačí (oddíl .reference:ch-resice-ilp-lp-relaxace-a-dualita). Řešiče proto prohledávají
+strom jako DPLL u SATu: větví se na proměnné a podstrom se zahodí, když v něm řešení být nemůže. Novinka oproti
+DPLL je "LP mez".notion: zahodit smíme i podstrom, kde řešení jsou, ale žádné není lepší než to, co už máme.
+
+
+.Subsection Algoritmus: větvení jako DPLL, mez navíc
+  label: ch-resice-ilp-vetveni-jako-dpll
+
+
+Algoritmus si drží nejlepší známé celočíselné řešení, tzv. "incumbent".notion, s hodnotou $z$; na začátku $z=-\infty$.
+Popis je pro maximalizaci.
+
+
+.Algorithm:
+  title: 'Branch & bound (max)'
+  label: ch-resice-ilp-alg-branch-and-bound
+
+  !pseudocode:
+
+    \REQUIRE ILP $\max c^Tx$ při $Ax\le b$, $x\in\mathbb Z^n$
+    \STATE $z\gets-\infty$; otevřené uzly $\gets\{$kořen = celé ILP$\}$
+    \WHILE{existuje otevřený uzel $u$}
+      \STATE vyřeš LP relaxaci uzlu $u$ $\to$ mez $b$, řešení $x^*$
+      \IF{LP je nepřípustné nebo $b\le z$}
+        \STATE prořízni $u$ \COMMENT{lepší řešení v podstromu není}
+      \ELSIF{$x^*$ je celočíselné}
+        \STATE incumbent $\gets x^*$, $z\gets b$
+      \ELSE
+        \STATE zvol $j$ s neceločíselným $x^*_j$
+        \STATE vytvoř potomky $u\wedge(x_j\le\lfloor x^*_j\rfloor)$ a $u\wedge(x_j\ge\lceil x^*_j\rceil)$
+      \ENDIF
+    \ENDWHILE
+    \RETURN incumbent (s hodnotou $z$ je to optimum)
+
+
+"Proč je to správně.".notion Větvení nic celočíselného neztratí: celé číslo $x_j$ splňuje buď $x_j\le\lfloor x^*_j\rfloor$,
+nebo $x_j\ge\lceil x^*_j\rceil$. Prořezání je bezpečné: LP mez uzlu je horní mez všech celočíselných řešení v jeho
+podstromu, a je-li $b\le z$, žádné z nich není lepší než incumbent. Potomci mají menší polyedr, takže jejich mez je
+nejvýš mez rodiče a strom je konečný (pro omezený polyedr).
+
+
+.Figure:
+  label: ch-resice-ilp-fig-vetveni
+
+  !tikz:
+    filename: 15f-branch-and-bound-01
+    options: 'x=0.8cm,y=0.8cm'
+
+    \fill[defc!6] (0,0)--(5,0)--(3.75,2.25)--(0,6)--cycle;
+    \fill[defc!18] (0,0)--(3,0)--(3,3)--(0,6)--cycle;
+    \fill[defc!18] (4,0)--(5,0)--(4,1.8)--cycle;
+    \draw[defc,thick] (5,0)--(3.75,2.25)--(0,6);
+    \draw[warnc,dashed] (3,0)--(3,3.4) (4,0)--(4,3.4);
+    \draw[osa] (-0.2,0)--(6.2,0) node[right,font=\footnotesize]{$x$};
+    \draw[osa] (0,-0.2)--(0,6.8) node[above,font=\footnotesize]{$y$};
+    \foreach \x in {0,...,5} \foreach \y in {0,...,6} {
+      \pgfmathparse{(\x+\y<=6) && (9*\x+5*\y<=45) ? 1 : 0}
+      \ifnum\pgfmathresult=1 \node[ipt] at (\x,\y) {}; \else \node[ipto] at (\x,\y) {}; \fi}
+    \node[warnc,font=\small] at (3.75,2.25) {$\times$};
+    \node[warnc,font=\footnotesize,anchor=west] at (3.95,2.6) {$x^*_1=3{,}75$};
+    \node[font=\footnotesize] at (1.5,-0.7) {$x\le3$};
+    \node[font=\footnotesize] at (4.6,-0.7) {$x\ge4$};
+
+  .caption:
+
+    Větvení na $x$ pro $\max 8x+5y$ při $x+y\le6$, $9x+5y\le45$: LP optimum $(3{,}75;\,2{,}25)$ má neceločíselné $x$.
+    Potomci $x\le3$ a $x\ge4$ (tmavší oblasti) vyřežou pás $3<x<4$, ve kterém žádný celočíselný bod neleží.
+
+
+.Subsection Ukázka na malém příkladu
+  label: ch-resice-ilp-ukazka-na-malem-prikladu
+
+
+.Example:
+  title: 'Branch & bound krok za krokem'
+  label: ch-resice-ilp-ex-branch-and-bound
+
+  $\max\ 8x+5y$ při $x+y\le6$, $9x+5y\le45$, $x,y\ge0$ celá. Uzly zpracováváme v pořadí ze slajdu.
+
+  .enumerate:
+
+    .item:
+
+      "Kořen".notion ($z=-\infty$). LP optimum v průsečíku $x+y=6$ a $9x+5y=45$: $(3{,}75;\,2{,}25)$, mez
+      $8\cdot3{,}75+5\cdot2{,}25=41{,}25$. Neceločíselné $x$ $\Rightarrow$ větvíme $x\le3$ / $x\ge4$.
+
+    .item:
+
+      "$x\le3$:".notion LP optimum $(3,3)$ s hodnotou 39, celočíselné $\Rightarrow$ incumbent $z=39$.
+
+    .item:
+
+      "$x\ge4$:".notion LP optimum $(4;\,1{,}8)$ (z $9\cdot4+5y=45$), mez $32+9=41>39$ $\Rightarrow$ větvíme na $y$:
+      $y\ge2$ / $y\le1$.
+
+    .item:
+
+      "$x\ge4$, $y\ge2$:".notion $9\cdot4+5\cdot2=46>45$ – LP je nepřípustné $\Rightarrow$ prořízni.
+
+    .item:
+
+      "$x\ge4$, $y\le1$:".notion LP optimum $(\tfrac{40}9;\,1)\approx(4{,}44;\,1)$, mez $\tfrac{365}{9}\approx40{,}56>39$
+      $\Rightarrow$ větvíme $x\le4$ / $x\ge5$.
+
+    .item:
+
+      "$x\le4$ (tj. $x=4$, $y\le1$):".notion optimum $(4,1)$ s hodnotou $37\le39$ $\Rightarrow$ prořízni.
+
+    .item:
+
+      "$x\ge5$:".notion z $9x+5y\le45$ je $x=5$, $y=0$; hodnota 40, celočíselné a $40>39$ $\Rightarrow$ nový
+      incumbent $z=40$.
+
+  Žádný otevřený uzel nezbyl $\Rightarrow$ "optimum je 40 v bodě $(5,0)$".notion – daleko od LP optima
+  $(3{,}75;\,2{,}25)$. (Všechny LP hodnoty i celočíselné optimum jsme ověřili skriptem.)
+
+
+.Figure:
+  label: ch-resice-ilp-fig-bb-strom
+
+  !tikz:
+    filename: 15f-branch-and-bound-02
+    options: 'level distance=16mm, level 1/.style={sibling distance=52mm}, level 2/.style={sibling distance=38mm}, level 3/.style={sibling distance=34mm}, edge from parent/.style={draw=black!60,thick}'
+
+    \node[bbn] {\textcircled{\tiny 1} $(3{,}75;\ 2{,}25)$\\ $41{,}25$}
+      child {node[bbinc] {\textcircled{\tiny 2} $x\le3$: $(3,3)$\\ $39$}}
+      child {node[bbn] {\textcircled{\tiny 3} $x\ge4$: $(4;\ 1{,}8)$\\ $41$}
+        child {node[bbn] {\textcircled{\tiny 5} $y\le1$: $(4{,}44;\ 1)$\\ $40{,}56$}
+          child {node[bbcut] {\textcircled{\tiny 6} $x\le4$: $(4,1)$\\ $37$ – prořez}}
+          child {node[bbinc] {\textcircled{\tiny 7} $x\ge5$: $(5,0)$\\ $\mathbf{40}$}}}
+        child {node[bbcut] {\textcircled{\tiny 4} $y\ge2$\\ nepřípustné}}};
+
+  .caption:
+
+    Strom branch & bound; čísla v kroužku jsou pořadí zpracování, v uzlu je LP optimum a mez. Modře uzly, kde
+    vznikl incumbent, šedě prořezané uzly.
+
+
+.Subsection Mez, gap a certifikát optimality
+  label: ch-resice-ilp-mez-gap-a-certifikat
+
+
+Během běhu známe (pro max) dvě čísla:
+
+.itemize:
+
+  .item:
+
+    "incumbent $z$".notion – hodnota nejlepšího nalezeného řešení, "dolní mez".emphasize na OPT;
+
+  .item:
+
+    "globální mez $B$".notion – největší mez $b$ přes otevřené uzly (dosud nevyřešený uzel dědí mez rodiče),
+    "horní mez".emphasize na OPT.
+
+
+.Definition:
+  title: 'Optimality gap'
+  label: ch-resice-ilp-def-gap
+
+  .equation:
+
+    \text{gap}=\frac{B-z}{|z|} .
+
+  Platí $z\le\mathrm{OPT}\le B$. "Gap $=0$ je certifikát optimality".notion; po časovém limitu máme aspoň garanci
+  „nejhůř o gap·100 % od optima“.
+
+
+.Example:
+  title: 'Gap v příkladu výše'
+  label: ch-resice-ilp-ex-gap
+
+  Stav po zpracování každého uzlu (hodnoty spočítané z čísel ve stromu):
+
+  .table:
+    columns: 'clccc'
+
+    .row:
+      head: true
+
+      uzel
+
+      co se stalo
+
+      $z$
+
+      $B$
+
+      gap
+
+    .row:
+
+      1
+
+      kořen, větvení
+
+      $-\infty$
+
+      $41{,}25$
+
+      –
+
+    .row:
+
+      2
+
+      incumbent 39
+
+      39
+
+      $41{,}25$
+
+      $5{,}8\,\%$
+
+    .row:
+
+      3
+
+      mez 41, větvení
+
+      39
+
+      41
+
+      $5{,}1\,\%$
+
+    .row:
+
+      4
+
+      nepřípustné
+
+      39
+
+      41
+
+      $5{,}1\,\%$
+
+    .row:
+
+      5
+
+      mez $40{,}56$, větvení
+
+      39
+
+      $40{,}56$
+
+      $4{,}0\,\%$
+
+    .row:
+
+      6
+
+      prořez
+
+      39
+
+      $40{,}56$
+
+      $4{,}0\,\%$
+
+    .row:
+
+      7
+
+      incumbent 40, nic otevřeného
+
+      40
+
+      40
+
+      $0$
+
+  Po uzlu 2 bychom při zastavení věděli „řešení s hodnotou 39 je nejhůř o 5,8 % od optima“, protože $(41{,}25-39)/39\approx0{,}058$.
+
+
+.Figure:
+  label: ch-resice-ilp-fig-gap
+
+  !tikz:
+    filename: 15f-branch-and-bound-03
+    options: 'x=1.2cm,y=1.5cm'
+
+    \fill[black!8] (2,0.0)--(2,2.25)--(3,2.25)--(3,2.0)--(5,2.0)--(5,1.556)--(7,1.556)--(7,0.0)--cycle;
+    \draw[osa] (0.5,-0.55)--(7.6,-0.55) node[right,font=\footnotesize]{uzel};
+    \draw[osa] (0.5,-0.55)--(0.5,2.7);
+    \foreach \v/\l in {0/39,1/40,2/41} {\draw (0.42,\v)--(0.58,\v); \node[font=\footnotesize,left] at (0.42,\v) {\l};}
+    \foreach \n in {1,...,7} {\draw (\n,-0.63)--(\n,-0.47); \node[font=\footnotesize,below] at (\n,-0.63) {\n};}
+    \draw[warnc,very thick] (1,2.25)--(3,2.25)--(3,2.0)--(5,2.0)--(5,1.556)--(7,1.556)--(7,1.0);
+    \draw[defc,very thick] (2,0.0)--(7,0.0)--(7,1.0);
+    \node[warnc,font=\footnotesize,anchor=south] at (2,2.25) {mez $B$};
+    \node[defc,font=\footnotesize,anchor=north] at (4.5,0.0) {incumbent $z$};
+    \node[font=\footnotesize] at (4,1.0) {gap};
+
+  .caption:
+
+    Globální mez $B$ (červeně) shora klesá, incumbent $z$ (modře) zdola roste. Šedá plocha je gap; v uzlu 7
+    se obě čísla potkají v hodnotě 40.
+
+
+.Remark:
+  title: 'Proč na mezi stojí celý branch & bound'
+
+  Prořezává se, když mez $\le$ incumbent – "bez dobré meze žádné prořezávání".notion. Silnější relaxace (oddíl
+  .reference:ch-resice-ilp-sila-formulace) $\Rightarrow$ menší gap $\Rightarrow$ menší strom. Proto u silné
+  formulace skladů nemusí řešič větvit vůbec: LP relaxace kořene je celočíselná.
+
+
+.Warning:
+  title: 'Typické chyby'
+
+  .itemize:
+
+    .item:
+
+      "Prořezávání ve špatném směru.".notion Pro max se prořezává při $b\le z$, pro min při $b\ge z$ (mez je dolní,
+      incumbent horní).
+
+    .item:
+
+      "Prořezat uzel s celočíselným LP řešením, ale nepřevzít ho.".notion Celočíselné $x^*$ s $b>z$ je nový
+      incumbent; uzel se dál nevětví, protože lepší řešení v podstromu být nemůže.
+
+    .item:
+
+      "Větvit na celočíselnou proměnnou.".notion Větví se na proměnnou s neceločíselnou hodnotou; potomci
+      $x_j\le\lfloor x^*_j\rfloor$ a $x_j\ge\lceil x^*_j\rceil$ pak oba vyloučí současné $x^*$.
+
+    .item:
+
+      "Zapomenout na omezení předků.".notion Uzel $x\ge5$ v příkladu má i omezení $x\ge4$ a $y\le1$ z cesty od kořene.

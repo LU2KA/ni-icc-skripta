@@ -1,0 +1,65 @@
+.Section Problém zastavení
+  label: ch-vycisl-problem-zastaveni
+
+
+.Definition:
+  title: 'Problém $\prob{HaltingProblem}$'
+  label: prob-halt
+
+  "Vstup:".notion popis TS $\enc{M}$ a vstupní řetězec $x$.
+
+
+  "Otázka:".notion zastaví se výpočet $M$ na vstupu $x$?
+
+
+.Theorem:
+  title: 'O problému zastavení'
+  label: thm-halting
+
+  Jazyk $\mathrm{Halt}=\{\enc{M,x}\mid M \text{ zastaví na } x\}$ je rekurzivně spočetný, ale
+  není rekurzivní.
+
+
+.Proof:
+  label: red-uchalt
+
+  "Rekurzivně spočetný:".emphasize univerzální stroj $U$ simuluje $M$ na $x$, a pokud simulace
+  skončí, přijme. (Pokud $M$ cyklí, cyklí i $U$ – to je u přijímání povoleno.)
+
+
+  "Redukce s orákulem:".notion $\prob{UC}$ (výpočet funkce) $\to$ $\prob{Halt}$. Jak: Kdyby existoval stroj $H$ rozhodující $\prob{Halt}$, spočítali bychom s jeho pomocí $\prob{UC}$ – to ale nejde, takže ani $H$ neexistuje.
+
+
+  "Není rekurzivní:".emphasize kdyby existoval stroj $H$, který $\prob{Halt}$ rozhoduje (a vždy
+  zastaví), uměli bychom spočítat $\prob{UC}$:
+
+
+  .centered:
+
+    !tikz:
+      filename: 02b-problem-zastaveni-01
+      options: 'node distance=5mm and 7mm'
+
+      \node[blok] (a) {vstup $\alpha$};
+      \node[blokd,right=of a] (b) {je $\alpha$ zápis\\ DTS?};
+      \node[blokd,right=of b] (c) {$H(\alpha,\alpha)$:\\ zastaví $M_\alpha$ na $\alpha$?};
+      \node[blokd,right=of c] (d) {simuluj $M_\alpha(\alpha)$\\ (skončí!)};
+      \node[blok,below=8mm of b] (o1) {výstup 1};
+      \node[blok,below=8mm of d] (o2) {$=1$ ? výstup 0\\ jinak výstup 1};
+      \draw[flow] (a)--(b);
+      \draw[flow] (b)-- node[above,font=\scriptsize]{ano} (c);
+      \draw[flow] (c)-- node[above,font=\scriptsize]{ano} (d);
+      \draw[flow] (b)-- node[left,font=\scriptsize]{ne} (o1);
+      \draw[flow] (c.south) |- node[pos=0.3,right,font=\scriptsize]{ne} (o1.east);
+      \draw[flow] (d)--(o2);
+
+
+  Tento postup vždy skončí a počítá $\prob{UC}$, což je ve sporu s větou .reference:thm-ucnc.
+
+
+.Corollary:
+  title: 'Pro praxi'
+  label: cor-analyzator
+
+  Nelze napsat univerzální analyzátor kódu, který by pro "libovolný".emphasize program s jistotou
+  určil, zda nespadne do nekonečného cyklu.

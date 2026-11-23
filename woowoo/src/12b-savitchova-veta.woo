@@ -1,0 +1,179 @@
+
+
+.Section Savitchova věta
+  label: ch-prostor-savitchova-veta
+
+
+.Theorem:
+  title: 'Walter Savitch, 1970'
+  label: thm-savitch
+
+  Pro každou prostorově konstruovatelnou funkci $S(n)\ge\log n$ platí
+
+  .equation:
+
+    \NSPACE(S(n))\subseteq\DSPACE(S^2(n)).
+
+  Speciálně $\PSPACE=\NPSPACE$.
+
+
+Příplatek za odstranění nedeterminismu v prostoru je pouze "kvadratický".emphasize (na rozdíl od času, kde věříme, že
+$\PP\neq\NP$ a příplatek je exponenciální). Je-li $S(n)$ polynom, je i $S^2(n)$ polynom.
+
+
+.Remark:
+  title: 'Proč „prostorově konstruovatelná“?'
+
+  Simulující stroj si bude muset hlídat paměťový limit a nastavit počáteční hloubku rekurze (číslo $M$ níže).
+  Kdyby samotné zjištění „kolik je $S(n)$“ sežralo moc paměti, celá věta by padla.
+
+
+.Subsection Problém: hledání cesty v grafu konfigurací
+  label: ch-prostor-problem-hledani-cesty-v-grafu-konfiguraci
+
+
+Nechť $N$ je nedeterministický stroj, který řeší zvolený problém v prostoru $S(n)$. Chceme postavit
+deterministický stroj $D$, který ho nasimuluje v prostoru $S^2(n)$. Výpočet stroje $N$ si představíme jako obrovský
+orientovaný "graf konfigurací".emphasize:
+
+.itemize:
+
+  .item:
+
+    vrcholy jsou konfigurace stroje $N$; zápis jedné zabere $O(S(n))$ paměti,
+
+  .item:
+
+    hrana $C\to C'$, pokud z $C$ lze přejít do $C'$ jedním krokem $N$ (z $C$ může vést víc hran – nedeterminismus),
+
+  .item:
+
+    vrcholů je $M=2^{O(S(n))}$ – graf tedy "nemůžeme".emphasize celý sestrojit.
+
+Stroj $N$ přijme vstup právě tehdy, když v grafu existuje orientovaná cesta z počáteční konfigurace
+$C_{\mathrm{start}}$ do přijímající $C_{\mathrm{accept}}$, a to délky nejvýše $M$. (Bez újmy na obecnosti je
+přijímající konfigurace jediná: před přijetím $N$ smaže pásku a vrátí hlavy na začátek.)
+
+
+.Warning:
+  title: 'Proč nestačí BFS ani DFS'
+
+  Klasické algoritmy optimalizují čas, ale plýtvají prostorem: BFS i DFS si potřebují pamatovat, které vrcholy už
+  navštívily, aby se nezacyklily. To zabere paměť $O(M)=2^{O(S(n))}$ – exponenciální prostor. My ho potřebujeme
+  srazit na $O(S^2(n))$.
+
+
+.Subsection Savitchova myšlenka: rozděl a panuj
+  label: ch-prostor-savitchova-myslenka-rozdel-a-panuj
+
+
+Místo uchovávání celé cesty vytvoříme deterministickou funkci $\mathrm{REACH}(C_A,C_B,t)$, která odpoví TRUE,
+pokud lze přejít z $C_A$ do $C_B$ v nejvýše $t$ krocích.
+
+
+"Rekurzivní rozklad.".notion Pro $t\ge2$ se z $C_A$ do $C_B$ dostaneme za $\le t$ kroků právě tehdy, když
+existuje „prostřední“ konfigurace $C_{\mathrm{mid}}$ taková, že lze dojít z $C_A$ do $C_{\mathrm{mid}}$ za
+$\le\lceil t/2\rceil$ kroků a z $C_{\mathrm{mid}}$ do $C_B$ za $\le\lfloor t/2\rfloor$ kroků.
+Základ ($t=1$): $C_A=C_B$, nebo z $C_A$ vznikne $C_B$ jedním krokem – ověříme přímo podle přechodové funkce.
+
+
+"Klíčový trik (recyklace paměti).".notion Nejprve otestujeme cestu do $C_{\mathrm{mid}}$. Pokud existuje,
+"zapomeneme".emphasize vše, co jsme k jejímu hledání použili, a uvolněný prostor použijeme k ověření cesty z
+$C_{\mathrm{mid}}$ do $C_B$.
+
+
+.Algorithm:
+  title: '$\mathrm{REACH}(C_A,C_B,t)$'
+
+  !pseudocode:
+
+    \IF{$t=1$}
+      \RETURN $(C_A=C_B)$ \textbf{or} (z $C_A$ lze dojít do $C_B$ jedním krokem $N$)
+    \ENDIF
+    \FOR{každou konfiguraci $C_{\mathrm{mid}}$ velikosti $\le S(n)$}
+      \IF{$\mathrm{REACH}(C_A,C_{\mathrm{mid}},\lceil t/2\rceil)$ \textbf{and} $\mathrm{REACH}(C_{\mathrm{mid}},C_B,\lfloor t/2\rfloor)$}
+        \RETURN TRUE
+      \ENDIF
+    \ENDFOR
+    \RETURN FALSE
+
+  "Hlavní program:".notion vygeneruj $C_{\mathrm{start}}$ a $C_{\mathrm{accept}}$, odpověz
+  $\mathrm{REACH}(C_{\mathrm{start}},C_{\mathrm{accept}},M)$, kde $M=2^{d\cdot S(n)}$.
+  Počítadlo $t$ ukládáme binárně, takže jeho zápis zabere jen $\log_2 M=d\cdot S(n)$ bitů.
+
+
+.Figure:
+  label: fig-savitchsim
+
+  !tikz:
+    filename: 12b-savitchova-veta-01
+    options: 'x=1cm,y=1cm,cf/.style={circle,draw=black!70,fill=white,thick,minimum size=7mm,inner sep=0pt,font=\scriptsize}'
+
+    \savrow{0cm}{Krok 1: $\mathrm{REACH}(C_1,C_4,4)$, cyklus zkouší $C_{\mathrm{mid}}=C_2$}{2}{$(C_1,C_4)$ & 4 & $C_2$}{\multicolumn{3}{c|}{\color{gr}(prázdné)}}
+    \savrow{-2.1cm}{Krok 2: zanoření do levé větve $\mathrm{REACH}(C_1,C_2,2)$}{1}{$(C_1,C_4)$ & 4 & $C_2$}{$(C_1,C_2)$ & 2 & $C_1$}
+    \savrow{-4.2cm}{Krok 3: vráceno TRUE, patro 1 \textbf{přepsáno} pravou větví $\mathrm{REACH}(C_2,C_4,2)$}{3}{$(C_1,C_4)$ & 4 & $C_2$}{$(C_2,C_4)$ & 2 & $C_3$}
+
+  .caption:
+
+    Simulace REACH na grafu $C_1\to C_2\to C_3\to C_4$. Hloubka rekurze je $\log_2 4=2$; každé patro zásobníku
+    drží $(C_A,C_B,t,C_{\mathrm{mid}})$. Žlutě právě zkoušený prostředek. V kroku~3 se paměť patra~1 recykluje.
+
+
+.Proof:
+  title: 'Analýza prostoru (důkaz Savitchovy věty)'
+
+  "Korektnost".notion plyne z rekurzivního rozkladu (indukcí podle $t$).
+  "Hloubka rekurze:".notion v každém zanoření se $t$ zmenší na polovinu, počáteční $t=M=2^{O(S(n))}$, maximální hloubka
+  je tedy $\log_2 M=O(S(n))$.
+  "Paměť na jedno patro:".notion argumenty volání $(C_A,C_B,t)$ a lokální proměnná $C_{\mathrm{mid}}$ – zápis
+  konfigurace i čísla $t$ vyžaduje $O(S(n))$ bitů.
+  "Celkem:".notion protože prostor recyklujeme (druhé rekurzivní volání se spustí až po úplném smazání stop prvního),
+  paměť se nesčítá „do šířky“, ale jen do hloubky zásobníku:
+
+  .equation:
+
+    \text{hloubka}\times\text{paměť na patro}=O(S(n))\cdot O(S(n))=O(S^2(n)).
+
+
+.Figure:
+  label: fig-savitch-strom
+
+  !tikz:
+    filename: 12b-savitchova-veta-02
+    options: 'x=1cm,y=1cm,rn/.style={circle,thick,minimum size=6.5mm,inner sep=0pt,font=\scriptsize},rcur/.style={rn,draw=black!85,fill=hl,very thick},rdone/.style={rn,draw=black!40,fill=black!12,text=black!55},rtodo/.style={rn,draw=black!35,dashed,fill=white,text=black!55}'
+
+    % strom volani REACH pro t=8 (jedna pevna volba prostredku v kazdem uzlu)
+    \node[rcur] (r) at (3.5,0) {8};
+    \node[rdone] (l0) at (1.5,-1.2) {4}; \node[rcur] (l1) at (5.5,-1.2) {4};
+    \node[rdone] (m0) at (0.5,-2.4) {2}; \node[rdone] (m1) at (2.5,-2.4) {2};
+    \node[rcur] (m2) at (4.5,-2.4) {2}; \node[rtodo] (m3) at (6.5,-2.4) {2};
+    \foreach \i in {0,...,4} \node[rdone] (k\i) at (\i,-3.6) {1};
+    \node[rcur] (k5) at (5,-3.6) {1};
+    \foreach \i in {6,7} \node[rtodo] (k\i) at (\i,-3.6) {1};
+    \draw[thick,black!35] (r)--(l0) (l0)--(m0) (l0)--(m1) (l1)--(m3) (m0)--(k0) (m0)--(k1) (m1)--(k2) (m1)--(k3) (m2)--(k4) (m3)--(k6) (m3)--(k7);
+    \draw[very thick,black!85] (r)--(l1) (l1)--(m2) (m2)--(k5);
+    \foreach \pp/\tv in {0/8,1/4,2/2,3/1} \node[font=\scriptsize,anchor=east] at (-0.5,-1.2*\pp) {patro \pp: $t=\tv$};
+    \draw[<->,thick,intc] (7.7,0)--node[right,font=\scriptsize,align=left]{hloubka\\ $\log_2 8=3$}(7.7,-3.6);
+    % zasobnik
+    \node[anchor=north west,font=\scriptsize] at (9.4,0.35) {\begin{tabular}{|c|c|l|}\hline patro & $t$ & větev\\\hline 0 & 8 & kořen\\\hline 1 & 4 & pravá\\\hline 2 & 2 & levá\\\hline 3 & 1 & pravá\\\hline\end{tabular}};
+    \node[font=\scriptsize\bfseries,anchor=south west] at (9.4,0.35) {na pásce (zásobník)};
+    \node[font=\scriptsize,align=left,anchor=north west] at (9.4,-2.2) {jen 4 rámce po $O(S(n))$ bitech,\\ ne 15 uzlů stromu};
+    % legenda
+    \node[rcur,minimum size=4mm] at (0,-4.7) {}; \node[font=\scriptsize,anchor=west] at (0.3,-4.7) {právě na zásobníku};
+    \node[rdone,minimum size=4mm] at (3.6,-4.7) {}; \node[font=\scriptsize,anchor=west] at (3.9,-4.7) {hotovo, paměť přepsána};
+    \node[rtodo,minimum size=4mm] at (7.9,-4.7) {}; \node[font=\scriptsize,anchor=west] at (8.2,-4.7) {teprve přijde};
+
+  .caption:
+
+    Strom rekurzivních volání $\mathrm{REACH}$ pro $t=8$ (v každém uzlu jen jedna volba $C_{\mathrm{mid}}$;
+    cyklus přes další prostředky opakuje celé podstromy, hloubku ale nemění). Číslo v uzlu je $t$, levé dítě
+    se počítá před pravým. Zachycen okamžik, kdy se vyhodnocuje šestý list. "Všimni si:".emphasize paměť
+    odpovídá jedné cestě od kořene (hloubka $\log_2 t$), ne velikosti stromu – hotové větve se smazaly
+    a jejich místo převzala další.
+
+
+.Concept:
+  title: 'Intuice'
+
+  Čas REACH je strašlivý – na každém patře zkoušíme $2^{O(S(n))}$ prostředků, celkem $2^{O(S^2(n))}$ kroků. Savitch
+  "vyměnil čas za prostor".emphasize: nic si nepamatuje, všechno počítá znovu.

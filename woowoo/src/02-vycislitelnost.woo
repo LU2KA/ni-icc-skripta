@@ -1,0 +1,72 @@
+.Chapter Vyčíslitelnost
+  label: ch-vycisl
+
+
+Zdroje: přednáška 1.
+
+
+.Concept:
+  title: 'Proč to děláme'
+
+  Kapitola .reference:ch-ts zavedla Turingův stroj; tady se ptáme, co všechno žádný Turingův stroj spočítat nedokáže.
+  Každý stroj je popsán konečným řetězcem, strojů je tedy jen spočetně mnoho, kdežto jazyků je nespočetně mnoho –
+  musí proto existovat jazyky, které žádný stroj nepopisuje. Ukážeme konkrétní příklady: funkci $\prob{UC}$, která
+  není počitatelná (diagonalizace), a problém zastavení, který je rekurzivně spočetný, ale není rekurzivní.
+  Nakonec uvidíme, že nerozhodnutelnost zasahuje i do základů matematiky (Hilbertův 10. problém).
+
+
+.Concept:
+  title: 'Strojů je málo, jazyků je moc'
+
+  Každý TS je popsán konečným řetězcem $\enc{M}\in\{0,1\}^*$, strojů je tedy jen
+  "spočetně".emphasize mnoho. Jazyků nad $\{0,1\}$ je ale tolik, kolik je podmnožin spočetné množiny
+  $\{0,1\}^*$, tedy "nespočetně".emphasize mnoho. Proto musí existovat jazyky, které žádný TS nepopisuje.
+
+
+.Figure:
+  label: fig-vycisl-hierarchie-jazyku
+
+  !tikz:
+    filename: 02-vycislitelnost-01
+
+    \draw[thick,fill=black!4,rounded corners=12pt] (-4.6,-1.9) rectangle (4.6,1.9);
+    \node[font=\sffamily\small\bfseries,anchor=north west] at (-4.5,1.85) {všechny jazyky (nespočetně)};
+    \fill[defc!12,draw=defc,thick] (-0.9,-0.1) ellipse (3.0 and 1.35);
+    \node[font=\sffamily\scriptsize\bfseries,defc,align=center] at (-2.6,0.55) {rekurzivně\\ spočetné};
+    \fill[exc!15,draw=exc,thick] (-0.3,-0.25) ellipse (1.7 and 0.9);
+    \node[font=\sffamily\scriptsize\bfseries,exc!70!black,align=center] at (-0.3,-0.25) {rekurzivní\\(rozhodnutelné)};
+    \node[font=\scriptsize,defc!80!black] at (1.55,0.65) {\prob{Halt}};
+    \fill[defc!80!black] (1.55,0.4) circle (1.4pt);
+    \node[font=\scriptsize,rej] at (3.5,-1.25) {\prob{UC}};
+    \fill[rej] (3.5,-1.0) circle (1.4pt);
+    \node[font=\scriptsize,rej] at (3.6,0.7) {$\overline{\prob{Halt}}$};
+    \fill[rej] (3.6,0.95) circle (1.4pt);
+
+  .caption:
+
+    Hierarchie jazyků. $\prob{Halt}$ je rekurzivně spočetný, ale ne rekurzivní.
+
+
+.Definition:
+  title: 'Rekurzivní a rekurzivně spočetné jazyky'
+  label: def-rekurzivni
+
+  .itemize:
+
+    .item:
+
+      "Jazyk stroje".notion $M$: $L_M = \{x\in\Sigma^* \mid f_M(x)=1\}$.
+
+    .item:
+
+      $L$ je "rekurzivně spočetný".notion, pokud existuje TS $M$, který ho "přijímá".emphasize
+      ($L=L_M$). Na slovech mimo $L$ se $M$ smí zacyklit.
+
+    .item:
+
+      $L$ je "rekurzivní (rozhodnutelný)".notion, pokud existuje TS $M$, který ho přijímá
+      "a zastaví se na každém vstupu".emphasize.
+
+    .item:
+
+      Jinak je $L$ "nerozhodnutelný".notion.

@@ -1,0 +1,285 @@
+.Section Od hádání k ověřování: certifikáty
+  label: ch-np-od-hadani-k-overovani-certifikaty
+
+
+Definice $\NP$ přes NDTS je skvělá pro teoretické důkazy, ale pro návrh algoritmů neohrabaná.
+Mnohem přirozenější je pohled z praxe: "je snazší řešení ověřit, než ho vymyslet.".emphasize
+
+.itemize:
+
+  .item:
+
+    "Sudoku:".notion vyřešit těžké sudoku trvá dlouho, ale vyplněnou mřížku zkontrolujete
+    za pár vteřin.
+
+  .item:
+
+    "Klika:".notion najít kliku velikosti $k$ je těžké, ale ukáže-li vám někdo $k$ vrcholů,
+    ověření hran je triviální.
+
+
+.Definition:
+  title: 'Verifikátor'
+  label: def-verifikator
+
+  "Verifikátor".notion pro jazyk $L$ je deterministický TS $V$, který kromě vstupu $x$ dostává
+  dodatečnou informaci $c$ – "certifikát".notion (svědka). $V$ "přijímá".emphasize vstup $x$, pokud
+  existuje certifikát $c$, pro který $V(x,c)$ přijme.
+
+
+  $V$ je "polynomiální verifikátor".notion, pokud pracuje v čase polynomiálním vzhledem k $|x|$.
+
+
+.Figure:
+  label: fig-np-verifikator
+
+  !tikz:
+    filename: 04e-certifikaty-01
+    options: 'node distance=7mm and 12mm'
+
+    \node[blokd,text width=26mm] (x) {vstup $x$\\ \footnotesize(instance)};
+    \node[bloki,text width=26mm,below=of x] (c) {certifikát $c$\\ \footnotesize(„nápověda“, $|c|\le p(|x|)$)};
+    \node[draw,very thick,draw=defc,fill=defc!10,minimum width=30mm,minimum height=20mm,rounded corners=4pt,
+          align=center,font=\sffamily\bfseries] (V) at ($(x)!0.5!(c)+(50mm,0)$) {verifikátor $V$\\ \footnotesize\mdseries deterministický\\ \footnotesize\mdseries čas $p(|x|)$};
+    \node[bloka,right=12mm of V,yshift=6mm] (a) {přijmi};
+    \node[blokr,right=12mm of V,yshift=-6mm] (r) {zamítni};
+    \draw[flow] (x.east) -- (V.west|-x.east);
+    \draw[flow] (c.east) -- (V.west|-c.east);
+    \draw[flow] (V.east) -- (a.west); \draw[flow] (V.east) -- (r.west);
+
+  .caption:
+
+    Polynomiální verifikátor. „Kdo“ certifikát dodá, nás nezajímá – ptáme se jen, zda
+    "existuje".emphasize.
+
+
+.Warning:
+  title: 'Certifikát je nutně krátký'
+
+  Pracuje-li $V$ v čase $p(|x|)$, pak mu na přečtení certifikátu stačí nejvýše $p(|x|)$ symbolů –
+  delší část by "ani nestihl přečíst".emphasize. Bez újmy na obecnosti tedy $|c|\le p(|x|)$.
+
+
+.Definition:
+  title: 'Certifikátová definice – třída $\NPhat$'
+  label: def-nphat
+
+  Jazyk $L$ patří do třídy $\NPhat$ právě tehdy, když existuje polynomiální verifikátor $V$
+  a polynom $p$ takové, že
+
+  .equation:
+
+    x\in L \iff \exists c\in\Sigma^*:\ |c|\le p(|x|)\ \wedge\ V(x,c)\text{ přijme}.
+
+
+.Warning:
+  title: 'Co znamená zkratka NP'
+
+  $\NP$ "neznamená".emphasize „Non-Polynomial“, ale „Nondeterministic Polynomial“ – což je, jak hned
+  ukážeme, totéž jako „problémy s polynomiálně ověřitelným řešením“.
+
+
+.Subsection Příklad: $\prob{SAT}$
+  label: ch-np-priklad-sat
+
+
+.Definition:
+  title: 'Problém $\prob{SAT}$ (booleovská splnitelnost)'
+  label: prob-sat-np
+
+  "Vstup:".notion booleovská formule $\varphi$ v konjunktivní normální formě (CNF).
+
+
+  "Otázka:".notion existuje ohodnocení proměnných, při kterém je $\varphi$ pravdivá?
+
+
+.Example:
+  title: '$\prob{SAT}\in\NPhat$'
+  label: ex-sat-cert
+
+  $\varphi=(x_1\vee\neg x_2)\wedge(\neg x_1\vee x_2\vee x_3)$.
+
+  .enumerate:
+
+    .item:
+
+      "Certifikát".notion $c$: vektor pravdivostních hodnot, např. $x_1=1,x_2=1,x_3=0$.
+      Délka $|c|$ je zjevně menší než $|\varphi|$.
+
+    .item:
+
+      "Verifikátor".notion $V$: dosadí hodnoty z $c$ do $\varphi$ a vyhodnotí ji
+      (deterministicky v čase $O(|\varphi|\cdot|c|)$). Vyjde-li 1, přijme.
+
+  .centered:
+
+    !tikz:
+      filename: 04e-certifikaty-02
+
+      \node[draw=intc,fill=intc!10,rounded corners=2pt,font=\small] (c) at (0,0) {$c$: \ $x_1{=}1,\ x_2{=}1,\ x_3{=}0$};
+      \node[font=\small] (f) at (0,-1.1) {$(\,\underbrace{x_1}_{1}\vee\underbrace{\neg x_2}_{0}\,)\ \wedge\ (\,\underbrace{\neg x_1}_{0}\vee\underbrace{x_2}_{1}\vee\underbrace{x_3}_{0}\,)$};
+      \node[font=\small] (r) at (0,-2.3) {$(\textcolor{acc}{\mathbf 1})\ \wedge\ (\textcolor{acc}{\mathbf 1}) = \textcolor{acc}{\mathbf 1}$ \quad$\Rightarrow$\quad \ANO};
+      \draw[flow] (c) -- (f); \draw[flow] (f) -- (r);
+
+
+.Subsection Věta o ekvivalenci $\NP=\NPhat$
+  label: ch-np-veta-o-ekvivalenci
+
+
+.Theorem:
+  title: 'Ekvivalence definic'
+  label: thm-np-eq
+
+  Jazyk $L$ je rozhodován polynomiálním NDTS ($L\in\NP$) $\iff$ $L$ má deterministický
+  polynomiální verifikátor ($L\in\NPhat$).
+
+
+.Figure:
+  label: fig-np-ekvivalence
+
+  !tikz:
+    filename: 04e-certifikaty-03
+
+    \node[draw=thmc,fill=thmc!8,very thick,rounded corners=6pt,minimum width=32mm,minimum height=24mm,align=center] (N) at (0,0)
+       {\textbf{NDTS $N$}\\ \footnotesize strom výpočtu,\\ \footnotesize hloubka $p(|x|)$};
+    \node[draw=defc,fill=defc!8,very thick,rounded corners=6pt,minimum width=32mm,minimum height=24mm,align=center] (V) at (10,0)
+       {\textbf{verifikátor $V(x,c)$}\\ \footnotesize deterministický,\\ \footnotesize čas $p(|x|)$};
+    \draw[->,line width=1.6pt,thmc] ([yshift=6mm]N.east) -- node[above=2pt,font=\small,align=center,text=black]
+       {\textcolor{thmc}{\textbf{($\Rightarrow$)}} \ $c$ = posloupnost voleb\\ podél přijímající větve} ([yshift=6mm]V.west);
+    \draw[->,line width=1.6pt,defc] ([yshift=-6mm]V.west) -- node[below=2pt,font=\small,align=center,text=black]
+       {\textcolor{defc}{\textbf{($\Leftarrow$)}} \ „uhodni“ $c$ délky $\le p(|x|)$,\\ pak spusť $V(x,c)$} ([yshift=-6mm]N.east);
+
+  .caption:
+
+    Oba směry důkazu ekvivalence na jednom obrázku.
+
+
+.Proof:
+  title: '($\Leftarrow$) z verifikátoru NDTS'
+
+  Máme verifikátor $V$ s polynomem $p$. NDTS $M$ na vstupu $x$ nejprve nedeterministicky
+  zapíše řetězec $c$ délky nejvýše $p(|x|)$ (každý symbol je jedno větvení) a pak
+  deterministicky spustí $V(x,c)$.
+
+  .itemize:
+
+    .item:
+
+      $x\in L$ $\Rightarrow$ existuje správný certifikát $c$. Alespoň jedna větev $M$ ho
+      zapíše, $V$ na ní přijme $\Rightarrow$ $M$ přijme $x$.
+
+    .item:
+
+      $x\notin L$ $\Rightarrow$ platné $c$ neexistuje. V každé větvi $V$ zamítne $\Rightarrow$
+      $M$ zamítne $x$.
+
+  Hádání trvá $O(p(|x|))$, ověření je polynomiální, celkem polynomiální čas.
+
+
+.Proof:
+  title: '($\Rightarrow$) z NDTS verifikátor'
+
+  NDTS $N$ rozhoduje $L$ v čase $p(|x|)$, stupeň větvení je nejvýše $d$.
+
+  .itemize:
+
+    .item:
+
+      "Certifikát".notion $c$ bude posloupnost voleb $N$ podél přijímající větve, např.
+      $c=\langle 1,3,2,1,\dots\rangle$; má délku $\le p(|x|)$ a každá položka je číslo $\le d$.
+
+    .item:
+
+      "Verifikátor".notion $V(x,c)$ deterministicky simuluje $N$ na $x$ a v každém větvení
+      poslechne nápovědu z $c$. Dojde-li simulace do $\qA$, přijme, jinak zamítne.
+
+  Přijímající větev (a tedy vhodné $c$) existuje právě tehdy, když $x\in L$. $V$ je
+  deterministický a pracuje v polynomiálním čase.
+
+
+.Figure:
+  label: fig-np-certifikat-log
+
+  !tikz:
+    filename: 04e-certifikaty-04
+
+    \node[chNPc] (r) at (0,0) {};
+    \foreach \x/\i in {-2.4/1,-0.8/2,0.8/3,2.4/4} {\node[chNPc] (a\i) at (\x,-1) {};}
+    \foreach \i in {1,2,4} {\draw[chNPe] (r) -- (a\i);}
+    \draw[chNPg] (r) -- node[lab,right]{3} (a3);
+    \foreach \x/\i in {0/1,0.8/2,1.6/3} {\node[chNPc] (b\i) at (\x,-2) {}; }
+    \draw[chNPg] (a3) -- node[lab,left]{1} (b1); \draw[chNPe] (a3) -- (b2); \draw[chNPe] (a3) -- (b3);
+    \node[chNPc] (c1) at (-0.4,-3) {}; \node[chNPc] (c2) at (0.4,-3) {};
+    \draw[chNPe] (b1) -- (c1); \draw[chNPg] (b1) -- node[lab,right]{2} (c2);
+    \node[chNPacc] (acc) at (0.4,-4) {\qA};
+    \draw[chNPg] (c2) -- (acc);
+    \node[draw=intc,fill=intc!10,rounded corners=2pt,font=\small,anchor=west] at (3.2,-2) {certifikát $c=\langle 3,1,2\rangle$};
+    \draw[->,intc,thick,dashed] (3.2,-2) -- (1.0,-2.6);
+
+  .caption:
+
+    Certifikát je „log“ rozhodnutí v jedné přijímající větvi: v každém větvení říká,
+    kterou hranou pokračovat.
+
+
+.Subsection Je certifikát vždy jen „uhodnuté řešení“?
+  label: ch-np-je-certifikat-vzdy-jen-uhodnute-reseni
+
+
+U vyhledávacích problémů (sudoku, $\prob{SAT}$, klika) je certifikát přímočarý: je to samo
+řešení. U čistě rozhodovacích problémů ale certifikát často není „objekt“, nýbrž
+"matematický důkaz".emphasize ověřitelný v polynomiálním čase.
+
+
+.Example:
+  title: '$\prob{Primes}$: je $p$ prvočíslo?'
+  label: ex-primes
+
+  Je-li $p$ "složené".emphasize, certifikát je snadný – dělitel. Pro "prvočíselnost".emphasize ale musíme
+  v polynomiálním čase přesvědčit, že $p$ žádného dělitele nemá, a zkoušet všechny trvá
+  exponenciálně dlouho. Řešením je "Prattův certifikát".notion (1975): rekurzivní stromová
+  struktura (svědectví o primitivních kořenech), kterou verifikátor mechanicky ověří.
+  Ukázka pro $p=29$ je na obr. .reference:fig-np-pratt.
+
+
+.Figure:
+  label: fig-np-pratt
+
+  !tikz:
+    filename: 04e-certifikaty-05
+    options: 'level distance=9mm'
+
+    \tikzset{pn/.style={blokd,font=\footnotesize,inner sep=3pt},
+             pl/.style={chNPacc,font=\small\bfseries,minimum width=6mm},
+             pc/.style={font=\footnotesize,anchor=west,align=left},
+             pd/.style={draw=black!30,dashed,thin}}
+    \node[pn] (p29) at (0,0) {$p=29$\\ $28=2^2\cdot 7$\\ svědek $a=2$};
+    \node[pl] (l1) at (-1.8,-2.3) {2};
+    \node[pn] (p7) at (1.9,-2.3) {$q=7$\\ $6=2\cdot 3$\\ svědek $a=3$};
+    \node[pl] (l2) at (0.6,-4.6) {2};
+    \node[pn] (p3) at (3.4,-4.6) {$q=3$\\ $2=2$\\ svědek $a=2$};
+    \node[pl] (l3) at (3.4,-6.5) {2};
+    \draw[e] (p29) -- (l1); \draw[e] (p29) -- (p7);
+    \draw[e] (p7) -- (l2); \draw[e] (p7) -- (p3);
+    \draw[e] (p3) -- (l3);
+    \node[pc] (c29) at (5.6,0) {$2^{28}\equiv 1$\\ $2^{28/2}=2^{14}\equiv 28\not\equiv 1$\\ $2^{28/7}=2^{4}\equiv 16\not\equiv 1$ \ $(\bmod\ 29)$};
+    \node[pc] (c7) at (5.6,-2.3) {$3^{6}\equiv 1$\\ $3^{6/2}=3^{3}\equiv 6\not\equiv 1$\\ $3^{6/3}=3^{2}\equiv 2\not\equiv 1$ \ $(\bmod\ 7)$};
+    \node[pc] (c3) at (5.6,-4.6) {$2^{2}\equiv 1$\\ $2^{2/2}=2\not\equiv 1$ \ $(\bmod\ 3)$};
+    \draw[pd] (p29.east) -- (c29.west); \draw[pd] (p7.east) -- (c7.west); \draw[pd] (p3.east) -- (c3.west);
+    \node[note,anchor=west] at (4.2,-6.5) {list 2: prvočíslo z definice (axiom)};
+
+  .caption:
+
+    Prattův certifikát čísla $29$ (bonusový proseminář 2). Vnitřní uzel nese prvočíslo $p$, rozklad
+    $p-1$ a svědka $a$; verifikátor vynásobením zkontroluje, že rozklad je úplný, a rychlým umocňováním
+    Lucasovy podmínky $a^{p-1}\equiv1$ a $a^{(p-1)/q}\not\equiv1 \pmod p$ pro každé prvočíslo $q\mid p-1$
+    (vpravo). Že jsou čísla $q$ opravdu prvočísla, dokazují jejich podstromy. "Všimni si:".emphasize
+    verifikátor nic nerozkládá, jen násobí a umocňuje; každé $q\le(p-1)/2$, takže hloubka stromu je
+    $O(\log p)$, tj. lineární v délce vstupu.
+
+
+.Concept:
+  title: 'Pointa'
+
+  Certifikát je v jádru vždy "záznamem rozhodnutí v jedné konkrétní přijímající větvi".notion
+  výpočtu NDTS.

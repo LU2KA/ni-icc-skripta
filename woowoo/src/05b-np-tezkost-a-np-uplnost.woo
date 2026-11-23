@@ -1,0 +1,153 @@
+.Section NP-těžkost a NP-úplnost
+  label: ch-redukce-np-tezkost-a-np-uplnost
+
+
+.Definition:
+  title: 'NP-těžký a NP-úplný jazyk'
+  label: def-nphard
+
+  .itemize:
+
+    .item:
+
+      Jazyk $Q$ je "NP-těžký".notion (NP-hard), pokud $L\redp Q$ pro "všechny".emphasize $L\in\NP$.
+
+    .item:
+
+      Jazyk $Q$ je "NP-úplný".notion (NP-complete), pokud je NP-těžký "a zároveň".emphasize $Q\in\NP$.
+
+
+.Figure:
+  label: fig-npworld
+
+  !tikz:
+    filename: 05b-np-tezkost-a-np-uplnost-01
+
+    \fill[defc!7,draw=defc,thick] (-1.2,0) ellipse (3.0 and 1.9);
+    \node[font=\sffamily\bfseries,defc] at (-2.4,1.35) {\NP};
+    \fill[exc!15,draw=exc,thick] (-2.3,-0.1) ellipse (1.3 and 0.9);
+    \node[font=\sffamily\bfseries,exc!70!black,align=center] at (-2.3,-0.1) {\PP\\ \scriptsize souvislost,\\ \scriptsize nejkratší cesta};
+    \begin{scope}
+      \clip (-1.2,0) ellipse (3.0 and 1.9);
+      \fill[warnc!25] (0.2,-2.4) rectangle (7,2.4);
+    \end{scope}
+    \draw[warnc,very thick,rounded corners=12pt] (0.2,-2.4) -- (6.6,-2.4) -- (6.6,2.4) -- (0.2,2.4) -- cycle;
+    \draw[defc,thick] (-1.2,0) ellipse (3.0 and 1.9);
+    \node[font=\sffamily\bfseries,warnc,align=center] at (4.6,1.75) {NP-těžké};
+    \node[font=\sffamily\scriptsize\bfseries,warnc!80!black,align=center] at (1.0,0.5) {NP-\\úplné};
+    \node[font=\tiny,align=center] at (1.0,-0.4) {SAT, 3-SAT,\\ klika,\\ IS, VC};
+    \node[font=\scriptsize,align=center] at (4.7,-0.2) {\prob{Halt},\\ zobecněné šachy,\\ problémy v \EXP\ \dots};
+
+  .caption:
+
+    Svět tříd složitosti (za předpokladu $\PP\neq\NP$). NP-úplné problémy jsou přesně
+    průnik $\NP$ a NP-těžkých. NP-těžké problémy mohou ležet i mimo $\NP$ – třeba v $\EXP$ nebo
+    dokonce mezi nerozhodnutelnými.
+
+
+.Theorem:
+  title: 'Svatý grál teorie složitosti'
+  label: thm-gral
+
+  Nechť $Q$ je libovolný NP-úplný problém. Pak $Q\in\PP \iff \PP=\NP$.
+
+
+.Proof:
+
+  ($\Leftarrow$) $Q\in\NP=\PP$. ($\Rightarrow$) Pro libovolné $L\in\NP$ platí $L\redp Q$ (NP-těžkost)
+  a $Q\in\PP$, takže podle přenosu řešitelnosti (lemma .reference:lem-redvlast) $L\in\PP$. Tedy
+  $\NP\subseteq\PP$, a protože $\PP\subseteq\NP$ platí vždy, máme rovnost.
+
+
+.Concept:
+  title: 'Intuice'
+
+  Jediný polynomiální algoritmus pro jediný NP-úplný problém by „shodil“ celou třídu $\NP$ do $\PP$.
+  Proto se NP-úplnost bere jako silný důkaz, že problém efektivní algoritmus "nemá".emphasize.
+
+
+.Subsection První (umělý) NP-úplný problém: $\prob{UNP}$
+  label: ch-redukce-prvni-umely-np-uplny-problem-unp
+  pdf_string: 'První (umělý) NP-úplný problém: UNP'
+
+
+Zkonstruovat "nějaký".emphasize NP-úplný problém je překvapivě snadné – stačí „převléct“ definici
+třídy $\NP$ za problém.
+
+
+.Definition:
+  title: 'Problém $\prob{UNP}$ – univerzální jazyk pro $\NP$'
+  label: prob-unp
+
+  "Vstup:".notion kód nedeterministického stroje $M$, vstupní slovo $x$ a číslo $k$ zapsané
+  "unárně".emphasize, tedy jako řetízek $1^k=\underbrace{11\dots1}_{k}$.
+
+
+  "Otázka:".notion přijme stroj $M$ slovo $x$ během nejvýše $k$ kroků (tj. existuje přijímající
+  větev délky $\le k$)?
+
+
+.Figure:
+  label: fig-redukce-vstup-unp
+
+  !tikz:
+    filename: 05b-np-tezkost-a-np-uplnost-02
+
+    \foreach \s [count=\i] in {1,0,0,1,1,0,1,0} {\node[cell,fill=defc!10] at ({(\i-1)*0.7},0) {\s};}
+    \foreach \s [count=\i] in {a,b,b,a} {\node[cell,fill=exc!12] at ({5.6+(\i-1)*0.7},0) {\s};}
+    \foreach \s [count=\i] in {1,1,1,1,1,1,1,1,1,1} {\node[cell,fill=intc!15] at ({8.4+(\i-1)*0.7},0) {\s};}
+    \draw[decorate,decoration={brace,amplitude=5pt,mirror},thick] (0,-0.45) -- (5.6,-0.45) node[midway,below=6pt,font=\small]{$\enc{M}$};
+    \draw[decorate,decoration={brace,amplitude=5pt,mirror},thick] (5.6,-0.45) -- (8.4,-0.45) node[midway,below=6pt,font=\small]{$x$};
+    \draw[decorate,decoration={brace,amplitude=5pt,mirror},thick] (8.4,-0.45) -- (15.4,-0.45) node[midway,below=6pt,font=\small]{$1^k$: délka $k$ (zde $k=10$)};
+    \node[note,anchor=west] at (8.4,0.75) {binárně by stačilo $\lceil\log_2 11\rceil=4$ bity};
+
+  .caption:
+
+    Vstup $\prob{UNP}$. Unární zápis zaručuje, že vstup je "alespoň tak dlouhý".emphasize, jako je
+    povolený počet kroků.
+
+
+.Theorem:
+  label: thm-unpnpc
+
+  $\prob{UNP}$ je NP-úplný.
+
+
+.Proof:
+
+  "$\prob{UNP} \in \NP$:".notion univerzální NDTS vezme $\enc{M,x,1^k}$ a krok po kroku simuluje $M$
+  na $x$, přičemž nedeterministické volby $M$ dělá svými vlastními volbami; po $k$ krocích se
+  zastaví. Protože $k$ je zapsáno unárně, je $k\le|\text{vstup}|$ a simulace $O(k)$ kroků (každý
+  v polynomiálním čase vůči $|\enc{M}|$) je polynomiální vzhledem k délce celého vstupu.
+
+
+.Proof:
+  label: red-unp
+
+  "Redukce:".notion libovolný $L\in\NP$ $\redp$ $\prob{UNP}$, slovo $x$ $\mapsto$ $\enc{M_L,x,1^{p(|x|)}}$.
+
+
+  "$\prob{UNP}$ je NP-těžký:".notion nechť $L\in\NP$ je libovolný. Existuje pevný NDTS $M_L$, který $L$
+  rozhoduje v čase $p(|x|)$. Redukce je
+
+  .equation:
+
+    f(x)=\bigl\langle M_L,\ x,\ 1^{p(|x|)}\bigr\rangle.
+
+  Kód $M_L$ má konstantní velikost (stroj je pro $L$ pevný), opsat $x$ a vypsat $p(|x|)$
+  jedniček trvá polynomiální čas. A z definice:
+  $x\in L \iff M_L$ přijme $x$ do $p(|x|)$ kroků $\iff f(x)\in\prob{UNP}$.
+
+
+.Warning:
+  title: 'Proč unárně?'
+
+  Kdyby bylo $k$ zapsáno binárně, mělo by délku jen $\approx\log_2 k$ a stroj by měl na výpočet
+  "exponenciálně".emphasize víc kroků, než je velikost vstupu. Simulace by nebyla polynomiální, problém by
+  „vypadl z $\NP$“ a byl by mnohem těžší (ležel by v $\NEXP$).
+
+
+"Od umělých problémů k přirozeným.".notion $\prob{UNP}$ je pro praxi k ničemu – je to jen
+„Turingův stroj převlečený za vstup“. Chceme vědět, zda jsou NP-úplné i "přirozené".emphasize
+problémy (logické formule, grafy, rozvrhy). K tomu musíme stroj nasimulovat uvnitř problému,
+aniž bychom ho dostali na vstupu.

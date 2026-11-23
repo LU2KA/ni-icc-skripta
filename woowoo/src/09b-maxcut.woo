@@ -1,0 +1,276 @@
+.Section MaxCut
+  label: ch-zoo-maxcut
+
+
+.Definition:
+  title: 'Problém MaxCut (maximální řez)'
+  label: prob-maxcut
+
+  "Vstup:".notion neorientovaný graf $G=(V,E)$ a číslo $k$.
+
+
+  "Otázka:".notion lze rozdělit $V=A\cup B$ (disjunktně) tak, aby aspoň $k$ hran mělo jeden konec
+  v $A$ a druhý v $B$?
+
+
+.Figure:
+
+  !tikz:
+    filename: 09b-maxcut-01
+
+    \fill[defc!8,rounded corners=6pt] (-0.6,-1.9) rectangle (1.6,1.2);
+    \fill[intc!10,rounded corners=6pt] (3.0,-1.9) rectangle (5.2,1.2);
+    \node[font=\sffamily\bfseries] at (0.5,1.5) {$A$};
+    \node[font=\sffamily\bfseries] at (4.1,1.5) {$B$};
+    \node[v] (1) at (0,0.6) {1};
+    \node[v] (2) at (1.0,-0.3) {2};
+    \node[v] (3) at (0,-1.3) {3};
+    \node[v] (4) at (3.6,0.6) {4};
+    \node[v] (5) at (3.6,-1.1) {5};
+    \node[v] (6) at (4.6,-0.2) {6};
+    \draw[efaint,thick,draw=black!30] (1)--(2) (4)--(5) (5)--(6);
+    \draw[rej,very thick] (1)--(4) (2)--(4) (2)--(5) (3)--(4) (3)--(5);
+    \node[rej,font=\small] at (6.3,-0.3) {řez $=5$};
+
+  .caption:
+
+    Řez: červené hrany vedou mezi $A$ a $B$.
+
+
+.Remark:
+  title: 'Proč je MaxCut zajímavý'
+
+  $\prob{MaxCut}\in\NP$ (certifikát = rozdělení, spočítáme přeříznuté hrany). Jde o klasický
+  optimalizační problém (fyzika spinových skel, návrh obvodů). Goemans–Williamsonův algoritmus
+  (SDP) dosáhne $0{,}878$ optima; jednoduché lokální prohledávání (přesouvej vrchol, dokud se řez
+  zvětšuje) dává $\tfrac12$-aproximaci. Pozor: $\prob{MinCut}$ je naopak v $\PP$ (toky).
+
+
+.Subsection $\prob{NAE-3-SAT}\redp\prob{MaxCut}$
+  label: ch-zoo-nae-3-sat-maxcut
+  pdf_string: 'NAE-3-SAT ≤p MaxCut'
+
+
+.Remark:
+  title: 'Redukce: $\prob{NAE-3-SAT} \redp \prob{(vážený) MaxCut}$'
+  label: red-wmaxcut
+
+  formule $\Phi$ $\;\longmapsto\;$ $(G,w,\ 2mn+2m)$
+
+
+Nechť $\Phi$ má $n$ proměnných a $m$ klauzulí. Strana řezu bude kódovat pravdivostní hodnotu.
+
+
+"1. Gadgety proměnných.".notion Pro každou proměnnou $x$ vrcholy $x$ a $\bar x$ spojené
+"těžkou hranou".notion váhy $2m$. Těžkou hranu se vždy vyplatí přeříznout $\Rightarrow$ $x$ a $\bar x$
+budou na opačných stranách.
+
+
+"2. Gadgety klauzulí.".notion Pro klauzuli $(\ell_1\vee\ell_2\vee\ell_3)$ trojúhelník na
+vrcholech literálů $\ell_1,\ell_2,\ell_3$ (váhy se při opakování dvojic sčítají).
+Trojúhelník je lichý cyklus, přeříznout lze nejvýše 2 jeho hrany – a to právě tehdy, když
+literály "nejsou všechny na stejné straně".emphasize (NAE!), jinak 0.
+
+
+.centered:
+
+  !tikz:
+    filename: 09b-maxcut-02
+
+    \begin{scope}
+      \fill[defc!8,rounded corners=4pt] (-1.3,0.6) rectangle (1.3,1.4);
+      \fill[intc!10,rounded corners=4pt] (-1.3,-0.9) rectangle (1.3,-0.1);
+      \node[v] (a) at (0,1.0) {$\ell_1$};
+      \node[v] (b) at (-0.8,-0.5) {$\ell_2$};
+      \node[v] (c) at (0.8,-0.5) {$\ell_3$};
+      \draw[rej,very thick] (a)--(b) (a)--(c);
+      \draw[draw=black!30,thick] (b)--(c);
+      \node[font=\small] at (0,-1.4) {NAE: přeříznuty \textbf{2} hrany};
+    \end{scope}
+    \begin{scope}[xshift=5cm]
+      \fill[intc!10,rounded corners=4pt] (-1.3,-0.9) rectangle (1.3,1.4);
+      \node[v] (a) at (0,1.0) {$\ell_1$};
+      \node[v] (b) at (-0.8,-0.5) {$\ell_2$};
+      \node[v] (c) at (0.8,-0.5) {$\ell_3$};
+      \draw[draw=black!30,thick] (a)--(b) (a)--(c) (b)--(c);
+      \node[font=\small] at (0,-1.4) {vše na jedné straně: \textbf{0} hran};
+    \end{scope}
+    \node[font=\sffamily\scriptsize\bfseries] at (-1.7,1.0) {$A$};
+    \node[font=\sffamily\scriptsize\bfseries] at (-1.7,-0.5) {$B$};
+
+
+.Theorem:
+  label: thm-naemaxcut
+
+  $\Phi$ je NAE-splnitelná $\iff$ $G$ má řez váhy aspoň $2mn+2m$.
+
+
+.Proof:
+
+  "($\Rightarrow$)".notion Z NAE-ohodnocení $h$: strana $A$ = literály pravdivé v $h$, strana $B$ =
+  nepravdivé. Každá proměnná přispěje $2m$ (hrana $x\bar x$ je přeříznutá), celkem $2mn$.
+  Každá klauzule je NAE-splněná, její trojúhelník má literály na obou stranách a přispěje 2;
+  celkem $2m$.
+
+
+  "($\Leftarrow$)".notion Mějme řez váhy $\ge 2mn+2m$.
+
+  .itemize:
+
+    .item:
+
+      "Všechny hrany $x\bar x$ jsou přeříznuté.".emphasize Jinak má řez váhu nejvýše
+      $2m(n-1)+2m = 2mn < 2mn+2m$ (trojúhelníky dají dohromady nejvýše $2m$).
+
+    .item:
+
+      Položme $x=1$, právě když $x\in A$. Díky předchozímu bodu je $\bar x\in B$, takže
+      hodnota literálu odpovídá jeho straně – ohodnocení je konzistentní.
+
+    .item:
+
+      Hrany proměnných dají přesně $2mn$, na klauzule tedy zbývá $\ge 2m$. Každý trojúhelník
+      dá nejvýše 2, takže každý dá přesně 2 $\Rightarrow$ literály každé klauzule nejsou všechny
+      na stejné straně $\Rightarrow$ NAE splněno.
+
+
+.Example:
+  label: ex-maxcutex
+
+  $\Phi=(x_1\vee x_2\vee x_3)\wedge(\neg x_1\vee x_2\vee\neg x_3)$, $n=3$, $m=2$, váha hran proměnných
+  $2m=4$. NAE-ohodnocení $x_1=1$, $x_2=0$, $x_3=0$; strana $A$ = pravdivé literály.
+
+  .centered:
+
+    !tikz:
+      filename: 09b-maxcut-03
+      options: 'xscale=1.5'
+
+      \fill[defc!8,rounded corners=6pt] (-0.5,1.5) rectangle (4.5,2.5);
+      \fill[intc!10,rounded corners=6pt] (-0.5,-0.5) rectangle (4.5,0.5);
+      \node[font=\sffamily\bfseries] at (-0.9,2) {$A$};
+      \node[font=\sffamily\bfseries] at (-0.9,0) {$B$};
+      \node[v] (x1) at (0,2) {$x_1$};
+      \node[v] (nx2) at (2,2) {$\bar x_2$};
+      \node[v] (nx3) at (4,2) {$\bar x_3$};
+      \node[v] (nx1) at (0,0) {$\bar x_1$};
+      \node[v] (x2) at (2,0) {$x_2$};
+      \node[v] (x3) at (4,0) {$x_3$};
+      \draw[rej,line width=3pt] (x1)--node[wt,left=2pt]{4}(nx1);
+      \draw[rej,line width=3pt] (nx2)--node[wt,left=2pt,pos=0.22,fill=white,inner sep=1pt]{4}(x2);
+      \draw[rej,line width=3pt] (nx3)--node[wt,right=2pt]{4}(x3);
+      % C1: x1,x2,x3
+      \draw[rej,thick] (x1)--(x2) (x1)--(x3);
+      \draw[black!30,thick] (x2) to[bend right=20] (x3);
+      % C2: nx1,x2,nx3
+      \draw[rej,thick] (nx3)--(nx1) (nx3)--(x2);
+      \draw[black!30,thick] (nx1) to[bend right=20] (x2);
+
+  Přeříznuto: $3\cdot4$ (proměnné) $+\,2$ ($C_1$) $+\,2$ ($C_2$) $=16=2mn+2m$. $\checkmark$
+
+
+.Subsection Od vah k jednoduchým grafům
+  label: ch-zoo-od-vah-k-jednoduchym-grafum
+
+
+.Remark:
+  title: 'Redukce: $\prob{vážený MaxCut} \redp \prob{MaxCut}$'
+  label: red-maxcut
+
+  $(G,w,K)$ $\;\longmapsto\;$ $(G',\ K+2W)$
+
+
+Náš důkaz používá váhy (multigraf). Hranu $\{u,v\}$ váhy $w$ nahradíme $w$ disjunktními
+"cestami délky 3".notion $u - a_i - b_i - v$ přes nové vrcholy.
+
+
+.centered:
+
+  !tikz:
+    filename: 09b-maxcut-04
+
+    \node[v] (u) at (0,0) {$u$};
+    \node[v] (v) at (2,0) {$v$};
+    \draw[line width=3pt] (u)--node[above=2pt,font=\small]{$w$}(v);
+    \draw[->,very thick,gr] (2.7,0)--(3.6,0);
+    \node[v] (u2) at (4.3,0) {$u$};
+    \node[v] (v2) at (7.7,0) {$v$};
+    \foreach \yy in {0.9,0,-0.9} {
+      \node[vs,minimum size=3mm,fill=black!15] (a) at (5.45,\yy) {};
+      \node[vs,minimum size=3mm,fill=black!15] (b) at (6.55,\yy) {};
+      \draw[e] (u2)--(a)--(b)--(v2);}
+    \node[font=\scriptsize] at (6,-1.4) {$w$ cest délky 3};
+
+
+"Proč to funguje (parita).".notion Projdeme-li cestu z $u$ do $v$, měníme stranu na každé
+přeříznuté hraně. Počet přeříznutých hran cesty je tedy lichý $\iff$ $u,v$ jsou na opačných stranách.
+
+
+.centered:
+
+  !tikz:
+    filename: 09b-maxcut-05
+    options: 'sideA/.style={fill=defc!30},sideB/.style={fill=intc!45}'
+
+    \begin{scope}
+      \node[v,sideA] (u) at (0,0) {$u$};
+      \node[v,sideB] (a) at (1.2,0) {$a$};
+      \node[v,sideA] (b) at (2.4,0) {$b$};
+      \node[v,sideB] (v) at (3.6,0) {$v$};
+      \draw[rej,very thick] (u)--(a)--(b)--(v);
+      \node[font=\small,align=center] at (1.8,-0.9) {$u,v$ na opačných stranách:\\ přeříznuty \textbf{3} hrany};
+    \end{scope}
+    \begin{scope}[xshift=6cm]
+      \node[v,sideA] (u) at (0,0) {$u$};
+      \node[v,sideB] (a) at (1.2,0) {$a$};
+      \node[v,sideA] (b) at (2.4,0) {$b$};
+      \node[v,sideA] (v) at (3.6,0) {$v$};
+      \draw[rej,very thick] (u)--(a)--(b);
+      \draw[black!30,thick] (b)--(v);
+      \node[font=\small,align=center] at (1.8,-0.9) {$u,v$ na stejné straně:\\ nejvýše \textbf{2} hrany (parita)};
+    \end{scope}
+    \node[font=\scriptsize] at (11.2,0.2) {\tikz\node[v,sideA,minimum size=3mm]{};\ = $A$};
+    \node[font=\scriptsize] at (11.2,-0.3) {\tikz\node[v,sideB,minimum size=3mm]{};\ = $B$};
+
+
+Každá cesta tedy dá (při optimálním umístění $a_i,b_i$) přesně $2+[\,u,v$ na opačných stranách$\,]$.
+Hrana váhy $w$ se chová jako $w$ přeříznutých hran plus konstanta $2w$, která nezávisí na řezu.
+Má-li původní graf celkovou váhu $W$:
+
+.equation:
+
+  \text{řez váhy}\ge K \text{ v původním grafu} \iff \text{řez velikosti}\ge K+2W \text{ v novém grafu}.
+
+
+.Warning:
+  title: 'Proč nefungují cesty délky 2?'
+
+  Na cestě $u-a-v$: jsou-li $u,v$ na "opačných".emphasize stranách, $a$ leží na jedné z nich a přeřízne
+  se "právě 1".emphasize hrana. Jsou-li $u,v$ na "stejné".emphasize straně, dáme $a$ na druhou a přeřízneme
+  "2".emphasize hrany. Cesta délky 2 tedy odměňuje opak toho, co chceme (parita je sudá) – „přeříznutí“
+  by se nevyplatilo.
+
+
+  .centered:
+
+    !tikz:
+      filename: 09b-maxcut-06
+      options: 'sideA/.style={fill=defc!30},sideB/.style={fill=intc!45}'
+
+      \begin{scope}
+        \node[v,sideA] (u) at (0,0) {$u$};
+        \node[v,sideA] (a) at (1.4,0) {$a$};
+        \node[v,sideB] (v) at (2.8,0) {$v$};
+        \draw[black!30,thick] (u)--(a);
+        \draw[rej,very thick] (a)--(v);
+        \node[font=\small,align=center] at (1.4,-0.9) {$u,v$ na opačných stranách:\\ přeříznuta \textbf{1} hrana};
+      \end{scope}
+      \begin{scope}[xshift=5.6cm]
+        \node[v,sideA] (u) at (0,0) {$u$};
+        \node[v,sideB] (a) at (1.4,0) {$a$};
+        \node[v,sideA] (v) at (2.8,0) {$v$};
+        \draw[rej,very thick] (u)--(a)--(v);
+        \node[font=\small,align=center] at (1.4,-0.9) {$u,v$ na stejné straně:\\ přeříznuty \textbf{2} hrany};
+      \end{scope}
+      \node[font=\scriptsize] at (10.0,0.2) {\tikz\node[v,sideA,minimum size=3mm]{};\ = $A$};
+      \node[font=\scriptsize] at (10.0,-0.3) {\tikz\node[v,sideB,minimum size=3mm]{};\ = $B$};

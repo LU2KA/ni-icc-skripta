@@ -1,0 +1,231 @@
+.Section 1-in-3 SAT
+  label: ch-x3c-1-in-3-sat
+
+
+.Definition:
+  title: 'Problém $\prob{One-in-Three 3-SAT}$ (1-in-3 SAT)'
+  label: prob-1in3
+
+  "Vstup:".notion formule $\Phi$ v 3-CNF.
+
+
+  "Otázka:".notion existuje ohodnocení, při kterém je v každé klauzuli "přesně jeden".emphasize
+  literál pravdivý?
+
+
+"Pozitivní 1-in-3 SAT".notion: totéž bez negací. Obě verze jsou v $\NP$ (certifikát = ohodnocení).
+
+
+.Table:
+  label: ch-x3c-tab-varianty-sat
+
+  .table:
+    columns: 'cccccc'
+
+    .row:
+      head: true
+
+      $x$
+
+      $y$
+
+      $z$
+
+      3-SAT
+
+      NAE-SAT
+
+      1-in-3 SAT
+
+    .row:
+
+      0
+
+      0
+
+      0
+
+      $\NE$
+
+      $\NE$
+
+      $\NE$
+
+    .row:
+
+      0
+
+      0
+
+      1
+
+      $\ANO$
+
+      $\ANO$
+
+      $\ANO$
+
+    .row:
+
+      0
+
+      1
+
+      0
+
+      $\ANO$
+
+      $\ANO$
+
+      $\ANO$
+
+    .row:
+
+      0
+
+      1
+
+      1
+
+      $\ANO$
+
+      $\ANO$
+
+      $\NE$
+
+    .row:
+
+      1
+
+      0
+
+      0
+
+      $\ANO$
+
+      $\ANO$
+
+      $\ANO$
+
+    .row:
+
+      1
+
+      0
+
+      1
+
+      $\ANO$
+
+      $\ANO$
+
+      $\NE$
+
+    .row:
+
+      1
+
+      1
+
+      0
+
+      $\ANO$
+
+      $\ANO$
+
+      $\NE$
+
+    .row:
+
+      1
+
+      1
+
+      1
+
+      $\ANO$
+
+      $\NE$
+
+      $\NE$
+
+    .row:
+
+      zakazuje
+
+      ~
+
+      ~
+
+      samé nuly
+
+      extrémy
+
+      vše kromě 1 jedničky
+
+  .caption:
+
+    Srovnání variant SATu pro klauzuli $(x\vee y\vee z)$.
+
+
+.Subsection $\prob{3-Coloring}\redp\prob{(pozitivní) 1-in-3 SAT}$
+  label: ch-x3c-3-coloring-1-in-3-sat
+
+
+.Remark:
+  title: 'Redukce: $\prob{3-Coloring} \redp \prob{1-in-3 SAT}$'
+  label: red-1in3
+
+  graf $G$ $\;\longmapsto\;$ formule $\Phi_G$ (bez negací)
+
+
+Pro graf $G=(V,E)$:
+
+.enumerate:
+
+  .item:
+
+    "Proměnné (barvy):".notion pro každý vrchol $v$ tři proměnné $R_v,G_v,B_v$.
+
+  .item:
+
+    "Vrcholové klauzule:".notion každý vrchol má přesně jednu barvu: $\mathrm{1in3}(R_v,G_v,B_v)$.
+
+  .item:
+
+    "Hranové klauzule:".notion pro každou hranu $\{u,v\}$ a barvu $c\in\{R,G,B\}$ nesmí
+    nastat $c_u=c_v=1$. Zavedeme novou výplňovou proměnnou $D^c_{uv}$ a přidáme
+    $\mathrm{1in3}(c_u,c_v,D^c_{uv})$.
+
+
+.Figure:
+  label: fig-x3c-hrana
+
+  !tikz:
+    filename: 10a-1-in-3-sat-01
+    options: 'cl/.style={draw,rounded corners=3pt,thick,font=\small,inner sep=4pt,fill=white}'
+
+    \node[chZlv,fill=chZF] (u) at (0,0) {$u$};
+    \node[chZlv,fill=chZT] (v) at (2,0) {$v$};
+    \draw[e] (u)--(v);
+    \draw[->,very thick,gr] (2.8,0)--(3.6,0);
+    \node[cl,anchor=west] (k1) at (3.9,0.9) {$\mathrm{1in3}(R_u,G_u,B_u)$: \ $(1,0,0)$};
+    \node[cl,anchor=west] (k2) at (3.9,0.0) {$\mathrm{1in3}(R_v,G_v,B_v)$: \ $(0,1,0)$};
+    \node[cl,anchor=west,draw=defc] at (3.9,-0.9) {$\mathrm{1in3}(R_u,R_v,D^R_{uv})$: \ $(1,0,\mathbf{0})$};
+    \node[cl,anchor=west,draw=defc] at (3.9,-1.8) {$\mathrm{1in3}(G_u,G_v,D^G_{uv})$: \ $(0,1,\mathbf{0})$};
+    \node[cl,anchor=west,draw=defc] at (3.9,-2.7) {$\mathrm{1in3}(B_u,B_v,D^B_{uv})$: \ $(0,0,\mathbf{1})$};
+    \node[note,anchor=west,text width=30mm] at (9.6,-1.8) {výplňová $D$ „nasaje“ chybějící jedničku};
+
+  .caption:
+
+    Hrana s vrcholy barvy $R$ ($u$) a $G$ ($v$). Kdyby měly oba barvu $c$, byly by
+    v hranové klauzuli dvě jedničky – zakázáno.
+
+
+.Remark:
+  title: 'Pozitivnost zdarma'
+
+  Nepoužili jsme ani jednu negaci – rovnou jsme tedy dokázali NP-těžkost "pozitivního".notion
+  1-in-3 SATu. (Korektnost: z 3-obarvení nastavíme $c_v=1$ pro barvu $v$ a $D^c_{uv}=1$ právě když
+  $c_u=c_v=0$; naopak z 1-in-3 ohodnocení přečteme barvu každého vrcholu z vrcholové klauzule
+  a hranové klauzule zaručí, že sousedé nemají stejnou barvu.)

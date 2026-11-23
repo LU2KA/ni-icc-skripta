@@ -1,0 +1,56 @@
+% Makra a styly obrazku kapitoly 10 (Presna pokryti: 1-in-3 SAT, X3C)
+% \chXcyc{stavy trojic}{nepokryte v}{zvyraznit volne p (1/0)}
+%   gadget promenne X3C pro k=3 (stejna geometrie jako 10b-exact-cover-3-sets-02);
+%   #1 = seznam i/stav pro trojice i=1..6 (liche i = T_{(i+1)/2}, sude i = F_{i/2}), stav s = vybrana, n = nevybrana
+%   #2 = seznam indexu nepokrytych vrcholu cyklu (0 = zadny)
+\newcommand{\chXcyc}[3]{%
+  \foreach \i in {1,...,6} {\coordinate (V\i) at ({60-60*(\i-1)}:1.2);}
+  \foreach \i/\st in {#1} {
+    \pgfmathtruncatemacro{\nx}{mod(\i,6)+1}
+    \pgfmathtruncatemacro{\j}{(\i+1)/2}
+    \ifodd\i \def\typ{T}\def\lab{F}\def\cc{exc}\else \def\typ{F}\def\lab{T}\def\cc{rej}\fi
+    \coordinate (Q\i) at ({30-60*(\i-1)}:2.25);
+    \if\st s
+      \fill[\cc,opacity=0.30] (V\i)--(V\nx)--(Q\i)--cycle;
+      \draw[\cc,very thick] (V\i)--(V\nx)--(Q\i)--cycle;
+      \node[font=\scriptsize,\cc!80!black] at ($(V\i)!0.5!(V\nx)!0.38!(Q\i)$) {$\typ_{\j}$};
+      \node[v,minimum size=7mm,font=\scriptsize,fill=black!12,text=black!55] at (Q\i) {$p^{\lab}_{\j}$};
+    \else
+      \draw[black!30,dashed] (V\i)--(V\nx)--(Q\i)--cycle;
+      \ifnum#3=1
+        \node[v,minimum size=7mm,font=\scriptsize,draw=intc,very thick,fill=hl] at (Q\i) {$p^{\lab}_{\j}$};
+      \else
+        \node[v,minimum size=7mm,font=\scriptsize,draw=black!40] at (Q\i) {$p^{\lab}_{\j}$};
+      \fi
+    \fi
+  }
+  \foreach \i in {1,...,6} {\node[v,minimum size=6mm,font=\scriptsize] at (V\i) {$v_{\i}$};}
+  \foreach \u in {#2} {\ifnum\u>0 \node[vbad,minimum size=6mm,font=\scriptsize] at (V\u) {$v_{\u}$};\fi}
+}
+% \chXcycq{stavy trojic}{index promenne}  (10z-ulohy-navic)
+%   gadget promenne X3C pro k=m=2 (cyklus v_1..v_4); #1 = seznam i/stav pro trojice i=1..4
+%   (liche i = T_{(i+1)/2}, sude i = F_{i/2}); stav s = vybrana, u = nevybrana a jeji volny p pouzije klauzule,
+%   g = nevybrana a jeji volny p jde do uklidu; uzly literalu se jmenuji G<#2>Q<i>
+\newcommand{\chXcycq}[2]{%
+  \foreach \i in {1,...,4} {\coordinate (V\i) at ({135-90*(\i-1)}:1.0);}
+  \foreach \i/\st in {#1} {
+    \pgfmathtruncatemacro{\nx}{mod(\i,4)+1}
+    \pgfmathtruncatemacro{\j}{(\i+1)/2}
+    \ifodd\i \def\typ{T}\def\lab{F}\def\cc{exc}\else \def\typ{F}\def\lab{T}\def\cc{rej}\fi
+    \coordinate (Q\i) at ({90-90*(\i-1)}:1.95);
+    \if\st s
+      \fill[\cc,opacity=0.30] (V\i)--(V\nx)--(Q\i)--cycle;
+      \draw[\cc,very thick] (V\i)--(V\nx)--(Q\i)--cycle;
+      \node[font=\scriptsize,\cc!80!black] at ($(V\i)!0.5!(V\nx)!0.38!(Q\i)$) {$\typ_{#2,\j}$};
+      \node[v,minimum size=8.5mm,font=\scriptsize,fill=black!12,text=black!55] (G#2Q\i) at (Q\i) {$p^{\lab}_{#2,\j}$};
+    \else
+      \draw[black!30,dashed] (V\i)--(V\nx)--(Q\i)--cycle;
+      \if\st u
+        \node[v,minimum size=8.5mm,font=\scriptsize,draw=thmc,very thick,fill=thmc!15] (G#2Q\i) at (Q\i) {$p^{\lab}_{#2,\j}$};
+      \else
+        \node[v,minimum size=8.5mm,font=\scriptsize,draw=intc,very thick,fill=hl] (G#2Q\i) at (Q\i) {$p^{\lab}_{#2,\j}$};
+      \fi
+    \fi
+  }
+  \foreach \i in {1,...,4} {\node[v,minimum size=6mm,font=\scriptsize] at (V\i) {$v_{\i}$};}
+}

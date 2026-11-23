@@ -1,0 +1,32 @@
+.Chapter Typové úlohy k zápočtovému testu
+  label: ch-typove
+
+
+Zdroje: typy úloh podle stránky předmětu „Hodnocení“ a oficiálního ukázkového testu; řešené úlohy a příklady
+z kapitol .reference:ch-ts až .reference:ch-resice-ilp.
+
+
+.Concept:
+  title: 'Proč to děláme'
+
+  Zápočtový test má čtyři úlohy čtyř předem známých typů (oddíl .reference:ch-test-co-je-na-testu). Úlohy každého
+  typu jsou ve skriptech rozeseté po mnoha kapitolách: stroje v kapitolách o čase a prostoru, self-redukce u TSP
+  a v cvičeních, modely v kapitolách o ILP a SAT, redukce v celém katalogu NP-úplných problémů. Tato příloha je
+  pro každý typ sbírá na jedno místo a ke každému typu přidává nové, úplně vyřešené úlohy testové obtížnosti,
+  napsané tak, jak by měla vypadat odpověď za plný počet bodů.
+
+
+.Warning:
+  title: 'Neoficiální úlohy'
+
+  Úlohy v této příloze (štítky „Typová úloha“) "nejsou".notion oficiální zadání předmětu ani úlohy z minulých testů.
+  Jsou to procvičovací úlohy sestavené podle znění typů na stránce předmětu a podle stylu ukázkového testu
+  (příloha .reference:ch-ukazkovy). Úlohy jsou záměrně na jiných problémech než ukázkový test a pokud možno i než
+  cvičení. Každé řešení bylo ověřeno programem na všech malých vstupech (stroje na všech krátkých slovech,
+  self-redukce proti orákulu hrubou silou, modely a redukce porovnáním s řešením hrubou silou).
+
+
+Každý oddíl má dvě části: "Kde to ve skriptech je".notion (odkazy na všechny už vyřešené úlohy a příklady daného
+typu s poznámkou, co trénují) a "Řešené úlohy".notion. Zadání si nejdřív zkus vyřešit sám (na papír, s časovým
+limitem zhruba 15 minut, u typu 4 zhruba 25 minut), teprve potom rozbal řešení. Postupy, podle kterých jsou
+řešení psaná, jsou v oddílu .reference:ch-test-postupy-na-papire.

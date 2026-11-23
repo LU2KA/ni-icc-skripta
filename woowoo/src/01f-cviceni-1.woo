@@ -1,0 +1,309 @@
+.Section Cvičení 1: Turingovy stroje
+  label: sec-cv1
+
+
+Ve všech řešeních značí $\blank$ prázdný symbol a zápis $x/y,D$ na hraně znamená „přečti $x$,
+zapiš $y$, posuň hlavu ve směru $D$“. Nevykreslené přechody vedou do $\qR$.
+
+
+.Exercise:
+  title: 'Cvičení 1.1'
+  label: cv-1-1
+
+  Na prosemináři jste viděli konstrukci dvoupáskového TS pro rozpoznání palindromů nad binární
+  abecedou. Sestrojte "jednopáskový".notion TS pro tento jazyk.
+
+
+.Solution:
+
+  "Idea:".notion první symbol si zapamatujeme "ve stavu".emphasize ($r_0$ nebo $r_1$), smažeme ho,
+  doběhneme na konec, porovnáme a smažeme poslední symbol a vrátíme se na začátek. Slovo se
+  v každém kole zkrátí o dva symboly.
+
+
+  .centered:
+
+    !tikz:
+      filename: 01f-cviceni-1-01
+
+      \node[st,initial,initial text=] (s) at (0,0) {$q_0$};
+      \node[st] (r0) at (2.8,1.9) {$r_0$};
+      \node[st] (r1) at (2.8,-1.9) {$r_1$};
+      \node[st] (c0) at (6.2,1.9) {$c_0$};
+      \node[st] (c1) at (6.2,-1.9) {$c_1$};
+      \node[stacc] (a) at (6.2,0) {\qA};
+      \node[st] (b) at (9.4,0) {$\mathit{back}$};
+      \draw[tr] (s) -- node[lab,above left]{$0/\blank,\Rgt$} (r0);
+      \draw[tr] (s) -- node[lab,below left]{$1/\blank,\Rgt$} (r1);
+      \draw[tr] (s) -- node[lab,above,pos=0.5]{$\blank/\blank,\Stay$ (vše spárováno)} (a);
+      \draw[tr] (r0) edge[loop above] node[lab]{$0,1$/stejné$,\Rgt$} (r0);
+      \draw[tr] (r1) edge[loop below] node[lab]{$0,1$/stejné$,\Rgt$} (r1);
+      \draw[tr] (r0) -- node[lab,above]{$\blank/\blank,\Lft$} (c0);
+      \draw[tr] (r1) -- node[lab,below]{$\blank/\blank,\Lft$} (c1);
+      \draw[tr] (c0) -- node[lab,above right]{$0/\blank,\Lft$} (b);
+      \draw[tr] (c1) -- node[lab,below right]{$1/\blank,\Lft$} (b);
+      \draw[tr] (c0) -- node[lab,right]{$\blank/\blank,\Stay$} (a);
+      \draw[tr] (c1) -- node[lab,right]{$\blank/\blank,\Stay$} (a);
+      \draw[tr] (b) edge[loop right] node[lab]{$0,1$/stejné$,\Lft$} (b);
+      \draw[tr] (b) to[out=-90,in=-90,looseness=0.9] node[lab,pos=0.5,below]{$\blank/\blank,\Rgt$} ($(s)+(0,-0.55)$) -- (s);
+
+
+  V $c_0$ (resp. $c_1$) čteme poslední symbol: musí to být $0$ (resp. $1$), jinak $\qR$. Čteme-li
+  v $c_0$ rovnou $\blank$, bylo slovo liché délky a smazaný symbol byl prostřední – přijímáme.
+  Každé kolo stojí $O(n)$ kroků a kol je $n/2$, celkem $O(n^2)$.
+
+
+  "Ukázka".notion na $0110$: "0110".code $\to$ ($q_0$ smaže 0) "⊔110".code
+  $\to$ ($c_0$ smaže poslední 0) "⊔11⊔".code $\to$ "⊔⊔1⊔".code
+  $\to$ "⊔⊔⊔⊔".code $\to$ $q_0$ čte $\blank$ $\to$ $\qA$.
+
+
+.Exercise:
+  title: 'Cvičení 1.2'
+  label: cv-1-2
+
+  Sestrojte dvoupáskový TS pro rozpoznání jazyka $\{a^nb^n\mid n\ge0\}$ v "lineárním".notion čase.
+
+
+.Solution:
+
+  "Idea:".notion druhou pásku použijeme jako "čítač".emphasize (zásobník). Za každé $a$ zapíšeme na
+  pásku 2 symbol $X$, za každé $b$ jeden $X$ „odebereme“ pohybem hlavy 2 doleva.
+
+
+  .centered:
+
+    !tikz:
+      filename: 01f-cviceni-1-02
+      options: 'node distance=14mm and 38mm'
+
+      \node[st,initial,initial text=] (p) {$q_a$};
+      \node[st,right=of p] (m) {$q_b$};
+      \node[stacc,below=of m] (acc) {\qA};
+      \draw[tr] (p) edge[loop above] node[lab]{$(a,\blank)/(a,X),\ \Rgt,\Rgt$} (p);
+      \draw[tr] (p) -- node[lab,above]{$(b,\blank)/(b,\blank),\ \Stay,\Lft$}
+                       node[lab,below]{$(\blank,\blank)/(\blank,\blank),\ \Stay,\Lft$} (m);
+      \draw[tr] (m) edge[loop above] node[lab]{$(b,X)/(b,X),\ \Rgt,\Lft$} (m);
+      \draw[tr] (m) -- node[lab,right]{$(\blank,\blank),\ \Stay,\Stay$} (acc);
+
+
+  .itemize:
+
+    .item:
+
+      $q_a$: čte $a$, píše $X$, obě hlavy doprava. Při prvním $b$ – nebo na konci vstupu, když žádné $b$
+      nepřijde – přepne do $q_b$ a hlavu 2 posune na poslední $X$.
+
+    .item:
+
+      $q_b$: dvojice $(b,X)$ – hlava 1 doprava, hlava 2 doleva.
+
+    .item:
+
+      Přijmeme jen v $q_b$ při $(\blank,\blank)$: vstup i čítač skončily současně. Situace
+      $(b,\blank)$ = víc $b$ než $a$; $(\blank,X)$ = víc $a$ než $b$; $(a,\cdot)$ v $q_b$ =
+      $a$ za $b$ – vše $\qR$.
+
+    .item:
+
+      "Pozor na konec vstupu v $q_a$:".emphasize při $(\blank,\blank)$ se nesmí rovnou přijmout – stejnou dvojici
+      stroj čte i po slově $aa$ (hlava 2 stojí za posledním $X$). Proto i tady jen přejde do $q_b$ s pohybem
+      $(\Stay,\Lft)$: pro prázdné slovo pak $q_b$ čte $(\blank,\blank)$ a přijme, pro $a^i$ s $i\ge1$ čte
+      $(\blank,X)$ a zamítne.
+
+  Každá hlava projde každou buňku nejvýše jednou: čas $O(n)$.
+
+
+  .centered:
+
+    !tikz:
+      filename: 01f-cviceni-1-07
+
+      \def\row#1#2#3#4#5#6{%
+        \node[font=\small\sffamily\bfseries,anchor=east] at (-0.4,#1+0.9) {#2};
+        \node[font=\scriptsize,anchor=east] at (-0.2,#1+0.35) {páska 1};
+        \tmtape{0}{#1+0.35}{_,a,a,b,b,_}{#3}
+        \node[font=\scriptsize,anchor=east] at (-0.2,#1-0.95) {páska 2};
+        \tmtape{0}{#1-0.95}{#4}{#5}
+        \node[note,anchor=west,text width=60mm,align=left] at (4.6,#1-0.3) {#6};}
+      \row{0}{Start}{2}{_,_,_,_,_,_}{2}{$q_a$: obě hlavy na začátku slova.}
+      \row{-3.0}{Po $aa$}{4}{_,X,X,_,_,_}{4}{$q_a$: za každé $a$ zapsáno $X$. Hlavy čtou $(b,\blank)$ $\Rightarrow$ $q_b$ s pohybem $(\Stay,\Lft)$.}
+      \row{-6.0}{Fáze $q_b$}{4}{_,X,X,_,_,_}{3}{$q_b$: hlava 2 stojí na posledním $X$. Každé $(b,X)$: hlava 1 $\Rgt$, hlava 2 $\Lft$.}
+      \row{-9.0}{Po $bb$}{6}{_,X,X,_,_,_}{1}{Obě hlavy čtou $(\blank,\blank)$: $b$ bylo stejně jako $a$ $\Rightarrow$ $\qA$.}
+
+
+  Výpočet na vstupu $aabb$. "Všimni si:".emphasize symboly $X$ se při čtení $b$ nemažou – „odebrání“ je
+  jen posun hlavy 2 doleva. Počet $X$ pod hlavou 2 a vlevo od ní je vždy počet dosud nespárovaných $a$.
+
+
+.Exercise:
+  title: 'Cvičení 1.3'
+  label: cv-1-3
+
+  Sestrojte TS pro rozpoznání jazyka $\{a^nb^nc^n\mid n\ge 0\}$.
+
+
+.Solution:
+
+  Rozšíříme myšlenku z~obr. .reference:fig-anbn: v jednom průchodu odškrtneme "jedno".emphasize $a$
+  (na $X$), "jedno".emphasize $b$ (na $Y$) a "jedno".emphasize $c$ (na $Z$).
+
+
+  .centered:
+
+    !tikz:
+      filename: 01f-cviceni-1-03
+      options: 'node distance=12mm and 21mm'
+
+      \node[st,initial,initial text=] (q0) {$q_0$};
+      \node[st,right=of q0] (q1) {$q_1$};
+      \node[st,right=of q1] (q2) {$q_2$};
+      \node[st,right=of q2] (q3) {$q_3$};
+      \node[st,below=18mm of q2] (q4) {$\mathit{back}$};
+      \node[st,below=18mm of q0] (ch) {$\mathit{chk}$};
+      \node[stacc,left=16mm of ch] (acc) {\qA};
+      \draw[tr] (q0) -- node[lab,above]{$a/X,\Rgt$} (q1);
+      \draw[tr] (q1) edge[loop above] node[lab]{$a,Y/\text{stejné},\Rgt$} (q1);
+      \draw[tr] (q1) -- node[lab,above]{$b/Y,\Rgt$} (q2);
+      \draw[tr] (q2) edge[loop above] node[lab]{$b,Z/\text{stejné},\Rgt$} (q2);
+      \draw[tr] (q2) -- node[lab,above]{$c/Z,\Rgt$} (q3);
+      \draw[tr] (q3) edge[loop above] node[lab]{$c/c,\Rgt$} (q3);
+      \draw[tr] (q3) |- node[lab,pos=0.25,right]{$\blank/\blank,\Lft$} (q4);
+      \draw[tr] (q4) edge[loop below] node[lab]{$a,b,c,Y,Z/\text{stejné},\Lft$} (q4);
+      \draw[tr] (q4) -- node[lab,pos=0.5,above right]{$X/X,\Rgt$} (q0);
+      \draw[tr] (q0) -- node[lab,left]{$Y/Y,\Rgt$} (ch);
+      \draw[tr] (q0) edge[bend right=30] node[lab,above left]{$\blank/\blank,\Stay$} (acc);
+      \draw[tr] (ch) edge[loop below] node[lab]{$Y,Z/\text{stejné},\Rgt$} (ch);
+      \draw[tr] (ch) -- node[lab,below]{$\blank/\blank,\Stay$} (acc);
+
+
+  .itemize:
+
+    .item:
+
+      $q_0$ stojí na prvním neodškrtnutém symbolu. Je-li to $a$, začne nové kolo. Je-li to $Y$,
+      všechna $a$ jsou spárovaná a $\mathit{chk}$ ověří, že zbývají jen $Y$ a $Z$ (žádné volné $b$, $c$).
+
+    .item:
+
+      $q_1$ přeskočí zbylá $a$ a už odškrtnutá $Y$, odškrtne první $b$; $q_2$ analogicky první $c$.
+
+    .item:
+
+      $q_3$ ověří, že za odškrtnutým $c$ jsou už jen $c$ – tím hlídáme pořadí (nesmí přijít
+      $a$ ani $b$ za $c$).
+
+    .item:
+
+      Chybějící přechody (např. $q_1$ čte $c$ nebo $\blank$ = málo $b$) vedou do $\qR$.
+
+  Kol je $n$, každé stojí $O(n)$: celkem $O(n^2)$.
+
+
+  .centered:
+
+    !tikz:
+      filename: 01f-cviceni-1-08
+
+      \tmtape{0}{0}{_,a,a,b,b,c,c,_}{2}
+      \node[note,anchor=west] at (5.9,0) {$q_0$ čte $a$: začíná 1.~kolo};
+      \tmtape{0}{-1.4}{_,X,a,Y,b,Z,c,_}{3}
+      \node[note,anchor=west] at (5.9,-1.4) {po 1.~kole ($\mathit{back}$ narazil na $X$): $q_0$ čte $a$};
+      \tmtape{0}{-2.8}{_,X,X,Y,Y,Z,Z,_}{4}
+      \node[note,anchor=west] at (5.9,-2.8) {po 2.~kole: $q_0$ čte $Y$ $\Rightarrow$ $\mathit{chk}$};
+      \tmtape{0}{-4.2}{_,X,X,Y,Y,Z,Z,_}{8}
+      \node[note,anchor=west] at (5.9,-4.2) {$\mathit{chk}$ přešel jen $Y$, $Z$ až na $\blank$ $\Rightarrow$ \qA};
+
+
+  Výpočet na vstupu $aabbcc$ – snímky pásky na začátku každého kola. "Všimni si:".emphasize každé kolo
+  odškrtne právě jedno $a$, $b$ a $c$; na vstupu $abcabc$ by $q_3$ za $Z$ narazil na $a$ a stroj zamítl.
+
+
+.Exercise:
+  title: 'Cvičení 1.4'
+  label: cv-1-4
+
+  Sestrojte TS, který počítá funkci „binární následník“: pro vstupní nezáporné číslo $x$
+  zapsané binárně jako řetězec nad $\{0,1\}$ je výstupem binární zápis čísla $x+1$.
+  (Můžete si vybrat, zda nejvyšší bit bude vpravo, nebo vlevo.)
+
+
+.Solution:
+
+  Zvolme nejvyšší bit "vlevo".emphasize (obvyklý zápis). Přičítání jedničky = šíření přenosu zprava:
+  všechny koncové jedničky se změní na nuly a první nula zleva od nich na jedničku.
+
+
+  .centered:
+
+    !tikz:
+      filename: 01f-cviceni-1-04
+      options: 'node distance=12mm and 34mm'
+
+      \node[st,initial,initial text=] (r) {$\mathit{right}$};
+      \node[st,right=of r] (c) {$\mathit{carry}$};
+      \node[stacc,right=of c] (h) {\qhalt};
+      \draw[tr] (r) edge[loop above] node[lab]{$0,1/\text{stejné},\Rgt$} (r);
+      \draw[tr] (r) -- node[lab,above]{$\blank/\blank,\Lft$} (c);
+      \draw[tr] (c) edge[loop above] node[lab]{$1/0,\Lft$} (c);
+      \draw[tr] (c) -- node[lab,above]{$0/1,\Stay$} (h);
+      \draw[tr] (c) edge[bend right=25] node[lab,below]{$\blank/1,\Stay$ \ (přetečení)} (h);
+
+
+  .centered:
+
+    !tikz:
+      filename: 01f-cviceni-1-05
+
+      \node[font=\scriptsize,anchor=east] at (-0.2,0) {$x=1011$};
+      \tmtape{0}{0}{_,1,0,1,1,_}{6}
+      \node[font=\scriptsize,anchor=east] at (-0.2,-1.3) {přenos};
+      \tmtape{0}{-1.3}{_,1,0,0,0,_}{3}
+      \node[font=\scriptsize,anchor=east] at (-0.2,-2.6) {$x+1=1100$};
+      \tmtape{0}{-2.6}{_,1,1,0,0,_}{3}
+      \node[note,anchor=west] at (4.6,0) {$\mathit{right}$ dojel za konec};
+      \node[note,anchor=west] at (4.6,-1.3) {$\mathit{carry}$: dvě jedničky $\to$ nuly};
+      \node[note,anchor=west] at (4.6,-2.6) {$0\to1$, zastav};
+
+
+  Pro $x=111$ projde $\mathit{carry}$ celé slovo a na $\blank$ před ním zapíše $1$: výsledek $1000$.
+  Čas $O(n)$. (Zvolíme-li nejvyšší bit vpravo, odpadne úvodní běh doprava.)
+
+
+.Exercise:
+  title: 'Cvičení 1.5'
+  label: cv-1-5
+
+  Sestrojte TS, který přijímá stejný jazyk jako deterministický konečný automat
+  $M=(Q,\Sigma,\delta,q_0,F)$.
+
+
+.Solution:
+
+  Konečný automat je vlastně TS, který "jen čte a jde doprava".emphasize. Stroj
+  $M'=(Q\cup\{\qA,\qR\},\Sigma,\Sigma\cup\{\blank\},\blank,1,\delta',q_0)$ s přechody
+
+  .equation:
+
+    \delta'(q,a) = (\delta(q,a),\,a,\,\Rgt)\quad\text{pro } a\in\Sigma,
+    \qquad
+    \delta'(q,\blank) = \begin{cases}(\qA,\blank,\Stay) & q\in F,\\ (\qR,\blank,\Stay) & q\notin F.\end{cases}
+
+
+  .centered:
+
+    !tikz:
+      filename: 01f-cviceni-1-06
+      options: 'node distance=10mm and 24mm'
+
+      \node[st,initial,initial text=] (p) {$p$};
+      \node[st,right=of p] (q) {$q$};
+      \node[stacc,right=of q,yshift=8mm] (a) {\qA};
+      \node[strej,right=of q,yshift=-8mm] (r) {\qR};
+      \draw[tr] (p) -- node[lab,above]{$a/a,\Rgt$} (q);
+      \node[note,below=1mm of p] {DKA: $p\xrightarrow{a}q$};
+      \draw[tr] (q) -- node[lab,above left,align=center]{$\blank/\blank,\Stay$\\($q\in F$)} (a);
+      \draw[tr] (q) -- node[lab,below left,align=center]{$\blank/\blank,\Stay$\\($q\notin F$)} (r);
+
+
+  Stroj udělá přesně $n+1$ kroků, vždy zastaví, a tedy "rozhoduje".emphasize regulární jazyk $L(M)$.

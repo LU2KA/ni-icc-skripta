@@ -1,0 +1,439 @@
+.Section Cvičení 3: Polynomiální redukce
+  label: sec-cv3
+
+
+Pro NP-úplnost vždy dokazujeme dvě věci: (a) problém je v $\NP$, (b) existuje redukce ze známého NP-těžkého
+problému. Stačí-li nám v redukci odpovědět „triviálně“ (např. když je parametr nesmyslně velký), vypíšeme
+nějakou "pevnou".emphasize ANO- či NE-instanci cílového problému.
+
+
+.Exercise:
+  title: 'Cvičení 3.1 (= cvičení 2.5)'
+  label: cv-3-1
+
+  Navrhněte postup, jak najít platné 3-obarvení grafu $G$ pomocí orákula pro rozhodovací verzi problému
+  3-obarvitelnosti: orákulum o libovolném grafu na vstupu rozhodne, zda je 3-obarvitelný, či nikoli.
+
+
+.Solution:
+  label: red-3colsearch
+
+  "Redukce s orákulem:".notion $\prob{3-Col}$: hledání $\to$ $\prob{3-Col}$: rozhodování.
+  Jak: Do grafu postupně přidáváme omezení a orákulem hlídáme, že zůstává 3-obarvitelný.
+
+
+  Opět "samo-redukovatelnost".emphasize jako u TSP v~kapitole .reference:ch-ts: postupně do grafu přidáváme omezení a orákulem
+  hlídáme, že graf zůstává 3-obarvitelný.
+
+
+  "Algoritmus (paleta):".notion
+
+  .enumerate:
+
+    .item:
+
+      Zeptej se orákula na $G$. Odpoví-li $\NE$, obarvení neexistuje – konec.
+
+    .item:
+
+      Přidej ke grafu "paletu".emphasize: nový trojúhelník $P_1P_2P_3$. (Trojúhelník je 3-obarvitelný, $G$ taky
+      a nejsou propojené, takže graf zůstane 3-obarvitelný; $P_1,P_2,P_3$ mají v každém obarvení tři
+      různé barvy, pojmenujme je $1,2,3$.)
+
+    .item:
+
+      Pro každý vrchol $v\in V(G)$: zkus $v$ "vynutit".emphasize barvu $c\in\{1,2\}$ tak, že ho spojíš hranou s oběma
+      vrcholy palety různými od $P_c$. Je-li graf stále 3-obarvitelný (orákulum: $\ANO$), hrany ponech;
+      jinak je odstraň a zkus další $c$. Neprojde-li ani $c=1$, ani $c=2$, vynuť $c=3$ bez ptaní.
+
+    .item:
+
+      Na konci je každý vrchol spojen se dvěma vrcholy palety, takže má jedinou možnou barvu – tu vypiš.
+
+
+  .centered:
+
+    !tikz:
+      filename: 08f-cviceni-3-01
+
+      \node[v,fill=tT!40] (p1) at (0,1.2) {$P_1$};
+      \node[v,fill=tF!40] (p2) at (-0.9,0) {$P_2$};
+      \node[v,fill=tB!40] (p3) at (0.9,0) {$P_3$};
+      \draw[e] (p1)--(p2)--(p3)--(p1);
+      \node[font=\scriptsize\sffamily,gr] at (0,-0.6) {paleta};
+      \node[v,fill=tT!40,very thick] (v) at (3.2,0.6) {$v$};
+      \draw[e,dashed,thick,defc] (v) to[bend left=10] (p3);
+      \draw[e,dashed,thick,defc] (v) to[bend right=40] (p2);
+      \node[font=\scriptsize,align=left,anchor=west] at (3.8,0.6) {$v$ sousedí s $P_2,P_3$\\ $\Rightarrow$ $v$ má barvu $P_1$};
+      \begin{scope}[xshift=7.2cm]
+        \node[v] (a) at (0,1) {}; \node[v] (b) at (1.2,1) {}; \node[v] (c) at (0.6,0) {}; \node[v] (d) at (1.8,0) {};
+        \draw[e] (a)--(b)--(c)--(a) (b)--(d)--(c);
+        \node[font=\scriptsize,align=center] at (0.9,-0.65) {$G$};
+      \end{scope}
+
+
+  "Korektnost:".notion invariant „aktuální graf je 3-obarvitelný“ platí po každém kroku. Přidané hrany
+  odpovídají přesně volbě „$v$ má barvu $c$“, takže pokud volba $c=1$ ani $c=2$ nepůjde, v každém obarvení
+  aktuálního grafu má $v$ barvu $3$ a vynucení $c=3$ invariant zachová. Na konci je výsledný graf
+  3-obarvitelný a každé jeho obarvení zúžené na $V(G)$ je platné obarvení $G$ (hrany $G$ jsme neubírali).
+
+
+  "Složitost:".notion $1+2|V|$ dotazů na orákulum, každý graf má polynomiální velikost $\Rightarrow$ polynomiálně
+  mnoho kroků plus volání orákula.
+
+
+  "Alternativa (slepování):".notion dokud $G$ není úplný graf, vezmi nesousední $u,v$ a zkus je
+  "ztotožnit".emphasize (slepit do jednoho vrcholu). Je-li výsledek 3-obarvitelný, ponech – $u,v$ dostanou stejnou
+  barvu; jinak přidej hranu $uv$ – v každém obarvení mají $u,v$ různé barvy. Skončíme s úplným grafem na
+  nejvýše 3 „super-vrcholech“, každý dostane vlastní barvu.
+
+
+  .centered:
+
+    !tikz:
+      filename: 08f-cviceni-3-07
+
+      % (a) slepeni projde
+      \node[font=\small\bfseries] at (-2.1,0) {(a)};
+      \node[v] (a) at (-1.2,0) {$a$}; \node[v] (b) at (0,0.8) {$b$};
+      \node[v] (c) at (0,-0.8) {$c$}; \node[v] (d) at (1.2,0) {$d$};
+      \draw[e] (a)--(b)--(c)--(a) (b)--(d)--(c);
+      \draw[gr,dashed,thick] (a) .. controls (-0.9,-1.75) and (0.9,-1.75) .. node[below,font=\scriptsize]{slepit?} (d);
+      \draw[flow] (1.8,0) -- node[above,font=\scriptsize]{slep $a,d$} (3.4,0);
+      \begin{scope}[xshift=4.6cm]
+        \node[v,fill=tT!40] (ad) at (-0.6,-0.5) {$ad$}; \node[v,fill=tF!40] (b2) at (0,0.6) {$b$};
+        \node[v,fill=tB!40] (c2) at (0.6,-0.5) {$c$};
+        \draw[e] (ad)--(b2)--(c2)--(ad);
+        \node[font=\scriptsize,acc!80!black,align=center] at (0,-1.35) {trojúhelník:\\ 3-obarvitelný};
+      \end{scope}
+      \draw[flow,acc!80!black] (5.9,0) -- node[above,font=\scriptsize]{$\ANO$: ponech} (8.35,0);
+      \begin{scope}[xshift=10.0cm]
+        \node[v,fill=tT!40] (a3) at (-1.2,0) {$a$}; \node[v,fill=tF!40] (b3) at (0,0.8) {$b$};
+        \node[v,fill=tB!40] (c3) at (0,-0.8) {$c$}; \node[v,fill=tT!40] (d3) at (1.2,0) {$d$};
+        \draw[e] (a3)--(b3)--(c3)--(a3) (b3)--(d3)--(c3);
+        \node[font=\scriptsize,align=center] at (0,-1.35) {$a,d$ stejná barva};
+      \end{scope}
+      % (b) slepeni neprojde
+      \begin{scope}[yshift=-3.4cm]
+        \node[font=\small\bfseries] at (-2.1,0) {(b)};
+        \node[v] (u) at (-1.2,0) {$u$}; \node[v] (x) at (0,0.7) {$x$};
+        \node[v] (y) at (0,-0.7) {$y$}; \node[v] (z) at (1.0,0) {$z$};
+        \node[v] (w) at (1.9,0) {$v$};
+        \draw[e] (x)--(y)--(z)--(x) (u)--(x) (u)--(y) (z)--(w);
+        \draw[gr,dashed,thick] (u) .. controls (-0.7,-1.75) and (1.4,-1.75) .. node[below,font=\scriptsize]{slepit?} (w);
+        \draw[flow] (2.5,0) -- node[above,font=\scriptsize]{slep $u,v$} (3.6,0);
+        \begin{scope}[xshift=4.9cm]
+          \node[v] (uv) at (-0.9,0) {$uv$}; \node[v] (x2) at (0,0.7) {$x$};
+          \node[v] (y2) at (0,-0.7) {$y$}; \node[v] (z2) at (0.9,0) {$z$};
+          \draw[e] (x2)--(y2)--(z2)--(x2) (uv)--(x2) (uv)--(y2) (uv)--(z2);
+          \node[font=\scriptsize,rej,align=center] at (0,-1.35) {$K_4$: není\\ 3-obarvitelný};
+        \end{scope}
+        \draw[flow,rej] (6.4,0) -- node[above,font=\scriptsize]{$\NE$: hrana $uv$} (8.35,0);
+        \begin{scope}[xshift=10.0cm]
+          \node[v,fill=tB!40] (u3) at (-1.2,0) {$u$}; \node[v,fill=tT!40] (x3) at (0,0.7) {$x$};
+          \node[v,fill=tF!40] (y3) at (0,-0.7) {$y$}; \node[v,fill=tB!40] (z3) at (1.0,0) {$z$};
+          \node[v,fill=tT!40] (w3) at (1.9,0) {$v$};
+          \draw[e] (x3)--(y3)--(z3)--(x3) (u3)--(x3) (u3)--(y3) (z3)--(w3);
+          \draw[intc,very thick] (u3) .. controls (-0.7,-1.75) and (1.4,-1.75) .. (w3);
+          \node[font=\scriptsize,align=center] at (0.35,-1.75) {$u,v$ různé barvy};
+        \end{scope}
+      \end{scope}
+
+
+  Jeden krok slepování na dvou malých grafech "(nad rámec přednášky)".emphasize. "Všimni si:".emphasize v (a) mají
+  $a,d$ v každém obarvení stejnou barvu (oba sousedí s $b$ i $c$), takže slepení projde; v (b) má $u$ vždy barvu $z$,
+  a ta se liší od barvy $v$ – slepení dá $K_4$, a proto přidáme hranu $uv$.
+
+
+.Exercise:
+  title: 'Cvičení 3.2'
+  label: cv-3-2
+
+  Dokažte, že $\prob{Subgraph Isomorphism}$ je NP-úplný: jsou dány grafy $G$ a $H$. Obsahuje $G$ podgraf
+  izomorfní s $H$? (Tj. existuje prosté zobrazení $f\colon V(H)\to V(G)$ takové, že pro každou hranu
+  $\{u,v\}\in E(H)$ je $\{f(u),f(v)\}\in E(G)$?)
+
+
+.Solution:
+  label: red-subiso
+
+  "Redukce:".notion $\prob{Clique} \redp \prob{Subgraph Isomorphism}$, instance $(G,k)$ $\mapsto$ $(G,\ H=K_k)$.
+
+
+  "V $\NP$:".notion certifikát je zobrazení $f$ (tabulka $|V(H)|$ dvojic). Ověříme prostotu a pro každou hranu $H$
+  přítomnost obrazu v $G$ – polynomiálně.
+
+
+  "NP-těžkost:".notion $\prob{Clique}\redp\prob{Subgraph Isomorphism}$. Instanci $(G,k)$ zobrazíme na $(G,\ H=K_k)$.
+  Je-li $k>|V(G)|$, je odpověď zjevně $\NE$ a vypíšeme pevnou NE-instanci (např. $G=K_1$, $H=K_2$) –
+  jinak by $K_k$ při binárně zadaném obrovském $k$ nebyl polynomiálně velký.
+
+
+  .centered:
+
+    !tikz:
+      filename: 08f-cviceni-3-02
+
+      \begin{scope}
+        \foreach \i/\a in {1/90,2/210,3/330} {\node[v,fill=intc!20] (h\i) at (\a:0.8) {\i};}
+        \draw[e] (h1)--(h2)--(h3)--(h1);
+        \node[font=\small\bfseries] at (0,-1.3) {$H=K_3$};
+      \end{scope}
+      \begin{scope}[xshift=5cm]
+        \node[vsel] (a) at (0,1) {$a$}; \node[vsel] (b) at (-1,0) {$b$}; \node[vsel] (c) at (0,-1) {$c$};
+        \node[v] (d) at (1.2,0) {$d$}; \node[v] (e) at (2.3,0.8) {$e$};
+        \draw[esel] (a)--(b)--(c)--(a);
+        \draw[e] (a)--(d)--(c) (d)--(e);
+        \node[font=\small\bfseries] at (0.6,-1.7) {$G$};
+      \end{scope}
+      \draw[->,thick,intc,dashed] (h1) to[bend left=20] (a);
+      \draw[->,thick,intc,dashed] (h2) to[bend right=25] (b);
+      \draw[->,thick,intc,dashed] (h3) to[bend right=20] (c);
+      \node[font=\small,intc] at (2.4,1.25) {$f$};
+
+
+  ($\Rightarrow$) Je-li $S=\{s_1,\dots,s_k\}$ klika v $G$, pak $f(i)=s_i$ je prosté a každou hranu $\{i,j\}$
+  úplného grafu $K_k$ zobrazí na hranu $\{s_i,s_j\}\in E(G)$.
+
+
+  ($\Leftarrow$) Je-li $f\colon V(K_k)\to V(G)$ prosté a zachovává hrany, pak obraz $f(V(K_k))$ má $k$ různých
+  vrcholů (prostota) a každé dva jsou spojeny (každá dvojice v $K_k$ je hrana) – je to klika velikosti $k$.
+
+
+.Exercise:
+  title: 'Cvičení 3.3'
+  label: cv-3-3
+
+  Dokažte, že $\prob{Half-Clique}$ je NP-úplný: je dán graf $G$ na $n$ vrcholech. Obsahuje $G$ kliku velikosti
+  alespoň $n/2$?
+
+
+.Solution:
+  label: red-halfclique
+
+  "Redukce:".notion $\prob{Clique} \redp \prob{Half-Clique}$, instance $(G,k)$ $\mapsto$ doplněný graf $G'$.
+
+
+  "V $\NP$:".notion certifikát je množina vrcholů, ověříme velikost $\ge n/2$ a všechny hrany mezi nimi.
+
+
+  "NP-těžkost:".notion $\prob{Clique}\redp\prob{Half-Clique}$. Máme $(G,k)$, $|V(G)|=n$. Graf "doplníme".emphasize
+  tak, aby hledaná klika měla přesně polovinu vrcholů nového grafu $G'$ na $N$ vrcholech:
+
+  .itemize:
+
+    .item:
+
+      "triviální případy:".notion $k\le1$ (klika existuje, je-li $n\ge1$) a $k>n$ (neexistuje) – vypíšeme
+      pevnou ANO/NE-instanci (NE-instance: 4 izolované vrcholy, největší klika má 1 vrchol $<2$);
+
+    .item:
+
+      "$2k=n$:".notion $G'=G$;
+
+    .item:
+
+      "$2k<n$:".notion přidáme $d=n-2k$ nových vrcholů spojených se "vším".emphasize (navzájem i se všemi vrcholy $G$).
+      $N=2n-2k$, $N/2=n-k=k+d$;
+
+    .item:
+
+      "$2k>n$:".notion přidáme $d=2k-n$ "izolovaných".emphasize vrcholů. $N=2k$, $N/2=k$.
+
+  V obou netriviálních případech je $N$ sudé, takže „alespoň $N/2$“ je celé číslo a parita $n$ nevadí.
+
+
+  .centered:
+
+    !tikz:
+      filename: 08f-cviceni-3-03
+
+      \begin{scope}
+        \draw[thick,fill=black!4,rounded corners=6pt] (-1.5,-1) rectangle (1.5,1);
+        \node[font=\small] at (0,0.5) {$G$ ($n$ vrcholů)};
+        \foreach \i in {1,2,3} {\node[vsel,minimum size=4mm] (k\i) at ({-0.8+\i*0.4},-0.2) {};}
+        \node[font=\scriptsize,acc!70!black] at (0,-0.65) {klika $k$};
+        \foreach \i in {1,2} {\node[v,fill=intc!30,minimum size=5mm] (u\i) at ({-0.4+(\i-1)*0.8},2.0) {};}
+        \draw[e,intc] (u1)--(u2);
+        \begin{scope}[on background layer]
+        \foreach \i in {1,2} {\foreach \x in {-1.3,-0.65,0,0.65,1.3} {\draw[intc!70,thin] (u\i)--(\x,1);}}
+        \end{scope}
+        \node[font=\scriptsize,intc,align=center,anchor=west] at (0.8,2.0) {$d=n-2k$ univerzálních\\ vrcholů (spojeny se vším)};
+        \node[font=\small\bfseries] at (0,-1.5) {$2k<n$: klika $k+d=N/2$};
+      \end{scope}
+      \begin{scope}[xshift=7cm]
+        \draw[thick,fill=black!4,rounded corners=6pt] (-1.5,-1) rectangle (1.5,1);
+        \node[font=\small] at (0,0.65) {$G$ ($n$ vrcholů)};
+        \foreach \i in {1,2,3,4} {\node[vsel,minimum size=4mm] (k\i) at ({-1.0+\i*0.4},-0.2) {};}
+        \node[font=\scriptsize,acc!70!black] at (0,-0.65) {klika $k$};
+        \foreach \i in {1,2,3} {\node[v,fill=gr!30,minimum size=5mm] at ({-0.8+(\i-1)*0.8},2.0) {};}
+        \node[font=\scriptsize,gr,align=center,anchor=west] at (1.4,2.0) {$d=2k-n$\\ izolovaných vrcholů};
+        \node[font=\small\bfseries] at (0,-1.5) {$2k>n$: klika $k=N/2$};
+      \end{scope}
+
+
+  "$2k<n$:".notion ($\Rightarrow$) klika $K$ velikosti $k$ v $G$ spolu se všemi $d$ univerzálními vrcholy je klika
+  velikosti $k+d=N/2$. ($\Leftarrow$) klika velikosti $\ge k+d$ v $G'$ obsahuje nejvýše $d$ nových vrcholů, tedy
+  alespoň $k$ vrcholů z $G$, a ty tvoří kliku v $G$.
+
+
+  "$2k>n$:".notion ($\Rightarrow$) klika velikosti $k$ v $G$ je klika velikosti $N/2$ v $G'$. ($\Leftarrow$) klika
+  velikosti $\ge k\ge2$ nemůže obsahovat izolovaný vrchol (ten nemá žádného souseda), leží tedy celá v $G$.
+
+
+  Konstrukce přidá nejvýše $n$ vrcholů – polynomiální.
+
+
+.Exercise:
+  title: 'Cvičení 3.4 (= cvičení 4.1)'
+  label: cv-3-4
+
+  Dokažte, že $\prob{Set Cover}$ je NP-úplný: je dáno univerzum $U$, systém jeho podmnožin
+  $\mathcal S=\{S_1,\dots,S_m\}$ a číslo $k$. Lze vybrat nejvýše $k$ množin ze $\mathcal S$ tak, aby jejich
+  sjednocení bylo celé $U$?
+
+
+.Solution:
+  label: red-setcover
+
+  "Redukce:".notion $\prob{VC} \redp \prob{Set Cover}$, instance $(G,k)$ $\mapsto$ $(U=E,\ \{S_v\}_{v\in V},\ k)$.
+
+
+  "V $\NP$:".notion certifikát je nejvýše $k$ indexů množin; sjednocení spočítáme a porovnáme s $U$.
+
+
+  "NP-těžkost:".notion $\prob{VC}\redp\prob{Set Cover}$. Z grafu $G=(V,E)$ a čísla $k$ vyrobíme
+
+  .equation:
+
+    U=E,\qquad \mathcal S=\{S_v\mid v\in V\},\ \text{kde } S_v=\{e\in E\mid v\in e\}\ \text{(hrany incidentní s } v\text{)},\qquad k \text{ stejné}.
+
+  .centered:
+
+    !tikz:
+      filename: 08f-cviceni-3-04
+
+      \node[v] (a) at (0,0) {$a$}; \node[v,fill=rej!15,draw=rej,very thick] (b) at (1.6,0) {$b$};
+      \node[v] (c) at (3.2,0) {$c$}; \node[v,fill=rej!15,draw=rej,very thick] (d) at (1.6,-1.5) {$d$};
+      \draw[e] (a) -- node[wt]{$e_1$} (b); \draw[e] (b) -- node[wt]{$e_2$} (c);
+      \draw[e] (b) -- node[wt]{$e_3$} (d); \draw[e] (a) -- node[wt]{$e_4$} (d); \draw[e] (c) -- node[wt]{$e_5$} (d);
+      \node[anchor=west,font=\small,align=left] at (4.2,-0.6) {$U=\{e_1,\dots,e_5\}$\\
+         $S_a=\{e_1,e_4\}$,\quad $\color{rej}S_b=\{e_1,e_2,e_3\}$\\ $S_c=\{e_2,e_5\}$,\quad $\color{rej}S_d=\{e_3,e_4,e_5\}$\\[2pt]
+         VC $\{b,d\}$ \ $\leftrightarrow$\ $S_b\cup S_d=U$};
+
+  ($\Rightarrow$) Je-li $C$ vrcholové pokrytí, $|C|\le k$, pak $\{S_v\mid v\in C\}$ pokrývá $U$: každá hrana má
+  konec $v\in C$, tedy leží v $S_v$.
+  ($\Leftarrow$) Pokrývají-li $S_{v_1},\dots,S_{v_j}$, $j\le k$, celé $E$, pak každá hrana leží v nějakém $S_{v_i}$,
+  tj. má konec $v_i$ – množina $\{v_1,\dots,v_j\}$ je vrcholové pokrytí.
+
+
+  (Ekvivalentně: $\prob{Set Cover}$ je „duální“ k $\prob{Hitting Set}$u – prvky a množiny si vymění role.)
+
+
+.Exercise:
+  title: 'Cvičení 3.5 (= cvičení 4.2)'
+  label: cv-3-5
+
+  Dokažte, že $\prob{Feedback Vertex Set}$ je NP-úplný: je dán neorientovaný jednoduchý graf $G=(V,E)$ a číslo $k$.
+  Existuje $F\subseteq V$, $|F|\le k$, taková, že graf $G-F$ neobsahuje žádnou kružnici (je to les)?
+
+
+.Solution:
+  label: red-fvs
+
+  "Redukce:".notion $\prob{VC} \redp \prob{Feedback Vertex Set}$, instance $(G,k)$ $\mapsto$ $(G',k)$: hrany $\to$ trojúhelníky.
+
+
+  "V $\NP$:".notion certifikát je $F$; acykličnost $G-F$ ověříme prohledáním do hloubky v čase $O(|V|+|E|)$.
+
+
+  "NP-těžkost:".notion $\prob{VC}\redp\prob{FVS}$. Každou hranu $uv$ „ztrojúhelníkujeme“: přidáme nový vrchol
+  $w_{uv}$ spojený s $u$ i $v$. Parametr $k$ zůstává. (Původní hranu ponecháme; graf zůstane jednoduchý.)
+
+
+  .centered:
+
+    !tikz:
+      filename: 08f-cviceni-3-05
+
+      \node[v] (u) at (0,0) {$u$}; \node[v] (v) at (1.6,0) {$v$};
+      \draw[e] (u)--(v);
+      \draw[->,very thick,intc] (2.3,0.3) -- (3.3,0.3);
+      \begin{scope}[xshift=4cm]
+        \node[v] (u2) at (0,0) {$u$}; \node[v] (v2) at (1.6,0) {$v$};
+        \node[v,fill=intc!25] (w) at (0.8,1.2) {$w_{uv}$};
+        \draw[e] (u2)--(v2) (u2)--(w)--(v2);
+      \end{scope}
+      \begin{scope}[xshift=8.3cm]
+        \node[v,fill=rej!15,draw=rej,very thick] (a) at (0,0) {$a$}; \node[v] (b) at (1.6,0) {$b$};
+        \node[v] (c) at (0.8,-1.3) {$c$};
+        \draw[e] (a)--(b) (a)--(c);
+        \node[vs,fill=intc!50] (w1) at (0.8,0.7) {}; \draw[e,thin] (a)--(w1)--(b);
+        \node[vs,fill=intc!50] (w2) at (-0.3,-0.9) {}; \draw[e,thin] (a)--(w2)--(c);
+        \node[font=\scriptsize,align=left,anchor=west] at (1.9,-0.7) {VC $\{a\}$: po odebrání $a$\\ zbydou jen „hvězdy“};
+      \end{scope}
+
+
+  ($\Rightarrow$) Nechť $C$ je VC v $G$, $|C|\le k$. V $G'-C$ zůstanou vrcholy $V\setminus C$ (nezávislá množina
+  v $G$, mezi nimi tedy žádné původní hrany) a vrcholy $w_{uv}$, z nichž každý má nejvýše jednoho souseda
+  (aspoň jeden z $u,v$ je v $C$). Každá komponenta je hvězda, tedy strom – $G'-C$ je les.
+
+
+  ($\Leftarrow$) Nechť $F$ je FVS v $G'$, $|F|\le k$. "BÚNO $F\subseteq V$:".emphasize obsahuje-li $F$ vrchol $w_{uv}$,
+  nahradíme ho vrcholem $u$. Každá kružnice přes $w_{uv}$ prochází i $u$ (sousedé $w_{uv}$ jsou jen $u,v$),
+  takže nová množina dál ruší všechny kružnice a není větší. Teď pro každou hranu $uv$ je
+  $u\,v\,w_{uv}$ kružnice v $G'$, kterou musí $F$ zasáhnout, a $w_{uv}\notin F$ – tedy $u\in F$ nebo $v\in F$.
+  $F$ je vrcholové pokrytí $G$.
+
+
+.Exercise:
+  title: 'Cvičení 3.6 (= cvičení 4.3)'
+  label: cv-3-6
+
+  Dokažte, že $\prob{Dominating Set}$ je NP-úplný: je dán graf $G=(V,E)$ a číslo $k$. Existuje $D\subseteq V$,
+  $|D|\le k$, taková, že každý vrchol mimo $D$ má souseda v $D$?
+
+
+.Solution:
+  label: red-domset
+
+  "Redukce:".notion $\prob{VC} \redp \prob{Dominating Set}$, instance $(G,k)$ $\mapsto$ $(G',k)$: vrchol $w_{uv}$ za hranu.
+
+
+  "V $\NP$:".notion certifikát je $D$, pro každý vrchol mimo $D$ projdeme sousedy.
+
+
+  "NP-těžkost:".notion $\prob{VC}\redp\prob{DS}$, stejný gadget jako u FVS: pro každou hranu $uv$ přidáme vrchol
+  $w_{uv}$ sousedící s $u$ a $v$.
+
+
+  "Pozor – izolované vrcholy.".notion
+  Izolovaný vrchol $z$ grafu $G$ do vrcholového pokrytí dávat nemusíme, ale v dominující množině být "musí".emphasize
+  (nemá žádného souseda, který by ho dominoval). Před konstrukcí proto izolované vrcholy z $G$ odstraníme
+  – odpověď VC se tím nezmění. (Ekvivalentně je ponecháme a zvýšíme $k$ o jejich počet.)
+
+
+  .centered:
+
+    !tikz:
+      filename: 08f-cviceni-3-06
+
+      \node[v,fill=rej!15,draw=rej,very thick] (a) at (0,0) {$a$}; \node[v] (b) at (1.6,0) {$b$};
+      \node[v,fill=rej!15,draw=rej,very thick] (c) at (3.2,0) {$c$}; \node[v] (d) at (1.6,-1.4) {$d$};
+      \draw[e] (a)--(b)--(c) (a)--(d)--(c);
+      \foreach \u/\w/\p in {a/b/{(0.8,0.9)},b/c/{(2.4,0.9)},a/d/{(0.3,-1.25)},d/c/{(2.9,-1.25)}} {
+         \node[vs,fill=intc!60] (x) at \p {}; \draw[e,thin,intc] (\u)--(x)--(\w);}
+      \node[v,dashed,draw=gr,text=gr] (z) at (4.6,-0.7) {$z$};
+      \node[font=\scriptsize,gr,anchor=west] at (5.0,-0.7) {izolovaný: odstranit!};
+      \node[font=\small,anchor=west,align=left] at (4.6,0.6) {VC $\{a,c\}$ = DS $\{a,c\}$\\ (dominuje $b$, $d$ i všechny $w_{uv}$)};
+
+
+  ($\Rightarrow$) Nechť $C$ je VC v $G$ (bez izolovaných vrcholů), $|C|\le k$. Vrchol $v\notin C$ má nějakou hranu
+  $vu$ a $u\in C$, je tedy dominován. Vrchol $w_{uv}$ sousedí s $u$ i $v$, z nichž aspoň jeden je v $C$.
+  $C$ je dominující množina.
+
+
+  ($\Leftarrow$) Nechť $D$ je DS v $G'$, $|D|\le k$. "BÚNO $D\subseteq V$:".emphasize obsahuje-li $D$ vrchol $w_{uv}$,
+  nahradíme ho $u$ – $u$ dominuje všechno, co dominoval $w_{uv}$ (tj. $u$, $v$, $w_{uv}$). Teď každý $w_{uv}\notin D$
+  musí mít souseda v $D$, a jeho jedinými sousedy jsou $u,v$ – tedy $u\in D$ nebo $v\in D$. $D$ pokrývá
+  každou hranu, je to VC velikosti $\le k$.

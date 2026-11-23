@@ -1,0 +1,267 @@
+.Chapter Graf všech redukcí
+  label: ch-graf
+
+
+Zdroje: všechny redukce z kapitol 5–13 a cvičení 3, 4.
+
+
+.Concept:
+  title: 'Proč to děláme'
+
+  Za celý kurz jsme dokázali desítky redukcí a každá z nich je jen jeden kamínek. Tady je všechny skládáme
+  do jednoho obrázku: vidíte, odkud kam vedou, které problémy jsou rozbočovače a jak z kořene „libovolný $L\in\NP$“
+  dojdeme do každého NP-těžkého problému. Pod grafem je přehled redukcí s jednovětou nápovědou a s odkazem na každou z nich.
+
+
+Šipka $A\to B$ znamená redukci
+$A\redp B$ (tedy „$B$ je alespoň tak těžký jako $A$“), číslo na šipce říká, ve které kapitole
+redukci najdete (cv~3.x, cv~4.x = řešení cvičení). Barva uzlu udává druh problému.
+Kvůli místu jsou redukce z kapitoly .reference:ch-cisla (pořadí, rovnice, sítě a čísla) v samostatném grafu na
+obr. .reference:fig-grafredukci2 a redukce pro prostorové třídy (kapitoly .reference:ch-prostor a .reference:ch-pspace) na
+obr. .reference:fig-grafredukci3.
+
+
+.Concept:
+  title: 'Jak graf číst'
+
+  .itemize:
+
+    .item:
+
+      "Tranzitivita:".notion každý problém, do kterého vede z $\prob{SAT}$u "cesta".emphasize, je NP-těžký –
+      stačí redukce za sebou složit. Všechny problémy v grafu kromě bonusového Super Maria navíc leží
+      v $\NP$, jsou tedy NP-úplné. (U zobecněného Maria víme jen, že je NP-těžký.)
+
+    .item:
+
+      "Kořen".notion je „libovolný $L\in\NP$“: odtud vedou jen dvě redukce „z definice“ ($\prob{UNP}$
+      a Cook–Levin přes $\prob{Dlaždičkování}$). Všechno ostatní už jen přebírá štafetu.
+
+    .item:
+
+      "Rozbočovač".notion je $\prob{3-SAT}$: díky své jednoduché struktuře je nejčastějším zdrojem
+      redukcí. Druhým rozbočovačem je $\prob{Vertex Cover}$ (všechna grafová cvičení).
+
+
+.Figure:
+  label: fig-grafredukci
+
+  !tikz:
+    filename: 19-graf-redukci-01
+    options: 'x=1.03cm,y=1.03cm'
+    include_options: 'width=\linewidth'
+
+      % --- uzly ---
+      \node[gvyp,text width=30mm] (L)   at (11.5, 0)    {libovolný $L\in\NP$};
+      \node[gvyp] (UNP)   at (7.5,-1.4)   {UNP};
+      \node[gvyp,text width=22mm] (DL) at (11.5,-1.4) {Dlaždičkování};
+      \node[glog] (SAT)   at (11.5,-2.8)  {SAT};
+      \node[glog] (S3)    at (11.5,-4.2)  {3-SAT};
+      \node[gapp,text width=20mm] (MAR) at (16.8,-3.3) {Super Mario Bros.};
+      \node[ggraf] (IS)   at (3.6,-6.0)   {IS};
+      \node[ggraf] (MAPF) at (7.8,-6.0)   {MAPF};
+      \node[ggraf] (COL)  at (11.5,-6.0)  {3-Coloring};
+      \node[glog,text width=21mm] (NAE4)  at (19.2,-6.0)  {NAE-4-SAT};
+      \node[ggraf] (VC)   at (1.8,-7.8)   {Vertex Cover};
+      \node[ggraf] (CLQ)  at (6.4,-7.8)   {Clique};
+      \node[gapp] (ROZ)   at (9.3,-7.8)   {Rozvrh zkoušek};
+      \node[ggraf] (PL)   at (11.9,-7.8)  {Planar 3-Coloring};
+      \node[glog] (ONE)   at (14.6,-7.8)  {(pozitivní) 1-in-3 SAT};
+      \node[glog,text width=21mm] (NAE3)  at (19.2,-7.8)  {NAE-3-SAT};
+      \node[gmno] (HS)    at (-0.5,-9.9)  {Hitting Set};
+      \node[gmno] (SC)    at (1.45,-9.9)  {Set Cover};
+      \node[ggraf] (FVS)  at (3.4,-9.9)   {Feedback Vertex Set};
+      \node[ggraf] (DS)   at (5.35,-9.9)  {Dominating Set};
+      \node[ggraf,text width=19mm] (SI)   at (7.6,-9.9)  {Subgraph\\ Isomorphism};
+      \node[ggraf] (HC)   at (9.6,-9.9)   {Half-Clique};
+      \node[gmno] (X3C)   at (14.6,-9.9)  {X3C};
+      \node[glog,text width=19mm] (PNAE)  at (17.6,-9.9)  {pozitivní\\ NAE-3-SAT};
+      \node[ggraf] (WMC)  at (20.6,-9.9)  {vážený MaxCut};
+      \node[ggraf] (MC)   at (20.6,-11.6) {MaxCut};
+      \node[glog,text width=21mm] (M2S)  at (17.4,-11.6) {MAX-2-SAT};
+      % --- hrany: prednasky a proseminare ---
+      \draw[rd] (L) -- node[kap]{\hyperlink{red:unp}{5}} (UNP);
+      \draw[rd] (L) -- node[kap]{\hyperlink{red:dlazd}{6}} (DL);
+      \draw[rd] (DL) -- node[kap]{\hyperlink{red:sat}{6}} (SAT);
+      \draw[rd] (SAT) -- node[kap]{\hyperlink{red:sat3sat}{7}} (S3);
+      \draw[rd] (S3) -- node[kap,pos=0.55]{\hyperlink{red:is}{8}} (IS);
+      \draw[rd] (S3) -- node[kap,pos=0.6]{\hyperlink{red:mapf}{9}} (MAPF);
+      \draw[rd] (S3) -- node[kap]{\hyperlink{red:3col}{9}} (COL);
+      \draw[rd] (S3) -- node[kap,pos=0.55]{\hyperlink{red:nae4}{7}} (NAE4);
+      \draw[rd] (S3.south east) to[out=-15,in=55] node[kap,pos=0.62]{\hyperlink{red:x3c}{10}} (X3C.north east);
+      \draw[rd] (IS) -- node[kap]{\hyperlink{red:vc}{8}} (VC);
+      \draw[rd] (IS) -- node[kap]{\hyperlink{red:clique}{8}} (CLQ);
+      \draw[rd] (VC) -- node[kap]{\hyperlink{red:hs}{8}} (HS);
+      \draw[rd] (COL) -- node[kap]{\hyperlink{red:rozvrh}{9}} (ROZ);
+      \draw[rd] (COL) -- node[kap]{\hyperlink{red:planar}{9}} (PL);
+      \draw[rd] (COL) -- node[kap]{\hyperlink{red:1in3}{10}} (ONE);
+      \draw[rd] (ONE) -- node[kap]{\hyperlink{red:x3c1in3}{10}} (X3C);
+      \draw[rd] (NAE4) -- node[kap]{\hyperlink{red:nae3}{7}} (NAE3);
+      \draw[rd] (NAE3) -- node[kap]{\hyperlink{red:poznae}{7}} (PNAE);
+      \draw[rd] (NAE3) -- node[kap]{\hyperlink{red:wmaxcut}{9}} (WMC);
+      \draw[rd] (WMC) -- node[kap]{\hyperlink{red:maxcut}{9}} (MC);
+      % --- hrany: cviceni 3 ---
+      \draw[rdc] (VC) -- node[kapc,pos=0.3]{\hyperlink{red:setcover}{cv 3.4/4.1}} (SC);
+      \draw[rdc] (VC) -- node[kapc,pos=0.7]{\hyperlink{red:fvs}{cv 3.5/4.2}} (FVS);
+      \draw[rdc] (VC) -- node[kapc,pos=0.45]{\hyperlink{red:domset}{cv 3.6/4.3}} (DS);
+      \draw[rdc] (CLQ) -- node[kapc]{\hyperlink{red:subiso}{cv 3.2}} (SI);
+      \draw[rdc] (CLQ) -- node[kapc,pos=0.6]{\hyperlink{red:halfclique}{cv 3.3}} (HC);
+      \draw[rdc] (MC) -- node[kapc]{\hyperlink{red:max2sat}{cv 4.4}} (M2S);
+      \draw[rdc] (NAE3.north west) to[out=160,in=-15] node[kapc,pos=0.35]{\hyperlink{red:nae3col}{cv 4.5}} (COL.east);
+      % --- bonus ---
+      \draw[rdb] (S3) -- node[kap,text=gr]{\hyperlink{red:mario}{7}} (MAR);
+      % --- odkazy: klik na uzel = skok na redukci, ktera ho dokazuje ---
+      \glinkr{L}{def:nphard}
+      \glink{UNP}{red:unp}
+      \glink{DL}{red:dlazd}
+      \glink{SAT}{red:sat}
+      \glink{S3}{red:sat3sat}
+      \glink{MAR}{red:mario}
+      \glink{IS}{red:is}
+      \glink{MAPF}{red:mapf}
+      \glink{COL}{red:3col}
+      \glink{NAE4}{red:nae4}
+      \glink{VC}{red:vc}
+      \glink{CLQ}{red:clique}
+      \glink{ROZ}{red:rozvrh}
+      \glink{PL}{red:planar}
+      \glink{ONE}{red:1in3}
+      \glink{NAE3}{red:nae3}
+      \glink{HS}{red:hs}
+      \glink{SC}{red:setcover}
+      \glink{FVS}{red:fvs}
+      \glink{DS}{red:domset}
+      \glink{SI}{red:subiso}
+      \glink{HC}{red:halfclique}
+      \glink{X3C}{red:x3c}
+      \glink{PNAE}{red:poznae}
+      \glink{WMC}{red:wmaxcut}
+      \glink{MC}{red:maxcut}
+      \glink{M2S}{red:max2sat}
+      % --- legenda ---
+      \begin{scope}[shift={(-0.6,-0.4)}]
+        \node[anchor=west,font=\sffamily\scriptsize\bfseries] at (0,0.3) {Uzly};
+        \node[gvyp,text width=12mm,minimum height=5mm,anchor=west] at (0,-0.35) {výpočet};
+        \node[glog,text width=12mm,minimum height=5mm,anchor=west] at (1.6,-0.35) {logika};
+        \node[ggraf,text width=12mm,minimum height=5mm,anchor=west] at (0,-1.05) {grafy};
+        \node[gmno,text width=12mm,minimum height=5mm,anchor=west] at (1.6,-1.05) {množiny};
+        \node[gapp,text width=12mm,minimum height=5mm,anchor=west] at (0,-1.75) {aplikace};
+        \node[anchor=west,font=\sffamily\scriptsize\bfseries] at (0,-2.45) {Šipky $A\to B$ = $A\redp B$};
+        \draw[rd] (0,-2.95) -- (0.8,-2.95) node[right,font=\sffamily\scriptsize]{přednáška / proseminář};
+        \draw[rdc] (0,-3.45) -- (0.8,-3.45) node[right,font=\sffamily\scriptsize]{řešení cvičení};
+        \draw[rdb] (0,-3.95) -- (0.8,-3.95) node[right,font=\sffamily\scriptsize]{bonus (jen idea)};
+      \end{scope}
+
+  .caption:
+
+    Graf všech polynomiálních redukcí ze skript: 26 problémů (plus kořen „libovolný $L\in\NP$“) a 28 redukcí. Číslo na šipce = kapitola,
+    ve které redukci najdete. "Každou redukci najdete s odkazem v přehledové tabulce v oddílu .reference:ch-graf-prehled-redukci-a-jejich-klicovych-myslenek".emphasize;
+    kořen „libovolný $L\in\NP$“ odkazuje na "definici NP-těžkosti"#def-nphard.
+
+
+.Figure:
+  label: fig-grafredukci2
+
+  !tikz:
+    filename: 19-graf-redukci-02
+    options: 'x=1.03cm,y=1.03cm'
+    include_options: 'width=\linewidth'
+
+      % --- importovane uzly (z grafu na obr. vyse) ---
+      \node[gimp] (S3)  at (2.5,0)  {3-SAT};
+      \node[gimp] (COL) at (7.0,0)  {3-Coloring};
+      \node[gimp] (VC)  at (11.0,0) {Vertex Cover};
+      \node[gimp] (ONE) at (16.0,0) {1-in-3 SAT};
+      \node[gnum,text width=20mm] (TP) at (20.8,0) {3-Partition\\[-1pt]{\tiny\normalfont silně NP-úpl.}};
+      % --- sekvence ---
+      \node[ggraf] (DHP) at (2.5,-2)  {DHP};
+      \node[ggraf] (UHP) at (0.3,-4)  {UHP};
+      \node[ggraf] (HC)  at (2.5,-4)  {HC};
+      \node[ggraf] (LP)  at (0.3,-6)  {Longest Path};
+      \node[ggraf] (TSP) at (2.5,-6)  {TSP};
+      % --- rovnice, site ---
+      \node[glog]  (ILP) at (7.0,-2)  {ILP};
+      \node[ggraf] (ST)  at (11.0,-2) {Steiner Tree};
+      % --- cisla ---
+      \node[gnum] (SS)  at (16.0,-2) {Subset Sum};
+      \node[gnum] (PAR) at (13.6,-4) {Partition};
+      \node[gnum] (KN)  at (16.0,-4) {Knapsack};
+      \node[gnum,text width=19mm] (WEP) at (18.5,-4) {Weighted Exact Path};
+      \node[gnum,text width=19mm] (RSP) at (16.0,-6) {Restricted Shortest Path};
+      \node[gnum] (BP)  at (19.6,-2) {Bin Packing};
+      \node[ggraf,text width=18mm] (BS) at (22.0,-2) {Balanced Split};
+      % --- hrany ---
+      \draw[rd] (S3) -- node[kap]{\hyperlink{red:dhp}{11}} (DHP);
+      \draw[rd] (DHP) -- node[kap]{\hyperlink{red:uhp}{11}} (UHP);
+      \draw[rd] (DHP) -- node[kap]{\hyperlink{red:hc}{11}} (HC);
+      \draw[rd] (UHP) -- node[kap]{\hyperlink{red:longpath}{11}} (LP);
+      \draw[rd] (HC) -- node[kap]{\hyperlink{red:tsp}{11}} (TSP);
+      \draw[rd] (S3) -- node[kap]{\hyperlink{red:ilpsat}{11}} (ILP);
+      \draw[rd] (COL) -- node[kap]{\hyperlink{red:ilpcol}{11}} (ILP);
+      \draw[rd] (VC) -- node[kap]{\hyperlink{red:ilpvc}{11}} (ILP);
+      \draw[rd] (VC) -- node[kap]{\hyperlink{red:steiner}{11}} (ST);
+      \draw[rd] (ONE) -- node[kap]{\hyperlink{red:subsetsum}{11}} (SS);
+      \draw[rd] (SS) -- node[kap]{\hyperlink{red:partition}{11}} (PAR);
+      \draw[rd] (SS) -- node[kap]{\hyperlink{red:knapsack}{11}} (KN);
+      \draw[rd] (SS) -- node[kap]{\hyperlink{red:wexactpath}{11}} (WEP);
+      \draw[rd] (KN) -- node[kap]{\hyperlink{red:rsp}{11}} (RSP);
+      \draw[rd] (TP) -- node[kap]{\hyperlink{red:binpacking}{11}} (BP);
+      \draw[rd] (TP) -- node[kap]{\hyperlink{red:balsplit}{11}} (BS);
+      % --- odkazy ---
+      \glink{S3}{red:sat3sat} \glink{COL}{red:3col} \glink{VC}{red:vc} \glink{ONE}{red:1in3}
+      \glinkr{TP}{thm:3partsilne}
+      \glink{DHP}{red:dhp} \glink{UHP}{red:uhp} \glink{HC}{red:hc} \glink{LP}{red:longpath} \glink{TSP}{red:tsp}
+      \glink{ILP}{red:ilpsat} \glink{ST}{red:steiner} \glink{SS}{red:subsetsum} \glink{PAR}{red:partition}
+      \glink{KN}{red:knapsack} \glink{WEP}{red:wexactpath} \glink{RSP}{red:rsp} \glink{BP}{red:binpacking}
+      \glink{BS}{red:balsplit}
+      % --- slabe / silne ---
+      \begin{scope}[on background layer]
+        \fill[intc!10,rounded corners=6pt] (12.4,-1.3) rectangle (19.8,-7.3);
+        \fill[rej!6,rounded corners=6pt] (18.6,0.75) rectangle (23.2,-2.75);
+      \end{scope}
+      \node[font=\sffamily\scriptsize\bfseries,intc!80!black,anchor=south west] at (12.5,-7.25) {slabě NP-úplné (pseudopolynomiální DP)};
+      \node[font=\sffamily\scriptsize\bfseries,rej!80!black,anchor=north east] at (23.1,-2.8) {silně NP-těžké};
+      % --- legenda ---
+      \begin{scope}[shift={(5.4,-4.0)}]
+        \node[anchor=west,font=\sffamily\scriptsize\bfseries] at (0,0.3) {Uzly};
+        \node[gimp,text width=17mm,minimum height=5mm,anchor=west] at (0,-0.4) {převzaté};
+        \node[ggraf,text width=17mm,minimum height=5mm,anchor=west] at (2.4,-0.4) {grafy};
+        \node[glog,text width=17mm,minimum height=5mm,anchor=west] at (0,-1.15) {logika/ILP};
+        \node[gnum,text width=17mm,minimum height=5mm,anchor=west] at (2.4,-1.15) {čísla};
+        \node[anchor=north west,font=\sffamily\scriptsize,align=left] at (0,-1.7) {TSP je silně NP-úplný už s vahami $\{1,2\}$;\\
+           3-Partition bez důkazu (Garey, Johnson 1975).};
+      \end{scope}
+
+  .caption:
+
+    Graf redukcí, pokračování: pořadí, rovnice, sítě a čísla (kapitola .reference:ch-cisla, 16 redukcí). Čárkovaně (převzaté) uzly
+    z obr. .reference:fig-grafredukci. Odkazy na redukce jsou v přehledové tabulce v oddílu .reference:ch-graf-prehled-redukci-a-jejich-klicovych-myslenek;
+    uzel 3-Partition odkazuje na "větu o silné NP-úplnosti 3-Partition"#thm-3partsilne.
+
+
+.Figure:
+  label: fig-grafredukci3
+
+  !tikz:
+    filename: 19-graf-redukci-03
+    options: 'x=1cm,y=1cm'
+
+      \node[gvyp,text width=30mm] (A)  at (0,0)    {libovolný $A\in\PSPACE$};
+      \node[gpsp] (TQ) at (4.6,0) {TQBF};
+      \node[gpsp,text width=22mm] (GG) at (9.0,0) {Generalized Geography};
+      \node[gapp,text width=24mm] (HRY) at (13.2,0) {hry: Go, Hex, piškvorky\dots};
+      \draw[rd] (A) -- node[kap]{\hyperlink{red:tqbf}{13}} (TQ);
+      \draw[rd] (TQ) -- node[kap]{\hyperlink{red:gg}{13}} (GG);
+      \draw[rdb] (GG) -- node[kap,text=gr]{lit.} (HRY);
+      \glink{TQ}{red:tqbf} \glink{GG}{red:gg}
+      \node[gvyp,text width=30mm] (B) at (0,-1.5) {libovolný $B\in\NL$};
+      \node[gpsp,text width=22mm] (SR) at (4.6,-1.5) {ST-REACH};
+      \draw[rdb] (B) -- node[kap,text=gr]{12} (SR);
+      \glinkr{SR}{prob:streach}
+      \node[font=\sffamily\scriptsize,anchor=west,text=gr] at (6.6,-1.5) {log-space redukce přes graf konfigurací (jen idea)};
+
+  .caption:
+
+    Úplné problémy pro prostorové třídy: $\PSPACE$-úplné (TQBF, GG) a $\NL$-úplný ST-REACH.
+    Redukce do TQBF a GG jsou v přehledové tabulce v oddílu .reference:ch-graf-prehled-redukci-a-jejich-klicovych-myslenek,
+    ST-REACH je definován v "problému ST-REACH"#prob-streach.

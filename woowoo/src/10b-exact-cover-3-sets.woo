@@ -1,0 +1,363 @@
+.Section Exact Cover by 3-Sets (proseminář 4)
+  label: ch-x3c-exact-cover
+
+
+.Definition:
+  title: 'Problém $\prob{X3C}$'
+  label: prob-x3c
+
+  "Vstup:".notion univerzum $U$ s $|U|=3k$ a systém $\mathcal S$ tříprvkových podmnožin $U$.
+
+
+  "Otázka:".notion lze z $\mathcal S$ vybrat přesně $k$ množin tak, aby byl každý prvek $U$
+  pokryt "právě jednou".emphasize?
+
+
+.Figure:
+  label: fig-x3c-instance
+
+  !tikz:
+    filename: 10b-exact-cover-3-sets-01
+    options: 'scale=1.25'
+
+    \foreach \i in {1,...,6} {\coordinate (P\i) at ({90+60*(\i-1)}:1.25);}
+    \fill[defc,opacity=0.30] (P1)--(P2)--(P3)--cycle;
+    \fill[rej,opacity=0.18] (P2)--(P3)--(P4)--cycle;
+    \fill[exc,opacity=0.30] (P4)--(P5)--(P6)--cycle;
+    \fill[intc,opacity=0.18] (P1)--(P5)--(P6)--cycle;
+    \draw[defc,very thick] (P1)--(P2)--(P3)--cycle;
+    \draw[exc,very thick] (P4)--(P5)--(P6)--cycle;
+    \draw[rej,dashed] (P2)--(P3)--(P4)--cycle;
+    \draw[intc,dashed] (P1)--(P5)--(P6)--cycle;
+    \foreach \i in {1,...,6} {\node[v,minimum size=5.5mm] at (P\i) {\i};}
+    \node[defc,font=\small] at (-0.55,0.3) {$S_1$};
+    \node[rej,font=\small] at (-0.55,-0.45) {$S_2$};
+    \node[exc,font=\small] at (0.55,-0.3) {$S_3$};
+    \node[intc,font=\small] at (0.55,0.45) {$S_4$};
+
+  $U=\{1,\dots,6\}$, $k=2$
+
+  $S_1=\{1,2,3\}$, $S_2=\{2,3,4\}$
+
+  $S_3=\{4,5,6\}$, $S_4=\{1,5,6\}$
+
+  "Řešení:".notion $\{S_1,S_3\}$ – každý prvek pokryt právě jednou (druhé přesné pokrytí je $\{S_2,S_4\}$).
+
+  "Strukturální náhled:".notion jde o 3-uniformní hypergraf, v němž hledáme
+  "perfektní párování".emphasize trojic (zobecnění perfektního párování v grafu, které je v $\PP$).
+
+  .caption:
+
+    Instance X3C jako hypergraf.
+
+
+$\prob{X3C}\in\NP$ (certifikát = vybrané množiny). Pointa: NP-těžkost ukážeme
+"dvakrát".emphasize – z $\prob{3-SAT}$u a z $\prob{monotónního 1-in-3 SAT}$u – a uvidíme, jak moc
+záleží na tom, odkud redukujeme.
+
+
+.Subsection $\prob{3-SAT}\redp\prob{X3C}$
+  label: ch-x3c-3-sat-x3c
+
+
+.Remark:
+  title: 'Redukce: $\prob{3-SAT} \redp \prob{X3C}$'
+  label: red-x3c
+
+  formule $\Phi$ $\;\longmapsto\;$ $(U,\mathcal S)$
+
+
+Formule má $n$ proměnných a $m$ klauzulí. Délku cyklu v gadgetu proměnné volíme $2k$ s $k=m$
+(literál se vyskytuje nejvýše v $m$ klauzulích, takže volných vrcholů bude vždy dost).
+
+
+"1. Gadget proměnné $x_i$ („ozubené kolo“).".notion Prvky: "vnitřní cyklus".emphasize
+$v_1,\dots,v_{2k}$ a "literálové vrcholy".emphasize $p^T_j$, $p^F_j$ pro $j=1,\dots,k$. Množiny:
+
+.equation:
+
+  T_j=\{v_{2j-1},v_{2j},p^F_j\}\ \text{(True trojice)},\qquad
+  F_j=\{v_{2j},v_{2j+1},p^T_j\}\ \text{(False trojice)},
+
+indexy $v$ bereme cyklicky ($v_{2k+1}=v_1$).
+
+
+.Figure:
+  label: fig-x3c-gadget-promenne
+
+  !tikz:
+    filename: 10b-exact-cover-3-sets-02
+    options: 'scale=1.15'
+
+    \foreach \i in {1,...,6} {\coordinate (V\i) at ({60-60*(\i-1)}:1.2);}
+    \foreach \i/\typ/\j/\lab/\cc in {1/T/1/F/exc,2/F/1/T/rej,3/T/2/F/exc,4/F/2/T/rej,5/T/3/F/exc,6/F/3/T/rej} {
+      \pgfmathtruncatemacro{\nx}{mod(\i,6)+1}
+      \coordinate (Q\i) at ({30-60*(\i-1)}:2.25);
+      \fill[\cc,opacity=0.22] (V\i)--(V\nx)--(Q\i)--cycle;
+      \draw[\cc,thick] (V\i)--(V\nx)--(Q\i)--cycle;
+      \node[font=\scriptsize,\cc!80!black] at ($(V\i)!0.5!(V\nx)!0.38!(Q\i)$) {$\typ_{\j}$};
+      \node[v,minimum size=7mm,font=\scriptsize,fill=\cc!12] at (Q\i) {$p^{\lab}_{\j}$};
+    }
+    \foreach \i in {1,...,6} {\node[v,minimum size=6mm,font=\scriptsize] at (V\i) {$v_{\i}$};}
+
+  .caption:
+
+    Gadget proměnné pro $k=3$. Abychom pokryli $v_2$, musíme vzít $T_1$ nebo $F_1$;
+    výběr se kolem cyklu propaguje: buď "všechna $T_j$".emphasize, nebo
+    "všechna $F_j$".emphasize.
+
+
+.Concept:
+  title: 'Co gadget „vrací“'
+
+  Zvolíme-li $x_i=$ True (všechna $T_j$), spotřebujeme všechny $p^F$ a "volné zůstanou všechny $p^T_j$".notion – ty smí použít klauzule, v nichž je literál $x_i$. Pro $x_i=$ False
+  naopak zůstanou volné $p^F_j$ pro literál $\neg x_i$. Literálové vrcholy indexujeme
+  podle klauzule: $p^T_{i,j}$ patří proměnné $x_i$ a klauzuli $C_j$.
+
+
+Obě možná pokrytí cyklu i to, proč nejde výběr míchat, ukazuje obr. .reference:fig-x3c-pokryti-cyklu.
+
+
+.Figure:
+  label: fig-x3c-pokryti-cyklu
+
+  !tikz:
+    filename: 10b-exact-cover-3-sets-06
+    options: 'scale=0.9'
+
+    \begin{scope}
+      \chXcyc{1/s,2/n,3/s,4/n,5/s,6/n}{0}{1}
+      \node[font=\small,align=center] at (0,-3.4) {$x_i=$ True: všechna $T_j$\\ volné zůstanou $p^T_j$};
+    \end{scope}
+    \begin{scope}[xshift=5.6cm]
+      \chXcyc{1/n,2/s,3/n,4/s,5/n,6/s}{0}{1}
+      \node[font=\small,align=center] at (0,-3.4) {$x_i=$ False: všechna $F_j$\\ volné zůstanou $p^F_j$};
+    \end{scope}
+    \begin{scope}[xshift=11.2cm]
+      \chXcyc{1/s,2/n,3/n,4/s,5/n,6/n}{3,6}{0}
+      \node[font=\small,align=center,rej] at (0,-3.4) {míchání $T_1$ a $F_2$:\\ $v_3$ ani $v_6$ nelze pokrýt};
+    \end{scope}
+
+  .caption:
+
+    Exaktní pokrytí cyklu gadgetu proměnné ($k=3$). Žlutě jsou literálové vrcholy, které gadget nechá volné
+    pro klauzule. Vpravo: $v_3$ leží jen v $F_1$ a $T_2$, které se překrývají s vybranými $T_1$ (ve $v_2$),
+    resp. $F_2$ (ve $v_4$); stejně tak $v_6$. "Všimni si:".emphasize cyklus má právě dvě exaktní pokrytí,
+    a ta odpovídají dvěma pravdivostním hodnotám.
+
+
+"2. Gadget klauzule.".notion Pro každou klauzuli $C_j$ dva nové prvky $c^1_j,c^2_j$ a pro
+každý její literál jednu množinu. Pro $C_1=(x_1\vee\neg x_2\vee x_3)$:
+
+.equation:
+
+  S_{1,1}=\{c^1_1,c^2_1,p^T_{1,1}\},\quad S_{1,2}=\{c^1_1,c^2_1,p^F_{2,1}\},\quad S_{1,3}=\{c^1_1,c^2_1,p^T_{3,1}\}.
+
+
+.Figure:
+  label: fig-x3c-gadget-klauzule
+
+  !tikz:
+    filename: 10b-exact-cover-3-sets-03
+
+    \node[v,fill=thmc!15,minimum size=8mm] (c1) at (-1.0,0) {$c^1_1$};
+    \node[v,fill=thmc!15,minimum size=8mm] (c2) at (1.0,0) {$c^2_1$};
+    \node[v,minimum size=8mm,font=\scriptsize,fill=exc!15] (pa) at (-3,-2) {$p^T_{1,1}$};
+    \node[v,minimum size=8mm,font=\scriptsize,fill=rej!12] (pb) at (0,-2) {$p^F_{2,1}$};
+    \node[v,minimum size=8mm,font=\scriptsize,fill=exc!15] (pc) at (3,-2) {$p^T_{3,1}$};
+    \begin{scope}[on background layer]
+      \fill[defc,opacity=0.15] (c1.center)--(c2.center)--(pa.center)--cycle;
+      \fill[intc,opacity=0.15] (c1.center)--(c2.center)--(pb.center)--cycle;
+      \fill[exc,opacity=0.15] (c1.center)--(c2.center)--(pc.center)--cycle;
+    \end{scope}
+    \draw[defc,thick] (c1)--(pa) (c2)--(pa);
+    \draw[intc,thick] (c1)--(pb) (c2)--(pb);
+    \draw[exc,thick] (c1)--(pc) (c2)--(pc);
+    \draw[thick] (c1)--(c2);
+    \node[font=\scriptsize,defc] at (-2.0,-0.7) {$S_{1,1}$};
+    \node[font=\scriptsize,intc] at (0,-1.1) {$S_{1,2}$};
+    \node[font=\scriptsize,exc] at (2.0,-0.7) {$S_{1,3}$};
+    \node[note] at (-3,-2.75) {z gadgetu $x_1$};
+    \node[note] at (0,-2.75) {z gadgetu $x_2$};
+    \node[note] at (3,-2.75) {z gadgetu $x_3$};
+
+  .caption:
+
+    Dvojici $(c^1_1,c^2_1)$ pokryje právě jedna z množin $S_{1,\cdot}$ – a to jen ta,
+    jejíž literálový vrchol zůstal v gadgetu proměnné volný, tj. jejíž literál je pravdivý.
+
+
+"3. Úklid (garbage collection).".notion X3C vyžaduje pokrýt "každý".emphasize prvek. Po výběru
+ohodnocení ale zůstanou volné literálové vrcholy, které žádná klauzule nepoužila.
+Spočítejme bilanci:
+
+.itemize:
+
+  .item:
+
+    Každá proměnná má $2m$ literálových vrcholů, ohodnocení jich $m$ spotřebuje
+    a $m$ uvolní: volných je celkem $nm$.
+
+  .item:
+
+    Každá klauzule spotřebuje "jeden".emphasize literálový vrchol (a své dva prvky $c^1_j,c^2_j$):
+    celkem $m$.
+
+  .item:
+
+    Zbývá přesně $K = nm - m = m(n-1)$ nevyužitých literálových vrcholů.
+
+
+.Warning:
+  title: 'Pozor na slajd'
+
+  Na slajdu prosemináře je uvedeno „klauzule spotřebují $3m$ vrcholů, zůstane $m(n-3)$“. Klauzulové
+  množiny sice mají dohromady $3m$ prvků, literálových vrcholů z nich je ale jen $m$ (zbylých $2m$
+  jsou $c^1_j,c^2_j$). Správně je $K=m(n-1)$. Kontrola: $|U| = 4nm + 2m + 2K = 6nm$ je dělitelné
+  třemi a pokrytí má $nm + m + K = 2nm = |U|/3$ množin, jak má být.
+
+
+Přidáme $K$ dvojic nových prvků $g^1_k,g^2_k$ a pro každou dvojici a "každý".emphasize literálový
+vrchol $p$ množinu $S_{k,p}=\{g^1_k,g^2_k,p\}$.
+
+
+.Figure:
+  label: fig-x3c-uklid
+
+  !tikz:
+    filename: 10b-exact-cover-3-sets-04
+
+    \foreach \k/\x in {1/0,2/3.2} {
+      \node[v,fill=black!10,minimum size=8mm,font=\scriptsize] (ga\k) at (\x-0.55,0) {$g^1_{\k}$};
+      \node[v,fill=black!10,minimum size=8mm,font=\scriptsize] (gb\k) at (\x+0.55,0) {$g^2_{\k}$};
+      \draw[thick] (ga\k)--(gb\k);
+      \coordinate (gm\k) at (\x,-0.4);}
+    \node at (5.2,0) {$\cdots$};
+    \foreach \lab/\x [count=\q] in {{p^T_{1,2}}/-1.5,{p^F_{4,1}}/0.5,{p^T_{2,3}}/2.5,{p^F_{1,1}}/4.5} {
+      \node[v,minimum size=9mm,font=\scriptsize,fill=exc!8] (q\q) at (\x,-2.0) {$\lab$};
+      \draw[gr,densely dotted] (gm1)--(q\q.north) (gm2)--(q\q.north);}
+    \draw[acc,very thick] (gm1)--(q2.north);
+    \draw[acc,very thick] (gm2)--(q4.north);
+    \node[note,anchor=west] at (5.8,-2.0) {volné literálové vrcholy};
+    \node[note,anchor=west] at (5.8,0) {$K$ „popelářů“};
+
+  .caption:
+
+    Každá dvojice $(g^1_k,g^2_k)$ se smí napojit na libovolné $p$. Protože dvojic je
+    přesně $K$, exaktně „uklidí“ zbylých $K$ volných literálových vrcholů.
+
+
+.Lemma:
+  title: 'Splnitelná formule $\Rightarrow$ exaktní pokrytí'
+  label: lem-x3c1
+
+  Je-li $\Phi$ splnitelná, má sestrojená instance X3C exaktní pokrytí.
+
+
+.Proof:
+
+  Mějme splňující ohodnocení. Pro $x_i=$ True vezmeme všechny $T_{i,j}$, pro False všechny $F_{i,j}$.
+  V každé klauzuli $C_j$ zvolíme "jeden".emphasize pravdivý literál; jeho vrchol $p_{i,j}$ zůstal volný,
+  použijeme ho k pokrytí $(c^1_j,c^2_j)$. Zbylých $K$ volných vrcholů bijektivně spárujeme
+  s dvojicemi $(g^1_k,g^2_k)$ množinami $S_{k,p}$. Každý prvek $U$ je pokryt právě jednou.
+
+
+.Lemma:
+  title: 'Exaktní pokrytí $\Rightarrow$ splnitelná formule'
+  label: lem-x3c2
+
+  Má-li sestrojená instance X3C exaktní pokrytí, je $\Phi$ splnitelná.
+
+
+.Proof:
+
+  Cyklus $v_1,\dots,v_{2m}$ gadgetu $x_i$ lze exaktně pokrýt jen konzistentním výběrem všech
+  $T_{i,j}$, nebo všech $F_{i,j}$ (jinak by některé $v$ bylo pokryto dvakrát nebo vůbec) – tím je
+  jednoznačně určeno ohodnocení $x_i$. Dvojice $(c^1_j,c^2_j)$ je pokryta nějakou množinou $S_{j,\cdot}$
+  obsahující literálový vrchol $p_{i,j}$, který tedy nebyl pokryt gadgetem proměnné – odpovídající
+  literál je pravdivý. Každá klauzule je splněna.
+
+
+.Subsection $\prob{Monotónní 1-in-3 SAT}\redp\prob{X3C}$
+  label: ch-x3c-monotonni-1-in-3-sat-x3c
+
+
+.Remark:
+  title: 'Redukce: $\prob{Monotónní 1-in-3 SAT} \redp \prob{X3C}$'
+  label: red-x3c1in3
+
+  formule $\Phi$ $\;\longmapsto\;$ $(U,\mathcal S)$
+
+
+Lepší výchozí problém se strukturou blízkou X3C:
+
+.itemize:
+
+  .item:
+
+    neobsahuje negace – odpadá párování $x_i$ a $\neg x_i$;
+
+  .item:
+
+    v každé klauzuli je "přesně jeden".emphasize pravdivý literál – přesně jako „pokryt právě jednou“.
+
+
+"Princip přímé redukce:".notion každá klauzule $C_j$ je prvkem $c_j$ univerza; každá proměnná
+$x_i$ dává množinu $S_{x_i}=\{c_j \mid x_i\in C_j\}$. Výběr $S_{x_i}$ $\equiv$ $x_i=$ True.
+
+
+.Figure:
+  label: fig-x3c-monotonni
+
+  !tikz:
+    filename: 10b-exact-cover-3-sets-05
+
+    \foreach \j/\x in {1/0,2/2.2,3/4.4,4/6.6} {\node[v,fill=thmc!12,minimum size=7mm] (c\j) at (\x,0) {$c_{\j}$};}
+    \node[font=\scriptsize,anchor=west] at (7.3,0) {prvky = klauzule};
+    \begin{scope}[on background layer]
+      \node[fit=(c1)(c2),draw=exc,very thick,rounded corners=10pt,fill=exc!12,inner sep=5pt,
+            label={[exc!80!black,font=\small]above:$S_{x_1}$ \checkmark}] {};
+      \node[fit=(c3)(c4),draw=exc,very thick,rounded corners=10pt,fill=exc!12,inner sep=5pt,
+            label={[exc!80!black,font=\small]above:$S_{x_4}$ \checkmark}] {};
+      \draw[gr,thick,dashed,rounded corners=10pt] ($(c2)+(-0.55,-0.55)$) rectangle ($(c3)+(0.55,-1.05)$);
+    \end{scope}
+    \node[font=\small,gr] at (3.3,-1.45) {$S_{x_2}$ (nevybrána)};
+    \node[note,text width=110mm] at (3.3,-2.35) {$C_1=(x_1,\dots)$, $C_2=(x_1,x_2,\dots)$, $C_3=(x_2,x_4,\dots)$, $C_4=(x_4,\dots)$:
+         exaktní pokrytí $c_j$ $\iff$ v $C_j$ je právě jedna pravdivá proměnná.};
+
+  .caption:
+
+    Monotónní 1-in-3 SAT jako exaktní pokrytí: vybrané množiny pokrývají každou klauzuli právě jednou.
+
+
+.Remark:
+  title: 'Velikost množin'
+
+  Množiny $S_{x_i}$ mají velikost podle počtu výskytů $x_i$, nikoli přesně 3. Pro zachování
+  velikosti 3 se v praxi přidávají lokální doplňkové prvky; princip redukce ale zůstává stejný.
+
+
+"Korektnost.".notion ($\Rightarrow$) Vezmeme množiny pravdivých proměnných; protože v každé
+klauzuli je pravdivá právě jedna, pokryjí každé $c_j$ právě jednou. ($\Leftarrow$) Z exaktního
+pokrytí nastavíme na True proměnné vybraných množin; každá klauzule je pokryta právě jednou,
+obsahuje tedy právě jednu pravdivou proměnnou. "Žádný úklid není potřeba".notion – 1-in-3 SAT
+sám zaručuje, že klauzule nebude „pokryta“ víckrát.
+
+
+.Concept:
+  title: 'Metodické poučení: volba výchozího problému'
+
+  .itemize:
+
+    .item:
+
+      "Nevhodná volba".notion (3-SAT $\to$ X3C) vyžaduje složité gadgety pro emulaci chybějící
+      logiky (negace, vícenásobné výskyty) a následný „garbage collection“.
+
+    .item:
+
+      "Vhodná volba".notion (1-in-3 SAT $\to$ X3C) se blíží identitě – struktury obou problémů
+      se na sebe přirozeně mapují.
+
+  Klasická sbírka Garey & Johnson (1979) obsahovala asi 300 NP-těžkých problémů, dnes jich známe
+  tisíce. Otázka „je varianta $X$ NP-těžká, nebo polynomiální?“ je standardní součástí výzkumu.

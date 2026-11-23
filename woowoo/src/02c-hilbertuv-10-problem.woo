@@ -1,0 +1,71 @@
+.Section Hilbertův 10. problém
+  label: ch-vycisl-hilbertuv-10-problem
+
+
+Nerozhodnutelnost zasahuje i do samotných základů matematiky. "Diofantická rovnice".notion je
+polynomiální rovnice s celočíselnými koeficienty, např. $3x^2y-7y^3z=42$.
+"Hilbertův 10. problém".notion (1900): najít algoritmus, který rozhodne, zda má daná diofantická
+rovnice celočíselné řešení.
+
+
+.Theorem:
+  title: 'Matijaševič, 1970'
+  label: thm-matijasevic
+
+  Hilbertův 10. problém je nerozhodnutelný.
+
+
+"Idea:".emphasize chování Turingových strojů (a tedy i $\prob{Halt}$) lze překódovat do
+hledání kořenů diofantických rovnic (obr. .reference:fig-vycisl-hilbert).
+
+
+.Figure:
+  label: fig-vycisl-hilbert
+
+  !tikz:
+    filename: 02c-hilbertuv-10-problem-01
+    options: 'node distance=5mm and 8mm'
+
+    \node[blok] (in) {$\enc{M},x$};
+    \node[blokd,right=of in] (pr) {převod\\ (Matijaševič)};
+    \node[blok,right=of pr] (rov) {diofantická rovnice\\ $p_{M,x}(y_1,\dots,y_k)=0$};
+    \node[blok,draw=rej,dashed,fill=rej!5,below=10mm of rov] (alg) {algoritmus pro\\ Hilbertův 10.~problém?};
+    \node[blok,right=of alg] (out) {ANO / NE};
+    \draw[flow] (in)--(pr);
+    \draw[flow] (pr)--(rov);
+    \draw[flow] (rov)--(alg);
+    \draw[flow] (alg)--(out);
+    \node[note,text width=46mm,align=center] at ($(in.east|-alg)!0.5!(pr.west|-alg)+(0.6,0)$) {klíčová vlastnost převodu:\\ $M$ zastaví na $x$ $\iff$\\ rovnice má celočíselné řešení};
+    \begin{scope}[on background layer]
+      \node[draw=rej,thick,dashed,rounded corners=6pt,fit=(in)(rov)(alg)(out),inner sep=6pt] (box) {};
+    \end{scope}
+    \node[below=1mm of box,font=\small,text=rej,align=center] {dohromady by to rozhodovalo $\prob{Halt}$ -- takový algoritmus\\ ale neexistuje (věta o problému zastavení)};
+
+  .caption:
+
+    Proč Hilbertův 10. problém nemá řešení: převod $\prob{Halt}$ na otázku po celočíselném kořeni.
+    "Všimni si:".emphasize opačným směrem to jde – zkoušením všech celočíselných $k$-tic $(y_1,\dots,y_k)$
+    řešení najdeme, pokud existuje, ale jinak hledáme věčně. Problém je tedy rekurzivně spočetný,
+    ale ne rekurzivní, stejně jako $\prob{Halt}$ "(nad rámec přednášky)".emphasize.
+
+
+.Remark:
+  title: 'Co si odnést'
+
+  .itemize:
+
+    .item:
+
+      Turingových strojů je spočetně mnoho, jazyků nespočetně – většinu jazyků žádný TS nepopisuje.
+
+    .item:
+
+      Rekurzivně spočetný (TS přijímá, smí cyklit) vs. rekurzivní (TS vždy zastaví).
+
+    .item:
+
+      $\prob{UC}$ není počitatelná (diagonalizace); $\prob{Halt}$ je rekurzivně spočetný, ale není rekurzivní.
+
+    .item:
+
+      Nerozhodnutelnost zasahuje i matematiku: Hilbertův 10. problém (Matijaševič).

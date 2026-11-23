@@ -1,0 +1,107 @@
+.Section O čem je tento kurz
+  label: ch-ts-o-cem-je-tento-kurz
+
+
+Programování a algoritmizace nás učí, "jak".emphasize problémy řešit co nejlépe. Výpočetní
+složitost se ptá na opačnou stranu mince – na "fundamentální limity".emphasize:
+
+.itemize:
+
+  .item:
+
+    Jaký je "nejlepší možný".emphasize algoritmus pro daný problém?
+
+  .item:
+
+    Existuje pro náš problém vůbec nějaké "efektivní".emphasize řešení?
+
+  .item:
+
+    Lze problém "vůbec".emphasize algoritmicky vyřešit?
+
+
+.Figure:
+
+  !tikz:
+    filename: 01a-o-cem-je-kurz-01
+    options: 'node distance=6mm and 9mm'
+
+    \node[blokd,text width=36mm,align=flush center] (v) {\textbf{Vyčíslitelnost}\\[2pt]\footnotesize Co lze vůbec spočítat\\ (neomezený čas i paměť)?};
+    \node[blokd,text width=36mm,align=flush center,right=of v] (s) {\textbf{Složitost}\\[2pt]\footnotesize Kolik času a paměti\\ výpočet stojí v závislosti na $n$?};
+    \node[bloki,text width=36mm,align=flush center,right=of s] (t) {\textbf{Těžké problémy}\\[2pt]\footnotesize SAT/ILP řešiče, parametrizace,\\ aproximace, heuristiky};
+    \draw[flow] (v) -- (s);
+    \draw[flow] (s) -- (t);
+    \node[note,below=2mm of v] {Halting problem,\\ diagonalizace};
+    \node[note,below=2mm of s] {\PP, \NP, \EXP,\\ redukce, NP-úplnost};
+    \node[note,below=2mm of t] {2.~polovina\\ semestru};
+    \draw[decorate,decoration={brace,amplitude=6pt,raise=4pt}] (v.north west) -- (s.north east)
+       node[midway,above=11pt,font=\sffamily\small\bfseries,defc]{I.~část kurzu};
+    \draw[decorate,decoration={brace,amplitude=6pt,raise=4pt}] (t.north west) -- (t.north east)
+       node[midway,above=11pt,font=\sffamily\small\bfseries,intc]{II.~část};
+
+  .caption:
+
+    Mapa kurzu. Tato skripta pokrývají celou první část a z druhé části SAT a (I)LP řešiče (přednášky 7–8); parametrizace, aproximace a heuristiky (přednášky 9–12) zatím ne.
+
+
+.Concept:
+  title: 'Rychlý počítač nás nezachrání'
+
+  Má-li algoritmus složitost $2^n$, pak počítač $1000\times$ rychlejší zvládne za stejný čas
+  vstup větší jen o $\log_2 1000 \approx 10$. Exponenciála „sežere“ jakékoliv zrychlení hardwaru.
+
+
+.Figure:
+
+  !tikz:
+    filename: 01a-o-cem-je-kurz-02
+
+    \begin{semilogyaxis}[width=10cm,height=5.4cm,xmin=0,xmax=45,ymin=1,ymax=1e14,
+      xlabel={velikost vstupu $n$},ylabel={počet kroků (log.)},axis lines=left,
+      ytick={1,1e3,1e6,1e9,1e12},legend style={draw=none,font=\small,at={(0.02,0.98)},anchor=north west},
+      every axis plot/.append style={thick},clip mode=individual]
+      \addplot[domain=0:45,samples=100,defc] {2^x};
+      \addlegendentry{$2^n$}
+      \addplot[domain=0:45,gr,dashed] {1e9};
+      \addplot[domain=0:45,warnc,dashed] {1e12};
+      \node[font=\scriptsize,anchor=south west,gr] at (axis cs:9,1e9) {rozpočet $T=10^9$ kroků};
+      \node[font=\scriptsize,anchor=south west,warnc] at (axis cs:9,1e12) {rozpočet $1000\,T$};
+      \draw[gr,densely dotted,thick] (axis cs:29.9,1) -- (axis cs:29.9,1e9);
+      \draw[warnc,densely dotted,thick] (axis cs:39.86,1) -- (axis cs:39.86,1e12);
+      \draw[<->,thick,intc] (axis cs:29.9,30) -- node[above,font=\scriptsize]{jen $+10$} (axis cs:39.86,30);
+      \node[font=\scriptsize,anchor=north east,gr] at (axis cs:29.6,1e3) {$n\approx30$};
+      \node[font=\scriptsize,anchor=north west,warnc] at (axis cs:40.1,1e3) {$n\approx40$};
+    \end{semilogyaxis}
+
+  .caption:
+
+    Tisícinásobné zrychlení posune hranici řešitelnosti u $2^n$ jen o deset.
+
+
+"Praktický dopad.".notion Pokud víme, že je problém "prokazatelně těžký".emphasize, nebudeme
+ztrácet roky hledáním rychlého algoritmu, ale sáhneme po exponenciálním či parametrizovaném
+algoritmu, heuristice nebo aproximaci. A naopak: celá moderní kryptografie stojí na tom, že
+určité problémy (např. faktorizace) jsou výpočetně těžké. Kdyby nebyly, internetové
+bankovnictví by přestalo existovat.
+
+
+.Subsection Proč potřebujeme formální model?
+  label: ch-ts-proc-potrebujeme-formalni-model
+
+
+Chci-li ukázat, že problém "lze".emphasize vyřešit rychle, stačí napsat program a změřit ho.
+Chci-li ale matematicky dokázat, že to rychleji "nejde".emphasize (nebo že to nejde vůbec), musím
+umět mluvit o "libovolném".emphasize programu v "libovolném".emphasize jazyce na "libovolném".emphasize hardware.
+Potřebujeme tedy matematickou abstrakci počítače, která je
+
+.enumerate:
+
+  .item:
+
+    "univerzální".notion – zvládne vše, co skutečný počítač,
+
+  .item:
+
+    "maximálně jednoduchá".notion – aby se o ní dalo formálně dokazovat.
+
+Přesně takový model zavedl v roce 1936 Alan Turing.

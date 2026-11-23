@@ -1,0 +1,825 @@
+.Section Přehled redukcí a jejich klíčových myšlenek
+  label: ch-graf-prehled-redukci-a-jejich-klicovych-myslenek
+
+
+Stejné redukce jako v grafu, seřazené podle kapitol. Sloupec „Trik“ je jednovětá nápověda, kterou si
+stojí za to umět zpaměti – zbytek důkazu se z ní obvykle dá odvodit. Každá redukce je odkaz na svůj důkaz.
+
+
+.table:
+  columns: 'rp{5.1cm}p{8.1cm}c'
+
+  .row:
+    head: true
+
+    ~
+
+    "Redukce".notion
+
+    "Trik".notion
+
+    "Kap.".notion
+
+  .row:
+
+    1
+
+    "$L\in\NP\redp\prob{UNP}$"#red-unp
+
+    $x\mapsto\enc{M_L,x,1^{p(|x|)}}$; počet kroků "unárně".emphasize
+
+    5
+
+  .row:
+
+    2
+
+    "$L\in\NP\redp\prob{Dlaždičkování}$"#red-dlazd
+
+    výpočetní tabulka čas $\times$ prostor, dlaždice z $\delta$, okraje = start a vychovaný konec
+
+    6
+
+  .row:
+
+    3
+
+    "$\prob{Dlaždičkování}\redp\prob{SAT}$"#red-sat
+
+    proměnné $u^{(x,y)}_i$; klauzule „aspoň jedna, nejvýše jedna, sousedé, okraje“
+
+    6
+
+  .row:
+
+    4
+
+    "$\prob{SAT}\redp\prob{3-SAT}$"#red-sat3sat
+
+    krátké klauzule zopakuj literál, dlouhé rozsekni pomocnými $z_i$
+
+    7
+
+  .row:
+
+    5
+
+    "$\prob{3-SAT}\redp\prob{NAE-4-SAT}$"#red-nae4
+
+    společná pólová proměnná $z$; při $z=1$ překlop vše (symetrie)
+
+    7
+
+  .row:
+
+    6
+
+    "$\prob{NAE-4-SAT}\redp\prob{NAE-3-SAT}$"#red-nae3
+
+    $\mathrm{NAE}(\ell_1,\ell_2,w)\land\mathrm{NAE}(\neg w,\ell_3,z)$
+
+    7
+
+  .row:
+
+    7
+
+    "$\prob{NAE-3-SAT}\redp\prob{pozitivní NAE-3-SAT}$"#red-poznae
+
+    stín $x'$ místo $\neg x$; globální $F,T,B$ vynutí $x\neq x'$
+
+    7
+
+  .row:
+
+    8
+
+    "$\prob{3-SAT}\redp\prob{IS}$"#red-is
+
+    hrana za proměnnou, trojúhelník za klauzuli, konfliktní hrany $\ell$–$\neg\ell$; $k=n+m$
+
+    8
+
+  .row:
+
+    9
+
+    "$\prob{IS}\redp\prob{VC}$"#red-vc
+
+    $S$ nezávislá $\iff V\setminus S$ pokrytí; $c=|V|-k$
+
+    8
+
+  .row:
+
+    10
+
+    "$\prob{VC}\redp\prob{Hitting Set}$"#red-hs
+
+    hrany jsou dvouprvkové množiny; speciální případ
+
+    8
+
+  .row:
+
+    11
+
+    "$\prob{IS}\redp\prob{Clique}$"#red-clique
+
+    doplněk grafu $\overline G$, stejné $k$
+
+    8
+
+  .row:
+
+    12
+
+    "$\prob{Clique}\redp\prob{Subgraph Isomorphism}$"#red-subiso
+
+    hledáme podgraf $H=K_k$
+
+    cv~3.2
+
+  .row:
+
+    13
+
+    "$\prob{Clique}\redp\prob{Half-Clique}$"#red-halfclique
+
+    doplň univerzální / izolované vrcholy, aby $k$ bylo přesně polovina
+
+    cv~3.3
+
+  .row:
+
+    14
+
+    "$\prob{VC}\redp\prob{Set Cover}$"#red-setcover
+
+    univerzum = hrany, množina $S_v$ = hrany u vrcholu $v$
+
+    cv~3.4
+
+  .row:
+
+    15
+
+    "$\prob{VC}\redp\prob{Feedback Vertex Set}$"#red-fvs
+
+    každou hranu „ztrojúhelníkuj“ novým vrcholem
+
+    cv~3.5
+
+  .row:
+
+    16
+
+    "$\prob{VC}\redp\prob{Dominating Set}$"#red-domset
+
+    vrchol $w_{uv}$ za každou hranu; izolované vrcholy odstraň
+
+    cv~3.6
+
+  .row:
+
+    17
+
+    "$\prob{3-SAT}\redp\prob{3-Coloring}$"#red-3col
+
+    paleta $T,F,B$; $x$, $\neg x$ spojené s $B$; „prasátko“ za klauzuli
+
+    9
+
+  .row:
+
+    18
+
+    "$\prob{3-Coloring}\redp\prob{Rozvrh zkoušek}$"#red-rozvrh
+
+    vrchol = předmět, hrana = student, $k=3$
+
+    9
+
+  .row:
+
+    19
+
+    "$\prob{3-Coloring}\redp\prob{Planar 3-Coloring}$"#red-planar
+
+    každé křížení nahraď gadgetem, který přenese barvy
+
+    9
+
+  .row:
+
+    20
+
+    "$\prob{NAE-3-SAT}\redp\prob{vážený MaxCut}$"#red-wmaxcut
+
+    strana řezu = hodnota; hrana $x$–$\bar x$ váhy $2m$; trojúhelník za klauzuli
+
+    9
+
+  .row:
+
+    21
+
+    "$\prob{vážený MaxCut}\redp\prob{MaxCut}$"#red-maxcut
+
+    hranu váhy $w$ nahraď $w$ cestami délky 3 (parita)
+
+    9
+
+  .row:
+
+    22
+
+    "$\prob{3-SAT}\redp\prob{MAPF}$"#red-mapf
+
+    makespan $3$ = vzdálenost $\Rightarrow$ binární volba cesty; kruh šestiúhelníků, blokátor
+
+    9
+
+  .row:
+
+    23
+
+    "$\prob{3-Coloring}\redp\prob{(pozitivní) 1-in-3 SAT}$"#red-1in3
+
+    $R_v,G_v,B_v$ s 1-in-3; hranová klauzule s výplňovou $D^c_{uv}$
+
+    10
+
+  .row:
+
+    24
+
+    "$\prob{3-SAT}\redp\prob{X3C}$"#red-x3c
+
+    „ozubené kolo“ za proměnnou, dvojice $c^1_j,c^2_j$ za klauzuli, úklid zbytků
+
+    10
+
+  .row:
+
+    25
+
+    "$\prob{(pozitivní) 1-in-3 SAT}\redp\prob{X3C}$"#red-x3c1in3
+
+    klauzule = prvek univerza, proměnná = množina
+
+    10
+
+  .row:
+
+    26
+
+    "$\prob{3-SAT}\redp\prob{Super Mario Bros.}$"#red-mario
+
+    herní mapa jako obvod: proměnné, klauzule, křížení (jen idea)
+
+    7
+
+  .row:
+
+    27
+
+    "$\prob{MaxCut}\redp\prob{MAX-2-SAT}$"#red-max2sat
+
+    za hranu $uv$ klauzule $(u\lor v)\land(\lnot u\lor\lnot v)$: splněno $|E|+\mathrm{cut}$
+
+    cv~4.4
+
+  .row:
+
+    28
+
+    "$\prob{NAE-3-SAT}\redp\prob{3-Coloring}$"#red-nae3col
+
+    vrchol $N$, hrany $x$–$\lnot x$, trojúhelník za klauzuli; symetrie NAE = symetrie barev
+
+    cv~4.5
+
+  .row:
+
+    29
+
+    "$\prob{3-SAT}\redp\prob{DHP}$"#red-dhp
+
+    řada obousměrných vrcholů za proměnnou (směr = hodnota), odskok $u\to C_j\to v$; lemma o odskoku
+
+    11
+
+  .row:
+
+    30
+
+    "$\prob{DHP}\redp\prob{UHP}$"#red-uhp
+
+    štěpení $v_{\mathrm{in}}-v_{\mathrm{mid}}-v_{\mathrm{out}}$
+
+    11
+
+  .row:
+
+    31
+
+    "$\prob{DHP}\redp\prob{HC}$"#red-hc
+
+    přidej hranu $T\to S$
+
+    11
+
+  .row:
+
+    32
+
+    "$\prob{HC}\redp\prob{TSP}$"#red-tsp
+
+    úplný graf, hrany $G$ váhy 1, ostatní 2, $k=|V|$
+
+    11
+
+  .row:
+
+    33
+
+    "$\prob{(U)HP}\redp\prob{Longest Path}$"#red-longpath
+
+    stejný graf, $k=|V|-1$
+
+    11
+
+  .row:
+
+    34
+
+    "$\prob{VC}\redp\prob{ILP}$"#red-ilpvc
+
+    $x_u+x_v\ge1$ za hranu, $\sum x_v\le k$
+
+    11
+
+  .row:
+
+    35
+
+    "$\prob{3-SAT}\redp\prob{ILP}$"#red-ilpsat
+
+    $\lnot y\mapsto 1-y$, klauzule = součet $\ge1$
+
+    11
+
+  .row:
+
+    36
+
+    "$\prob{3-Coloring}\redp\prob{ILP}$"#red-ilpcol
+
+    indikátory $x_{v,c}$: $\sum_c x_{v,c}=1$, $x_{u,c}+x_{v,c}\le1$
+
+    11
+
+  .row:
+
+    37
+
+    "$\prob{VC}\redp\prob{Steiner Tree}$"#red-steiner
+
+    kořen $r$ + terminál za hranu, vrcholy $G$ Steinerovy, $k'=|E|+k$
+
+    11
+
+  .row:
+
+    38
+
+    "$\prob{1-in-3 SAT}\redp\prob{Subset Sum}$"#red-subsetsum
+
+    čísla v základu 4, číslice za proměnnou i klauzuli, cíl $11\ldots1_4$
+
+    11
+
+  .row:
+
+    39
+
+    "$\prob{Subset Sum}\redp\prob{Partition}$"#red-partition
+
+    vyrovnávací čísla $2S-T$ a $S+T$
+
+    11
+
+  .row:
+
+    40
+
+    "$\prob{Subset Sum}\redp\prob{Knapsack}$"#red-knapsack
+
+    $w_i=c_i=a_i$, $W=C=T$
+
+    11
+
+  .row:
+
+    41
+
+    "$\prob{3-Partition}\redp\prob{Bin Packing}$"#red-binpacking
+
+    čísla = předměty, $q$ košů kapacity $B$ (silná těžkost se zachová)
+
+    11
+
+  .row:
+
+    42
+
+    "$\prob{Subset Sum}\redp\prob{Weighted Exact Path}$"#red-wexactpath
+
+    řetěz, „vezmi“ = hrana váhy $a_i$ (čísla zůstanou binárně)
+
+    11 (pros.~5)
+
+  .row:
+
+    43
+
+    "$\prob{Knapsack}\redp\prob{Restricted Shortest Path}$"#red-rsp
+
+    „vezmi“ = délka $w_i$, „přeskoč“ = cena $c_i$; $P=\sum c_i-C$
+
+    11 (pros.~5)
+
+  .row:
+
+    44
+
+    "$\prob{3-Partition}\redp\prob{Balanced Split}$"#red-balsplit
+
+    cesta s $a_i$ vrcholy (smí se – čísla jsou unárně malá)
+
+    11 (pros.~5)
+
+  .row:
+
+    45
+
+    "$A\in\PSPACE\ \redp\prob{TQBF}$"#red-tqbf
+
+    savitchovský rozklad, $\exists C_{\mathrm{mid}}\forall A\forall B$ zabrání zdvojení
+
+    13
+
+  .row:
+
+    46
+
+    "$\prob{TQBF}\redp\prob{Generalized Geography}$"#red-gg
+
+    diamant za proměnnou, Bob volí klauzuli, Alice literál
+
+    13 (pros.~6)
+
+
+.Subsection Redukce z úloh navíc a z typových úloh
+  label: ch-graf-redukce-z-uloh-navic
+
+
+Další redukce jsou v řešených úlohách: v oddílech „Úlohy navíc“ na konci kapitol (sloupec „Úloha“ je číslo
+úlohy) a mezi typovými úlohami v příloze .reference:ch-typove (značeno B). V grafu na obr.
+.reference:fig-grafredukci zakreslené nejsou a "nejsou z přednášky".emphasize – u testu se na ně nedá odvolat
+jako na známý výsledek, slouží jako zásoba triků. Redukce „s orákulem“ nejsou převody $\redp$, ale algoritmy
+s voláním orákula (oddíl .reference:ch-graf-redukce-s-orakulem-a-vycislitelnost).
+
+
+.table:
+  columns: 'p{5.6cm}p{8.1cm}c'
+
+  .row:
+    head: true
+
+    "Redukce".notion
+
+    "Trik".notion
+
+    "Úloha".notion
+
+  .row:
+
+    "$\prob{Halt}\to\prob{Halt}_\varepsilon$ (s orákulem)"#red-un-2-5
+
+    stroj $M_x$ si vstup $x$ napíše na pásku sám
+
+    2.5
+
+  .row:
+
+    "$\prob{Halt}\to\prob{Empty}$ (s orákulem)"#red-un-2-6
+
+    $M'$ ignoruje vstup, spustí $M$ na $x$ a přijme; odpověď orákula se obrací
+
+    2.6
+
+  .row:
+
+    "$\prob{Empty}\to\prob{Eq}$ (s orákulem)"#red-un-2-7
+
+    porovnej se strojem $M_\emptyset$, který nepřijme nic
+
+    2.7
+
+  .row:
+
+    "$L\in\DTIME(4^n)\redp\prob{BA}$"#red-un-3-8
+
+    počet kroků zapsaný "binárně".emphasize: $x\mapsto\enc{M_L,x,c\cdot4^{|x|}}$
+
+    3.8
+
+  .row:
+
+    "rozklad na prvočinitele $\to$ $\prob{FACT}$ (s orákulem)"#red-un-4-6
+
+    nejmenší dělitel binárním vyhledáváním, vydělit a opakovat
+
+    4.6
+
+  .row:
+
+    "$\prob{UNP}\redp\prob{UNP}_{=}$"#red-un-5-6
+
+    stroj smí s přijetím libovolně dlouho čekat; $k\mapsto k+1$
+
+    5.6
+
+  .row:
+
+    "$\prob{UNP}\redp\prob{UNP}_{\varepsilon}$"#red-un-5-7
+
+    vstup zadrátuj do stroje: $M_x$ si $x$ napíše sám, $k\mapsto k+2n$
+
+    5.7
+
+  .row:
+
+    "$\prob{UNP}\redp\prob{Halt}$"#red-un-5-8
+
+    pevný stroj, který zastaví právě na ANO-instancích; NP-těžký problém mimo $\NP$
+
+    5.8
+
+  .row:
+
+    "$\prob{SAT}\redp\prob{Double-SAT}$"#red-un-7-4
+
+    přidej volnou proměnnou: $\varphi\land(y\lor\lnot y)$ zdvojí počet modelů
+
+    7.4
+
+  .row:
+
+    "$\prob{3-SAT}\redp\prob{E3-SAT}$"#red-un-7-5
+
+    krátké klauzule doplň novými $a,b$ ve všech kombinacích znamének
+
+    7.5
+
+  .row:
+
+    "$\prob{3-SAT}\redp\prob{3-SAT-3}$"#red-un-7-6
+
+    každý výskyt proměnné má vlastní kopii, kopie spojí cyklus implikací
+
+    7.6
+
+  .row:
+
+    "$\prob{3-SAT}\redp\prob{Monotónní 3-SAT}$"#red-un-7-7
+
+    záporný literál $\lnot x$ nahraď „stínem“ $x'$ a vynuť $x'=\lnot x$
+
+    7.7
+
+  .row:
+
+    "$\prob{IS}\redp\prob{Set Packing}$"#red-un-8-4
+
+    $S_v$ = vrchol $v$ a jeho hrany; disjunktní množiny = nesousední vrcholy
+
+    8.4
+
+  .row:
+
+    "$\prob{Clique}\redp\prob{Dense Subgraph}$"#red-un-8-5
+
+    specializace: $l=k(k-1)/2$ hran na $k$ vrcholech je klika
+
+    8.5
+
+  .row:
+
+    "$\prob{VC}\redp\prob{Min-Ones Monotone 2-SAT}$"#red-un-8-6
+
+    hrana $uv$ = klauzule $(y_u\lor y_v)$, jedničky = pokrytí
+
+    8.6
+
+  .row:
+
+    "$\prob{Clique}\redp\prob{Clique and IS}$"#red-un-8-7
+
+    přidej $k$ izolovaných vrcholů – nezávislá množina je zadarmo
+
+    8.7
+
+  .row:
+
+    "$k\text{-}\prob{Coloring}\redp(k+1)\text{-}\prob{Coloring}$"#red-un-9-4
+
+    nový vrchol spojený se všemi spotřebuje jednu barvu
+
+    9.4
+
+  .row:
+
+    "$\prob{3-Coloring}\redp\prob{Clique Cover}$"#red-un-9-5
+
+    doplněk grafu: barevná třída v $G$ = klika v $\overline G$
+
+    9.5
+
+  .row:
+
+    "$\prob{MaxCut}\redp\prob{Max Bisection}$"#red-un-9-7
+
+    $n$ izolovaných vrcholů vyrovná velikosti stran
+
+    9.7
+
+  .row:
+
+    "$\prob{Max Bisection}\redp\prob{Min Bisection}$"#red-un-9-7
+
+    doplněk grafu: řezy v $G$ a $\overline G$ dají dohromady $h^2$
+
+    9.7
+
+  .row:
+
+    "$\prob{X3C}\redp\prob{Set Cover}$"#red-un-10-3
+
+    zobecnění: $k=q$ trojic pokryje $3q$ prvků jen bez překryvu
+
+    10.3
+
+  .row:
+
+    "$\prob{X3C}\redp\prob{Exact Hitting Set}$"#red-un-10-4
+
+    prohoď role prvků a množin: $B_u$ = trojice obsahující $u$
+
+    10.4
+
+  .row:
+
+    "$\prob{X3C}\redp\prob{Subset Sum}$"#red-un-10-5
+
+    prvek = číslice v základu $m+1$ (žádné přenosy), cíl $11\ldots1$
+
+    10.5
+
+  .row:
+
+    "$\prob{1-in-3 SAT}\redp\prob{0/1 soustava rovnic}$"#red-un-10-6
+
+    klauzule = rovnice „součet literálů $=1$“, negace je $1-x$
+
+    10.6
+
+  .row:
+
+    "$\prob{X3C}\redp\prob{X4C}$"#red-un-10-7
+
+    $q$ nových prvků $d_j$, každá trojice s každým $d_j$
+
+    10.7
+
+  .row:
+
+    "$\prob{HP}\redp\prob{HC}$ a $\prob{HC}\redp\prob{HP}$"#red-un-11-3
+
+    univerzální vrchol uzavře cestu; kopie vrcholu se dvěma listy kružnici rozpojí
+
+    11.3
+
+  .row:
+
+    "$\prob{Subset Sum}\redp\prob{Zero Subset Sum}$"#red-un-11-4
+
+    přidej číslo $-T$
+
+    11.4
+
+  .row:
+
+    "$\prob{Partition}\redp\prob{3-Way Partition}$"#red-un-11-5
+
+    přidej číslo $S/2$ – zabere jednu skupinu samo
+
+    11.5
+
+  .row:
+
+    "$\prob{Partition}\redp\prob{Bin Packing}$ ($q=2$)"#red-un-11-7
+
+    dva koše kapacity $S/2$; jen slabá NP-těžkost
+
+    11.7
+
+  .row:
+
+    "$\prob{1-in-3 SAT}\redp\prob{Subset Sum}$ (základ 3)"#red-un-11-8
+
+    u klauzule sečteme nejvýše 3 jedničky, takže stačí základ 4, a po rozboru přenosů i 3
+
+    11.8
+
+  .row:
+
+    "$\prob{SAT}\redp\prob{TQBF}$, $\prob{TAUT}\redp\prob{TQBF}$"#red-un-13-4
+
+    samé $\exists$, resp. samé $\forall$ před formulí
+
+    13.4
+
+  .row:
+
+    "$\prob{Generalized Geography}\redp\prob{Misère GG}$"#red-un-13-8
+
+    ke každému vrcholu nový list: kdo by neměl tah, má ještě jeden a tím prohraje
+
+    13.8
+
+  .row:
+
+    "$\prob{Queens Completion}\redp\prob{SAT}$"#red-un-14-5
+
+    proměnná za políčko; řádky a sloupce „právě jedna“, diagonály „nejvýše jedna“
+
+    14.5
+
+  .row:
+
+    "$\prob{3-SAT}\redp\prob{PFP}$"#typ-4-1
+
+    cesta volí u každé proměnné větev, zakázané dvojice = opačné literály
+
+    B 4.1
+
+  .row:
+
+    "$\prob{Hamiltonovská cesta}\redp\prob{Deg-3 Spanning Tree}$"#typ-4-2
+
+    ke každému vrcholu přivěs list – stupeň 3 v $G'$ je stupeň 2 v $G$
+
+    B 4.2
+
+  .row:
+
+    "$\prob{Subset Sum}\redp\prob{Rozvrh na dva stroje}$"#typ-4-3
+
+    vyrovnávací úloha $d=|S-2T|$, termín $D=\max(T,S-T)$
+
+    B 4.3
+
+  .row:
+
+    "$\prob{Vertex Cover}\redp\prob{FAS}$"#red-typ-4-4
+
+    vrchol = hrana $v^{\mathrm{in}}\to v^{\mathrm{out}}$, hrana $uv$ = orientovaný cyklus přes obě
+
+    B 4.4
+
+  .row:
+
+    "$\prob{IS}\redp\prob{Řídká množina}$"#red-typ-4-5
+
+    ke každému vrcholu list, $k'=n+k$
+
+    B 4.5
+
+  .row:
+
+    "$\prob{3-SAT}\redp\prob{Společné slovo}$"#red-typ-4-6
+
+    automat za klauzuli čte ohodnocení jako slovo délky $n$
+
+    B 4.6
+
+  .row:
+
+    "$\prob{Partition}\redp\prob{Vyvážené rozdělení}$"#red-typ-4-7
+
+    ke každému číslu přičti 1 a přidej $n$ jedniček – vyrovnají počty
+
+    B 4.7

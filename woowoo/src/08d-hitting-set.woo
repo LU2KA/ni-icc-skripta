@@ -1,0 +1,47 @@
+.Section $\prob{VC}\redp\prob{Hitting Set}$: zobecnění
+  label: ch-is-vc-hitting-set
+
+
+.Remark:
+  title: 'Redukce: $\prob{VC} \redp \prob{Hitting Set}$'
+  label: red-hs
+
+  $(G,k)$ $\;\longmapsto\;$ $(U=V,\ \mathcal S=E,\ k)$
+
+
+.Definition:
+  title: 'Problém $\prob{Hitting Set}$ (zasažení množin)'
+  label: prob-hs
+
+  "Vstup:".notion univerzum $U$, systém podmnožin $\mathcal S=\{S_1,\dots,S_m\}$ a číslo $k$.
+
+
+  "Otázka:".notion lze vybrat $H\subseteq U$, $|H|\le k$, které protne každou množinu ($H\cap S_i\neq\emptyset$ pro všechna $i$)?
+
+
+VC je jen speciální případ: univerzum $U=V$, systém $\mathcal S=E$ (každá hrana je dvouprvková
+množina), parametr $k$ stejný.
+
+
+.Figure:
+  label: fig-is-hrany-jako-mnoziny
+
+  !tikz:
+    filename: 08d-hitting-set-01
+
+    \foreach \n/\a in {a/90,b/30,c/-30,d/-90,e/-150,f/150} {\coordinate (\n) at (\a:1.5);}
+    \foreach \u/\w/\c in {a/b/defc,b/c/exc,c/d/thmc,d/e/intc,e/f/cvc,f/a/warnc,b/e/sumc} {
+      \draw[line width=7mm,line cap=round,\c,opacity=0.22] (\u)--(\w);}
+    \foreach \n/\a/\s in {a/90/v,b/30/vbad,c/-30/v,d/-90/vbad,e/-150/v,f/150/vbad} {\node[\s,minimum size=5.5mm] at (\a:1.5) {$\n$};}
+    \node[font=\small,anchor=west,align=left] at (2.5,0) {univerzum $U=\{a,\dots,f\}$\\ 7 dvouprvkových množin (hrany)\\ \textcolor{rej}{$H=\{b,d,f\}$} zasáhne každou};
+
+  .caption:
+
+    Hrany jako dvouprvkové množiny: vrcholové pokrytí $=$ zasahující množina.
+
+
+.Warning:
+  title: 'Poučení'
+
+  Zobecnění NP-těžkého problému je nutně NP-těžké – instance speciálního případu jsou zároveň instancemi
+  obecného (redukce je identita, jen „přejmenujeme“ objekty).

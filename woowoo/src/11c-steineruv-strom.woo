@@ -1,0 +1,117 @@
+.Section Steinerův strom
+  label: ch-cisla-steineruv-strom
+
+
+.Definition:
+  title: 'Problém $\prob{Steiner Tree}$ (Steinerův strom)'
+  label: prob-steiner
+
+  "Vstup:".notion graf $G=(V,E)$, množina "terminálů".emphasize $R\subseteq V$ a číslo $k$.
+
+
+  "Otázka:".notion existuje v $G$ strom s nejvýše $k$ hranami, který obsahuje všechny terminály?
+
+
+Ostatní ("Steinerovy".emphasize) vrcholy smíme použít, ale nemusíme. $\prob{Steiner Tree}\in\NP$ – certifikátem je
+strom. Aplikace: návrh sítí, propojování na čipech (VLSI).
+
+
+.Figure:
+  label: ch-cisla-fig-steiner
+
+  !tikz:
+    filename: 11c-steineruv-strom-01
+    options: 'x=1cm,y=1cm, ter/.style={rectangle,draw=black!80,fill=intc!45,thick,minimum size=4.2mm,inner sep=0pt}, sv/.style={circle,draw=black!60,fill=white,thick,minimum size=3.6mm,inner sep=0pt}'
+
+    % levy: obecny priklad
+    \node[ter] (t1) at (0,2) {}; \node[ter] (t2) at (3,2.2) {}; \node[ter] (t3) at (0.3,0) {}; \node[ter] (t4) at (3.2,0.1) {};
+    \node[sv] (s1) at (1.6,1.1) {}; \node[sv] (s2) at (1.5,2.6) {}; \node[sv] (s3) at (1.7,-0.4) {}; \node[sv] (s4) at (2.5,1.2) {};
+    \draw[efaint,draw=black!30,thick] (t1)--(s2)--(t2) (t3)--(s3)--(t4) (t1)--(t3) (t2)--(t4) (s1)--(s2) (s1)--(s3);
+    \draw[esel] (t1)--(s1) (t3)--(s1) (s1)--(s4) (s4)--(t2) (s4)--(t4);
+    \node[ter] at (0,-1.2) {}; \node[font=\scriptsize,anchor=west] at (0.2,-1.2) {terminál};
+    \node[sv] at (1.8,-1.2) {}; \node[font=\scriptsize,anchor=west] at (2.0,-1.2) {Steinerův vrchol};
+    % pravy: extremy
+    \node[blokd,text width=36mm,font=\footnotesize] at (8.2,1.9) {$|R|=2$: nejkratší cesta\\ \scriptsize BFS / Dijkstra};
+    \node[blokd,text width=36mm,font=\footnotesize] at (8.2,0.6) {$R=V$: kostra\\ \scriptsize BFS (váženě MST)};
+    \node[blokr,text width=36mm,font=\footnotesize] at (8.2,-0.7) {mezi tím: NP-těžký\\ \scriptsize které Steinerovy vrcholy použít?};
+
+  .caption:
+
+    Steinerův strom (zeleně) se 4 terminály a dvěma Steinerovými vrcholy. Vpravo: kde leží obtížnost.
+
+
+.Subsection $\prob{Vertex Cover}\redp\prob{Steiner Tree}$
+  label: ch-cisla-vc-steiner-tree
+  pdf_string: 'Vertex Cover ≤p Steiner Tree'
+
+
+Přednáška tuto redukci jen zmiňuje; uvádím standardní konstrukci.
+
+
+.Remark:
+  title: 'Redukce: $\prob{Vertex Cover} \redp \prob{Steiner Tree}$'
+  label: red-steiner
+
+  $(G,k)$, $E\neq\emptyset$ $\;\longmapsto\;$ $(H,\ R,\ k'=|E|+k)$
+
+
+Z grafu $G=(V,E)$ postavíme graf $H$:
+
+.itemize:
+
+  .item:
+
+    kořen $r$ a za každou hranu $e\in E$ terminál $t_e$; tedy $R=\{r\}\cup\{t_e: e\in E\}$,
+
+  .item:
+
+    za každý vrchol $v\in V$ Steinerův vrchol $v$, spojený s kořenem $r$,
+
+  .item:
+
+    terminál $t_e$ pro $e=\{u,v\}$ spojíme s Steinerovými vrcholy $u$ a $v$.
+
+
+.Figure:
+  label: ch-cisla-fig-vc-steiner
+
+  !tikz:
+    filename: 11c-steineruv-strom-02
+    options: 'x=1cm,y=1cm, ter/.style={rectangle,draw=black!80,fill=intc!45,thick,minimum size=5mm,inner sep=1pt,font=\tiny}, sv/.style={circle,draw=black!70,fill=white,thick,minimum size=5.5mm,inner sep=0pt,font=\scriptsize}'
+
+    % G
+    \node[sv,fill=acc!25] (g1) at (0,1.2) {1}; \node[sv] (g2) at (1.3,1.2) {2};
+    \node[sv,fill=acc!25] (g3) at (0.65,0) {3}; \node[sv] (g4) at (2.0,0) {4};
+    \draw[e] (g1)--(g2) (g2)--(g3) (g1)--(g3) (g3)--(g4);
+    \node[font=\scriptsize,align=center] at (1.0,-0.9) {$G$, $k=2$\\ VC $=\{1,3\}$};
+    \draw[->,very thick,gr] (2.7,0.6)--(3.6,0.6);
+    % H
+    \begin{scope}[xshift=5.6cm]
+    \node[ter,fill=intc!70] (r) at (1.95,2.5) {$r$};
+    \foreach \i/\x in {1/0,2/1.3,3/2.6,4/3.9} \node[sv] (v\i) at (\x,1.2) {\i};
+    \node[ter] (t12) at (-0.3,-0.3) {12}; \node[ter] (t13) at (1.0,-0.3) {13};
+    \node[ter] (t23) at (2.3,-0.3) {23}; \node[ter] (t34) at (3.6,-0.3) {34};
+    \draw[efaint,draw=black!30,thick] (r)--(v2) (r)--(v4) (t12)--(v2) (t13)--(v3) (t23)--(v2) (t34)--(v4);
+    \draw[esel] (r)--(v1) (r)--(v3) (t12)--(v1) (t13)--(v1) (t23)--(v3) (t34)--(v3);
+    \node[v,fill=acc!25,draw=acc!80!black,minimum size=5.5mm,font=\scriptsize] at (v1) {1};
+    \node[v,fill=acc!25,draw=acc!80!black,minimum size=5.5mm,font=\scriptsize] at (v3) {3};
+    \node[font=\scriptsize,anchor=west,align=left] at (4.5,1.2) {strom: $k=2$ hrany z $r$\\ $+\,|E|=4$ hrany k terminálům\\ $=6=k'$};
+    \end{scope}
+
+  .caption:
+
+    $\prob{VC}\redp\prob{Steiner Tree}$: oranžově terminály (kořen a jeden za hranu), kroužky Steinerovy
+    vrcholy. Vrcholové pokrytí $\{1,3\}$ dá strom se $|E|+k$ hranami.
+
+
+.Proof:
+  title: 'Korektnost'
+
+  ($\Rightarrow$) Je-li $C$ vrcholové pokrytí velikosti $k$, vezmeme hrany $r$–$v$ pro $v\in C$ a každý terminál
+  $t_e$ připojíme k jednomu jeho konci z $C$ (existuje, $C$ pokrývá $e$). Vznikne strom s $k+|E|$ hranami.
+
+
+  ($\Leftarrow$) Strom $T$ obsahuje $|E|+1$ terminálů a nějakou množinu $C$ Steinerových vrcholů; strom na
+  $|E|+1+|C|$ vrcholech má $|E|+|C|$ hran, takže $|C|\le k$. Každý terminál $t_e$ je ve stromu (a $|R|\ge2$),
+  má tedy ve stromu souseda – a jeho jediní sousedé v $H$ jsou konce hrany $e$. Proto každá hrana $e$ má konec
+  v~$C$, tj. $C$ je vrcholové pokrytí velikosti $\le k$ (doplníme libovolnými vrcholy na přesně $k$).

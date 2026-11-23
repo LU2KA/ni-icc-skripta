@@ -1,0 +1,449 @@
+.Section MAPF: hledání cest pro více agentů
+  label: ch-zoo-mapf-hledani-cest-pro-vice-agentu
+
+
+.Definition:
+  title: 'Problém Multiagent Path Finding (MAPF)'
+  label: prob-mapf
+
+  "Vstup:".notion graf $G$, množina agentů $A$; každý agent $a$ má start $s(a)\in V(G)$ a cíl
+  $t(a)\in V(G)$; číslo $\ell$ ("makespan".emphasize).
+
+
+  "Otázka:".notion lze všechny agenty dopravit do jejich cílů během $\ell$ kroků?
+
+
+Na začátku stojí všichni agenti na startech. V jednom kroku každý agent "zůstane stát".emphasize,
+nebo "se posune na sousední vrchol".emphasize. Zakázané jsou dva typy kolizí:
+
+
+.Figure:
+
+  !tikz:
+    filename: 09c-mapf-01
+
+    \begin{scope}
+      \node[v] (p) at (0,0) {}; \node[v] (q) at (1.4,0) {}; \node[v] (r) at (2.8,0) {};
+      \draw[e] (p)--(q)--(r);
+      \node[chZag,fill=defc!40] at (0,0.6) {1}; \node[chZag,fill=intc!50] at (2.8,0.6) {2};
+      \draw[->,thick,defc] (0.25,0.6) to[bend left=20] (1.25,0.45);
+      \draw[->,thick,intc] (2.55,0.6) to[bend right=20] (1.55,0.45);
+      \node[rej,font=\Large\bfseries] at (1.4,0) {$\times$};
+      \node[font=\small] at (1.4,-0.7) {kolize na vrcholu};
+    \end{scope}
+    \begin{scope}[xshift=5cm]
+      \node[v] (p) at (0,0) {}; \node[v] (q) at (1.8,0) {};
+      \draw[e] (p)--(q);
+      \node[chZag,fill=defc!40] at (0,0.6) {1}; \node[chZag,fill=intc!50] at (1.8,0.6) {2};
+      \draw[->,thick,defc] (0.25,0.75) to[bend left=25] (1.55,0.75);
+      \draw[->,thick,intc] (1.55,0.45) to[bend left=25] (0.25,0.45);
+      \node[rej,font=\Large\bfseries] at (0.9,0) {$\times$};
+      \node[font=\small] at (0.9,-0.7) {výměna po hraně (swap)};
+    \end{scope}
+    \begin{scope}[xshift=9.5cm]
+      \node[v] (s) at (0,0) {}; \node[v] (top) at (1.2,0.8) {}; \node[v] (bot) at (1.2,-0.8) {}; \node[v] (t) at (2.4,0) {};
+      \draw[e] (s)--(top)--(t)--(bot)--(s);
+      \node[chZag,fill=defc!40] at (s) {1}; \node[chZag,fill=intc!50] at (t) {2};
+      \draw[->,thick,defc] (s) to[bend right=35] (bot);
+      \draw[->,thick,defc] (bot) to[bend right=35] (t);
+      \draw[->,thick,intc] (t) to[bend right=35] (top);
+      \draw[->,thick,intc] (top) to[bend right=35] (s);
+      \node[font=\small,align=center] at (1.2,-1.5) {agenti si vymění místa:\\ makespan 2};
+    \end{scope}
+
+  .caption:
+
+    Zakázané kolize a příklad: agent 1 jde dolní cestou, agent 2 horní. (Ve variantě
+    „se swapy“ výměnu po hraně povolujeme.) Použití: sklady s roboty, logistika, drony, videohry.
+
+
+.Theorem:
+  title: 'Složitost MAPF'
+  label: thm-mapfnp
+
+  MAPF je NP-úplný i pro $\ell=3$ (se swapy i bez nich).
+
+
+.itemize:
+
+  .item:
+
+    Surynek (2010): MAPF s omezeným makespanem je NP-úplný (redukce z $\prob{3-SAT}$).
+
+  .item:
+
+    Ma a kol. (2016): NP-úplný už pro $\ell=3$.
+
+  .item:
+
+    Fioravantes, Knop, Křišťan, Melissinos, Opler (2024): NP-úplný i pro rovinné grafy
+    maximálního stupně 4.
+
+  .item:
+
+    "Kontrast:".notion se swapy je pro $\ell\le2$ MAPF polynomiální. Hranice je ostrá!
+
+$\prob{MAPF}\in\NP$: certifikátem jsou pozice všech agentů v krocích $1,\dots,\ell$. Ukážeme
+redukci $\prob{3-SAT}\redp\prob{MAPF}$ s $\ell=3$ (bez rovinnosti).
+
+
+.Remark:
+  title: 'Redukce: $\prob{3-SAT} \redp \prob{MAPF}$'
+  label: red-mapf
+
+  formule $\Phi$ $\;\longmapsto\;$ graf, agenti, $\ell=3$
+
+
+.Concept:
+  title: 'Klíčový trik: žádný čas nazbyt'
+
+  Je-li $\dist(s(a),t(a))=\ell$, musí agent $a$ v každém kroku postoupit po nejkratší cestě –
+  nesmí čekat ani zabloudit. Téměř všichni agenti budou mít do cíle vzdálenost přesně $3=\ell$
+  a právě "dvě".emphasize nejkratší cesty $\Rightarrow$ jejich pohyb je "binární volba".notion.
+  Gadgety navrhneme tak, aby volby kolidovaly přesně tam, kde chceme. (Srovnejte s 3-barvením:
+  tam binární volbu vynucovaly hrany do $B$, tady čas.)
+
+
+.Subsection Gadget proměnné: kruh šestiúhelníků
+  label: ch-zoo-gadget-promenne-kruh-sestiuhelniku
+
+
+Má-li proměnná $x$ ve formuli $m_x$ výskytů, vytvoříme $m_x$ šestiúhelníků zapojených
+"do kruhu".notion; sousední šestiúhelníky sdílí vrchol $g_i$. Šestiúhelník $i$ má vrcholy
+$g_{i-1},p_i,s_i,n_i,g_i,t_i$ (v tomto pořadí po obvodu). Agent $a_i$ jde z $s_i$ do $t_i$;
+vzdálenost je 3 a nejkratší cesty jsou dvě:
+
+.equation:
+
+  \text{přes } n_i:\ s_i\to n_i\to g_i\to t_i \ \leadsto\ x=1,
+  \qquad
+  \text{přes } p_i:\ s_i\to p_i\to g_{i-1}\to t_i \ \leadsto\ x=0.
+
+
+.Figure:
+
+  !tikz:
+    filename: 09c-mapf-02
+    options: 'mv/.style={circle,draw=black!80,thick,minimum size=7mm,inner sep=0pt,font=\scriptsize}'
+
+    \foreach \i in {1,2,3} {
+      \pgfmathsetmacro{\ox}{(\i-1)*3.6}
+      \node[mv,fill=tB!25] (p\i) at (\ox+0.75,1.0) {$p_{\i}$};
+      \node[mv,fill=black!45,text=white] (s\i) at (\ox+1.8,1.45) {$s_{\i}$};
+      \node[mv,fill=tF!25] (n\i) at (\ox+2.85,1.0) {$n_{\i}$};
+      \node[mv] (t\i) at (\ox+1.8,-1.1) {$t_{\i}$};
+    }
+    \node[mv] (g0) at (0,0) {$g_3$};
+    \node[mv] (g1) at (3.6,0) {$g_1$};
+    \node[mv] (g2) at (7.2,0) {$g_2$};
+    \node[mv] (g3) at (10.8,0) {$g_3$};
+    \foreach \i/\l/\r in {1/g0/g1,2/g1/g2,3/g2/g3} {
+      \draw[e] (\l)--(p\i)--(s\i)--(n\i)--(\r)--(t\i)--(\l);}
+    \draw[tF!80!black,line width=2.2pt] (s1)--(n1)--(g1)--(t1);
+    \draw[tB!80!black,line width=2.2pt,dashed] (s1)--(p1)--(g0)--(t1);
+    \draw[<->,dashed,gr,thick] (g0.south) to[bend right=22] node[below,font=\scriptsize]{tentýž vrchol -- kruh} (g3.south);
+    \node[font=\scriptsize,tF!80!black,anchor=west] at (11.3,1.0) {přes $n_i$: $x=1$};
+    \node[font=\scriptsize,tB!80!black,anchor=west] at (11.3,0.5) {přes $p_i$: $x=0$};
+
+  .caption:
+
+    Gadget proměnné se třemi výskyty. Šedé vrcholy jsou starty agentů $a_i$; v prvním šestiúhelníku jsou vyznačeny obě nejkratší cesty agenta $a_1$.
+
+
+"Porty pro klauzule:".notion vrcholy $p_i$ a $n_i$. V kroku 1 je volný $p_i$ $\iff$ $x=1$
+(agent šel přes $n_i$), a volný $n_i$ $\iff$ $x=0$.
+
+
+.Lemma:
+  title: 'Všichni agenti volí stejně'
+  label: lem-mapfvar
+
+  V každém řešení s $\ell=3$ jdou buď "všichni".emphasize agenti $a_1,\dots,a_{m_x}$ přes $n_i$, nebo
+  všichni přes $p_i$.
+
+
+.centered:
+
+  !tikz:
+    filename: 09c-mapf-03
+    options: 'mv/.style={circle,draw=black!80,thick,minimum size=7mm,inner sep=0pt,font=\scriptsize}'
+
+    \node[mv] (gl) at (0,0) {$g_{i-1}$};
+    \node[mv] (p1) at (0.75,1.0) {$p_i$};
+    \node[mv,fill=black!45,text=white] (s1) at (1.8,1.45) {$s_i$};
+    \node[mv] (n1) at (2.85,1.0) {$n_i$};
+    \node[mv,fill=intc!50] (g) at (3.6,0) {$g_i$};
+    \node[mv] (t1) at (1.8,-1.1) {$t_i$};
+    \node[mv] (p2) at (4.35,1.0) {$p_{i+1}$};
+    \node[mv,fill=black!45,text=white] (s2) at (5.4,1.45) {$s_{i+1}$};
+    \node[mv] (n2) at (6.45,1.0) {$n_{i+1}$};
+    \node[mv] (gr2) at (7.2,0) {$g_{i+1}$};
+    \node[mv] (t2) at (5.4,-1.1) {$t_{i+1}$};
+    \draw[e] (gl)--(p1)--(s1)--(n1)--(g)--(t1)--(gl);
+    \draw[e] (g)--(p2)--(s2)--(n2)--(gr2)--(t2)--(g);
+    \draw[tF!80!black,line width=2.2pt] (s1)--(n1)--(g);
+    \draw[tB!80!black,line width=2.2pt] (s2)--(p2)--(g);
+    \node[font=\scriptsize,tF!80!black] at (1.9,2.2) {$a_i$: kroky 1, 2};
+    \node[font=\scriptsize,tB!80!black] at (5.4,2.2) {$a_{i+1}$: kroky 1, 2};
+    \draw[<-,rej,thick] (g.south) -- ++(0,-0.9) node[below,font=\small\bfseries]{krok 2: oba na $g_i$ -- kolize!};
+
+
+.Proof:
+
+  Agenti nesmí čekat. Jde-li $a_i$ přes $n_i$, stojí v kroku 2 na $g_i$. Jde-li $a_{i+1}$ přes
+  $p_{i+1}$, stojí v kroku 2 "také".emphasize na $g_i$ – kolize. Tedy: $a_i$ jde přes $n_i$ $\Rightarrow$
+  $a_{i+1}$ jde přes $n_{i+1}$. Šestiúhelníky tvoří kruh, takže se volba „přes $n$“ přenese na
+  všechny. Jinak jdou všichni přes $p$.
+
+
+.Subsection Gadget klauzule s blokátorem
+  label: ch-zoo-gadget-klauzule-s-blokatorem
+
+
+Pro klauzuli $C=(\lambda_1\vee\lambda_2\vee\lambda_3)$ vytvoříme tři šestiúhelníky
+(jeden na literál) s vrcholy $c_j,u_j,f_j,e_j,b_j,h_j$ po obvodu, a vrchol $\tau$.
+
+.itemize:
+
+  .item:
+
+    "Agent literálu".notion $c_j$ startuje v $c_j$ a má cíl $e_j$ ve vzdálenosti 3. Dvě nejkratší cesty:
+    "vnitřní".emphasize $c_j\to h_j\to b_j\to e_j$ (zůstane v gadgetu klauzule) a
+    "vnější".emphasize $c_j\to u_j\to f_j\to e_j$ (v kroku 1 vstoupí do gadgetu proměnné).
+
+  .item:
+
+    "Port".notion $u_j$ je vrchol gadgetu proměnné: je-li $\lambda_j=x$, pak $u_j=p_i$;
+    je-li $\lambda_j=\neg x$, pak $u_j=n_i$ (pro šestiúhelník $i$ tohoto výskytu).
+
+  .item:
+
+    "Blokátor".notion $\beta$: start $h_1$, cíl $\tau$. Hrany $h_1h_2$, $h_1h_3$, $h_2\tau$,
+    $h_3\tau$; tedy $\dist(h_1,\tau)=2$ – blokátor má "jeden krok rezervu".emphasize.
+
+
+.Figure:
+
+  !tikz:
+    filename: 09c-mapf-04
+    options: 'x=1.05cm,y=1.05cm,mv/.style={circle,draw=black!80,thick,minimum size=6.5mm,inner sep=0pt,font=\scriptsize}'
+
+    \foreach \j/\ox in {2/0,1/3.3,3/6.6} {
+      \node[mv,fill=black!40,text=white] (c\j) at (\ox,0.7) {$c_{\j}$};
+      \node[mv,draw=thmc,dashed,fill=thmc!12] (u\j) at (\ox+0.6,1.5) {$u_{\j}$};
+      \node[mv] (f\j) at (\ox+1.6,1.5) {$f_{\j}$};
+      \node[mv] (e\j) at (\ox+2.2,0.7) {$e_{\j}$};
+      \node[mv] (b\j) at (\ox+1.6,-0.1) {$b_{\j}$};
+      \node[mv] (h\j) at (\ox+0.6,-0.1) {$h_{\j}$};
+      \draw[e] (c\j)--(u\j)--(f\j)--(e\j)--(b\j)--(h\j)--(c\j);}
+    \node[mv,fill=black,text=white] at (h1) {$\beta$};
+    \node[font=\tiny,below=0.5mm of h1] {$h_1$};
+    \node[mv] (tau) at (4.4,-1.8) {$\tau$};
+    \draw[e] (h2)--(tau) (h3)--(tau);
+    \draw[e] (h1) to[bend left=20] (h2);
+    \draw[e] (h1) to[bend right=20] (h3);
+    \node[font=\scriptsize,thmc] at (4.4,2.15) {porty v gadgetech proměnných};
+    \draw[->,very thick,acc,rounded corners=2pt] ($(c3)+(0.1,0.3)$) -- ($(u3)+(0.1,-0.3)$) -- ($(f3)+(-0.1,-0.3)$) -- ($(e3)+(-0.3,0.1)$);
+    \draw[->,very thick,defc,rounded corners=2pt] ($(c2)+(0.1,-0.3)$) -- ($(h2)+(0.1,0.3)$) -- ($(b2)+(-0.1,0.3)$) -- ($(e2)+(-0.3,-0.1)$);
+    \node[font=\scriptsize,acc,anchor=west] at (9.1,1.4) {vnější cesta};
+    \node[font=\scriptsize,defc,anchor=west] at (9.1,0.0) {vnitřní cesta};
+
+  .caption:
+
+    Gadget klauzule. Šedí agenti $c_j$ volí vnitřní/vnější cestu, černý blokátor $\beta$
+    chce do $\tau$.
+
+
+.Lemma:
+  title: 'O blokátoru'
+  label: lem-blokator
+
+  V každém řešení s $\ell=3$ jde aspoň jeden z agentů $c_1,c_2,c_3$ vnější cestou.
+
+
+.Proof:
+
+  Blokátor má z $h_1$ do $\tau$ vzdálenost 2. Po kroku 1 musí stát na vrcholu ve vzdálenosti
+  $\le2$ od $\tau$, tedy na $h_1$, $h_2$ nebo $h_3$ ($\tau$ z $h_1$ za jeden krok nedosáhne, sousedé
+  $c_1,b_1$ jsou od $\tau$ dál). Agent $c_j$ jdoucí vnitřní cestou ale v kroku 1 stojí na $h_j$.
+  Blokátor tak v kroku 1 zabere $h_j$ pro nějaké $j$, a agent $c_j$ musí jít vnější cestou.
+
+
+.Figure:
+  label: fig-mapf-blokator
+
+  !tikz:
+    filename: 09c-mapf-06
+    options: 'x=1.05cm,y=1.05cm,mv/.style={circle,draw=black!80,thick,minimum size=6.5mm,inner sep=0pt,font=\scriptsize}'
+
+    \foreach \j/\ox in {2/0,1/3.3,3/6.6} {
+      \node[mv,fill=black!40,text=white] (c\j) at (\ox,0.7) {$c_{\j}$};
+      \node[mv,draw=thmc,dashed,fill=thmc!12] (u\j) at (\ox+0.6,1.5) {$u_{\j}$};
+      \node[mv] (f\j) at (\ox+1.6,1.5) {$f_{\j}$};
+      \node[mv] (e\j) at (\ox+2.2,0.7) {$e_{\j}$};
+      \node[mv] (b\j) at (\ox+1.6,-0.1) {$b_{\j}$};
+      \node[mv,fill=intc!45,draw=intc!80!black,very thick] (h\j) at (\ox+0.6,-0.1) {$h_{\j}$};
+      \draw[e] (c\j)--(u\j)--(f\j)--(e\j)--(b\j)--(h\j)--(c\j);
+      \draw[->,thick,defc,shorten >=1pt] (c\j) to[bend right=35] node[left,font=\tiny,defc]{1} (h\j);}
+    \node[mv] (tau) at (4.4,-1.8) {$\tau$};
+    \draw[e] (h2)--(tau) (h3)--(tau);
+    \draw[e] (h1) to[bend left=20] (h2);
+    \draw[e] (h1) to[bend right=20] (h3);
+    \node[chZag,fill=black,text=white] at ($(h1)+(0.05,-0.62)$) {$\beta$};
+    \node[font=\scriptsize,intc!80!black,anchor=west,align=left] at (9.1,-0.1) {kde může být\\ $\beta$ po kroku 1};
+    \node[font=\scriptsize,defc,anchor=west,align=left] at (9.1,1.0) {krok 1 vnitřní\\ cestou: $c_j\to h_j$};
+
+  .caption:
+
+    Důkaz lemmatu o blokátoru. Po kroku 1 musí $\beta$ stát ve vzdálenosti $\le 2$ od $\tau$, tedy na jednom
+    z oranžových vrcholů $h_1,h_2,h_3$. "Všimni si:".emphasize na každý z nich by v kroku 1 vstoupil agent $c_j$
+    jdoucí vnitřní cestou (modré šipky) – všichni tři vnitřní tedy být nemohou.
+
+
+"Jeden vnější agent stačí.".notion Jde-li $c_j$ vnější cestou, blokátor stihne do $\tau$:
+
+.itemize:
+
+  .item:
+
+    $j=1$: $h_1\to h_1\to h_2\to\tau$ (agent $c_2$ je v kroku 2 už na $b_2$),
+
+  .item:
+
+    $j\in\{2,3\}$: $h_1\to h_j\to\tau\to\tau$.
+
+Gadget klauzule tedy přesně simuluje "OR".notion: aspoň jeden agent musí ven, ale jeden stačí.
+
+
+.Figure:
+  label: fig-mapf-rozvrh-klauzule
+
+  !tikz:
+    filename: 09c-mapf-07
+    options: 'pc/.style={draw=black!40,minimum width=11mm,minimum height=6mm,font=\small,inner sep=1pt}, hd/.style={font=\small\bfseries,minimum height=6mm}'
+
+    \foreach \t in {0,...,3} {\node[hd] at (1.8+1.3*\t,0.75) {\t};}
+    \node[hd,anchor=east] at (1.05,0.75) {krok};
+    \foreach \rr/\who/\col/\a/\b/\c/\d in {
+        0/{$c_1$ (vnější)}/acc/c_1/u_1/f_1/e_1,
+        1/{$c_2$ (vnitřní)}/defc/c_2/h_2/b_2/e_2,
+        2/{$c_3$ (vnitřní)}/defc/c_3/h_3/b_3/e_3,
+        3/{blokátor $\beta$}/black/h_1/h_1/h_2/\tau} {
+      \node[anchor=east,font=\small,text=\col] at (1.05,-0.6*\rr) {\who};
+      \foreach \t/\pos in {0/\a,1/\b,2/\c,3/\d} {\node[pc] (m\rr\t) at (1.8+1.3*\t,-0.6*\rr) {$\pos$};}}
+    \node[pc,fill=intc!45] at (m11) {$h_2$};
+    \node[pc,fill=intc!45] at (m32) {$h_2$};
+    \node[pc,fill=acc!20] at (m01) {$u_1$};
+    \draw[->,thick,intc!80!black] (m11.south east) to[bend left=10] (m32.north west);
+    \node[font=\scriptsize,anchor=west,align=left,text=black!70] at (7.0,-0.9) {$h_2$ uvolní $c_2$ v kroku 2,\\ $\beta$ tam vstoupí až v kroku 2};
+    \node[font=\scriptsize,anchor=west,align=left,text=black!70] at (7.0,0.2) {port $u_1$ musí být\\ v kroku 1 volný};
+
+  .caption:
+
+    Pozice agentů gadgetu klauzule po krocích pro $j=1$ (ven jde jen $c_1$). Žádní dva agenti nestojí
+    v témž kroku na stejném vrcholu a nikdo si nevymění místo po hraně (ověřeno simulací; stejně pro $j=2,3$
+    s blokátorem $h_1\to h_j\to\tau\to\tau$). "Všimni si:".emphasize kdyby šli vnitřní cestou všichni tři,
+    plán pro $\beta$ neexistuje. "(nad rámec přednášky)".emphasize
+
+
+.Figure:
+
+  !tikz:
+    filename: 09c-mapf-05
+    options: 'mv/.style={circle,draw=black!80,thick,minimum size=7mm,inner sep=0pt,font=\scriptsize},ag/.style={chZag,minimum size=5mm}'
+
+    % gadget promenne
+    \node[mv] (gl) at (0,0) {$g_{i-1}$};
+    \node[mv,fill=thmc!15,draw=thmc,very thick] (p) at (0.75,1.0) {$p_i$};
+    \node[mv] (s) at (1.8,1.45) {$s_i$};
+    \node[mv,fill=black!55,text=white] (n) at (2.85,1.0) {$a_i$};
+    \node[font=\tiny,above right=0mm of n] {$n_i$};
+    \node[mv] (g) at (3.6,0) {$g_i$};
+    \node[mv] (t) at (1.8,-1.1) {$t_i$};
+    \draw[e] (gl)--(p)--(s)--(n)--(g)--(t)--(gl);
+    \node[font=\scriptsize\bfseries] at (1.8,2.15) {gadget proměnné $x$};
+    % gadget klauzule (sestiuhelnik 1) -- port u1 je tentyz vrchol jako p_i
+    \begin{scope}[xshift=7.2cm]
+      \node[mv] (c1) at (0,0.5) {};
+      \node[font=\tiny,left=0mm of c1] {$c_1$};
+      \node[mv,fill=black!40,draw=thmc,very thick,text=white] (u1) at (0.75,1.4) {$c_1$};
+      \node[font=\tiny,above left=0mm of u1] {$u_1$};
+      \node[mv] (f1) at (1.9,1.4) {$f_1$};
+      \node[mv] (e1) at (2.65,0.5) {$e_1$};
+      \node[mv] (b1) at (1.9,-0.4) {$b_1$};
+      \node[mv] (h1) at (0.75,-0.4) {$h_1$};
+      \draw[e] (c1)--(u1)--(f1)--(e1)--(b1)--(h1)--(c1);
+      \node[ag,fill=black,text=white] at ($(h1)+(-0.45,-0.35)$) {$\beta$};
+      \node[font=\scriptsize\bfseries] at (1.3,2.15) {šestiúhelník literálu $x$ v klauzuli};
+    \end{scope}
+    \draw[thmc,very thick,dashed,<->] (p.east) to[bend right=12] node[below,font=\scriptsize,text=thmc]{tentýž vrchol: $u_1=p_i$} (u1.west);
+
+  .caption:
+
+    Snímek po kroku 1 pro klauzuli $(x\vee\lambda_2\vee\lambda_3)$ při $\sigma(x)=1$.
+    Agent $a_i$ šel přes $n_i$, port $p_i=u_1$ je proto v kroku 1 volný a agent $c_1$ smí vnější cestou
+    (stojí na něm). Agenti $c_2,c_3$ jdou vnitřní cestou, blokátor $\beta$ čeká na $h_1$.
+
+
+.Subsection Korektnost
+  label: ch-zoo-korektnost
+
+
+.Theorem:
+  label: thm-mapfred
+
+  $\Phi$ je splnitelná $\iff$ existuje plán s makespanem 3.
+
+
+.Proof:
+
+  "($\Rightarrow$)".notion Mějme splňující $\sigma$. Je-li $\sigma(x)=1$, jdou všichni agenti
+  gadgetu $x$ přes $n_i$, jinak přes $p_i$ – v kroku 1 jsou tedy volné porty všech "pravdivých".emphasize
+  literálů. V každé klauzuli vybereme jeden pravdivý literál $\lambda_j$: agent $c_j$ jde vnější
+  cestou (jeho port je v kroku 1 volný), ostatní vnitřní, blokátor projde podle předchozího odstavce.
+  Mezi gadgety se agenti potkávají jen na portech a jen v kroku 1. Všichni jsou v cíli po 3 krocích.
+
+
+  "($\Leftarrow$)".notion Mějme plán s makespanem 3. Agenti proměnných i literálů mají vzdálenost 3,
+  jdou tedy po nejkratších cestách bez čekání. Podle lemmatu .reference:lem-mapfvar volí všichni agenti
+  gadgetu $x$ stejně; položíme $\sigma(x)=1$, jdou-li přes $n_i$, jinak $0$. Podle
+  lemmatu .reference:lem-blokator jde v každé klauzuli nějaký $c_j$ vnější cestou a v kroku 1 stojí na portu
+  $u_j$, který tedy není obsazen agentem proměnné:
+
+  .itemize:
+
+    .item:
+
+      $u_j=p_i$ (literál $x$) $\Rightarrow$ agenti $x$ jdou přes $n_i$ $\Rightarrow$ $\sigma(x)=1$,
+
+    .item:
+
+      $u_j=n_i$ (literál $\neg x$) $\Rightarrow$ agenti $x$ jdou přes $p_i$ $\Rightarrow$ $\sigma(x)=0$.
+
+  V obou případech je $\lambda_j$ pravdivý a klauzule $C$ splněna.
+
+
+.Remark:
+  title: 'Co si odnést'
+
+  .itemize:
+
+    .item:
+
+      $\prob{3-SAT}\redp\prob{3-Coloring}$: paleta $T,F,B$, gadget proměnné, „prasátko“ propustí $F$ jen při vstupu $FFF$.
+
+    .item:
+
+      Barvení modeluje rozvrhy ($\prob{3-Coloring}\redp\prob{Rozvrh}$); intervalové grafy ale barvíme hladově optimálně.
+
+    .item:
+
+      Rovinnost nepomůže: gadget pro křížení dává $\prob{3-Coloring}\redp\prob{Planar 3-Coloring}$.
+
+    .item:
+
+      $\prob{NAE-3-SAT}\redp\prob{MaxCut}$: strana řezu = pravdivostní hodnota, těžké hrany vynutí konzistenci, váhy odstraníme cestami délky 3.
+
+    .item:
+
+      $\prob{3-SAT}\redp\prob{MAPF}$ s makespanem 3: vzdálenost do cíle = makespan vynutí binární volbu cesty.

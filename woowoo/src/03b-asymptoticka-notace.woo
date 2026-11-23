@@ -1,0 +1,51 @@
+.Section Asymptotická notace
+  label: ch-cas-asymptoticka-notace
+
+
+.Remark:
+  title: 'Konvence pro $f\colon\N\to\N$'
+
+  Čas je diskrétní počet kroků, proto automaticky zaokrouhlujeme nahoru a předpokládáme kladné
+  hodnoty: $\sqrt n$ znamená $\lceil\sqrt n\rceil$ a $\log n$ znamená $\max\{1,\lceil\log_2 n\rceil\}$.
+
+
+.Definition:
+  title: 'Velké $O$'
+  label: def-bigo
+
+  Pro funkce $f(n)\ge1$ a $g(n)\ge 1$:
+
+  .equation:
+
+    f(n)=O(g(n)) \iff \exists c\in\N\ \ \forall n\in\N:\ f(n)\le c\cdot g(n).
+
+  Formálně je $O(g(n))$ množina funkcí, takže bychom měli psát $f\in O(g)$, ale v informatice
+  je hluboce zakořeněná konvence psát rovnítko.
+
+
+.Warning:
+  title: 'Kde je $n_0$?'
+
+  Na rozdíl od definice z jiných předmětů zde chybí „pro všechna $n\ge n_0$“. Protože
+  $f,g\ge1$, lze konečně mnoho počátečních hodnot vždy „pohltit“ zvětšením konstanty $c$, takže
+  obě definice jsou ekvivalentní.
+
+
+.Figure:
+  label: fig-cas-velke-o
+
+  !tikz:
+    filename: 03b-asymptoticka-notace-01
+
+    \begin{axis}[width=9.5cm,height=5.5cm,xmin=1,xmax=4,ymin=0,ymax=150,axis lines=left,
+      xlabel={$n$},legend style={draw=none,font=\small,at={(0.03,0.97)},anchor=north west},
+      every axis plot/.append style={very thick,samples=60}]
+      \addplot[defc,domain=1:4] {2*x^2+4*x+3}; \addlegendentry{$f(n)=2n^2+4n+3$}
+      \addplot[gr,dashed,domain=1:4] {x^2}; \addlegendentry{$g(n)=n^2$}
+      \addplot[thmc,domain=1:4] {9*x^2}; \addlegendentry{$9\cdot g(n)$}
+    \end{axis}
+
+  .caption:
+
+    $2n^2+4n+3 = O(n^2)$ s konstantou $c=9$: pro $n\ge1$ je $4n\le 4n^2$ a $3\le 3n^2$,
+    tedy $f(n)\le 2n^2+4n^2+3n^2=9n^2$.

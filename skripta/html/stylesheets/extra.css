@@ -1,0 +1,155 @@
+/* Vzhled skript NI-ICC nad motivem MkDocs Material (převzato ze skript NI-UMI).
+   Paleta: neutrální břidlicová + modrý akcent (minimalistický styl, důraz na čtení). */
+[data-md-color-scheme="default"] {
+  --md-primary-fg-color: #1e293b;
+  --md-primary-fg-color--light: #334155;
+  --md-primary-fg-color--dark: #0f172a;
+  --md-primary-bg-color: #ffffff;
+  --md-primary-bg-color--light: #e2e8f0;
+  --md-accent-fg-color: #2563eb;
+  --md-accent-fg-color--transparent: rgba(37, 99, 235, 0.1);
+  --md-typeset-a-color: #1d4ed8;
+}
+[data-md-color-scheme="slate"] {
+  --md-hue: 222;
+  --md-primary-fg-color: #0f172a;
+  --md-primary-fg-color--light: #1e293b;
+  --md-primary-fg-color--dark: #020617;
+  --md-primary-bg-color: #f8fafc;
+  --md-primary-bg-color--light: #cbd5e1;
+  --md-accent-fg-color: #60a5fa;
+  --md-accent-fg-color--transparent: rgba(96, 165, 250, 0.12);
+  --md-typeset-a-color: #93c5fd;
+}
+
+/* čtení: o něco vzdušnější řádkování, tabulky čitelné velikosti */
+.md-typeset { line-height: 1.65; }
+.md-typeset table:not([class]) { font-size: 0.72rem; }
+.md-typeset table:not([class]) th,
+.md-typeset table:not([class]) td { vertical-align: top; padding: 0.6em 0.7em; }
+
+/* většina výkladu je v rámečcích (příklady, řešení), proto v nich písmo není drobné jako ve výchozím motivu */
+.md-typeset .admonition,
+.md-typeset details { font-size: 0.76rem; }
+.md-typeset .admonition table:not([class]),
+.md-typeset details table:not([class]) { font-size: 0.7rem; }
+
+/* cíl odkazu nesmí zajet pod přilepenou hlavičku */
+.md-typeset .admonition[id],
+.md-typeset details[id] { scroll-margin-top: 5.5rem; }
+.md-typeset .admonition:target { box-shadow: 0 0 0 2px var(--md-accent-fg-color); }
+
+/* obrázky */
+.md-typeset .woo-centered {
+  display: flex; flex-wrap: wrap; justify-content: center; align-items: center;
+  gap: 1rem 1.5rem; margin: 1em 0;
+}
+.md-typeset img.woo-fig { max-width: 100%; height: auto; }
+.md-typeset img.woo-img { max-height: 28rem; }
+[data-md-color-scheme="slate"] .md-typeset img.woo-fig {
+  background: #ffffff; border-radius: 6px; padding: 8px; box-sizing: content-box; max-width: calc(100% - 16px);
+}
+.md-typeset .woo-missing { color: var(--md-default-fg-color--light); font-style: italic; }
+
+/* popisné seznamy (trojice CSP: X, D, C) */
+.md-typeset dl.woo-dl {
+  display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 0.3em 0.8em; margin: 0.6em 0;
+}
+.md-typeset dl.woo-dl dt { font-weight: 700; margin: 0; }
+.md-typeset dl.woo-dl dd { margin: 0; }
+.md-typeset dl.woo-dl dd > :first-child { margin-top: 0; }
+.md-typeset dl.woo-dl dd > :last-child { margin-bottom: 0; }
+
+/* seznamy s vlastními značkami: (a), (b), 1., ... */
+.md-typeset ul.woo-custom { list-style: none; margin-left: 0; padding-left: 0; }
+.md-typeset ul.woo-custom > li { display: flex; gap: 0.6em; margin-left: 0; }
+.md-typeset ul.woo-custom > li > .woo-bul { flex: none; min-width: 1.7em; font-weight: 600; }
+.md-typeset ul.woo-custom > li > div { min-width: 0; }
+.md-typeset ul.woo-custom > li > div > :first-child { margin-top: 0; }
+.md-typeset ul.woo-custom > li > div > :last-child { margin-bottom: 0; }
+
+/* pseudokód */
+.md-typeset ol.woo-algo {
+  background: var(--md-code-bg-color); border-radius: 0.2rem; margin: 0.8em 0;
+  padding: 0.7em 0.9em 0.7em 2.8em; overflow-x: auto; font-size: 0.74rem; line-height: 1.7;
+}
+.md-typeset ol.woo-algo > li { margin: 0 0 0 0; padding-left: calc(var(--ind, 0) * 1.6em); }
+.md-typeset ol.woo-algo > li::marker { color: var(--md-default-fg-color--light); font-size: 0.9em; }
+.md-typeset .woo-algo-c { float: right; margin-left: 1.5em; color: var(--md-default-fg-color--light); font-style: italic; }
+.md-typeset .woo-sc { font-variant: small-caps; letter-spacing: 0.02em; }
+
+/* vysazené rovnice se na úzkém displeji posouvají, stránka ne */
+.md-typeset div.arithmatex { overflow-x: auto; overflow-y: hidden; padding: 0.2em 0; }
+
+/* tlačítko pro rozbalení všech řešení */
+.md-typeset .woo-toggle {
+  display: inline-flex; align-items: center; min-height: 44px; margin: 0 0 0.6em 0; padding: 0 1em;
+  font: inherit; font-size: 0.7rem; font-weight: 600; cursor: pointer;
+  color: var(--md-typeset-a-color); background: transparent;
+  border: 1px solid currentColor; border-radius: 0.2rem;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+.md-typeset .woo-toggle:hover { background: var(--md-accent-fg-color--transparent); }
+.md-typeset .woo-toggle:focus-visible { outline: 2px solid var(--md-accent-fg-color); outline-offset: 2px; }
+.md-typeset details.woo-solution > summary { cursor: pointer; }
+@media (prefers-reduced-motion: reduce) { .md-typeset .woo-toggle { transition: none; } }
+
+/* tisk: řešení vytisknout rozbalená nejde spolehlivě ve všech prohlížečích, aspoň obrázky nedělit */
+@media print { .md-typeset img.woo-fig, .md-typeset .admonition { break-inside: avoid; } }
+
+/* MathJax přidává ke každému vzorci skrytou kopii pro čtečky obrazovky. Je sice neviditelná, ale její šířka
+   roztahovala stránku do strany (vodorovný posun na telefonu). Zmenšíme ji na 1 px, čtečky ji čtou dál. */
+.md-typeset mjx-container mjx-assistive-mml { width: 1px !important; height: 1px !important; }
+
+/* jádro a řešené úlohy podtématu: v dlouhém oddíle je od výkladu oddělí linka */
+.md-typeset h2.woo-part {
+  margin-top: 2.6em;
+  padding-top: 0.9em;
+  border-top: 2px solid var(--md-accent-fg-color);
+  text-wrap: balance;
+}
+
+/* obrázky a tabulky s popiskem (.Figure:, .Table:) */
+.md-typeset figure.woo-float { display: block; width: auto; max-width: 100%; margin: 1.4em 0; text-align: center; }
+.md-typeset figure.woo-float[id] { scroll-margin-top: 5.5rem; }
+.md-typeset figure.woo-float:target { box-shadow: 0 0 0 2px var(--md-accent-fg-color); border-radius: 4px; }
+.md-typeset figure.woo-float .woo-centered { margin: 0.4em 0; }
+.md-typeset figure.woo-float figcaption {
+  max-width: 44rem; margin: 0.5em auto 0; font-size: 0.72rem; font-style: normal; text-align: center;
+  color: var(--md-default-fg-color--light);
+}
+.md-typeset figure.woo-table figcaption { margin: 0 auto 0.5em; }
+.md-typeset figure.woo-table table { text-align: left; }
+.md-typeset .woo-fignum { font-weight: 700; color: var(--md-default-fg-color); }
+
+/* hlavička redukce: co se převádí na co (fialová jako věty ve skriptech) */
+.md-typeset .admonition.woo-redukcebox { border-color: #8e2c6e; }
+.md-typeset .admonition.woo-redukcebox > .admonition-title { background-color: rgba(142, 44, 110, 0.1); }
+.md-typeset .admonition.woo-redukcebox > .admonition-title::before { background-color: #8e2c6e; }
+.md-typeset .admonition.woo-redukcebox > p:last-child { text-align: center; }
+.md-typeset p.woo-redukce {
+  margin: 0.8em 0; padding: 0.45em 0.8em; border-left: 0.2rem solid #8e2c6e; border-radius: 0.1rem;
+  background-color: rgba(142, 44, 110, 0.08);
+}
+[data-md-color-scheme="slate"] .md-typeset .admonition.woo-redukcebox,
+[data-md-color-scheme="slate"] .md-typeset p.woo-redukce { border-color: #d68ac0; }
+[data-md-color-scheme="slate"] .md-typeset .admonition.woo-redukcebox > .admonition-title::before { background-color: #d68ac0; }
+
+/* definice rozhodovacího problému (Vstup / Otázka) */
+.md-typeset .admonition.woo-problem { border-color: #1f5fa8; background-color: transparent; }
+.md-typeset .admonition.woo-problem > .admonition-title { background-color: rgba(31, 95, 168, 0.12); }
+.md-typeset .admonition.woo-problem > .admonition-title::before { background-color: #1f5fa8; }
+[data-md-color-scheme="slate"] .md-typeset .admonition.woo-problem { border-color: #7fb0e6; }
+[data-md-color-scheme="slate"] .md-typeset .admonition.woo-problem > .admonition-title::before { background-color: #7fb0e6; }
+
+/* ukázky kódu (!codeblock:) */
+.md-typeset pre.woo-code { font-size: 0.72rem; line-height: 1.5; }
+.md-typeset pre.woo-code > code { display: block; padding: 0.8em 1em; overflow-x: auto; }
+
+/* vzorec v buňce tabulky se nesmí zmenšovat podle šířky sloupce (jinak mají dlouhé názvy problémů drobné písmo);
+   širokou tabulku obalí Material vodorovným posuvníkem */
+.md-typeset table mjx-container > svg { max-width: none; }
+/* Material dává každému sloupci nejméně 5rem; úzké sloupce (čísla, „Kap.“) pak zbytečně roztahují tabulku přes okraj */
+.md-typeset table:not([class]) th { min-width: 0; }
+/* vzorec a interpunkce těsně za ním drží na jednom řádku */
+.md-typeset .woo-nobr { white-space: nowrap; }

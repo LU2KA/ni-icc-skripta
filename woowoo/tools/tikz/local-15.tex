@@ -1,0 +1,30 @@
+% Makra a styly obrazku kapitoly 15 ((I)LP: modelovani, resice a optimalizace) -- nove napsane
+\tikzset{
+  % uzly stromu branch & bound
+  bbn/.style={draw=black!70,rounded corners=2pt,thick,align=center,font=\footnotesize,inner sep=3pt,fill=white},
+  bbinc/.style={bbn,draw=defc,fill=defc!12,very thick},
+  bbcut/.style={bbn,draw=black!35,text=black!50},
+  % body v rovine
+  ipt/.style={circle,fill=black!70,inner sep=0pt,minimum size=3.2pt},
+  ipto/.style={circle,fill=black!20,inner sep=0pt,minimum size=2.4pt},
+  lpopt/.style={circle,fill=warnc,inner sep=0pt,minimum size=5pt},
+  ilpopt/.style={circle,fill=defc,inner sep=0pt,minimum size=5pt},
+  polyP/.style={fill=defc!10,draw=defc,thick},
+  osa/.style={->,draw=black!60},
+  % casova osa (rozvrhy)
+  job/.style={draw,minimum height=5mm,inner sep=0pt,font=\scriptsize,anchor=west},
+}
+% \chQaxes{xmax}{ymax}: osy x, y
+\newcommand{\chQaxes}[2]{%
+  \draw[osa] (-0.2,0)--(#1,0) node[right,font=\scriptsize]{$x$};
+  \draw[osa] (0,-0.2)--(0,#2) node[above,font=\scriptsize]{$y$};}
+% \chQpoly: mnohosten 2x+y<=5, x+2y<=5, x,y>=0 (prednaska 8, slajdy 14--16, 23, 32) s celociselnymi body;
+% pouzivat s x=1.2cm,y=1.2cm (nebo jinym meritkem)
+\newcommand{\chQpoly}{%
+  \fill[defc!10] (0,0)--(2.5,0)--(5/3,5/3)--(0,2.5)--cycle;
+  \draw[defc,thick] (2.5,0)--(5/3,5/3)--(0,2.5);
+  \chQaxes{3.3}{3.3}
+  \foreach \x in {0,...,3} \foreach \y in {0,...,3} {
+    \pgfmathparse{(2*\x+\y<=5) && (\x+2*\y<=5) ? 1 : 0}
+    \ifnum\pgfmathresult=1 \node[ipt] at (\x,\y) {}; \else \node[ipto] at (\x,\y) {}; \fi}
+  \foreach \n in {1,2,3} {\node[font=\tiny,below] at (\n,0) {\n}; \node[font=\tiny,left] at (0,\n) {\n};}}

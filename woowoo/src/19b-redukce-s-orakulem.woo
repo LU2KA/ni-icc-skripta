@@ -1,0 +1,113 @@
+.Section Redukce s orákulem a vyčíslitelnost
+  label: ch-graf-redukce-s-orakulem-a-vycislitelnost
+
+
+Do grafu výše jsme nezahrnuli redukce jiného typu: ty, které "volají".emphasize algoritmus pro jiný problém
+jako podprogram (klidně víckrát), a redukci, kterou jsme dokázali nerozhodnutelnost.
+
+
+.Figure:
+  label: fig-graf-redukce-s-orakulem
+
+  !tikz:
+    filename: 19b-redukce-s-orakulem-01
+    options: 'x=1cm,y=1cm, orc/.style={gr0,draw=black,fill=black!80,text=white,text width=42mm}, src/.style={text width=42mm}'
+
+      \node[glog,src] (topt) at (0,0)    {TSP: hodnota optima};
+      \node[glog,src] (tres) at (0,-1.6) {TSP: nalezení kružnice};
+      \node[orc] (tdec) at (9.6,-0.8) {TSP: rozhodovací verze};
+      \draw[rd,thmc] (topt.east) -- node[kap,above=2pt,sloped]{kap.~1: binární vyhledávání} (tdec.west);
+      \draw[rd,thmc] (tres.east) -- node[kap,below=2pt,sloped]{kap.~1: samo-redukovatelnost} (tdec.west);
+      \node[ggraf,src] (cres) at (0,-3.4) {3-Coloring: nalezení obarvení};
+      \node[orc] (cdec) at (9.6,-3.4) {3-Coloring:\\ rozhodovací verze};
+      \draw[rd,thmc] (cres) -- node[kapc,above=2pt]{cv~3.1 = 2.5: samo-redukovatelnost} (cdec);
+      \node[ggraf,src] (kres) at (0,-5.0) {Clique: největší klika};
+      \node[orc] (kdec) at (9.6,-5.0) {Clique: rozhodovací verze};
+      \draw[rd,thmc] (kres) -- node[kapc,above=2pt]{cv~2.4: bin.\ vyhledávání + mazání vrcholů} (kdec);
+      \node[gvyp,src] (uc) at (0,-6.6) {UC (výpočet funkce)};
+      \node[orc] (halt) at (9.6,-6.6) {Halt};
+      \draw[rd,thmc] (uc) -- node[kap,above=2pt]{kap.~2: kdyby šlo Halt rozhodnout} (halt);
+      \glink{topt}{red:tspopt}
+      \glink{tres}{red:tspsearch}
+      \glink{cres}{red:3colsearch}
+      \glink{uc}{red:uchalt}
+      \glink{kres}{red:cliquemax}
+
+  .caption:
+
+    Redukce s orákulem (černě problém, jehož algoritmus voláme jako podprogram). Číslo = kapitola.
+    Odkazy na jednotlivé redukce jsou v tabulce níže.
+
+
+.table:
+  columns: 'p{5.5cm}p{7cm}'
+
+  .row:
+    head: true
+
+    "Redukce s orákulem".notion
+
+    "Jak (popisek šipky)".notion
+
+  .row:
+
+    "TSP: hodnota optima $\to$ TSP: rozhodovací verze"#red-tspopt
+
+    kap. 1: binární vyhledávání
+
+  .row:
+
+    "TSP: nalezení kružnice $\to$ TSP: rozhodovací verze"#red-tspsearch
+
+    kap. 1: samo-redukovatelnost
+
+  .row:
+
+    "3-Coloring: nalezení obarvení $\to$ 3-Coloring: rozhodovací verze"#red-3colsearch
+
+    cv 3.1 = 2.5: samo-redukovatelnost
+
+  .row:
+
+    "Clique: největší klika $\to$ Clique: rozhodovací verze"#red-cliquemax
+
+    cv 2.4: bin. vyhledávání + mazání vrcholů
+
+  .row:
+
+    "UC (výpočet funkce) $\to$ Halt"#red-uchalt
+
+    kap. 2: kdyby šlo Halt rozhodnout
+
+
+.Remark:
+  title: 'Co si odnést'
+
+  .itemize:
+
+    .item:
+
+      Z $\prob{SAT}$u (Cook–Levin) vede cesta do každého problému v grafu, všechny jsou proto NP-těžké
+      (a kromě Super Maria i NP-úplné).
+
+    .item:
+
+      Nejvíc redukcí začíná v $\prob{3-SAT}$u (gadgety pro proměnné a klauzule) a ve $\prob{Vertex Cover}$u.
+
+    .item:
+
+      Číselné problémy: $\prob{Subset Sum}$, $\prob{Partition}$, $\prob{Knapsack}$ jsou jen slabě NP-úplné;
+      převádět čísla na strukturu smíme jen z "silně".emphasize těžkého $\prob{3-Partition}$.
+
+    .item:
+
+      V $\PSPACE$ hraje roli SATu $\prob{TQBF}$ a pro hry $\prob{Generalized Geography}$.
+
+    .item:
+
+      Optimalizační a hledací verze nejsou těžší než rozhodovací – stačí orákulum a binární vyhledávání či
+      samo-redukovatelnost.
+
+    .item:
+
+      Stejným principem (redukcí) dokazujeme i nerozhodnutelnost: $\prob{UC}$ by šla spočítat pomocí $\prob{Halt}$.

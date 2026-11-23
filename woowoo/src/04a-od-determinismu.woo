@@ -1,0 +1,154 @@
+.Section Od determinismu k nedeterminismu
+  label: ch-np-od-determinismu-k-nedeterminismu
+
+
+Co kdybychom stroji dovolili v jedné situaci reagovat několika různými způsoby? Z výpočtu-cesty se stane strom:
+
+
+.Figure:
+  label: fig-np-dts-ndts
+
+  !tikz:
+    filename: 04a-od-determinismu-01
+    options: 'level distance=9mm'
+
+    % DTS: cesta
+    \begin{scope}
+      \node[font=\sffamily\small\bfseries,defc] at (0,0.8) {DTS: cesta};
+      \foreach \i in {0,...,4} {\node[chNPc] (d\i) at (0,-\i*0.9) {};}
+      \foreach \i [evaluate=\i as \j using {int(\i+1)}] in {0,...,3} {\draw[chNPe] (d\i) -- (d\j);}
+      \node[chNPacc,below=4mm of d4] (dacc) {\qA};
+      \draw[chNPe] (d4) -- (dacc);
+      \node[note,anchor=west] at (0.5,-1.8) {jediné\\ pokračování};
+    \end{scope}
+    % NDTS: strom
+    \begin{scope}[xshift=7cm]
+      \node[font=\sffamily\small\bfseries,thmc] at (0,0.8) {NDTS: strom};
+      \node[chNPc] (r) at (0,0) {};
+      \node[chNPc] (a) at (-2,-0.9) {};
+      \node[chNPc] (b) at (0,-0.9) {};
+      \node[chNPc] (c) at (2,-0.9) {};
+      \node[chNPc] (a1) at (-2.6,-1.8) {};
+      \node[chNPc] (a2) at (-1.4,-1.8) {};
+      \node[chNPc] (b1) at (0,-1.8) {};
+      \node[chNPc] (c1) at (1.5,-1.8) {};
+      \node[chNPc] (c2) at (2.5,-1.8) {};
+      \foreach \u/\w in {r/a,r/b,r/c,a/a1,a/a2,b/b1,c/c1,c/c2} {\draw[chNPe] (\u) -- (\w);}
+      \node[chNPc] (x) at (-2.6,-2.7) {};
+      \draw[chNPe] (a1) -- (x);
+      \node[note,anchor=east] at (-0.4,0.12) {3 volby};
+      \node[note,anchor=west] at (0.15,-1.3) {1 volba};
+    \end{scope}
+
+  .caption:
+
+    Výpočet DTS je posloupnost konfigurací (cesta). U NDTS může mít konfigurace více
+    následníků – výpočet se větví do stromu.
+
+
+.Concept:
+  title: 'Proč to děláme?'
+
+  Nedeterministický Turingův stroj (NDTS) "není fyzicky realizovatelný".emphasize. Je to abstraktní,
+  teoretický model. Ukáže se ale jako ultimátní nástroj pro pochopení struktury a složitosti
+  problémů – zejména třídy $\NP$.
+
+
+.Definition:
+  title: 'Nedeterministický Turingův stroj'
+  label: def-ndts
+
+  NDTS s $k$ páskami je devítice $M=(Q,\Sigma,G,B,k,\delta,q_0,\qA,\qR)$, kde
+
+  .itemize:
+
+    .item:
+
+      $Q$, $\Sigma$, $G\supsetneq\Sigma$, $B\in G\setminus\Sigma$ (blank) a $k\ge1$ mají stejný význam jako u DTS (definice .reference:def-dts),
+
+    .item:
+
+      $q_0\in Q$ je počáteční stav,
+
+    .item:
+
+      $\qA\in Q$ je "přijímací".notion a $\qR\in Q$ "zamítací".notion stav ($\qA\neq\qR$),
+
+    .item:
+
+      $\delta\subseteq \bigl(Q\times G^k\bigr)\times\bigl(Q\times G^k\times\{\Lft,\Stay,\Rgt\}^k\bigr)$ je "přechodová relace".notion.
+
+
+.Subsection Klíčový rozdíl: relace místo funkce
+  label: ch-np-klicovy-rozdil-relace-misto-funkce
+
+
+.equation:
+
+  \delta\ \subseteq\ \underbrace{\bigl(Q\times G^k\bigr)}_{\text{aktuální situace}}\ \times\
+  \underbrace{\bigl(Q\times G^k\times\{\Lft,\Stay,\Rgt\}^k\bigr)}_{\text{možná pokračování}}
+
+Pro danou situaci (stav + čtené symboly) určuje $\delta$ "množinu".emphasize všech platných
+pokračování. V konfiguraci tedy může mít NDTS:
+
+.centered:
+
+  !tikz:
+    filename: 04a-od-determinismu-02
+
+    \begin{scope}
+      \node[chNPc,minimum size=8mm,font=\small] (s) at (0,0) {$q,a$};
+      \foreach \x/\l in {-1.2/1,0/2,1.2/3} {\node[chNPc] (t\l) at (\x,-1.4) {}; \draw[chNPe] (s) -- (t\l);}
+      \node[font=\small\bfseries,align=center] at (0,-2.3) {více přechodů};
+      \node[note,text width=38mm] at (0,-3.0) {stroj má na výběr --\\ vznikají větve};
+    \end{scope}
+    \begin{scope}[xshift=5cm]
+      \node[chNPc,minimum size=8mm,font=\small] (s) at (0,0) {$q,a$};
+      \node[chNPc] (t) at (0,-1.4) {}; \draw[chNPe] (s) -- (t);
+      \node[font=\small\bfseries,align=center] at (0,-2.3) {jeden přechod};
+      \node[note,text width=38mm] at (0,-3.0) {lokálně\\ deterministické chování};
+    \end{scope}
+    \begin{scope}[xshift=10cm]
+      \node[chNPc,minimum size=8mm,font=\small,draw=gr] (s) at (0,0) {$q,a$};
+      \node[chNPstuck] at (0,-1.4) {zásek};
+      \draw[gr,thick,dashed] (s) -- (0,-1.1);
+      \node[font=\small\bfseries,align=center] at (0,-2.3) {žádný přechod};
+      \node[note,text width=38mm] at (0,-3.0) {větev výpočtu\\ nepokračuje};
+    \end{scope}
+
+
+.Subsection Strom výpočtu
+  label: ch-np-strom-vypoctu
+
+
+Zatímco výpočet DTS je prostá posloupnost konfigurací, výpočet NDTS tvoří "strom konfigurací".notion.
+Každý uzel je jedna konfigurace (stav, obsah pásek, pozice hlav), větvení
+vzniká tam, kde má $\delta$ více možností. Listy jsou konfigurace ve stavu $\qA$, $\qR$, nebo
+konfigurace bez dalšího přechodu (zásek).
+
+
+.Figure:
+  label: fig-np-strom
+
+  !tikz:
+    filename: 04a-od-determinismu-03
+
+    \node[chNPc,minimum size=9mm,font=\scriptsize] (r) at (0,0) {start};
+    \node[chNPc] (a) at (-3,-1.2) {};
+    \node[chNPc] (b) at (0,-1.2) {};
+    \node[chNPc] (c) at (3,-1.2) {};
+    \node[chNPrej] (a1) at (-3.8,-2.4) {\qR};
+    \node[chNPstuck] (a2) at (-2.2,-2.4) {zásek};
+    \node[chNPc] (b1) at (-0.7,-2.4) {};
+    \node[chNPc] (b2) at (0.7,-2.4) {};
+    \node[chNPrej] (c1) at (3,-2.4) {\qR};
+    \node[chNPrej] (b11) at (-0.7,-3.6) {\qR};
+    \node[chNPc] (b21) at (0.7,-3.6) {};
+    \node[chNPacc] (acc) at (0.7,-4.8) {\qA};
+    \foreach \u/\w in {r/a,r/c,a/a1,a/a2,b/b1,c/c1,b1/b11} {\draw[chNPe] (\u) -- (\w);}
+    \draw[chNPg] (r) -- (b); \draw[chNPg] (b) -- (b2); \draw[chNPg] (b2) -- (b21); \draw[chNPg] (b21) -- (acc);
+    \node[note,anchor=west,acc!70!black] at (1.2,-3.6) {přijímající větev\\ $\Rightarrow$ slovo je přijato};
+
+  .caption:
+
+    Strom výpočtu NDTS na jednom vstupu. Stačí jediná zelená větev do $\qA$.

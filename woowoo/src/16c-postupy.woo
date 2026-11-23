@@ -1,0 +1,450 @@
+.Section Postupy na papíře
+  label: ch-test-postupy-na-papire
+
+
+Pro každý ze čtyř typů úloh je tu jeden postup (co napsat a v jakém pořadí) a jeden rámeček typických chyb.
+Postupy nejsou nic nového: skládají dohromady to, co skripta u jednotlivých témat už říkají, a odkazují tam.
+Ukázky celých řešení jsou v příloze .reference:ch-ukazkovy (ukázkový test) a .reference:ch-typove (typové úlohy).
+
+
+.Subsection Typ 1: Turingův stroj
+  label: ch-test-postup-ts
+
+
+.Procedure:
+  title: 'Návrh Turingova stroje u testu'
+
+  .enumerate:
+
+    .item:
+
+      "Přečti požadavky.".notion Kolik pásek? Deterministický, nebo nedeterministický? Omezený čas, nebo prostor?
+      Má stroj jazyk "rozhodovat".emphasize (vždy zastavit)? Vstupní páska jen pro čtení znamená, že se do prostoru
+      nepočítá a nesmí se na ni psát.
+
+    .item:
+
+      "Myšlenka jednou větou.".notion Například „druhá páska je čítač“ (.reference:cv-1-2), „slovo zkopírujeme
+      a čteme pozpátku“ (příklad .reference:ex-palin), „uhodni prostředek“ (.reference:cv-2-1), „na pracovní
+      pásce jsou jen dva binární čítače“.
+
+    .item:
+
+      "Pásky.".notion Co je na které pásce a kterým směrem se která hlava pohybuje.
+
+    .item:
+
+      "Stavy nebo fáze s významem.".notion Ke každému stavu (fázi) napiš, co v něm platí: „v $q_b$ je na pásce 2
+      tolik symbolů $X$, kolik bylo přečteno $a$, a hlava 2 stojí na posledním z nich“. U nedeterministického stroje
+      řekni, "kde".emphasize a "co".emphasize stroj hádá (Guess) a jak to deterministicky ověří (Verify), viz oddíl
+      .reference:ch-np-jak-navrhovat-nedeterministicke-stroje.
+
+    .item:
+
+      "Okrajové případy a zamítnutí.".notion Prázdné slovo, špatné pořadí písmen, chybějící nebo přebývající
+      oddělovač, jedna páska skončí dřív než druhá. Stačí věta „nevypsané přechody vedou do $\qR$“, ale u každé
+      fáze má být jasné, "proč".emphasize daná situace znamená slovo mimo jazyk.
+
+    .item:
+
+      "Odhad zdroje.".notion Čas: počet průchodů krát délka průchodu. Prostor: co přesně leží na pracovní pásce
+      a kolik buněk to zabere. Podrobnosti v rámečcích níže.
+
+    .item:
+
+      "Kontrola na dvou slovech".notion – jednom z jazyka a jednom mimo něj (stačí v duchu, na papír krátce).
+
+
+"Co musí obsahovat zdůvodnění „čas $O(n)$ na dvou páskách“.".notion
+
+.itemize:
+
+  .item:
+
+    Každá hlava udělá jen "konstantně mnoho průchodů".emphasize a každý průchod má $O(n)$ kroků; žádné „běhání tam
+    a zpět“ pro každý symbol. Přesně tím se dvoupáskové palindromy ($O(n)$) liší od jednopáskových ($O(n^2)$),
+    viz příklad .reference:ex-palin a .reference:cv-1-1.
+
+  .item:
+
+    Počítání se dělá na druhé pásce "unárně".emphasize: jeden zapsaný symbol za jedno přečtené písmeno a párování
+    pohybem hlavy 2 (.reference:cv-1-2). Počet kroků je pak úměrný počtu buněk, které hlavy přejedou.
+
+  .item:
+
+    Převíjení hlavy na začátek je také průchod a do času se počítá; konstantně mnoho převinutí je v pořádku.
+
+  .item:
+
+    Konkrétní konstanta (např. $3n+3$) není potřeba, stačí ukázat $c\cdot n$ – na multiplikativních konstantách
+    nezáleží (věta .reference:thm-speedup a důsledek .reference:cor-nokonst).
+
+  .item:
+
+    U nedeterministického stroje se čas měří na "každé".emphasize větvi (definice .reference:def-ntime); stačí ukázat,
+    že žádná větev nepřekročí odhad, např. proto, že hlava 1 se v každém kroku posune doprava (.reference:cv-2-1).
+
+
+"Co musí obsahovat zdůvodnění „pracovní prostor $O(\log n)$ se vstupní páskou jen pro čtení“.".notion
+
+.itemize:
+
+  .item:
+
+    Vstupní páska je jen pro čtení a "do prostoru se nepočítá".emphasize; počítá se jen pracovní páska
+    (oddíl .reference:ch-prostor-logaritmicky-prostor-l-a-nl, definice .reference:def-lnl).
+
+  .item:
+
+    Na pracovní pásce je jen "konstantně mnoho".emphasize čítačů nebo ukazatelů do vstupu, každý s hodnotou
+    nejvýše $n$ a zapsaný "binárně".emphasize, tedy na $\lceil\log_2(n+1)\rceil$ buňkách. Celkem $O(1)\cdot O(\log n)=O(\log n)$.
+    Stejný argument používá $\prob{ST-REACH}\in\NL$ (aktuální vrchol a počítadlo kroků, problém .reference:prob-streach).
+
+  .item:
+
+    Jak se z čítače stane pozice: čtecí hlavu přesuneme na začátek vstupu a posouváme ji doprava, přičemž
+    odečítáme od pracovní kopie čítače, dokud není nula. Kopie je jen další čítač.
+
+  .item:
+
+    Konečně mnoho informace (např. „už jsem viděl oddělovač“, „předchozí písmeno bylo $b$“) se nosí ve stavu,
+    na pásku nepatří.
+
+  .item:
+
+    Čas se tu neomezuje (smí být klidně $O(n^2\log n)$), ale stroj musí zastavit: všechny cykly jsou řízené čítači,
+    které dojdou k nule nebo k $n$.
+
+
+.Warning:
+  title: 'Typické chyby'
+
+  .itemize:
+
+    .item:
+
+      Jen přechodová tabulka bez myšlenky a bez významu stavů; nebo naopak jen myšlenka bez fází. Zadání chce obojí
+      a k tomu odhad.
+
+    .item:
+
+      Zapomenutá kontrola tvaru slova ($a^*b^*$, právě jeden oddělovač) nebo okrajových případů ($i=0$, prázdné slovo).
+
+    .item:
+
+      Jednopáskový postup „odškrtni a vrať se“ ($O(n^2)$, obr. .reference:fig-anbn) tam, kde se chce $O(n)$ na dvou páskách.
+
+    .item:
+
+      Unární čítač nebo kopie části vstupu na pracovní pásce u logaritmického prostoru – to je $\Theta(n)$ buněk.
+      A naopak: „číslo si pamatuji ve stavu“ – stavů je konečně mnoho, neomezené číslo se do nich nevejde.
+
+    .item:
+
+      Zápis na vstupní pásku u stroje se vstupní páskou jen pro čtení (např. „odškrtnu $a$“).
+
+    .item:
+
+      U nedeterministického stroje: hádání neomezené délky, větev, která nikdy neskončí, nebo záměna „přijme“
+      za „všechny větve přijmou“ (přijímá se, když přijme "aspoň jedna".emphasize větev, definice .reference:def-ndts-acc).
+
+
+.Subsection Typ 2: Self-redukce
+  label: ch-test-postup-self-redukce
+
+
+.Procedure:
+  title: 'Self-redukce u testu'
+
+  .enumerate:
+
+    .item:
+
+      "Ujasni si orákulum.".notion Na co přesně odpovídá („alespoň $k$“, nebo „nejvýše $k$“) a že se smí ptát jen
+      na instance "téhož".emphasize problému – upravený graf, upravenou formuli, jiný práh. Jeden dotaz je jeden krok.
+
+    .item:
+
+      "Hodnota optima.".notion Binární vyhledávání přes práh $k$ (důsledek .reference:cor-binsearch, redukce
+      "hodnota optima TSP"#red-tspopt). Napiš, proč je odpověď v $k$ "monotónní".emphasize (má-li graf kliku velikosti $k$,
+      má i menší), a počet dotazů $\lceil\log_2(\text{počet možných hodnot})\rceil$.
+
+    .item:
+
+      "Nalezení řešení.".notion Procházej prvky (hrany, vrcholy, proměnné) jeden po druhém. Prvek zkusmo odstraň
+      nebo zafixuj a orákulem ověř, že upravená instance má "stále řešení s optimální hodnotou".emphasize. Když ano,
+      změnu ponech; když ne, vrať ji (prvek je nutný). Vzory: mazání hran u TSP (redukce "nalezení optimální kružnice TSP"#red-tspsearch),
+      mazání vrcholů u kliky (.reference:cv-2-4), přidávání omezení u 3-barvení (.reference:cv-3-1).
+
+    .item:
+
+      "Invariant.".notion Napiš ho výslovně, typicky „aktuální instance má řešení hodnoty $\mathrm{OPT}$ a každé
+      její řešení je i řešením původní instance“, a ukaž, že ho zachová "každá".emphasize z obou větví ($\ANO$ i $\NE$).
+
+    .item:
+
+      "Konec.".notion Proč to, co zbylo (zafixovalo se), je řešení: např. „zbylo přesně $|V|$ hran a ty tvoří kružnici“,
+      „každý vrchol je spojený se dvěma vrcholy palety“.
+
+    .item:
+
+      "Počet dotazů".notion jako konkrétní funkce $n$ (případně $m$, $\log\mathrm{MAX}$): binární vyhledávání plus jeden
+      dotaz na prvek. Dodej, že každá upravená instance má polynomiální velikost, takže celý algoritmus je
+      polynomiální vzhledem k volání orákula.
+
+
+.Figure:
+  label: fig-test-self-redukce
+
+  !tikz:
+    filename: 16c-postupy-01
+
+    \tikzset{sr/.style={blokd,minimum width=52mm},srq/.style={bloki,minimum width=52mm}}
+    \node[blok,minimum width=52mm] (in) at (0,0) {instance $I$ (graf, formule, \dots)};
+    \node[srq] (q0) at (0,-1.5) {orákulum: má $I$ vůbec řešení?};
+    \node[blokr] (no) at (6.6,-1.5) {řešení neexistuje};
+    \node[sr] (opt) at (0,-3.4) {hodnota: binární vyhledávání\\ přes práh $k$ $\Rightarrow$ $\mathrm{OPT}$\\ \footnotesize $\lceil\log_2(\text{počet hodnot})\rceil$ dotazů};
+    \node[note,anchor=east,align=right] at (-3.0,-3.4) {u rozhodovacích\\ problémů (SAT, HC)\\ tento krok odpadá};
+    \node[sr] (loop) at (0,-5.7) {další prvek $e$: $I'$ := $I$ s prvkem $e$\\ smazaným / zafixovaným};
+    \node[srq] (q1) at (6.6,-5.7) {orákulum: má $I'$ řešení\\ hodnoty $\mathrm{OPT}$?};
+    \node[bloka,minimum width=52mm] (out) at (0,-8.1) {vydej, co v $I$ zbylo\\ (zafixovalo se)};
+    \node[note,draw=black!30,dashed,rounded corners=3pt,inner sep=5pt] at (6.6,-8.1) {invariant: $I$ má řešení hodnoty $\mathrm{OPT}$\\ a každé jeho řešení řeší i původní instanci};
+    \draw[flow] (in)--(q0);
+    \draw[flow] (q0)-- node[above,font=\scriptsize]{\NE} (no);
+    \draw[flow] (q0)-- node[right,font=\scriptsize]{\ANO} (opt);
+    \draw[flow] (opt)--(loop);
+    \draw[flow] (loop)-- node[above,font=\scriptsize]{$I'$} (q1);
+    \draw[flow,acc!70!black] (q1.north) to[bend right=40] node[above,font=\scriptsize]{\ANO: $I:=I'$ (změnu ponech)} (loop.north east);
+    \draw[flow,rej] (q1.south) to[bend left=40] node[below,font=\scriptsize]{\NE: změnu vrať ($e$ je nutný)} (loop.south east);
+    \draw[flow] (loop)-- node[right,font=\scriptsize]{žádný další prvek} (out);
+
+  .caption:
+
+    Kostra každé self-redukce: nejdřív zjistit, zda řešení existuje, pak přesnou hodnotu optima a teprve s ní
+    procházet prvky. Jeden průchod smyčkou je jeden dotaz. "Všimni si:".emphasize ve smyčce se orákulum ptá, zda
+    zůstalo řešení "optimální".emphasize hodnoty, ne jen nějaké řešení – proto se hodnota zjišťuje dřív než řešení.
+    Vzory: klika (.reference:cv-2-4), vrcholové pokrytí a hamiltonovská kružnice (oddíl .reference:ch-typove-typ-2-self-redukce).
+
+
+.Warning:
+  title: 'Typické chyby'
+
+  .itemize:
+
+    .item:
+
+      Hledání řešení s prahem, který není přesné optimum: orákulum pak „vidí“ i horší řešení a algoritmus může
+      optimum zničit (rámeček „Musíme znát přesné optimum“ u redukce "nalezení optimální kružnice TSP"#red-tspsearch). Proto nejdřív hodnota,
+      pak řešení.
+
+    .item:
+
+      Chybí invariant nebo zdůvodnění, proč je výstup na konci opravdu řešení (a optimální).
+
+    .item:
+
+      Smazání vrcholu bez jeho hran, nebo dotaz na jiný problém, než na jaký orákulum odpovídá.
+
+    .item:
+
+      Zapomenutý úvodní dotaz „existuje vůbec nějaké řešení?“.
+
+    .item:
+
+      Počet dotazů jen jako „polynomiálně mnoho“ – zadání chce odhad vzhledem k $n$.
+
+    .item:
+
+      Binární vyhledávání nad odpovědí, která není monotónní v prahu.
+
+
+.Subsection Typ 3: Formulace jako ILP nebo SAT
+  label: ch-test-postup-ilp-sat
+
+
+Tři základní modelovací vzory jsou v oddílu .reference:ch-cisla-ilp:
+"výběr podmnožiny".emphasize (redukce "$\prob{Vertex Cover} \redp \prob{ILP}$"#red-ilpvc),
+"logická podmínka".emphasize (redukce "$\prob{3-SAT} \redp \prob{ILP}$"#red-ilpsat) a
+"volba jedné z několika možností".emphasize (redukce "$\prob{3-Coloring} \redp \prob{ILP}$"#red-ilpcol).
+Podrobně modelování rozebírají kapitoly .reference:ch-resice-sat
+a .reference:ch-resice-ilp.
+
+
+.Procedure:
+  title: 'Model ILP u testu'
+
+  .enumerate:
+
+    .item:
+
+      "Proměnné.".notion Každé rozhodnutí je proměnná s indexy, oborem ($\{0,1\}$, $\mathbb Z_{\ge0}$) a významem
+      vyřčeným větou: „$x_{z,t}=1$ právě když se zkouška $z$ koná v termínu $t$“. Pomocné proměnné (např. „termín
+      $t$ je použitý“, „maximum zátěže“) také s významem.
+
+    .item:
+
+      "Omezení po skupinách.".notion Každou skupinu napiš s kvantifikátorem ($\forall z\in Z$) a jednou větou, co
+      zajišťuje („každá zkouška právě jednou“, „konflikty ne ve stejném termínu“).
+
+    .item:
+
+      "Provázání pomocných proměnných.".notion Pomocná binární proměnná se musí zapnout, když se děje to, co
+      popisuje: $x_{i,j}\le y_j$ nebo $\sum_i x_{i,j}\le c\cdot y_j$ (velké $M$).
+
+    .item:
+
+      "Účelová funkce.".notion $\min$ nebo $\max$ lineárního výrazu. Minimalizaci maxima převeď na novou proměnnou
+      $t$ s omezeními $t\ge(\text{každý výraz})$ a cílem $\min t$.
+
+    .item:
+
+      "Velikost.".notion Počet proměnných a počet omezení jako funkce parametrů zadání.
+
+    .item:
+
+      "Kontrola správnosti".notion jednou dvěma větami: každé řešení úlohy dává přípustné řešení modelu se stejnou
+      hodnotou a naopak.
+
+
+.Procedure:
+  title: 'Kódování do SAT u testu'
+
+  .enumerate:
+
+    .item:
+
+      "Proměnné.".notion Booleovské proměnné s významem: „$x_{v,c}$ je pravda právě když vrchol $v$ dostane barvu $c$“
+      (stejný vzor jako proměnné „dlaždice $i$ na pozici $(x,y)$“ v důkazu Cook–Levinovy věty, redukce "$\prob{Dlaždičkování} \redp \prob{SAT}$"#red-sat).
+
+    .item:
+
+      "Klauzule po skupinách".notion s významem: „alespoň jeden“ je jedna dlouhá klauzule, „nejvýše jeden“ jsou
+      dvojice $(\lnot a\lor\lnot b)$ (nebo úspornější kódování z .reference:cv-7-4), zákaz kombinace je
+      $(\lnot a\lor\lnot b)$, implikace $a\Rightarrow b$ je $(\lnot a\lor b)$.
+
+    .item:
+
+      "Dekódování.".notion Jak ze splňujícího ohodnocení přečíst řešení.
+
+    .item:
+
+      "Obě implikace.".notion Řešení úlohy dává splňující ohodnocení a každé splňující ohodnocení dává řešení.
+
+    .item:
+
+      "Velikost.".notion Počet proměnných a klauzulí.
+
+
+.Warning:
+  title: 'Typické chyby'
+
+  .itemize:
+
+    .item:
+
+      Nelineární výrazy v ILP: součin proměnných, $\max$, absolutní hodnota, „když …, pak …“ bez převodu na lineární
+      nerovnice.
+
+    .item:
+
+      Proměnné bez oboru ($x\in\{0,1\}$ chybí, takže $x=0{,}5$ je přípustné) nebo bez vyřčeného významu.
+
+    .item:
+
+      Pomocná proměnná nesvázaná s ostatními: např. „termín je použitý“ může být $0$, i když se v něm něco koná.
+
+    .item:
+
+      Omezení napsané pro jeden index místo pro všechny ($\forall$ chybí) nebo skupina, u níž není řečeno, co zajišťuje.
+
+    .item:
+
+      Chybějící velikost programu (počet proměnných a omezení), přestože ji zadání výslovně chce.
+
+    .item:
+
+      U SAT: zapomenutá klauzule „alespoň jeden“, nebo formule, která není v CNF (implikace a ekvivalence je třeba
+      rozepsat na klauzule).
+
+
+.Subsection Typ 4: Důkaz NP-těžkosti redukcí
+  label: ch-test-postup-np
+
+
+.Procedure:
+  title: 'Důkaz NP-úplnosti u testu'
+
+  .enumerate:
+
+    .item:
+
+      "$Q\in\NP$".notion (chce-li zadání úplnost): co je certifikát, jak je dlouhý a proč ho lze ověřit v polynomiálním
+      čase (oddíl .reference:ch-np-od-hadani-k-overovani-certifikaty).
+
+    .item:
+
+      "Volba zdroje".notion $A$ mezi problémy, které smíme použít bez důkazu. Vodítko je podobnost: výběr podmnožiny
+      ($\prob{IS}$, $\prob{VC}$, $\prob{Clique}$), rozdělení do tříd ($\prob{3-Coloring}$), pořadí a cesty
+      (Hamiltonovská cesta/kružnice), čísla ($\prob{Subset Sum}$), lokální logické podmínky ($\prob{3-SAT}$).
+      Má-li zadání nápovědu, použij ji.
+
+    .item:
+
+      "Hlavička redukce".notion $A\redp Q$ a co se převádí na co (oddíl .reference:ch-test-hlavicka-redukce).
+
+    .item:
+
+      "Konstrukce".notion $f(x)$ úplně: vrcholy, hrany, čísla, parametr $k$; u gadgetů obrázek.
+
+    .item:
+
+      "Polynomialita:".notion velikost $f(x)$ jako funkce velikosti $x$ a čas výpočtu.
+
+    .item:
+
+      "($\Rightarrow$)".notion Z řešení instance $x$ sestroj řešení instance $f(x)$.
+
+    .item:
+
+      "($\Leftarrow$)".notion Z "libovolného".emphasize řešení $f(x)$ sestroj řešení $x$. Tady se využívá, že gadgety
+      nedovolí „podvádět“ (rigidita, oddíl .reference:ch-is-anatomie-redukci).
+
+    .item:
+
+      "Závěr:".notion $A$ je NP-těžký a $A\redp Q$, tedy $Q$ je NP-těžký; spolu s bodem 1 NP-úplný. Recept je
+      v oddílu .reference:ch-cook-mapa-redukci-a-recept-na-dukaz-np-uplnosti.
+
+
+.Warning:
+  title: 'Typické chyby'
+
+  .itemize:
+
+    .item:
+
+      "Opačný směr".notion: $Q\redp\prob{SAT}$ ukazuje jen, že $Q$ není těžší než $\prob{SAT}$ (oddíl
+      .reference:ch-redukce-jak-porovnat-slozitost-dvou-problemu). Redukuje se "ze známého těžkého na $Q$".emphasize.
+
+    .item:
+
+      Jen jedna implikace. Nejčastěji chybí ($\Leftarrow$), nebo předpokládá, že řešení $f(x)$ má „hezký“ tvar, aniž by
+      to bylo dokázané.
+
+    .item:
+
+      Konstrukce, která potřebuje znát řešení $x$ (např. splňující ohodnocení). Redukce dostane jen instanci a musí
+      běžet v polynomiálním čase.
+
+    .item:
+
+      Exponenciální výstup: gadget pro každou podmnožinu, čísla zapsaná unárně, ačkoli vstup je binárně (podezřelé
+      redukce v oddílu .reference:sec-podezrele).
+
+    .item:
+
+      Chybějící důkaz $Q\in\NP$ u úlohy na NP-úplnost, nebo nespočítaný parametr $k$ cílové instance.
+
+    .item:
+
+      Neošetřené triviální případy (např. $k>n$, cíl větší než součet všech čísel); stačí na ně vypsat pevnou
+      $\ANO$- nebo $\NE$-instanci (úvod oddílu .reference:sec-cv3).

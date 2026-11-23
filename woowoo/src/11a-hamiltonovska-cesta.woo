@@ -1,0 +1,434 @@
+.Section Hamiltonovská cesta
+  label: ch-cisla-hamiltonovska-cesta
+
+
+.Definition:
+  title: 'Problém $\prob{Directed Hamiltonian Path}$ (DHP)'
+  label: prob-dhp
+
+  "Vstup:".notion orientovaný graf $G=(V,E)$ a vrcholy $S,T$.
+
+
+  "Otázka:".notion existuje v $G$ orientovaná cesta z $S$ do $T$, která navštíví každý vrchol "právě jednou".emphasize?
+
+
+Problém nese jméno W.~R.~Hamiltona (hlavolam "Icosian game".emphasize, 1857) a úzce souvisí s obchodním
+cestujícím ($\prob{TSP}$, problém .reference:prob-tsp): tam mají hrany váhy a hledáme hamiltonovskou
+"kružnici".emphasize nejmenší váhy. $\prob{DHP}\in\NP$ – certifikátem je pořadí vrcholů.
+
+
+.Subsection $\prob{3-SAT}\redp\prob{DHP}$
+  label: ch-cisla-3-sat-dhp
+  pdf_string: '3-SAT ≤p DHP'
+
+
+.Remark:
+  title: 'Redukce: $\prob{3-SAT} \redp \prob{DHP}$'
+  label: red-dhp
+
+  formule $\Phi$ $\;\longmapsto\;$ $(G_\Phi,S,T)$
+
+
+Mějme formuli $\Phi$ s proměnnými $x_1,\dots,x_n$ a klauzulemi $C_1,\dots,C_m$. Postavíme orientovaný graf,
+v němž hamiltonovská cesta „vyřeší“ formuli.
+
+
+"Makro-pohled.".notion Cesta začíná v $S$, postupně (shora dolů) projde "řadami".emphasize proměnných
+$x_1,\dots,x_n$ a skončí v $T$. Každá klauzule je jediný samostatný vrchol $C_j$ „bokem“.
+
+
+.Figure:
+  label: ch-cisla-fig-dhp-makro
+
+  !tikz:
+    filename: 11a-hamiltonovska-cesta-06
+    options: 'x=1cm,y=1cm, rada/.style={blok,draw=defc,fill=defc!7,minimum width=46mm,minimum height=7mm}'
+
+    \node[hst] (S) at (0,1.3) {$S$};
+    \node[font=\scriptsize,anchor=west] at (0.45,1.3) {startovní vrchol};
+    \node[rada] (r1) at (0,0) {řada pro proměnnou $x_1$};
+    \node[rada] (r2) at (0,-1.2) {řada pro proměnnou $x_2$};
+    \node (rd) at (0.4,-2.1) {$\vdots$};
+    \node[rada] (rn) at (0,-3.0) {řada pro proměnnou $x_n$};
+    \node[hst] (T) at (0,-4.3) {$T$};
+    \node[font=\scriptsize,anchor=west] at (0.45,-4.3) {cílový vrchol};
+    \draw[one] (S)--(r1); \draw[one] (r1)--(r2); \draw[one,dashed] (r2)--(rn); \draw[one] (rn)--(T);
+    \node[hc] (C1) at (4.2,0) {$C_1$};
+    \node[hc] (C2) at (4.2,-1.2) {$C_2$};
+    \node at (4.2,-2.1) {$\vdots$};
+    \node[hc] (Cm) at (4.2,-3.0) {$C_m$};
+    \node[font=\scriptsize,align=center,intc!80!black] at (4.2,0.85) {klauzule\\ „bokem“};
+    \node[font=\scriptsize,align=left,anchor=west] at (5.0,-1.5) {cesta: $S$, řady shora dolů, $T$;\\ každá řada celá jedním směrem;\\ $C_j$ navštíví „odskokem“ z řady};
+
+  .caption:
+
+    Makro-pohled na graf $G_\Phi$. "Všimni si:".emphasize vrcholy klauzulí nejsou na hlavní trase – cesta je musí
+    posbírat odskoky z řad (gadget klauzule níže).
+
+
+"Gadget proměnné (rozhodovací řada).".notion Řada pro $x_i$ je posloupnost vrcholů propojených
+"obousměrně".emphasize; na koncích jsou vrcholy $L_i$ a $R_i$. Má-li cesta projít všechny vrcholy řady, musí
+ji projít z jednoho konce na druhý:
+
+.itemize:
+
+  .item:
+
+    zleva doprava ($L_i\to R_i$) $\iff x_i=\mathrm{TRUE}$,
+
+  .item:
+
+    zprava doleva ($R_i\to L_i$) $\iff x_i=\mathrm{FALSE}$.
+
+Změna směru uprostřed řady by nechala některé vrcholy nenavštívené.
+Konce $L_i,R_i$ spojíme se začátky $L_{i+1},R_{i+1}$ "všemi čtyřmi".emphasize orientovanými hranami
+($L_i\to L_{i+1}$, $L_i\to R_{i+1}$, $R_i\to L_{i+1}$, $R_i\to R_{i+1}$), dále $S\to L_1,R_1$ a
+$L_n,R_n\to T$. Ať řadu $x_i$ opustíme kterýmkoli koncem, do řady $x_{i+1}$ můžeme vstoupit z obou stran –
+volby jednotlivých proměnných jsou nezávislé.
+
+
+.Figure:
+  label: ch-cisla-fig-dhp-napojeni
+
+  !tikz:
+    filename: 11a-hamiltonovska-cesta-07
+    options: 'x=1cm,y=1cm, vnitrek/.style={blok,draw=black!50,fill=black!4,minimum width=26mm,minimum height=6mm,font=\scriptsize}'
+
+    \node[hst] (L1) at (0,0) {$L_i$};
+    \node[vnitrek] (I1) at (2.6,0) {vnitřek řady $x_i$};
+    \node[hst] (R1) at (5.2,0) {$R_i$};
+    \node[hst] (L2) at (0,-2.4) {$L_{i+1}$};
+    \node[vnitrek] (I2) at (2.6,-2.4) {vnitřek řady $x_{i+1}$};
+    \node[hst] (R2) at (5.2,-2.4) {$R_{i+1}$};
+    \draw[bid] (L1)--(I1); \draw[bid] (I1)--(R1);
+    \draw[bid] (L2)--(I2); \draw[bid] (I2)--(R2);
+    \draw[odsT] (L1)--(L2);
+    \draw[odsT] (R1)--(L2);
+    \draw[odsF] (L1)--(R2);
+    \draw[odsF] (R1)--(R2);
+    \node[font=\scriptsize,tT!70!black,anchor=east,align=right] at (-0.5,-1.2) {vstup zleva:\\ $x_{i+1}=\mathrm{TRUE}$};
+    \node[font=\scriptsize,tF!80!black,anchor=west,align=left] at (5.7,-1.2) {vstup zprava:\\ $x_{i+1}=\mathrm{FALSE}$};
+
+  .caption:
+
+    Napojení řad $x_i$ a $x_{i+1}$ všemi čtyřmi hranami. "Všimni si:".emphasize z $L_i$ i z $R_i$ vede hrana do $L_{i+1}$
+    (zeleně) i do $R_{i+1}$ (červeně), takže směr průchodu řadou $x_{i+1}$ nezávisí na tom, jak jsme prošli řadu $x_i$.
+
+
+"Gadget klauzule (odskok).".notion Pro každou klauzuli $C_j$ má každá řada vyhrazený pár sousedních
+vrcholů $u,v$ ($u$ vlevo). Mezi páry leží "separátor".emphasize bez odskoků; řada má tedy tvar
+
+.equation:
+
+  L_i,\ \underbrace{u_{i1},v_{i1}}_{C_1},\ s,\ \underbrace{u_{i2},v_{i2}}_{C_2},\ s,\ \dots,\ s,\ \underbrace{u_{im},v_{im}}_{C_m},\ R_i
+  \qquad (3m+1\ \text{vrcholů}).
+
+.itemize:
+
+  .item:
+
+    $x_i\in C_j$ (pozitivní literál): hrany $u_{ij}\to C_j\to v_{ij}$. Jdeme-li "zleva doprava".emphasize,
+    můžeme z $u$ odbočit do $C_j$ a vrátit se do $v$ – žádný vrchol řady nevynecháme.
+
+  .item:
+
+    $\lnot x_i\in C_j$ (negativní literál): hrany naopak, $v_{ij}\to C_j\to u_{ij}$; odskok jde použít
+    jen při průchodu "zprava doleva".emphasize.
+
+
+.Figure:
+  label: fig-dhprada
+
+  !tikz:
+    filename: 11a-hamiltonovska-cesta-01
+    options: 'x=1cm,y=1cm'
+
+    % --- jedna rada ---
+    \node[hv] (L) at (0,0) {$L_i$};
+    \node[hv] (u1) at (1.2,0) {$u$};
+    \node[hv] (v1) at (2.2,0) {$v$};
+    \node[hs] (s1) at (3.3,0) {};
+    \node[hv] (u2) at (4.4,0) {$u$};
+    \node[hv] (v2) at (5.4,0) {$v$};
+    \node[hs] (s2) at (6.5,0) {};
+    \node (dots) at (7.4,0) {$\cdots$};
+    \node[hv] (R) at (8.3,0) {$R_i$};
+    \foreach \a/\b in {L/u1,u1/v1,v1/s1,s1/u2,u2/v2,v2/s2,s2/dots,dots/R} \draw[bid] (\a)--(\b);
+    \draw[decorate,decoration={brace,mirror,amplitude=4pt}] ([yshift=-4mm]u1.south west)--([yshift=-4mm]v1.south east)
+       node[midway,below=4pt,font=\scriptsize]{pár pro $C_1$};
+    \draw[decorate,decoration={brace,mirror,amplitude=4pt}] ([yshift=-4mm]u2.south west)--([yshift=-4mm]v2.south east)
+       node[midway,below=4pt,font=\scriptsize]{pár pro $C_2$};
+    \node[font=\scriptsize,gr] at (4.9,-1.35) {separátory šedě};
+    % --- pozitivni odskok ---
+    \node[hc] (C1) at (1.7,1.5) {$C_1$};
+    \draw[odsT] (u1) to[bend left=15] (C1);
+    \draw[odsT] (C1) to[bend left=15] (v1);
+    \node[font=\scriptsize,tT!70!black,align=center] at (0.2,1.5) {$x_i\in C_1$:\\ $u\to C_1\to v$};
+    % --- negativni odskok ---
+    \node[hc] (C2) at (4.9,1.5) {$C_2$};
+    \draw[odsF] (v2) to[bend right=15] (C2);
+    \draw[odsF] (C2) to[bend right=15] (u2);
+    \node[font=\scriptsize,tF!80!black,align=center] at (6.6,1.5) {$\lnot x_i\in C_2$:\\ $v\to C_2\to u$};
+    % --- smer ---
+    \draw[->,thick,tT!70!black] (0,-1.9)--node[below,font=\scriptsize]{zleva doprava: $x_i=\mathrm{TRUE}$, použitelné zelené odskoky} (8.3,-1.9);
+    \draw[<-,thick,tF!80!black] (0,-2.6)--node[below,font=\scriptsize]{zprava doleva: $x_i=\mathrm{FALSE}$, použitelné červené odskoky} (8.3,-2.6);
+
+  .caption:
+
+    Rozhodovací řada proměnné $x_i$. Obousměrné hrany, pro každou klauzuli pár $(u,v)$, mezi páry
+    separátor. Odskok pozitivního literálu jde po směru TRUE, negativního po směru FALSE.
+
+
+.Warning:
+  title: 'Nelegální zkratka'
+
+  Co brání cestě, aby z $u$ odskočila do $C_1$ a místo návratu do $v$ pokračovala jinam (třeba do řady $x_2$)?
+  Argument „do řady $x_1$ se už nevrátím“ "neplatí".notion – přes vrchol jiné klauzule se do řady $x_1$
+  vrátit lze. Potřebujeme "lokální".emphasize argument – a ten dává následující lemma.
+
+
+.Lemma:
+  title: 'O odskoku'
+  label: lem-odskok
+
+  Vstoupí-li hamiltonovská cesta z vrcholu $u$ do $C_j$, pak z $C_j$ pokračuje do $v$ (druhého vrcholu
+  téhož páru). Symetricky pro odskok $v\to C_j\to u$.
+
+
+.Proof:
+
+  Pozitivní případ (hrany $u\to C_j\to v$). Kdyby cesta z $C_j$ odešla jinam, do $v$ už lze vstoupit
+  jen z pravého souseda $s$ (z $u$ cesta odešla do $C_j$, $C_j$ je použitý). Z $v$ pak vedou hrany jen do $u$ a do
+  $s$ – oba už navštívené – a hrana $v\to C_j$ neexistuje. Vrchol $v$ je slepá ulička, a protože to není $T$,
+  nemůže cesta pokračovat. Spor.
+
+
+.Figure:
+  label: ch-cisla-fig-odskok
+
+  !tikz:
+    filename: 11a-hamiltonovska-cesta-02
+    options: 'x=1cm,y=1cm'
+
+    \node[hv] (u) at (0,0) {$u$};
+    \node[hv,fill=rej!15,draw=rej] (v) at (1.4,0) {$v$};
+    \node[hs] (s) at (2.8,0) {$s$};
+    \node[hc] (C) at (0.7,1.4) {$C_j$};
+    \node (jinam) at (-1.4,1.4) {\scriptsize jinam};
+    \draw[bid] (u)--(v); \draw[bid] (v)--(s); \draw[bid] (-1.0,0)--(u); \draw[bid] (s)--(4.0,0);
+    \draw[hpath] (u)--(C);
+    \draw[hpath,draw=rej!50] (C)--(jinam);
+    \draw[odsT,dashed] (C)--(v);
+    \draw[hpath] (s)--(v);
+    \node[font=\scriptsize,rej,align=center] at (1.4,-0.8) {slepá ulička:\\ $u$ i $s$ už navštívené};
+
+  .caption:
+
+    Lemma o odskoku: kdyby cesta z $C_j$ odešla jinam, zbyl by vrchol $v$ jako slepá ulička.
+
+
+.Example:
+  title: '$\Phi=(x_1\lor\lnot x_2)$, ohodnocení $x_1=x_2=\mathrm{TRUE}$'
+  label: ex-dhpex
+
+  Jediná klauzule se dvěma literály, takže každá řada je jen $L_i,u_i,v_i,R_i$ (žádné separátory).
+  Klauzuli $C_1$ obslouží literál $x_1$: řada $x_1$ jde zleva doprava a odskočí do $C_1$ (zeleně).
+  Řada $x_2$ jde také zleva doprava, takže svůj (červený) odskok $v_2\to C_1\to u_2$ použít nemůže – a ani nepotřebuje.
+
+
+  .centered:
+
+    !tikz:
+      filename: 11a-hamiltonovska-cesta-03
+      options: 'x=1cm,y=1cm'
+
+      \node[hst] (S) at (1.8,1.4) {$S$};
+      \node[hv] (L1) at (0,0) {$L_1$}; \node[hv] (u1) at (1.2,0) {$u_1$};
+      \node[hv] (v1) at (2.4,0) {$v_1$}; \node[hv] (R1) at (3.6,0) {$R_1$};
+      \node[hv] (L2) at (0,-2) {$L_2$}; \node[hv] (u2) at (1.2,-2) {$u_2$};
+      \node[hv] (v2) at (2.4,-2) {$v_2$}; \node[hv] (R2) at (3.6,-2) {$R_2$};
+      \node[hst] (T) at (1.8,-3.4) {$T$};
+      \node[hc] (C) at (5.3,-1) {$C_1$};
+      % cesta (pod hranami)
+      \foreach \a/\b in {S/L1,L1/u1,v1/R1,R1/L2,L2/u2,u2/v2,v2/R2,R2/T} \draw[hpath] (\a)--(\b);
+      \draw[hpath] (u1) .. controls (1.6,1.0) and (4.6,1.25) .. (C); \draw[hpath] (C) .. controls (4.5,0.35) and (3.0,1.0) .. (v1);
+      % hrany
+      \foreach \a/\b in {L1/u1,u1/v1,v1/R1,L2/u2,u2/v2,v2/R2} \draw[bid] (\a)--(\b);
+      \foreach \a/\b in {S/L1,S/R1,L1/L2,R1/R2,L2/T,R2/T} \draw[one] (\a)--(\b);
+      \draw[one] (L1)--(R2); \draw[one] (R1)--(L2);
+      \draw[odsT] (u1) .. controls (1.6,1.0) and (4.6,1.25) .. (C); \draw[odsT] (C) .. controls (4.5,0.35) and (3.0,1.0) .. (v1);
+      \draw[odsF] (v2) to[out=-30,in=-120] (C); \draw[odsF] (C) to[out=-100,in=-50] (u2);
+
+
+  Hamiltonovská cesta (silně zeleně): $S\to L_1\to u_1\to C_1\to v_1\to R_1\to L_2\to u_2\to v_2\to R_2\to T$.
+
+
+.Theorem:
+  label: thm-dhpnpc
+
+  $\prob{DHP}$ je NP-úplný.
+
+
+.Proof:
+
+  "($\Rightarrow$) Splnitelná formule dává cestu.".notion Mějme splňující ohodnocení. Začneme v $S$, řadu $x_i$
+  projdeme zleva doprava, je-li $x_i=\mathrm{TRUE}$, jinak zprava doleva. V každé klauzuli $C_j$ je aspoň jeden
+  pravdivý literál; pro "první".emphasize z nich (řekněme z proměnné $x_k$) odskočíme z řady $x_k$ do $C_j$ – směr
+  průchodu řadou $x_k$ tento odskok právě umožňuje. Z poslední řady dojdeme do $T$. Prošli jsme všechny vrcholy
+  řad a každý vrchol klauzule právě jednou.
+
+
+  "($\Leftarrow$) Cesta dává splňující ohodnocení.".notion Podle lemmatu .reference:lem-odskok jsou odskoky jen
+  vložky $u\to C_j\to v$ (resp. $v\to C_j\to u$). Vypustíme-li je, zbude cesta přes samotné řady – a ta musí
+  každou řadu projít celou jedním směrem. Ohodnocení přečteme ze směrů: zleva doprava $\Rightarrow x_i=\mathrm{TRUE}$,
+  zprava doleva $\Rightarrow x_i=\mathrm{FALSE}$. Cesta navštíví každý $C_j$, a to odskokem
+  z nějaké řady $x_k$. Pozitivní odskok jde použít jen zleva doprava, negativní jen zprava doleva, takže příslušný
+  literál je pravdivý. Každá klauzule obsahuje pravdivý literál.
+
+
+  "Velikost:".notion $|V|=2+m+n(3m+1)=O(nm)$, redukce je polynomiální.
+
+
+.Subsection Rodina sekvenčních problémů
+  label: ch-cisla-rodina-sekvencnich-problemu
+
+
+Z $\prob{DHP}$ plyne těžkost dalších problémů už jen "lokálními úpravami".emphasize.
+
+
+.Subsection $\prob{DHP}\redp\prob{UHP}$ (neorientovaná hamiltonovská cesta)
+  label: ch-cisla-dhp-uhp
+  pdf_string: 'DHP ≤p UHP (neorientovaná hamiltonovská cesta)'
+
+
+.Remark:
+  title: 'Redukce: $\prob{DHP} \redp \prob{UHP}$'
+  label: red-uhp
+
+  orientovaný $(G,S,T)$ $\;\longmapsto\;$ neorientovaný $(G',S_{\mathrm{in}},T_{\mathrm{out}})$
+
+
+Každý vrchol $v$ rozštěpíme na cestu $v_{\mathrm{in}}-v_{\mathrm{mid}}-v_{\mathrm{out}}$; orientovaná hrana
+$u\to v$ se stane neorientovanou hranou $\{u_{\mathrm{out}},v_{\mathrm{in}}\}$. Vrchol $v_{\mathrm{mid}}$ má
+stupeň 2, a vynutí tak průchod „skrz“ ve správném směru (do $v_{\mathrm{in}}$ se vchází, z
+$v_{\mathrm{out}}$ odchází).
+
+
+.Figure:
+  label: ch-cisla-fig-stepeni-vrcholu
+
+  !tikz:
+    filename: 11a-hamiltonovska-cesta-04
+    options: 'x=1cm,y=1cm'
+
+    \node[hv] (v) at (0,0) {$v$};
+    \draw[one] (-1.3,0.6)--(v); \draw[one] (-1.3,-0.6)--(v); \draw[one] (v)--(1.3,0.6); \draw[one] (v)--(1.3,-0.6);
+    \draw[->,very thick,gr] (2.0,0)--(3.0,0);
+    \node[hv] (vi) at (4.6,0) {\tiny in}; \node[hv,fill=hl] (vm) at (5.8,0) {\tiny mid}; \node[hv] (vo) at (7.0,0) {\tiny out};
+    \draw[e] (vi)--(vm)--(vo);
+    \draw[e] (3.4,0.6)--(vi); \draw[e] (3.4,-0.6)--(vi); \draw[e] (vo)--(8.2,0.6); \draw[e] (vo)--(8.2,-0.6);
+    \node[font=\scriptsize,gr] at (3.3,1.0) {příchozí}; \node[font=\scriptsize,gr] at (8.3,1.0) {odchozí};
+
+  .caption:
+
+    Štěpení vrcholu: z orientovaného grafu neorientovaný. Stupeň 2 vrcholu $v_{\mathrm{mid}}$ zaručí,
+    že se $v$ projde „zepředu dozadu“.
+
+
+.Subsection $\prob{DHP}\redp\prob{HC}$ (hamiltonovská kružnice)
+  label: ch-cisla-dhp-hc
+  pdf_string: 'DHP ≤p HC (hamiltonovská kružnice)'
+
+
+.Remark:
+  title: 'Redukce: $\prob{DHP} \redp \prob{HC}$'
+  label: red-hc
+
+  $(G,S,T)$ $\;\longmapsto\;$ $G+(T\to S)$
+
+
+V naší konstrukci do $S$ žádná hrana nevede a z $T$ žádná nevychází, takže stačí přidat hranu $T\to S$: každá
+hamiltonovská kružnice ji musí použít a po jejím odebrání zbude hamiltonovská cesta $S\leadsto T$. Stejné
+štěpení vrcholů pak dá i neorientovanou $\prob{HC}$."Pro obecný vstup $\prob{DHP}$ (kde do $S$ hrany vést mohou) by se nejdřív přidaly nové vrcholy $S'\to S$ a $T\to T'$ a hrana $T'\to S'$.".footnote
+
+
+.Subsection $\prob{HC}\redp\prob{TSP}$
+  label: ch-cisla-hc-tsp
+  pdf_string: 'HC ≤p TSP'
+
+
+.Remark:
+  title: 'Redukce: $\prob{HC} \redp \prob{TSP}$'
+  label: red-tsp
+
+  neorientovaný $G$ $\;\longmapsto\;$ $(K_{|V|},\ w\in\{1,2\},\ k=|V|)$
+
+
+Úplný graf na vrcholech $G$; hrany z $G$ mají váhu~1, doplněné hrany váhu~2, a $k=|V|$. Okruh má přesně $|V|$
+hran, takže váhu $\le|V|$ má právě tehdy, když používá jen hrany váhy~1 – tedy je to hamiltonovská kružnice v~$G$.
+
+
+.Figure:
+  label: ch-cisla-fig-hc-tsp
+
+  !tikz:
+    filename: 11a-hamiltonovska-cesta-05
+    options: 'x=1cm,y=1cm'
+
+    \foreach \n/\p in {a/{(0,1.4)},b/{(1.4,1.4)},c/{(1.4,0)},d/{(0,0)},e/{(0.7,2.4)}} \node[v] (\n) at \p {\n};
+    \draw[e] (a)--(b) (b)--(c) (c)--(d) (d)--(a) (a)--(e) (e)--(b);
+    \node[font=\scriptsize] at (0.7,-0.7) {$G$};
+    \draw[->,very thick,gr] (2.3,0.9)--(3.3,0.9);
+    \begin{scope}[xshift=4.3cm]
+    \foreach \n/\p in {a/{(0,1.4)},b/{(1.4,1.4)},c/{(1.4,0)},d/{(0,0)},e/{(0.7,2.4)}} \node[v] (\n) at \p {\n};
+    \draw[efaint,dashed,draw=black!35] (a)--(c) (b)--(d) (e)--(c) (e)--(d);
+    \draw[esel] (a)--(e) (e)--(b) (b)--(c) (c)--(d) (d)--(a);
+    \draw[e] (a)--(b);
+    \node[font=\scriptsize,align=left,anchor=west] at (2.0,1.6) {\textcolor{black!80}{---} váha 1 (hrany $G$)\\[1pt]
+       \textcolor{black!40}{- - -} váha 2 (doplněné)\\[1pt] \textcolor{acc!80!black}{\textbf{---}} okruh váhy $5=|V|$};
+    \end{scope}
+
+  .caption:
+
+    $\prob{HC}\redp\prob{TSP}$: hamiltonovská kružnice v $G$ je okruh váhy $|V|$; každý okruh, který
+    použije doplněnou hranu, má váhu aspoň $|V|+1$.
+
+
+.Remark:
+  title: 'Poznámka'
+
+  Váhy jsou jen $\{1,2\}$ – $\prob{TSP}$ je tedy těžký i s malými čísly. Na to se odvoláme v oddílu o silné
+  NP-úplnosti.
+
+
+.Subsection $\prob{HP}\redp\prob{Longest Path}$
+  label: ch-cisla-hp-longest-path
+  pdf_string: 'HP ≤p Longest Path'
+
+
+.Definition:
+  title: 'Problém $\prob{Longest Path}$ (nejdelší cesta)'
+  label: prob-longpath
+
+  "Vstup:".notion graf $G=(V,E)$ a číslo $k$.
+
+
+  "Otázka:".notion existuje v $G$ cesta (bez opakování vrcholů) s alespoň $k$ hranami?
+
+
+.Remark:
+  title: 'Redukce: $\prob{(U)HP} \redp \prob{Longest Path}$'
+  label: red-longpath
+
+  $G$ $\;\longmapsto\;$ $(G,\ k=|V|-1)$
+
+
+Cesta s $|V|-1$ hranami navštíví všech $|V|$ vrcholů, je to tedy přesně hamiltonovská cesta."Pro verzi s pevnými konci $S,T$ hledáme cestu $S\leadsto T$ s alespoň $|V|-1$ hranami.".footnote
+
+
+.Concept:
+  title: 'Nejkratší vs. nejdelší'
+
+  "Nejkratší".emphasize cesta je v $\PP$ (BFS, Dijkstra), "nejdelší".emphasize je NP-těžká. Rozdíl: u nejkratší cesty se
+  „zákaz opakování vrcholů“ dodrží sám od sebe (opakování by cestu jen prodloužilo), u nejdelší ho musíme
+  hlídat – a právě v tom je ukrytá hamiltonovskost.

@@ -1,0 +1,228 @@
+.Section Řezy a separace
+  label: ch-resice-ilp-rezy-a-separace
+
+
+Branch & bound mez používá; řezy ji "zlepšují".emphasize. Přidávají nerovnice, které žádné celočíselné řešení
+neporuší, ale odříznou zlomkové LP optimum. Stejný mechanismus – přidávat nerovnice až tehdy, když jsou potřeba –
+vyřeší i problém z oddílu .reference:ch-resice-ilp-tsp-a-sklady s $2^n$ podmínkami obchodního cestujícího.
+
+
+.Subsection Řezy: přiřezávání k celočíselnému obalu
+  label: ch-resice-ilp-rezy-celociselny-obal
+
+
+.Definition:
+  title: 'Řez'
+  label: ch-resice-ilp-def-rez
+
+  "Řez".notion je nerovnost, která platí pro "všechna".emphasize celočíselná řešení, ale "odřízne".emphasize aktuální
+  LP optimum $x^*$.
+
+
+.Example:
+  title: 'Řez ze slajdu 23'
+  label: ch-resice-ilp-ex-rez
+
+  $2x+y\le5$, $x+2y\le5$, $x,y\in\mathbb Z_{\ge0}$; účel $\max 3x+2y$, LP optimum $(\tfrac53,\tfrac53)$ (oddíl
+  .reference:ch-resice-ilp-lp-relaxace-a-dualita).
+
+  .enumerate:
+
+    .item:
+
+      Sečti obě omezení: $3x+3y\le10$.
+
+    .item:
+
+      Vyděl třemi: $x+y\le\tfrac{10}3$.
+
+    .item:
+
+      Vlevo je pro celá $x,y$ celé číslo, takže smíme pravou stranu zaokrouhlit dolů: "$x+y\le3$".notion.
+
+  Kontrola: všechna celočíselná řešení ji splňují (odvodili jsme ji z platných nerovnic a celočíselnosti).
+  LP optimum ji porušuje: $\tfrac53+\tfrac53=\tfrac{10}3>3$ – je "odříznuto".notion. Nové LP optimum s přidaným
+  řezem je $(2,1)$ s hodnotou $8=\mathrm{OPT}$; zbytek už žádné větvení nepotřebuje.
+
+
+.Figure:
+  label: ch-resice-ilp-fig-rez
+
+  !tikz:
+    filename: 15g-rezy-a-separace-01
+    options: 'x=1.6cm,y=1.6cm'
+
+    \chQpoly
+    \fill[warnc!30] (2,1)--(5/3,5/3)--(1,2)--cycle;
+    \draw[defc!60!black,very thick] (-0.1,3.1)--(3.1,-0.1);
+    \node[defc!60!black,font=\footnotesize,anchor=west] at (2.75,0.45) {$x+y=3$};
+    \node[warnc,font=\small] at (5/3,5/3) {$\times$};
+    \node[warnc,font=\footnotesize,anchor=south west] at (1.7,1.7) {$(\frac53,\frac53)$ odříznut};
+    \node[ilpopt] at (2,1) {};
+    \node[defc,font=\footnotesize,anchor=west] at (2.1,1.05) {$(2,1)$};
+
+  .caption:
+
+    Řez $x+y\le3$ odřízne červený trojúhelník – část polyedru bez celočíselných bodů, ve které leželo LP optimum.
+
+
+"Cíl řezů.".notion Přiblížit se "celočíselnému obalu".notion $\mathrm{conv}(P\cap\mathbb Z^n)$ – nejmenšímu konvexnímu
+mnohostěnu, který obsahuje všechny celočíselné body z $P$. Ten má celočíselné vrcholy, takže nad ním by stačilo LP.
+Pro příklad výše je obal nakreslený vpravo na obr. .reference:ch-resice-ilp-fig-formulace.
+Celý obal ale obvykle neznáme a může mít obrovské množství stěn; řezy proto přidáváme jen tam, kde je potřeba. Postup
+„sečti nezáporné násobky omezení a zaokrouhli dolů“ se jmenuje "(nad rámec přednášky)".emphasize Chvátalův–Gomoryho
+řez; Gomoryho řezy patří mezi rodiny řezů moderních řešičů (oddíl .reference:ch-resice-ilp-resice-v-praxi).
+
+
+.Subsection Separace: nerovnosti až na vyžádání
+  label: ch-resice-ilp-separace
+
+
+Zpět k obchodnímu cestujícímu: nerovností zákazu podcyklů je $\approx2^n$, ale potřebujeme jen ty
+"porušené".notion. Začneme jen se stupni a opakujeme: "vyřeš, najdi porušenou, přidej".notion.
+
+
+.Definition:
+  title: 'Separační orákulum'
+  label: ch-resice-ilp-def-separacni-orakulum
+
+  "Separační orákulum".notion dostane $x^*$ a buď najde platnou nerovnost, kterou $x^*$ porušuje, nebo odpoví „žádná
+  není“.
+
+
+U TSP se orákulum dá implementovat rychle:
+
+.itemize:
+
+  .item:
+
+    "$x^*$ celočíselné:".notion vybrané hrany tvoří kružnice; "komponenty souvislosti".emphasize najde DFS. Je-li
+    komponent víc, vezmeme za $S$ jednu z nich – přes její řez jde $0<2$.
+
+  .item:
+
+    "$x^*$ zlomkové:".notion hledáme $S$ s nejmenším $\sum_{e\in\delta(S)}x^*_e$, tj. "minimální řez".emphasize
+    v grafu s kapacitami $x^*_e$. Je-li menší než 2, máme porušenou nerovnici; jinak žádná porušená není. Minimální
+    řez je polynomiální úloha (toky).
+
+
+.Figure:
+  label: ch-resice-ilp-fig-separace
+
+  !tikz:
+    filename: 15g-rezy-a-separace-02
+    options: 'x=1.3cm,y=1.3cm'
+
+    \node[vs] (a1) at (0,0.9) {}; \node[vs] (a2) at (-0.55,0) {}; \node[vs] (a3) at (0.55,0) {};
+    \node[vs] (b1) at (1.9,0.9) {}; \node[vs] (b2) at (1.35,0) {}; \node[vs] (b3) at (2.45,0) {};
+    \draw[e] (a1)--(a2)--(a3)--(a1) (b1)--(b2)--(b3)--(b1);
+    \draw[rej,dashed,rounded corners=4pt] (-0.9,-0.35) rectangle (0.9,1.2);
+    \node[rej,font=\footnotesize] at (-1.1,0.45) {$S$};
+    \node[font=\footnotesize,align=center] at (0.95,-0.9) {$x^*$ celočíselné: stačí DFS;\\ přes řez jde $0<2$};
+    \begin{scope}[xshift=7cm]
+      \node[vs] (p) at (0,0.45) {};
+      \node[vs] (q) at (1,0.95) {}; \node[vs] (r) at (1,-0.05) {};
+      \node[vs] (s) at (2.2,0.95) {}; \node[vs] (t) at (2.2,-0.05) {};
+      \node[vs] (w) at (3.2,0.45) {};
+      \draw[e] (p)--(q) (p)--(r) (s)--(w) (t)--(w);
+      \draw[e,dashed] (q)--(r) (q)--(s) (r)--(t) (s)--(t);
+      \node[font=\scriptsize,right] at (1,0.45) {$\frac12$}; \node[font=\scriptsize,left] at (2.2,0.45) {$\frac12$};
+      \node[font=\scriptsize,above] at (1.6,0.95) {$\frac12$}; \node[font=\scriptsize,below] at (1.6,-0.05) {$\frac12$};
+      \draw[rej,dashed,rounded corners=4pt] (-0.35,-0.35) rectangle (1.4,1.3);
+      \node[rej,font=\footnotesize] at (-0.55,0.45) {$S$};
+      \node[font=\footnotesize,align=center] at (1.6,-0.9) {$x^*$ zlomkové: stupně 2 $\checkmark$, souvislé,\\ přes řez jde $\frac12+\frac12=1<2$};
+    \end{scope}
+
+  .caption:
+
+    Separace pro TSP. Vlevo celočíselné $x^*$ se dvěma kružnicemi. Vpravo zlomkové $x^*$ (plné hrany mají hodnotu 1,
+    čárkované $\tfrac12$): každý vrchol má součet 2 a graf je souvislý, a přesto přes řez kolem $S$ jde jen 1 – DFS
+    by porušení nenašlo, minimální řez ano.
+
+
+.Subsection Branch & Cut
+  label: ch-resice-ilp-branch-and-cut
+
+
+"Branch & cut".notion = branch & bound + separace v každém uzlu stromu: v uzlu se opakovaně řeší LP a přidávají
+porušené nerovnice; až když separace žádnou nenajde, přichází na řadu heuristika (je $x^*$ nový incumbent?)
+a prořez nebo větvení.
+
+
+.Figure:
+  label: ch-resice-ilp-fig-branch-and-cut
+
+  !tikz:
+    filename: 15g-rezy-a-separace-03
+    options: 'node distance=7mm and 12mm'
+
+    \node[blokd] (lp) {LP relaxace};
+    \node[blokd,right=of lp] (sep) {separace};
+    \node[bloki,right=of sep,align=center] (heu) {heuristika:\\ incumbent?};
+    \node[blok,right=of heu,align=center] (br) {prořez /\\ větvení};
+    \draw[flow] (lp) to[bend left=30] node[above,font=\scriptsize]{$x^*$} (sep);
+    \draw[flow] (sep) to[bend left=30] node[below,font=\scriptsize]{přidej nerovnost} (lp);
+    \draw[flow] (sep)--(heu) node[midway,above,font=\scriptsize]{žádná};
+    \draw[flow] (heu)--(br);
+    \draw[flow] (br.south) |- ++(0,-1.4) -| node[pos=0.25,below,font=\scriptsize]{potomci} (lp.south);
+
+  .caption:
+
+    Jeden uzel branch & cut: smyčka LP–separace běží, dokud separace hlásí porušené nerovnice.
+
+
+"Tentýž mechanismus, dva různé důvody:".notion
+
+.table:
+  columns: 'p{6.5cm}p{6.5cm}'
+
+  .row:
+    head: true
+
+    řezy navíc
+
+    líná omezení (lazy constraints)
+
+  .row:
+
+    Model je "správný i bez nich".notion.
+
+    Jsou "součástí modelu".notion, jen se nevešla do paměti.
+
+  .row:
+
+    Zmenšují integrality gap, a tím strom.
+
+    Bez nich je výsledek "špatně".notion.
+
+  .row:
+
+    Např. $x+y\le3$ výše, trojúhelníky u VC (oddíl .reference:ch-resice-ilp-sila-formulace).
+
+    Např. zákaz podcyklů u TSP.
+
+
+.Warning:
+  title: 'Typické chyby'
+
+  .itemize:
+
+    .item:
+
+      "Řez, který odřízne celočíselné řešení.".notion Řez musí platit pro "všechna".emphasize celočíselná přípustná
+      řešení. Odvozený řez si ověř na několika celočíselných bodech.
+
+    .item:
+
+      "Zaokrouhlit pravou stranu, když vlevo nejsou celá čísla.".notion Krok 3 v příkladu potřebuje celočíselné
+      koeficienty i proměnné vlevo.
+
+    .item:
+
+      "Zaměnit řezy a líná omezení.".notion Řešení, které nesplňuje líné omezení, není přípustné. Když řešič líná
+      omezení nekontroluje (nebo je vypnete), dostanete „optimum“, které třeba u TSP tvoří víc kružnic.
+
+    .item:
+
+      "Separace jen přes komponenty.".notion U zlomkového $x^*$ nestačí hledat komponenty souvislosti (obrázek
+      vpravo); potřeba je minimální řez.

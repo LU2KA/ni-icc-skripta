@@ -1,0 +1,148 @@
+.Section Celočíselné lineární programování (ILP)
+  label: ch-cisla-ilp
+
+
+Existuje univerzální jazyk optimalizace, do kterého se dá přeložit skoro všechno.
+
+
+.Definition:
+  title: 'Problém $\prob{Integer Linear Programming}$ (ILP)'
+  label: prob-ilp
+
+  "Proměnné:".notion $x_1,\dots,x_n\in\mathbb Z$ (často jen binární, $\{0,1\}$).
+
+
+  "Účelová funkce:".notion minimalizovat (nebo maximalizovat) $c_1x_1+\dots+c_nx_n$.
+
+
+  "Omezení:".notion soustava lineárních nerovnic $Ax\le b$.
+
+
+  "Rozhodovací verze:".notion existuje celočíselné $x$ splňující $Ax\le b$?
+  (Optimalizaci převedeme přidáním omezení $c^{\top}x\le k$.)
+
+
+.Figure:
+  label: ch-cisla-fig-lp-ilp
+
+  !tikz:
+    filename: 11b-ilp-01
+    options: 'scale=0.82'
+
+    \fill[defc!12] (0,0)--(4,0)--(2.4,2.4)--(0,4)--cycle;
+    \draw[defc,thick] (4,0)--(2.4,2.4)--(0,4);
+    \draw[->] (-0.3,0)--(5.3,0) node[right]{$x_1$};
+    \draw[->] (0,-0.3)--(0,5.3) node[above]{$x_2$};
+    \foreach \x in {0,...,4} \foreach \y in {0,...,4} {
+      \pgfmathparse{(3*\x+2*\y<=12) && (2*\x+3*\y<=12) ? 1 : 0}
+      \ifnum\pgfmathresult=1 \fill[black!70] (\x,\y) circle (1.6pt); \else \fill[black!20] (\x,\y) circle (1.2pt); \fi}
+    \draw[intc,thick,dashed] (-0.2,5.0)--(5.0,-0.2) node[pos=0.06,right,font=\scriptsize]{$x_1+x_2=4{,}8$};
+    \draw[exc,thick] (-0.2,4.2)--(4.2,-0.2);
+    \node[exc,font=\scriptsize,anchor=west] at (3.4,1.5) {$x_1+x_2=4$};
+    \fill[intc] (2.4,2.4) circle (3pt);
+    \node[intc!80!black,font=\scriptsize,anchor=south west] at (2.45,2.45) {LP optimum $4{,}8$};
+    \foreach \p in {(4,0),(3,1),(2,2),(1,3),(0,4)} \draw[exc,very thick] \p circle (4pt);
+    \node[font=\scriptsize,defc,anchor=west] at (2.9,4.9) {$3x_1+2x_2\le12$};
+    \node[font=\scriptsize,defc,anchor=west] at (2.9,4.4) {$2x_1+3x_2\le12$};
+
+  .caption:
+
+    Mnohostěn přípustných řešení LP a celočíselné body v něm.
+
+
+"LP vs. ILP – magie celých čísel.".notion Maximalizujeme $x_1+x_2$.
+
+.itemize:
+
+  .item:
+
+    "Reálné proměnné:".notion "lineární programování".emphasize (LP) je řešitelné v polynomiálním čase
+    (elipsoidová metoda, metody vnitřního bodu). Optimum leží ve vrcholu mnohostěnu, který obecně
+    "není".emphasize celočíselný – tady $(2{,}4;\,2{,}4)$ s hodnotou $4{,}8$.
+
+  .item:
+
+    "Celočíselné proměnné:".notion optimum je jen $4$ (zeleně kroužkované body).
+    Požadavek celočíselnosti („buď, anebo“) z problému dělá NP-těžký problém.
+
+
+.Subsection Univerzálnost ILP: tři redukce
+  label: ch-cisla-univerzalnost-ilp
+
+
+Tři následující redukce převádějí do binárního ILP tři různé problémy: $\prob{Vertex Cover}$, $\prob{3-SAT}$
+a $\prob{3-Coloring}$. Každá z nich dokazuje, že ILP je NP-těžký, a zároveň ukazuje jeden základní modelovací
+vzor: výběr podmnožiny, logickou podmínku a volbu jedné z několika možností.
+
+
+.Subsection $\prob{Vertex Cover}\redp\prob{ILP}$ – výběr podmnožiny
+  label: ch-cisla-vc-ilp
+  pdf_string: 'Vertex Cover ≤p ILP – výběr podmnožiny'
+
+
+.Remark:
+  title: 'Redukce: $\prob{Vertex Cover} \redp \prob{ILP}$'
+  label: red-ilpvc
+
+  $(G,k)$ $\;\longmapsto\;$ binární ILP
+
+
+.equation:
+
+  x_v\in\{0,1\}\ \ (v\in V),\qquad x_u+x_v\ge 1\ \ \text{pro každou hranu } \{u,v\}\in E,\qquad \sum_{v\in V}x_v\le k .
+
+$x_v=1$ znamená „$v$ je v pokrytí“; hranová nerovnice říká, že aspoň jeden konec je vybrán.
+
+
+.Subsection $\prob{3-SAT}\redp\prob{ILP}$ – logika
+  label: ch-cisla-3-sat-ilp
+  pdf_string: '3-SAT ≤p ILP – logika'
+
+
+.Remark:
+  title: 'Redukce: $\prob{3-SAT} \redp \prob{ILP}$'
+  label: red-ilpsat
+
+  formule $\Phi$ $\;\longmapsto\;$ binární ILP
+
+
+Proměnná $y_i\in\{0,1\}$ za každou proměnnou formule; literál $\lnot y_i$ zapíšeme jako $(1-y_i)$. Klauzule
+se přepíše na „součet literálů $\ge1$“, např.
+
+.equation:
+
+  (y_1\lor\lnot y_2\lor y_3)\quad\leadsto\quad y_1+(1-y_2)+y_3\ge 1,\quad\text{tj.}\quad y_1-y_2+y_3\ge 0 .
+
+
+.Subsection $\prob{3-Coloring}\redp\prob{ILP}$ – více možností
+  label: ch-cisla-3-coloring-ilp
+  pdf_string: '3-Coloring ≤p ILP – více možností'
+
+
+.Remark:
+  title: 'Redukce: $\prob{3-Coloring} \redp \prob{ILP}$'
+  label: red-ilpcol
+
+  graf $G$ $\;\longmapsto\;$ binární ILP
+
+
+Pro problémy s více volbami použijeme "indikátorové".emphasize proměnné $x_{v,c}\in\{0,1\}$ pro vrchol $v$ a barvu
+$c\in\{R,G,B\}$:
+
+.equation:
+
+  \forall v\in V:\ x_{v,R}+x_{v,G}+x_{v,B}=1\quad\text{(právě jedna barva)},\qquad
+  \forall \{u,v\}\in E,\ \forall c:\ x_{u,c}+x_{v,c}\le 1 .
+
+
+Každá z redukcí dokazuje, že ILP (i s binárními proměnnými) je NP-těžký. $\prob{ILP}\in\NP$ platí také,
+důkaz ale není triviální: je třeba ukázat, že má-li soustava celočíselné řešení, má i řešení s polynomiálně
+dlouhým binárním zápisem (pro binární ILP je to zřejmé).
+
+
+.Concept:
+  title: 'Proč to vlastně učíme?'
+
+  V praxi (logistika, rozvrhování, AI) se NP-těžké problémy často zapíší jako ILP a předají profesionálním
+  řešičům (Gurobi, CPLEX, HiGHS). Tři redukce výše jsou zároveň tři základní "modelovací vzory".emphasize:
+  výběr podmnožiny, logická podmínka a volba jedné z několika možností.

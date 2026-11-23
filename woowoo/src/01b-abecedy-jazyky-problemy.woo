@@ -1,0 +1,76 @@
+.Section Co vlastně počítáme: abecedy, jazyky, problémy
+  label: ch-ts-co-vlastne-pocitame-abecedy-jazyky-problemy
+
+
+.Definition:
+  title: 'Abeceda, řetězce, jazyk'
+  label: def-abeceda
+
+  .itemize:
+
+    .item:
+
+      "Abeceda".notion $\Sigma$ je konečná neprázdná množina symbolů (typicky $\{0,1\}$).
+
+    .item:
+
+      $\Sigma^*$ je množina všech "konečných řetězců".notion nad $\Sigma$ (včetně prázdného $\varepsilon$).
+
+    .item:
+
+      "Jazyk".notion je libovolná podmnožina $L \subseteq \Sigma^*$.
+
+  Obecně počítáme funkce $f\colon \Sigma^*\to\Sigma^*$. Výpočet "jednoho bitu".emphasize
+  $g\colon\{0,1\}^*\to\{0,1\}$ odpovídá jazyku $L_g = \{x\in\{0,1\}^* \mid g(x)=1\}$.
+
+
+Pro výpočetní složitost jsou pojmy "jazyk".emphasize a "rozhodovací problém".emphasize totožné.
+
+
+.Figure:
+
+  !tikz:
+    filename: 01b-abecedy-jazyky-problemy-01
+
+    \draw[thick,fill=black!3,rounded corners=10pt] (-4.2,-1.6) rectangle (4.2,1.6);
+    \node[font=\sffamily\bfseries,anchor=north west] at (-4.1,1.55) {$\Sigma^*$ -- všechny instance};
+    \fill[acc!15,draw=acc,thick] (-1.0,0) ellipse (2.4 and 1.05);
+    \node[acc!70!black,font=\sffamily\bfseries] at (-1.0,0.6) {$L$ = ANO-instance};
+    \node[rej,font=\sffamily\bfseries] at (2.9,-1.1) {NE-instance};
+    \foreach \p/\t in {(-2.1,-0.15)/{\enc{G_1}},(-0.2,-0.35)/{\enc{G_2}},(-1.3,-0.6)/{\enc{G_5}}}
+       {\node[font=\scriptsize] at \p {$\t$};}
+    \foreach \p/\t in {(2.3,0.6)/{\enc{G_3}},(3.1,-0.2)/{\enc{G_4}},(2.0,-0.6)/{\texttt{0110}}}
+       {\node[font=\scriptsize] at \p {$\t$};}
+
+  .caption:
+
+    Rozhodovací problém = jazyk. Problém $\prob{Souvislost}$: $L=\{\enc{G}\mid G \text{ je souvislý graf}\}$.
+    Řetězce, které vůbec nekódují graf, jsou prostě NE-instance.
+
+
+.Definition:
+  title: 'Instance, velikost vstupu'
+  label: def-instance
+
+  .itemize:
+
+    .item:
+
+      "Instance".notion je libovolný řetězec vyhovující specifikaci vstupu (např. kódování grafu $\enc{G}$).
+
+    .item:
+
+      Instance dělíme na "ANO-instance".notion a "NE-instance".notion podle odpovědi na otázku problému.
+
+    .item:
+
+      "Velikost vstupu".notion je $n = |\enc{G}|$, tedy délka "kódování".emphasize instance.
+
+
+.Remark:
+  title: 'Na kódování (skoro) nezáleží'
+
+  Rozumná kódování (seznam hran vs. matice sousednosti) se liší jen "polynomiálně".emphasize: graf na
+  $k$ vrcholech s $m$ hranami má matici velikosti $k^2$ a seznam hran velikosti $O(m\log k)$.
+  Proč nám to (většinou) nevadí, uvidíme u třídy $\PP$. Nerozumné je např. zapsat číslo
+  "unárně".emphasize – to vstup exponenciálně nafoukne (viz $\prob{UNP}$ v~kapitole .reference:ch-redukce).

@@ -1,0 +1,22 @@
+% Makra obrazku prilohy B (typove ulohy)
+% \typtape{x}{y}{seznam symbolu}{index hlavy (1..), 0 = bez hlavy} -- jako \tmtape, ale symboly se sazi doslova
+% (lze psat \#, \blank, $X$ ...)
+\newcommand{\typtape}[4]{%
+  \foreach \s [count=\i] in {#3} {
+    \ifnum\i=#4
+      \node[cellhl] at ({#1+(\i-1)*0.7},#2) {\s};
+    \else
+      \node[cell] at ({#1+(\i-1)*0.7},#2) {\s};
+    \fi
+  }
+  \ifnum#4>0
+    \draw[headarrow] ({#1+(#4-1)*0.7+0.35},{#2-0.85}) -- ({#1+(#4-1)*0.7+0.35},{#2-0.4});
+  \fi
+}
+\tikzset{
+  typlit/.style={circle,draw=black!80,fill=white,thick,minimum size=9mm,inner sep=0pt,font=\small},
+  typlitsel/.style={typlit,fill=acc!25,draw=acc!80!black,very thick},
+  typpair/.style={draw=rej!80,dashed,thick},
+  typarc/.style={->,thick,draw=black!60},
+  typarcsel/.style={->,draw=acc!80!black,line width=1.8pt},
+}

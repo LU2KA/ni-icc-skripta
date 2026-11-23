@@ -1,0 +1,357 @@
+.Section Jak číst tato skripta
+  label: ch-test-jak-cist-skripta
+
+
+Skripta pokrývají látku předmětu NI-ICC, ale nejsou členěná po týdnech – kapitoly jsou seřazené
+"logicky".emphasize, od výpočetního modelu přes třídy složitosti a katalog NP-úplných problémů až k prostorové
+složitosti a PSPACE-úplnosti. Kapitoly .reference:ch-resice-sat a .reference:ch-resice-ilp přidávají praktickou
+stranu druhé poloviny semestru: SAT a ILP řešiče a modelování problémů pro ně. Na konci jsou přílohy: tato
+(test a orientace ve skriptech), typové úlohy (příloha .reference:ch-typove), vyřešený ukázkový test (příloha
+.reference:ch-ukazkovy) a graf všech redukcí (příloha .reference:ch-graf).
+
+
+Obsah proseminářů je zapracován přímo do textu a zadání cvičení (s nápovědou a vzorovým řešením) najdete
+u kapitoly, ke které tematicky patří. Tabulka ukazuje, kde je která přednáška, proseminář a cvičení:
+
+
+.Table:
+  label: tab-test-prednasky
+
+  .table:
+    columns: 'p{5.2cm}p{6.6cm}l'
+
+    .row:
+      head: true
+
+      Zdroj
+
+      Téma
+
+      Kapitoly
+
+    .row:
+
+      Přednáška 1, proseminář 1, cvičení 1
+
+      TS, vyčíslitelnost, $\PP$ a $\EXP$
+
+      .reference:ch-ts, .reference:ch-vycisl, .reference:ch-cas
+
+    .row:
+
+      Přednáška 2, proseminář 2, cvičení 2
+
+      nedeterminismus, $\NP$, certifikáty
+
+      .reference:ch-np
+
+    .row:
+
+      Přednáška 3
+
+      redukce, Cook–Levin, $\prob{SAT}\redp\prob{3-SAT}$
+
+      .reference:ch-redukce, .reference:ch-cook, .reference:ch-sat
+
+    .row:
+
+      Proseminář 3, cvičení 3
+
+      IS, VC, Hitting Set, Clique
+
+      .reference:ch-is
+
+    .row:
+
+      Přednáška 4
+
+      NAE-SAT, barvení, MaxCut, MAPF, 1-in-3 SAT
+
+      .reference:ch-cook (mapa), .reference:ch-sat, .reference:ch-zoo, .reference:ch-x3c
+
+    .row:
+
+      Proseminář 4
+
+      X3C
+
+      .reference:ch-x3c
+
+    .row:
+
+      Cvičení 4
+
+      Set Cover, FVS, DS, MAX-2-SAT, NAE $\to$ 3-Col
+
+      .reference:ch-is, .reference:ch-zoo
+
+    .row:
+
+      Přednáška 5
+
+      Hamiltonovská cesta, TSP, ILP, Steiner, Subset Sum, Partition, Knapsack, slabá/silná NP-úplnost
+
+      .reference:ch-cisla
+
+    .row:
+
+      Proseminář 5
+
+      podezřelé redukce z batohu
+
+      .reference:ch-cisla
+
+    .row:
+
+      Cvičení 5
+
+      pseudopolynomiální algoritmy
+
+      .reference:ch-cisla
+
+    .row:
+
+      Přednáška 6
+
+      prostor, Savitch, $\LL$ a $\NL$, $\coNP$, 2-SAT, TQBF, hry
+
+      .reference:ch-prostor, .reference:ch-pspace
+
+    .row:
+
+      Proseminář 6
+
+      Generalized Geography
+
+      .reference:ch-pspace
+
+    .row:
+
+      Přednáška 7, proseminář 7, cvičení 7
+
+      SAT: algoritmy, užití a řešiče; PySAT; enkódování do SAT
+
+      .reference:ch-resice-sat
+
+    .row:
+
+      Přednáška 8, cvičení 8
+
+      (I)LP řešiče, optimalizace a nástroje; modelování v ILP
+
+      .reference:ch-resice-ilp
+
+  .caption:
+
+    Kde je ve skriptech která přednáška, proseminář a cvičení. Přednášky 9–12 (podle rozpisu na stránkách předmětu
+    24. 11. až 15. 12. 2026) k 20. 11. 2026 ještě neproběhly a ve skriptech zatím nejsou.
+
+
+.Subsection Úlohy navíc
+  label: ch-test-ulohy-navic
+
+
+Každá z kapitol .reference:ch-ts až .reference:ch-resice-ilp končí oddílem "Úlohy navíc".notion: osm úplně
+vyřešených úloh nad rámec cvičení, seřazených od rozcvičky (dosazení do definice, výpočet na konkrétní instanci)
+přes úlohy na úrovni testu po těžší. Číslují se „Úloha $N.k$“, kde $N$ je číslo kapitoly – na rozdíl od cvičení
+předmětu („Cvičení $N.k$“, $N$ je číslo cvičení) a od typových úloh v příloze .reference:ch-typove. Nejsou to
+oficiální úlohy předmětu; co jde nad rámec přednášky, je u nich označeno. Zadání si nejdřív zkus vyřešit sám,
+teprve potom rozbal řešení.
+
+
+Kam sáhnout podle typu úlohy v testu:
+
+
+.Table:
+  label: tab-test-ulohy-navic
+
+  .table:
+    columns: 'p{3.6cm}p{6.4cm}p{4.6cm}'
+
+    .row:
+      head: true
+
+      Typ úlohy v testu
+
+      Úlohy navíc v kapitolách
+
+      Typové úlohy (příloha B)
+
+    .row:
+
+      1 – Turingův stroj
+
+      "1.4"#un-1-4, "1.5"#un-1-5, "1.6"#un-1-6, "1.8"#un-1-8, "4.4"#un-4-4, "12.4"#un-12-4, "12.7"#un-12-7
+
+      "1.1"#typ-1-1 až "1.6"#typ-1-6
+
+    .row:
+
+      2 – self-redukce
+
+      "4.6"#un-4-6
+
+      "2.1"#typ-2-1 až "2.7"#typ-2-7
+
+    .row:
+
+      3 – formulace jako ILP nebo SAT
+
+      "10.6"#un-10-6, "11.2"#un-11-2, "14.5"#un-14-5, "14.6"#un-14-6, "14.8"#un-14-8, "15.1"#un-15-1, "15.5"#un-15-5
+
+      "3.1"#typ-3-1 až "3.7"#typ-3-7
+
+    .row:
+
+      4 – důkaz NP-těžkosti
+
+      "7.4"#un-7-4 až "7.7"#un-7-7, "8.4"#un-8-4 až "8.7"#un-8-7, "9.4"#un-9-4, "9.5"#un-9-5, "9.7"#un-9-7, "10.3"#un-10-3 až "10.7"#un-10-7, "11.3"#un-11-3 až "11.5"#un-11-5, "11.7"#un-11-7, "11.8"#un-11-8
+
+      "4.1"#typ-4-1 až "4.7"#typ-4-7
+
+  .caption:
+
+    Úlohy navíc a typové úlohy podle typu úlohy zápočtového testu. Ostatní úlohy navíc procvičují látku kapitoly
+    (definice, věty, výpočty na konkrétních instancích) a k testu se hodí nepřímo.
+
+
+.Subsection Hlavička redukce
+  label: ch-test-hlavicka-redukce
+
+
+Každá redukce začíná rámečkem, který hned řekne, "co se redukuje na co".emphasize. Vypadá takto:
+
+
+.Remark:
+  title: 'Redukce: $\prob{A} \redp \prob{B}$'
+
+  instance $A$ $\;\longmapsto\;$ instance $B$
+
+
+Titulek rámečku je $A\redp B$, tělo ukazuje, na co se převádí jedna instance. Redukce vždy musí
+zachovat odpověď – ANO-instance $A$ přejde na ANO-instanci $B$ a NE-instance na NE-instanci
+($x\in A\iff f(x)\in B$); právě tohle se v každé redukci dokazuje oběma implikacemi.
+
+
+Druhá varianta je "redukce s orákulem".emphasize: problém $A$ řešíme pomocí (libovolně mnoha volání) algoritmu
+pro $B$. Tak vypadají binární vyhledávání optima a samo-redukovatelnost (úloha 2 zápočtového testu). Tělo rámečku
+je jedna věta, jak se to dělá:
+
+
+.Remark:
+  title: 'Redukce s orákulem: $\prob{A}$ – hledání řešení $\to$ $\prob{A}$ – rozhodovací verze'
+
+  Postupně fixujeme části řešení a orákulem hlídáme, že se dají doplnit na celé řešení.
+
+
+Uvnitř řešení cvičení rámeček být nemůže, proto tam hlavička redukce stojí jako první, tučně uvedený odstavec,
+například:
+
+
+"Redukce:".notion $\prob{Clique} \redp \prob{Subgraph Isomorphism}$, instance $(G,k)$ $\mapsto$ $(G,\ H=K_k)$.
+
+
+Všechny redukce z přednášek, proseminářů a cvičení jsou zakreslené v jednom grafu v příloze .reference:ch-graf
+(obr. .reference:fig-grafredukci); v přehledu pod grafem (oddíl
+.reference:ch-graf-prehled-redukci-a-jejich-klicovych-myslenek) vede na každou redukci odkaz. Redukce z úloh navíc
+a z typových úloh mají vlastní tabulku v oddílu .reference:ch-graf-redukce-z-uloh-navic.
+
+
+.Subsection Barevné rámečky
+  label: ch-test-barevne-ramecky
+
+
+Barevné rámečky mají pevný význam. Ukázky níže jsou "živé".emphasize: tak přesně vypadá každý typ rámečku
+ve zbytku skript.
+
+
+.Definition:
+  title: 'Název pojmu'
+  nonumber: true
+
+  Formální definice – to, co je potřeba umět přesně.
+
+
+.Definition:
+  title: 'Problém $\prob{Název}$'
+  nonumber: true
+
+  "Vstup:".notion co dostaneme (graf, formule, čísla …).
+
+
+  "Otázka:".notion rozhodovací otázka s odpovědí $\ANO$/$\NE$. Rozhodovací problém je definice zvláštního druhu,
+  proto má vlastní hlavičku.
+
+
+.Theorem:
+  title: 'Název věty'
+  nonumber: true
+
+  Tvrzení, které se dokazuje (důkaz následuje pod rámečkem).
+
+
+.Proof:
+
+  Důkaz věty, lemmatu nebo důsledku.
+
+
+.Example:
+  title: 'Název příkladu'
+  nonumber: true
+
+  Konkrétní výpočet nebo instance – doporučuji si ho projít s tužkou.
+
+
+.Concept:
+  title: 'Intuice'
+
+  Neformální vysvětlení, „proč to tak je“. Na začátku každé kapitoly je rámeček tohoto typu s titulkem
+  „Proč to děláme“.
+
+
+.Warning:
+  title: 'Pozor'
+
+  Častá chyba nebo jemnost, na kterou se u zkoušky snadno zapomene. Rámeček s titulkem „Typické chyby“ sbírá
+  chyby, které se dělají v určitém typu úlohy.
+
+
+.Remark:
+  title: 'Poznámka'
+
+  Doplněk nebo souvislost s jinou částí látky.
+
+
+.Remark:
+  title: 'Co si odnést'
+
+  Shrnutí na konci kapitoly nebo oddílu: co si z něj zapamatovat.
+
+
+.Procedure:
+  title: 'Název postupu'
+
+  .enumerate:
+
+    .item:
+
+      Číslovaný návod, „kuchařka“ na určitý typ úlohy.
+
+    .item:
+
+      Kroky se dělají v uvedeném pořadí.
+
+
+.Exercise:
+  title: 'Cvičení N.M'
+
+  Zadání úlohy ze cvičení (nebo z prosemináře, nebo typové úlohy v příloze .reference:ch-typove). Nejdřív ji zkus vyřešit sám.
+
+
+.Solution:
+
+  Vzorové řešení je na webu schované; rozbalí se kliknutím na pruh „Řešení“.
+
+
+V kapitolách .reference:ch-resice-sat a .reference:ch-resice-ilp a v přílohách je navíc vše, co v přednáškách,
+proseminářích ani cvičeních není a bylo doplněné pro pochopení, označené "(nad rámec přednášky)".emphasize.

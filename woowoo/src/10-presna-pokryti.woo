@@ -1,0 +1,16 @@
+.Chapter Přesná pokrytí: 1-in-3 SAT a X3C
+  label: ch-x3c
+
+
+Zdroje: přednáška 4, proseminář 4.
+
+
+.Concept:
+  title: 'Proč to děláme'
+
+  Do katalogu NP-úplných problémů přidáváme dva problémy s podmínkou „přesně jednou“: $\prob{1-in-3 SAT}$ (v každé
+  klauzuli je přesně jeden literál pravdivý) a $\prob{X3C}$ (každý prvek univerza je pokryt právě jednou).
+  $\prob{1-in-3 SAT}$ navazuje na barvení grafů: jeho NP-těžkost plyne z redukce z $\prob{3-Coloring}$, a to rovnou pro
+  verzi bez negací. NP-těžkost $\prob{X3C}$ ukážeme dvakrát – z $\prob{3-SAT}$ (gadgety a úklid) a z monotónního
+  $\prob{1-in-3 SAT}$ (téměř identita) – a uvidíme, jak moc záleží na volbě výchozího problému.
+  Kapitolu uzavírá shrnutí redukčních řetězců a opakujících se technik.

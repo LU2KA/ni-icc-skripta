@@ -1,0 +1,180 @@
+
+
+.Section Prostorové třídy
+  label: ch-prostor-prostorove-tridy
+
+
+.Definition:
+  title: 'Prostorová složitost'
+  label: def-prostor
+
+  Nechť $M$ je Turingův stroj. Říkáme, že $M$ "pracuje v prostoru".emphasize $S(n)$, pokud pro každý vstup délky $n$
+  navštíví nejvýše $S(n)$ buněk na svých pracovních páskách.
+
+  .itemize:
+
+    .item:
+
+      $\DSPACE(S(n))$: problémy řešitelné deterministicky v prostoru $O(S(n))$,
+
+    .item:
+
+      $\NSPACE(S(n))$: problémy řešitelné nedeterministicky v prostoru $O(S(n))$,
+
+    .item:
+
+      $\PSPACE=\bigcup_{k\ge1}\DSPACE(n^k)$, $\NPSPACE=\bigcup_{k\ge1}\NSPACE(n^k)$.
+
+
+.Definition:
+  title: 'Prostorová konstruovatelnost'
+  label: def-prostor-konstr
+
+  Funkce $f:\N\to\N$, $f(n)\ge\log n$, je "prostorově konstruovatelná".emphasize, pokud existuje Turingův stroj, který
+  na vstup $1^n$ spočítá (binárně) hodnotu $f(n)$ v prostoru $O(f(n))$.
+
+
+Např. $\log n$, $n^k$, $n\log n$, $2^n$ – všechny „rozumné“ funkce. Analogicky k časové hierarchii
+(věta .reference:thm-hierarchie) platí:
+
+
+.Theorem:
+  title: 'Prostorová hierarchie; Stearns, Hartmanis, Lewis 1965'
+  label: thm-prostorhier
+
+  Nechť $f,g$ jsou prostorově konstruovatelné a $f(n)=o(g(n))$. Pak $\DSPACE(f(n))\subsetneq\DSPACE(g(n))$.
+
+
+Více prostoru $\Rightarrow$ skutečně víc vyřešíme. (Oproti časové hierarchii tu ani nepotřebujeme logaritmickou
+rezervu.)
+
+
+.Concept:
+  title: 'Čas vs. prostor: znovupoužitelnost'
+
+  Proč je studium prostoru tak odlišné od studia času? "Prostor lze recyklovat, čas nikoliv!".notion Sekunda,
+  která uplyne, je navždy pryč. Paměťovou buňku, kterou už nepotřebujete, ale můžete přepsat novou hodnotou.
+  Prostor je proto extrémně „silnější“ zdroj než čas.
+
+
+.Subsection Kam patří to, co už známe?
+  label: ch-prostor-kam-patri-to-co-uz-zname
+
+
+.Lemma:
+  title: 'Čas omezuje prostor'
+  label: lem-casprostor
+
+  $\DTIME(f(n))\subseteq\DSPACE(f(n))$, a tedy $\PP\subseteq\PSPACE$.
+
+
+.Proof:
+
+  V každém kroku může stroj navštívit nejvýš jednu novou buňku, nemůže tedy zabrat více prostoru, než má času.
+
+
+Čas je tedy vždy horním odhadem pro prostor – ale čas může být teoreticky "exponenciálně".emphasize delší než
+spotřebovaný prostor.
+
+
+.Lemma:
+  title: '$\NP\subseteq\PSPACE$'
+  label: lem-nppspace
+
+  Každý problém z $\NP$ lze rozhodnout deterministicky v polynomiálním prostoru.
+
+
+.Proof:
+
+  Mějme $L\in\NP$ s polynomiálním verifikátorem $V$ a certifikáty délky $p(n)$ (definice .reference:def-verifikator a .reference:def-nphat).
+
+  .enumerate:
+
+    .item:
+
+      Postupně vygenerujeme každý možný certifikát $c\in\{0,1\}^{p(n)}$ (např. ohodnocení proměnných).
+
+    .item:
+
+      Spustíme na něm verifikátor $V(x,c)$. Řekne-li ANO, přijmeme.
+
+    .item:
+
+      "Klíčový krok:".notion řekne-li NE, smažeme certifikát i paměť verifikátoru a zkusíme další.
+
+  Čas bude exponenciální ($2^{p(n)}$ pokusů), ale paměť nikdy nepřekročí velikost jednoho certifikátu, počítadla a
+  verifikátoru – tedy polynom.
+
+
+.Subsection Graf konfigurací a $\PSPACE\subseteq\EXP$
+  label: ch-prostor-graf-konfiguraci-a-pspace-exp
+
+
+Pokud má algoritmus omezenou paměť $S(n)$, jak dlouho může běžet, než se dostane do nekonečné smyčky (znovu do
+zcela stejné situace)? Konfiguraci výpočtu tvoří:
+
+.enumerate:
+
+  .item:
+
+    vnitřní stav stroje: $|Q|$ možností (konstanta),
+
+  .item:
+
+    pozice hlavy na pracovní pásce: $S(n)$ možností,
+
+  .item:
+
+    obsah pracovní pásky: $|\Gamma|^{S(n)}$ možností (kde $\Gamma$ je abeceda pásky),
+
+  .item:
+
+    (u stroje se vstupní páskou navíc pozice čtecí hlavy: $n+2$ možností).
+
+.equation:
+
+  C(n)=|Q|\cdot S(n)\cdot|\Gamma|^{S(n)}\ (\cdot\,(n+2)) = 2^{O(S(n))}\qquad\text{pro } S(n)\ge\log n .
+
+
+.Corollary:
+  title: 'Zacyklení'
+  label: cor-zacykleni
+
+  Běží-li deterministický stroj v prostoru $S(n)$ déle než $2^{O(S(n))}$ kroků, musel zopakovat konfiguraci, a tedy
+  se zacyklil. Proto $\DSPACE(S(n))\subseteq\DTIME(2^{O(S(n))})$ a speciálně
+
+  .equation:
+
+    \PSPACE\subseteq\EXP .
+
+  (Stroj můžeme po exponenciálním čase násilně zastavit – kdyby měl přijmout, už by to udělal.)
+
+
+.Figure:
+  label: ch-prostor-fig-zacykleni
+
+  !tikz:
+    filename: 12a-prostorove-tridy-01
+    options: 'x=1cm,y=1cm,cf/.style={circle,draw=black!70,fill=white,thick,minimum size=4mm,inner sep=0pt}'
+
+    \foreach \i/\x/\y in {1/0/0,2/1.1/0.5,3/2.2/0.2,4/3.3/0.6,5/4.4/0.1,6/5.5/0.5,7/6.4/-0.4,8/5.4/-0.9,9/4.3/-0.6} \node[cf] (c\i) at (\x,\y) {};
+    \node[cf,fill=acc!30,label={[font=\scriptsize]left:$C_{\mathrm{start}}$}] at (c1) {};
+    \foreach \a/\b in {1/2,2/3,3/4,4/5,5/6,6/7,7/8,8/9} \draw[->,thick,black!65] (c\a)--(c\b);
+    \draw[->,thick,rej] (c9) to[bend left=25] (c5);
+    \node[font=\scriptsize,rej,align=center] at (4.9,-1.6) {opakovaná konfigurace\\ $\Rightarrow$ deterministický stroj se zacyklí navždy};
+    \node[font=\scriptsize,align=left,anchor=west] at (7.4,0.2) {vrcholů (konfigurací)\\ je jen $2^{O(S(n))}$};
+
+  .caption:
+
+    Deterministický výpočet je cesta v grafu konfigurací. Po $2^{O(S(n))}$ krocích se musí nějaká
+    konfigurace zopakovat.
+
+
+Dostáváme řetězec inkluzí
+
+.equation:
+
+  \PP\subseteq\NP\subseteq\PSPACE\subseteq\EXP
+
+(bohužel nevíme, které inkluze jsou ostré – víme jen, že $\PP\subsetneq\EXP$, takže aspoň jedna). Kam do tohoto
+řetězce zapadne $\NPSPACE$?

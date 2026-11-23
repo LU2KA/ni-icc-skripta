@@ -1,0 +1,606 @@
+.Section Redukce do SAT: kódování problémů
+  label: ch-resice-sat-redukce-do-sat
+
+
+.Subsection „Obrácený“ směr redukce
+  label: ch-resice-sat-obraceny-smer
+
+
+Dosud jsme redukovali "ze".emphasize $\prob{SAT}$u, abychom ukázali, že jiný problém je těžký (např.
+$\prob{3-SAT}\redp\prob{3-Coloring}$ v oddílu .reference:ch-zoo-3-coloring). Teď redukujeme "do".emphasize $\prob{SAT}$u,
+abychom problém "vyřešili".emphasize: instanci převedeme na formuli, předáme ji CDCL řešiči a z jeho modelu
+přečteme řešení. Zdědíme tak desítky let práce na SAT řešičích.
+
+
+.Figure:
+  label: ch-resice-sat-fig-obraceny-smer
+
+  !tikz:
+    filename: 14c-kodovani-do-sat-01
+    options: 'x=1cm,y=1cm,node distance=9mm'
+
+    \node[blokd] (s1) at (0,1.4) {$\prob{3-SAT}$};
+    \node[blokd,right=18mm of s1] (c1) {$\prob{3-Coloring}$};
+    \draw[->,very thick,rej] (s1)--node[above,font=\scriptsize]{$\redp$}(c1);
+    \node[font=\scriptsize,rej,anchor=west,align=left] at ($(c1.east)+(0.3,0)$) {\textbf{těžkost}: $\prob{3-Coloring}$ je\\ aspoň tak těžké jako $\prob{SAT}$};
+    \node[blokd] (c2) at (-0.5,0) {$\prob{3-Coloring}$};
+    \node[blokd,right=18mm of c2] (s2) {$\prob{SAT}$};
+    \node[blokr,right=of s2] (r) {CDCL řešič};
+    \node[bloka,right=of r] (o) {obarvení};
+    \draw[->,very thick,acc] (c2)--node[above,font=\scriptsize]{$\redp$}(s2);
+    \draw[flow,acc] (s2)--(r); \draw[flow,acc] (r)--(o);
+    \node[font=\scriptsize,acc] at (3.6,-0.75) {\textbf{řešení}: zdědíme desítky let práce na SAT řešičích};
+
+  .caption:
+
+    Stejné dva problémy, opačné směry: redukce "z".emphasize $\prob{3-SAT}$u dokazuje těžkost, redukce "do".emphasize
+    $\prob{SAT}$u dává algoritmus.
+
+
+"Jeden řešič, mnoho domén:".notion verifikace hardwaru a model checking, plánování a rozvrhování, kryptoanalýza
+a bioinformatika, matematika (Ramseyova a Schurova čísla – oddíl .reference:ch-resice-sat-sat-resic-v-praxi).
+
+
+.Remark:
+  title: 'Omezení'
+
+  "Naivní".emphasize kódování může být obrovské (polynomiální existuje vždy – Cook–Levin, věta .reference:thm-cooklevin).
+  Někdy je lepší specializovaný řešič (ILP, CP, SMT; oddíl .reference:ch-resice-sat-smt).
+
+
+.Subsection Vzorový recept: k-barevnost
+  label: ch-resice-sat-k-barevnost
+
+
+"Problém:".notion lze graf $G=(V,E)$ obarvit $k$ barvami (sousedé různě)?
+
+
+.Remark:
+  title: 'Redukce: $k$-$\prob{Coloring} \redp \prob{SAT}$'
+  label: ch-resice-sat-red-barveni
+
+  graf $G=(V,E)$, počet barev $k$ $\;\longmapsto\;$ formule $\varphi_{G,k}$ v CNF
+
+
+.description:
+
+  .ditem:
+    bullet: 'Proměnné:'
+
+    $x_{v,c}$ = „vrchol $v$ má barvu $c$“ pro $v\in V$, $c\in\{1,\dots,k\}$.
+
+  .ditem:
+    bullet: 'Alespoň jedna barva:'
+
+    $\bigvee_{c=1}^{k}x_{v,c}$ pro každý $v$.
+
+  .ditem:
+    bullet: 'Nejvýše jedna barva:'
+
+    $\lnot x_{v,c}\lor\lnot x_{v,c'}$ pro každý $v$ a $c\neq c'$.
+
+  .ditem:
+    bullet: 'Sousedé různě:'
+
+    $\lnot x_{u,c}\lor\lnot x_{v,c}$ pro $\{u,v\}\in E$ a každou barvu $c$.
+
+
+"Směr redukce:".notion $\prob{3-Coloring}\redp\prob{SAT}$ – opačně než při důkazu těžkosti. "Velikost:".notion
+$|V|\cdot k$ proměnných a $|V|+|V|\binom{k}{2}+|E|\,k=O(|V|k^2+|E|k)$ klauzulí.
+
+
+Recept se skládá ze tří opakujících se "stavebních bloků".emphasize, které budeme používat pořád (v cvičení
+.reference:cv-7-4 je i zmenšíme):
+
+
+.Definition:
+  title: 'Stavební bloky kódování'
+  label: ch-resice-sat-def-bloky
+
+  Pro proměnné $y_1,\dots,y_n$:
+
+  .description:
+
+    .ditem:
+      bullet: 'alespoň jedna (at-least-one):'
+
+      $\mathrm{ALO}(y_1,\dots,y_n)=(y_1\lor\dots\lor y_n)$ – jedna klauzule;
+
+    .ditem:
+      bullet: 'nejvýše jedna (at-most-one):'
+
+      $\mathrm{AMO}(y_1,\dots,y_n)=\bigwedge_{i<j}(\lnot y_i\lor\lnot y_j)$ – „žádné dvě zároveň“, $\binom n2$ klauzulí;
+
+    .ditem:
+      bullet: 'právě jedna (exactly-one):'
+
+      $\mathrm{EO}=\mathrm{ALO}\land\mathrm{AMO}$;
+
+    .ditem:
+      bullet: 'nejvýše $k$ (at-most-$k$):'
+
+      $\mathrm{AMK}_k(y_1,\dots,y_n)$ – „žádných $k+1$ zároveň“; přímo $\binom{n}{k+1}$ klauzulí, s pomocnými
+      proměnnými $O(nk)$ (cvičení .reference:cv-7-4).
+
+
+  Zkratky ALO/AMO/EO/AMK jsou "(nad rámec přednášky)".emphasize – přednáška říká „alespoň jedna“, „nejvýše jedna“.
+
+
+.Example:
+  title: 'Trojúhelník a tři barvy'
+  label: ch-resice-sat-ex-trojuhelnik
+
+  $G=K_3$ s vrcholy $1,2,3$ a hranami $\{1,2\},\{1,3\},\{2,3\}$, $k=3$. Proměnných je $3\cdot3=9$; očíslujeme je
+  pro řešič jako na prosemináři: $x_{v,c}\mapsto(v-1)\cdot3+c$.
+
+  .table:
+    columns: 'lp{8.5cm}c'
+
+    .row:
+      head: true
+
+      skupina
+
+      klauzule
+
+      počet
+
+    .row:
+
+      alespoň jedna barva
+
+      $(x_{1,1}\lor x_{1,2}\lor x_{1,3})$, $(x_{2,1}\lor x_{2,2}\lor x_{2,3})$, $(x_{3,1}\lor x_{3,2}\lor x_{3,3})$
+
+      3
+
+    .row:
+
+      nejvýše jedna barva
+
+      $(\lnot x_{1,1}\lor\lnot x_{1,2})$, $(\lnot x_{1,1}\lor\lnot x_{1,3})$, $(\lnot x_{1,2}\lor\lnot x_{1,3})$ a totéž pro vrcholy 2, 3
+
+      9
+
+    .row:
+
+      sousedé různě
+
+      $(\lnot x_{1,1}\lor\lnot x_{2,1})$, $(\lnot x_{1,2}\lor\lnot x_{2,2})$, $(\lnot x_{1,3}\lor\lnot x_{2,3})$ a totéž pro hrany $\{1,3\}$, $\{2,3\}$
+
+      9
+
+    .row:
+
+      celkem
+
+      $3+3\binom32+3\cdot3$
+
+      21
+
+
+  "Model a dekódování:".notion například $x_{1,1}=x_{2,2}=x_{3,3}=1$, ostatní 0 – vrchol $v$ dostane barvu $c$ s
+  $x_{v,c}=1$. Ověření: každý vrchol má právě jednu barvu, sousedé různé.
+
+
+  "Se dvěma barvami".notion ($k=2$, $3+3+6=12$ klauzulí) je formule nesplnitelná: podle „alespoň jedna barva“ má
+  každý ze tří vrcholů barvu 1 nebo 2, dva z nich tedy stejnou – a ty jsou v trojúhelníku sousední, což
+  zakazuje klauzule „sousedé různě“. (Počty i splnitelnost ověřeny skriptem; kódování navíc porovnáno s hrubou
+  silou na všech grafech do 5 vrcholů pro $k\le3$.)
+
+
+.Figure:
+  label: ch-resice-sat-fig-trojuhelnik
+
+  !tikz:
+    filename: 14c-kodovani-do-sat-02
+    options: 'x=1cm,y=1cm'
+
+    \node[v,fill=tF!35] (v1) at (0,1.7) {1};
+    \node[v,fill=tB!35] (v2) at (1.8,1.7) {2};
+    \node[v,fill=tT!35] (v3) at (0.9,0.2) {3};
+    \draw[e] (v1)--(v2)--(v3)--(v1);
+    \begin{scope}[xshift=3.2cm,yshift=1.9cm]
+      \foreach \c in {1,2,3} {\node[font=\scriptsize] at (\c*1.3,0.5) {$c=\c$};}
+      \foreach \v in {1,2,3} {
+        \node[font=\scriptsize,anchor=east] at (0.55,-\v*0.7+0.7) {$v=\v$};
+        \foreach \c in {1,2,3} {
+          \pgfmathtruncatemacro{\num}{(\v-1)*3+\c}
+          \ifnum\v=\c
+            \node[gcellT,minimum width=13mm] at (\c*1.3,-\v*0.7+0.7) {$x_{\v,\c}=\num$};
+          \else
+            \node[gcell,minimum width=13mm] at (\c*1.3,-\v*0.7+0.7) {\num};
+          \fi
+        }
+      }
+    \end{scope}
+    \node[font=\scriptsize,align=left,anchor=west] at (8.0,1.2) {$x_{1,1}\lor x_{1,2}\lor x_{1,3}$\\ $\lnot x_{1,1}\lor\lnot x_{2,1}$\\ $\lnot x_{1,1}\lor\lnot x_{1,2}$};
+
+  .caption:
+
+    Vlevo $K_3$ obarvený podle modelu, uprostřed tabulka proměnných (řádek = vrchol, sloupec = barva, v políčku
+    číslo proměnné pro řešič; zeleně pravdivé), vpravo po jedné klauzuli z každé skupiny.
+
+
+.Warning:
+  title: 'Typické chyby'
+
+  .itemize:
+
+    .item:
+
+      Obrátit směr: kódování $X\redp\prob{SAT}$ je "algoritmus".emphasize pro $X$, ne důkaz těžkosti $X$ (viz níže).
+
+    .item:
+
+      Zapomenout klauzuli pro "každou".emphasize barvu: „sousedé různě“ je $|E|\cdot k$ klauzulí, ne $|E|$.
+
+    .item:
+
+      Psát podmínku, která není klauzule (např. „$x_{u,c}\neq x_{v,c}$“). Do CNF patří jen disjunkce literálů;
+      „nesmí být obě 1“ je $\lnot x_{u,c}\lor\lnot x_{v,c}$.
+
+    .item:
+
+      Myslet si, že bez „nejvýše jedné barvy“ je kódování špatně. Pro barvení (i pro Schurův problém,
+      oddíl .reference:ch-resice-sat-sat-resic-v-praxi) nejsou tyto klauzule pro splnitelnost nutné – má-li vrchol
+      víc barev, vybereme kteroukoli. Dekodér s tím ale musí počítat.
+
+
+.Subsection Pozor: do SAT se redukuje i to, co je snadné
+  label: ch-resice-sat-i-snadne
+
+
+$\prob{SAT}$ je NP-úplný, takže $X\redp\prob{SAT}$ pro "každé".emphasize $X\in\NP$ – tedy i pro vše v $\PP$, $\NL$, $\LL$.
+
+
+.Figure:
+  label: ch-resice-sat-fig-tridy
+
+  !tikz:
+    filename: 14c-kodovani-do-sat-03
+    options: 'x=1cm,y=1cm'
+
+    \draw[rounded corners=6pt,draw=rej!70,fill=rej!5,thick] (0,0) rectangle (7.4,4.4);
+    \node[font=\small,rej] at (7.0,4.1) {$\NP$};
+    \draw[rounded corners=6pt,draw=intc,fill=intc!8,thick] (0.3,0.25) rectangle (5.0,3.0);
+    \node[font=\small,intc] at (4.72,2.78) {$\PP$};
+    \draw[rounded corners=6pt,draw=acc,fill=acc!8,thick] (0.55,0.4) rectangle (3.9,2.0);
+    \node[font=\small,acc] at (3.62,1.8) {$\NL$};
+    \draw[rounded corners=4pt,draw=defc,fill=defc!10,thick] (0.75,0.55) rectangle (1.95,1.15);
+    \node[font=\scriptsize,defc] at (1.75,0.7) {$\LL$};
+    \node[font=\scriptsize,anchor=west] (par) at (0.8,0.95) {parita};
+    \node[font=\scriptsize,anchor=west] (st) at (0.8,1.42) {s-t dosažitelnost};
+    \node[font=\scriptsize,anchor=west] (two) at (2.4,0.75) {$\prob{2-SAT}$};
+    \node[font=\scriptsize,anchor=west] (horn) at (0.6,2.55) {$\prob{Horn-SAT}$, $\prob{XOR-SAT}$};
+    \node[font=\scriptsize,anchor=west] (col) at (0.4,3.8) {$\prob{3-Coloring}$};
+    \node[blokr,font=\small\bfseries] (sat) at (8.6,2.2) {$\prob{SAT}$};
+    \foreach \n in {par,st,two,horn,col} {\draw[->,thick,acc!80!black] (\n.east) to[out=0,in=180] (sat.west);}
+
+  .caption:
+
+    Do $\prob{SAT}$u vede redukce z každého problému v $\NP$ – i z úplně snadných.
+
+
+.Warning:
+  title: 'Redukce do SAT nedokazuje těžkost'
+
+  $X\redp\prob{SAT}$ dokazuje jen $X\in\NP$. Těžkost dokazuje redukce "z".emphasize těžkého problému.
+
+
+.Subsection Příklad: dosažitelnost jako Hornova formule
+  label: ch-resice-sat-dosazitelnost
+
+
+Orientovaný graf $G$, vrcholy $s,t$. Je $t$ dosažitelný z $s$?
+
+
+.Remark:
+  title: 'Redukce: $\prob{s-t nedosažitelnost} \redp \prob{Horn-SAT}$'
+  label: ch-resice-sat-red-dosazitelnost
+
+  $(G,s,t)$ $\;\longmapsto\;$ Hornova formule $\varphi$, splnitelná $\iff$ $t$ "není".emphasize dosažitelný
+
+
+.description:
+
+  .ditem:
+    bullet: 'Proměnné:'
+
+    $r_v$ = „$v$ je dosažitelný z $s$“.
+
+  .ditem:
+    bullet: 'Klauzule:'
+
+    $(r_s)$; $(\lnot r_u\lor r_v)$ pro každou hranu $(u,v)$, tj. $r_u\Rightarrow r_v$; $(\lnot r_t)$.
+
+
+Všechny klauzule jsou Hornovy (nejvýše jeden kladný literál), takže unit propagation z oddílu
+.reference:ch-resice-sat-horn-sat rozhodne v lineárním čase. Unit propagation tu "je".emphasize prohledávání do šířky:
+od faktu $(r_s)$ se jednička šíří po hranách.
+
+
+.Example:
+  title: 'Propagace = BFS'
+  label: ch-resice-sat-ex-dosazitelnost
+
+  Hrany $(s,a),(a,b),(b,t),(s,c),(d,c),(d,t)$.
+
+  .table:
+    columns: 'cll'
+
+    .row:
+      head: true
+
+      krok
+
+      klauzule
+
+      vynuceno
+
+    .row:
+
+      1
+
+      $(r_s)$
+
+      $r_s=1$
+
+    .row:
+
+      2
+
+      $r_s\Rightarrow r_a$, $r_s\Rightarrow r_c$
+
+      $r_a=1$, $r_c=1$
+
+    .row:
+
+      3
+
+      $r_a\Rightarrow r_b$
+
+      $r_b=1$
+
+    .row:
+
+      4
+
+      $r_b\Rightarrow r_t$
+
+      $r_t=1$ – spor s $(\lnot r_t)$ $\Rightarrow$ "UNSAT".notion
+
+
+  $r_d$ zůstane 0 – do $d$ nevede žádná hrana z dosažitelných vrcholů. Odpověď UNSAT znamená „$t$ "je".emphasize
+  dosažitelný“.
+
+
+.Figure:
+  label: ch-resice-sat-fig-dosazitelnost
+
+  !tikz:
+    filename: 14c-kodovani-do-sat-04
+    options: 'x=1cm,y=1cm'
+
+    \node[litT] (s) at (0,0) {$s$};
+    \node[litT] (a) at (1.6,0.9) {$a$};
+    \node[litT] (b) at (3.2,0.9) {$b$};
+    \node[litT] (c) at (1.6,-0.9) {$c$};
+    \node[lit] (d) at (3.2,-0.9) {$d$};
+    \node[litT,draw=rej,very thick] (t) at (4.8,0) {$t$};
+    \draw[impT] (s)--(a); \draw[impT] (a)--(b); \draw[impT] (b)--(t); \draw[impT] (s)--(c);
+    \draw[imp] (d)--(c); \draw[imp] (d)--(t);
+    \node[note,anchor=west] at (5.5,0.3) {zeleně: vynuceno propagací z $(r_s)$};
+    \node[note,anchor=west,text=rej] at (5.5,-0.3) {$r_t$ vynuceno $\Rightarrow$ spor s $(\lnot r_t)$ $\Rightarrow$ UNSAT};
+
+  .caption:
+
+    Propagace jedniček z $s$ je přesně BFS. Kissat na grafu s 200 000 vrcholy a 600 000 hranami ($t$ dosažitelný):
+    UNSAT za 0,3 s, "0 rozhodnutí, 0 konfliktů".notion a 188 232 propagací – přesně tolik vrcholů je dosažitelných z $s$.
+
+
+.Warning:
+  title: 'Typické chyby'
+
+  .itemize:
+
+    .item:
+
+      Splete se význam odpovědi: formule je splnitelná, právě když $t$ "není".emphasize dosažitelný. Model je
+      „certifikát nedosažitelnosti“ (množina $\{v: r_v=1\}$ uzavřená na hrany, obsahuje $s$, neobsahuje $t$).
+
+    .item:
+
+      Brát to jako důkaz, že dosažitelnost je těžká – je v $\NL$; ukázka jen ilustruje, že řešič snadné instance
+      vyřeší snadno (bez jediného rozhodnutí).
+
+
+.Subsection Klika
+  label: ch-resice-sat-klika
+
+
+"Problém:".notion má graf $G=(V,E)$ kliku velikosti $k$? (Problém $\prob{Clique}$, oddíl .reference:ch-is-is-clique.)
+
+
+.Remark:
+  title: 'Redukce: $\prob{Clique} \redp \prob{SAT}$'
+  label: ch-resice-sat-red-klika
+
+  $(G,k)$ $\;\longmapsto\;$ formule $\varphi_{G,k}$ v proměnných $y_{v,i}$
+
+
+.description:
+
+  .ditem:
+    bullet: 'Proměnné:'
+
+    $y_{v,i}$ = „vrchol $v$ je $i$-tým vrcholem kliky“, $v\in V$, $i\in\{1,\dots,k\}$.
+
+  .ditem:
+    bullet: 'Pozice obsazena:'
+
+    $\bigvee_{v\in V}y_{v,i}$ pro každé $i$.
+
+  .ditem:
+    bullet: 'Vrchol jen jednou:'
+
+    $\lnot y_{v,i}\lor\lnot y_{v,j}$ pro každý $v$ a $i\neq j$.
+
+  .ditem:
+    bullet: 'Pozice jen jednou:'
+
+    $\lnot y_{u,i}\lor\lnot y_{v,i}$ pro každé $i$ a $u\neq v$.
+
+  .ditem:
+    bullet: 'Hrany:'
+
+    $\lnot y_{u,i}\lor\lnot y_{v,j}$ pro $i\neq j$ a $\{u,v\}\notin E$, $u\ne v$ („nesousedé nesmí být oba v klice“).
+
+
+"Korektnost:".notion je-li $S=\{s_1,\dots,s_k\}$ klika, nastavíme $y_{s_i,i}=1$ a vše ostatní 0 – všechny klauzule
+platí. Naopak v modelu má každá pozice právě jeden vrchol a různé pozice různé vrcholy, takže
+$S=\{v: \exists i\ y_{v,i}=1\}$ má přesně $k$ prvků; každé dva leží na různých pozicích a klauzule „Hrany“ by
+jinak byla porušena, tedy jsou sousední. (Porovnáno s hrubou silou na všech grafech do 5 vrcholů a všech $k$.)
+
+
+.Example:
+  title: 'Klika velikosti 3'
+  label: ch-resice-sat-ex-klika
+
+  Graf s vrcholy $1,2,3,4$ a hranami $\{1,2\},\{1,3\},\{2,3\},\{2,4\},\{3,4\}$, $k=3$. Ukázky klauzulí:
+  $y_{1,1}\lor y_{2,1}\lor y_{3,1}\lor y_{4,1}$ (pozice 1 obsazena), $\lnot y_{1,1}\lor\lnot y_{1,2}$ (vrchol 1 jen
+  jednou), $\lnot y_{1,1}\lor\lnot y_{4,2}$ ($\{1,4\}\notin E$). Celkem $3+4\binom32+3\binom42+1\cdot3\cdot2=3+12+18+6=39$
+  klauzulí ve 12 proměnných. Model $y_{1,1}=y_{2,2}=y_{3,3}=1$ dává kliku $\{1,2,3\}$.
+
+
+"Polynomiální $\neq$ malé.".notion Počet klauzulí je $k+|V|\binom k2+k\binom{|V|}2+|\overline E|\,k(k-1)=O(|V|^2k^2)$
+($|\overline E|$ = počet nehran). Pro 100 vrcholů a $k=10$ je to řádově milion (slajd: „asi milion“; přesně pro
+graf bez hran $10+4\,500+49\,500+445\,500=499\,510$ – dopočteno "(nad rámec přednášky)".emphasize). Na velikosti
+kódování v praxi záleží.
+
+
+.Subsection Optimalizace: největší klika
+  label: ch-resice-sat-nejvetsi-klika
+
+
+„Má graf kliku velikosti $k$?“ umíme zakódovat do $\prob{SAT}$u. Ale co „Jaká je "největší".emphasize klika?“
+
+.itemize:
+
+  .item:
+
+    "Klika velikosti $k$:".notion snadno ověříme – stačí ukázat $k$ vrcholů.
+
+  .item:
+
+    "Největší klika:".notion musíme ukázat, že "žádná".emphasize větší klika neexistuje.
+
+
+"Přístup:".notion binární vyhledávání přes $k$ – spodní mez dává nalezená klika (SAT), horní mez odpověď UNSAT.
+
+
+.Example:
+  title: 'Binární vyhledávání největší kliky'
+  label: ch-resice-sat-ex-max-klika
+
+  Graf s vrcholy $1,\dots,5$ a hranami $\{1,2\},\{1,3\},\{2,3\},\{2,4\},\{2,5\},\{3,4\},\{4,5\}$. Víme $1\le\omega\le5$.
+
+  .table:
+    columns: 'clll'
+
+    .row:
+      head: true
+
+      dotaz
+
+      interval $[\mathit{lo},\mathit{hi}]$
+
+      odpověď řešiče
+
+      nový interval
+
+    .row:
+
+      $k=3$
+
+      $[1,5]$
+
+      SAT, např. klika $\{1,2,3\}$
+
+      $[3,5]$
+
+    .row:
+
+      $k=4$
+
+      $[3,5]$
+
+      UNSAT
+
+      $[3,3]$
+
+
+  Největší klika má velikost 3 (kliky velikosti 3 jsou tři: $\{1,2,3\}$, $\{2,3,4\}$, $\{2,4,5\}$; vše ověřeno
+  skriptem). Stačily 2 dotazy; obecně $O(\log|V|)$ volání řešiče.
+
+
+.Figure:
+  label: ch-resice-sat-fig-klika
+
+  !tikz:
+    filename: 14c-kodovani-do-sat-05
+    options: 'x=1cm,y=1cm'
+
+    \begin{scope}
+      \node[font=\small] at (0.8,2.0) {klika velikosti 3};
+      \fill[rej!10,draw=rej!60,rounded corners=6pt] (-0.45,-0.5) rectangle (2.05,1.6);
+      \node[v,fill=defc!12] (1) at (0,1.2) {1};
+      \node[v,fill=defc!12] (2) at (1.6,1.2) {2};
+      \node[v,fill=defc!12] (3) at (0.8,0) {3};
+      \node[v,fill=defc!12] (4) at (2.6,0) {4};
+      \draw[e] (1)--(2) (1)--(3) (2)--(3) (2)--(4) (3)--(4);
+      \node[font=\scriptsize,above left=-1mm of 1] {$i{=}1$};
+      \node[font=\scriptsize,above right=-1mm of 2] {$i{=}2$};
+      \node[font=\scriptsize,below=1mm of 3] {$i{=}3$};
+    \end{scope}
+    \begin{scope}[xshift=5.2cm]
+      \node[font=\small] at (1.4,2.0) {klika $\{1,2,3\}$ – největší?};
+      \fill[rej!10,draw=rej!60,rounded corners=6pt] (-0.45,-0.5) rectangle (2.05,1.6);
+      \node[v,fill=defc!12] (1) at (0,1.2) {1};
+      \node[v,fill=defc!12] (2) at (1.6,1.2) {2};
+      \node[v,fill=defc!12] (3) at (0.8,0) {3};
+      \node[v,fill=defc!12] (4) at (2.6,0) {4};
+      \node[v,fill=defc!12] (5) at (3.4,1.2) {5};
+      \draw[e] (1)--(2) (1)--(3) (2)--(3) (2)--(5) (2)--(4) (3)--(4) (4)--(5);
+    \end{scope}
+
+  .caption:
+
+    Vlevo příklad .reference:ch-resice-sat-ex-klika (model $y_{1,1}=y_{2,2}=y_{3,3}=1$), vpravo příklad
+    .reference:ch-resice-sat-ex-max-klika: kliku velikosti 3 snadno ukážeme, ale že větší není, potvrdí až UNSAT pro $k=4$.
+
+
+.Concept:
+  title: 'Proč je optimalizace těžší'
+
+  Rozhodovací verze je v $\NP$. Optimalizační verze je NP-těžká – a polynomiální certifikát „maximálnosti“
+  by znamenal $\NP=\coNP$ (třída $\coNP$, definice .reference:def-conp). Řešič proto „největší“ potvrzuje
+  odpovědí UNSAT, ne krátkým certifikátem.
+
+
+.Warning:
+  title: 'Typické chyby'
+
+  .itemize:
+
+    .item:
+
+      Vynechat „vrchol jen jednou“: pak jeden vrchol obsadí všechny pozice a formule je splnitelná pro každý
+      graf s aspoň jedním vrcholem.
+
+    .item:
+
+      Psát klauzule „Hrany“ pro hrany místo pro "nehrany".emphasize: zakazujeme dvojici nesousedů, ne sousedů.
+
+    .item:
+
+      Hledat maximum lineárně $k=1,2,3,\dots$ – funguje, ale binární vyhledávání potřebuje jen $O(\log|V|)$ volání.

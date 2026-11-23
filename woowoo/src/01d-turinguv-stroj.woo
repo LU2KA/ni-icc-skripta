@@ -1,0 +1,321 @@
+.Section Turingův stroj
+  label: ch-ts-turinguv-stroj
+
+
+.Definition:
+  title: 'Deterministický Turingův stroj'
+  label: def-dts
+
+  Deterministický Turingův stroj (DTS) je osmice $(Q,\Sigma,G,B,k,\delta,q_0,\qhalt)$, kde
+
+  .itemize:
+
+    .item:
+
+      $Q$ je konečná množina "vnitřních stavů".notion,
+
+    .item:
+
+      $\Sigma$ je konečná "vstupní abeceda".notion,
+
+    .item:
+
+      $G$ je konečná "abeceda pásky".notion, $\Sigma \subsetneq G$,
+
+    .item:
+
+      $B\in G\setminus\Sigma$ je "prázdný symbol".notion (blank, značíme $\blank$),
+
+    .item:
+
+      $k$ je "počet pásek".notion,
+
+    .item:
+
+      $\delta\colon Q\times G^k \to Q\times G^k\times\{\Lft,\Stay,\Rgt\}^k$ je "přechodová funkce".notion,
+
+    .item:
+
+      $q_0$ je "počáteční".notion a $\qhalt$ "koncový".notion stav.
+
+
+.Figure:
+
+  !tikz:
+    filename: 01d-turinguv-stroj-01
+
+    \tmtape{0}{0}{_,_,1,0,1,1,_,_,_}{3}
+    \node at (-0.35,0) {\dots};
+    \node at (6.65,0) {\dots};
+    \node[draw,thick,rounded corners=3pt,fill=defc!8,minimum width=36mm,minimum height=13mm,align=center,
+          font=\sffamily\small] (cu) at (1.75,-2.2) {řídicí jednotka\\ stav $q_i$};
+    \draw[thick,warnc] (1.75,-0.85) -- (cu.north);
+    \node[note,anchor=west] at (4.2,-2.2) {čtení / zápis / posun hlavy};
+    \node[note,anchor=west] at (6.9,0) {nekonečná páska};
+
+  .caption:
+
+    Jednopáskový Turingův stroj. Žlutě je buňka pod čtecí hlavou.
+
+
+"Jak stroj pracuje.".notion Má $k$ oboustranně nekonečných pásek, nad každou jednu hlavu.
+Na začátku je na první pásce vstup obklopený symboly $\blank$, ostatní pásky jsou prázdné.
+Jeden "krok výpočtu".notion (daný $\delta$):
+
+
+.centered:
+
+  !tikz:
+    filename: 01d-turinguv-stroj-02
+    options: 'node distance=4mm'
+
+    \node[blokd] (a) {\textbf{1.} přečti symboly\\ pod hlavami};
+    \node[blokd,right=of a] (b) {\textbf{2.} změň\\ vnitřní stav};
+    \node[blokd,right=of b] (c) {\textbf{3.} zapiš nové\\ symboly};
+    \node[blokd,right=of c] (d) {\textbf{4.} posuň hlavy\\ $\Lft$, $\Stay$, $\Rgt$};
+    \draw[flow] (a)--(b); \draw[flow] (b)--(c); \draw[flow] (c)--(d);
+    \draw[flow] (d.south) -- ++(0,-0.4) -| node[pos=0.25,below,font=\scriptsize]{další krok} (a.south);
+
+
+"Konec výpočtu.".notion Stroj zastaví, jakmile přejde do $\qhalt$. Rozhodovací stroje mají
+místo něj dva koncové stavy: $\qA$ (accept, výstup 1) a $\qR$ (reject, výstup 0).
+
+
+.Subsection Příklad: stroj pro $L=\{a^nb^n\mid n\ge 0\}$
+  label: ch-ts-priklad-stroj-pro-anbn
+  pdf_string: 'Příklad: stroj pro L = { aⁿbⁿ | n ≥ 0 }'
+
+
+"Idea:".notion párujeme symboly $a$ a $b$ – vždy první $a$ i první $b$ přepíšeme na $\sharp$.
+
+
+.Figure:
+
+  !tikz:
+    filename: 01d-turinguv-stroj-03
+
+    \tmtape{0}{0}{a,a,b,b,_}{1}
+    \node[note,anchor=west] at (3.8,0) {najdi první $a$, změň na $\sharp$};
+    \tmtape{0}{-1.4}{*,a,b,b,_}{3}
+    \node[note,anchor=west] at (3.8,-1.4) {najdi první $b$, změň na $\sharp$};
+    \tmtape{0}{-2.8}{*,a,*,b,_}{4}
+    \node[note,anchor=west] at (3.8,-2.8) {zkontroluj, že dál jsou jen $b$};
+    \tmtape{0}{-4.2}{*,a,*,b,_}{1}
+    \node[note,anchor=west] at (3.8,-4.2) {vrať se na začátek \dots\ a opakuj};
+    \tmtape{0}{-5.6}{*,*,*,*,_}{5}
+    \node[note,anchor=west] at (3.8,-5.6) {zbyly jen $\sharp$ $\Rightarrow$ \qA};
+
+  .caption:
+
+    Výpočet na vstupu $aabb$ – snímky pásky.
+
+
+.Figure:
+  label: fig-anbn
+
+  !tikz:
+    filename: 01d-turinguv-stroj-04
+    options: 'node distance=22mm and 30mm,auto'
+
+    \node[st,initial,initial text=start] (fa) {$\mathit{find}_a$};
+    \node[st,right=45mm of fa] (fb) {$\mathit{find}_b$};
+    \node[st,below=22mm of fb] (cb) {$\mathit{check}_b$};
+    \node[st,below=22mm of fa,inner sep=3pt] (cr) {$\mathit{car\_ret}$};
+    \node[strej] (qr) at ($(fa)!0.5!(cb)$) {\qR};
+    \node[stacc,left=22mm of cr] (qa) {\qA};
+    \draw[tr] (fa) edge[loop above] node[lab]{$\sharp/\sharp,\Rgt$} (fa);
+    \draw[tr] (fa) -- node[lab,above]{$a/\sharp,\Rgt$} (fb);
+    \draw[tr] (fa) -- node[lab,pos=0.55]{$b/b,\Stay$} (qr);
+    \draw[tr] (fa) -- node[lab,left,pos=0.4]{$\blank/\blank,\Stay$} (qa);
+    \draw[tr] (fb) edge[loop above] node[lab]{$a,\sharp$/stejné$,\Rgt$} (fb);
+    \draw[tr] (fb) -- node[lab]{$b/\sharp,\Rgt$} (cb);
+    \draw[tr] (fb) -- node[lab,pos=0.45]{$\blank/\blank,\Stay$} (qr);
+    \draw[tr] (cb) edge[loop below] node[lab]{$b/b,\Rgt$} (cb);
+    \draw[tr] (cb) -- node[lab,pos=0.4]{$a,\sharp$/stejné$,\Stay$} (qr);
+    \draw[tr] (cb) -- node[lab,below]{$\blank/\blank,\Lft$} (cr);
+    \draw[tr] (cr) edge[loop below] node[lab]{$a,b,\sharp$/stejné$,\Lft$} (cr);
+    \draw[tr] (cr) -- node[lab,right,pos=0.6]{$\blank/\blank,\Rgt$} (fa);
+
+  .caption:
+
+    Stavový diagram. Zápis „$a/\sharp,\Rgt$“ čti: "přečti $a$, zapiš $\sharp$ a posuň hlavu doprava".emphasize.
+
+
+.Concept:
+  title: 'Co dělá který stav'
+
+  $\mathit{find}_a$ přeskakuje $\sharp$ a hledá první nezpárované $a$ (najde-li místo něj $b$, je
+  pořadí špatně; najde-li $\blank$, je vše spárováno). $\mathit{find}_b$ přeskočí zbylá $a$
+  a~$\sharp$ a označí první $b$. $\mathit{check}_b$ ověří, že za ním už jsou jen $b$ (tím
+  hlídá tvar $a^*b^*$). $\mathit{car\_ret}$ („carriage return“) vrátí hlavu na začátek.
+  Stroj udělá $\approx n$ průchodů přes slovo délky $2n$, tedy čas $O(n^2)$.
+
+
+.Subsection Více pásek: palindromy v lineárním čase (proseminář 1)
+  label: ch-ts-vice-pasek-palindromy-v-linearnim-case
+
+
+.Example:
+  title: 'Palindromy nad $\{0,1\}$'
+  label: ex-palin
+
+  Chceme rozhodnout, zda se slovo čte stejně zepředu i zezadu (např. $0110$).
+
+  .itemize:
+
+    .item:
+
+      "1 páska:".notion zapamatuj první znak "ve stavu".emphasize, smaž ho, doběhni na konec,
+      porovnej a smaž poslední znak, doběhni zpět… Hlava neustále běhá sem a tam:
+      $O(n^2)$ (viz cvičení~1.1).
+
+    .item:
+
+      "2 pásky:".notion slovo zkopírujeme na druhou pásku a pak čteme obě současně –
+      jednu zepředu, druhou zezadu: $O(n)$.
+
+
+.Figure:
+
+  !tikz:
+    filename: 01d-turinguv-stroj-05
+
+    \def\row#1#2#3#4#5#6{%
+      \node[font=\small\sffamily\bfseries,anchor=east] at (-0.4,#1+0.9) {#2};
+      \node[font=\scriptsize,anchor=east] at (-0.2,#1+0.35) {páska 1};
+      \tmtape{0}{#1+0.35}{_,0,1,1,0,_}{#3}
+      \node[font=\scriptsize,anchor=east] at (-0.2,#1-0.95) {páska 2};
+      \tmtape{0}{#1-0.95}{#4}{#5}
+      \node[note,anchor=west,text width=58mm,align=flush left] at (4.6,#1-0.3) {#6};}
+    \row{0}{Start}{2}{_,_,_,_,_,_}{2}{$q_{\mathrm{copy}}$: obě hlavy na začátku slova.}
+    \row{-3.0}{Fáze 1}{6}{_,0,1,1,0,_}{6}{$q_{\mathrm{copy}}$: kopíruj $\Rgt,\Rgt$. Na $(\blank,\blank)$ přejdi do $q_{\mathrm{rewind}}$ s pohybem $(\Stay,\Lft)$.}
+    \row{-6.0}{Fáze 2}{6}{_,0,1,1,0,_}{1}{$q_{\mathrm{rewind}}$: hlava 1 stojí, hlava 2 couvá až na $\blank$ před slovem. Pak $(\Lft,\Rgt)$.}
+    \row{-9.0}{Fáze 3}{5}{_,0,1,1,0,_}{2}{$q_{\mathrm{compare}}$: hlava 1 jde $\Lft$, hlava 2 jde $\Rgt$, symboly se musí shodovat. Na $(\blank,\blank)$ přijmi.}
+
+  .caption:
+
+    Dvoupáskový stroj pro palindromy na vstupu $0110$.
+
+
+.Table:
+
+  .table:
+    columns: 'lll'
+
+    .row:
+      head: true
+
+      Fáze
+
+      Přechod $\delta(q,a,b)=(q',a',b',D_1,D_2)$
+
+      Význam
+
+    .row:
+
+      kopírování
+
+      $\delta(q_{\mathrm{copy}},0,\blank)=(q_{\mathrm{copy}},0,0,\Rgt,\Rgt)$
+
+      zkopíruj 0
+
+    .row:
+
+      ~
+
+      $\delta(q_{\mathrm{copy}},1,\blank)=(q_{\mathrm{copy}},1,1,\Rgt,\Rgt)$
+
+      zkopíruj 1
+
+    .row:
+
+      ~
+
+      $\delta(q_{\mathrm{copy}},\blank,\blank)=(q_{\mathrm{rewind}},\blank,\blank,\Stay,\Lft)$
+
+      konec slova
+
+    .row:
+
+      převinutí
+
+      $\delta(q_{\mathrm{rewind}},\blank,x)=(q_{\mathrm{rewind}},\blank,x,\Stay,\Lft)$, $x\in\{0,1\}$
+
+      hlava 2 couvá
+
+    .row:
+
+      ~
+
+      $\delta(q_{\mathrm{rewind}},\blank,\blank)=(q_{\mathrm{compare}},\blank,\blank,\Lft,\Rgt)$
+
+      začátek porovnávání
+
+    .row:
+
+      porovnání
+
+      $\delta(q_{\mathrm{compare}},x,x)=(q_{\mathrm{compare}},x,x,\Lft,\Rgt)$
+
+      znaky sedí
+
+    .row:
+
+      ~
+
+      $\delta(q_{\mathrm{compare}},x,y)=(\qR,x,y,\Stay,\Stay)$ pro $x\neq y$
+
+      zamítni
+
+    .row:
+
+      ~
+
+      $\delta(q_{\mathrm{compare}},\blank,\blank)=(\qA,\blank,\blank,\Stay,\Stay)$
+
+      přijmi
+
+  .caption:
+
+    Přechodová funkce dvoupáskového stroje pro palindromy.
+
+
+.Remark:
+  title: 'Úplnost přechodové funkce'
+
+  Zatím jsme popsali jen „šťastnou cestu“. Co když se ve fázi $q_{\mathrm{rewind}}$ hlava 1
+  „zázrakem“ ocitne nad $0$? Správně navržený stroj má $\delta$ definovanou pro "všechny".emphasize
+  kombinace; nedosažitelné situace pošleme do $\qR$, např.
+  $\delta(q_{\mathrm{rewind}},0,0)=(\qR,0,0,\Stay,\Stay)$. V programování tomu odpovídají
+  "assert".code⁠y a nedosažitelný kód; dokazování, že program nikdy nevstoupí do neplatného
+  stavu, je předmětem "formální verifikace".emphasize.
+
+
+.Subsection Funkce počítaná strojem a Churchova–Turingova teze
+  label: ch-ts-funkce-pocitana-strojem-a-churchova-turingova-teze
+
+
+.Definition:
+  title: 'Funkce počítaná TS'
+  label: def-fm
+
+  TS $M$ počítá funkci $f_M$, pokud pro každé $x\in\Sigma^*$: je-li výpočet na $x$ konečný,
+  je $f_M(x)$ obsah výstupu; cyklí-li výpočet na $x$ donekonečna, $f_M(x)$ "není definována".emphasize.
+
+
+.Theorem:
+  title: 'Churchova–Turingova teze'
+  label: thm-church
+
+  Ke každému algoritmu existuje ekvivalentní Turingův stroj.
+
+
+  "Silná forma:".emphasize každý fyzikálně realizovatelný počítač lze simulovat TS s nejvýše
+  "polynomiálním".emphasize zpomalením (možným protipříkladem jsou kvantové počítače).
+
+
+.Warning:
+  title: 'Pozor'
+
+  Jde o "tezi".emphasize, ne o větu – pojem „algoritmus“ není formálně definován, takže ji nelze
+  dokázat. Je to empirické pozorování: všechny dosud navržené modely výpočtu jsou s TS ekvivalentní.

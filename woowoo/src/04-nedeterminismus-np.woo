@@ -1,0 +1,16 @@
+.Chapter Nedeterminismus a třída NP
+  label: ch-np
+
+
+Zdroje: přednáška 2, proseminář 2, cvičení 2.
+
+
+.Concept:
+  title: 'Proč to děláme'
+
+  Dosud náš Turingův stroj fungoval jako klasický počítač: aktuální stav a čtený symbol jednoznačně určily další krok.
+  V této kapitole stroji dovolíme reagovat v jedné situaci několika různými způsoby – výpočet už není cesta, ale strom.
+  Nedeterministický Turingův stroj (NDTS) není fyzicky realizovatelný, je to abstraktní model; ukáže se ale jako
+  ultimátní nástroj pro pochopení struktury a složitosti problémů, zejména třídy $\NP$.
+  Vedle definice $\NP$ přes NDTS zavedeme i pohled přes certifikáty a verifikátory (řešení je snazší ověřit, než ho
+  vymyslet), ukážeme, že obě definice splývají, a dojdeme k otázce $\PP\overset{?}{=}\NP$.

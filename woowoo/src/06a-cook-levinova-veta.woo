@@ -1,0 +1,560 @@
+.Section Cook–Levinova věta
+  label: ch-cook-cook-levinova-veta
+
+
+.Definition:
+  title: 'Problém $\prob{SAT}$ (splnitelnost)'
+  label: prob-sat
+
+  "Vstup:".notion booleovská formule $\varphi$ v konjunktivní normální formě (CNF).
+
+
+  "Otázka:".notion existuje pravdivostní ohodnocení proměnných, pro které je $\varphi$ splněna?
+
+
+.Theorem:
+  title: 'Cook–Levin, 1971'
+  label: thm-cooklevin
+
+  Problém $\prob{SAT}$ je NP-úplný.
+
+
+Je to "první přirozený".emphasize NP-úplný problém. Z definice musíme ukázat, že každý z nekonečně
+mnoha problémů v $\NP$ se redukuje na $\prob{SAT}$.
+
+.enumerate:
+
+  .item:
+
+    "$\prob{SAT} \in \NP$:".notion certifikát je ohodnocení, verifikátor dosadí a vyhodnotí.
+
+  .item:
+
+    "$\prob{SAT}$ je NP-těžký:".notion vezmeme libovolné $L\in\NP$ s jeho NDTS $M$ a výpočet $M$
+    polynomiálně překódujeme do formule. Abychom nekódovali stroj přímo, uděláme
+    "vizuální mezikrok".emphasize – problém Dlaždičkování:
+
+    .equation:
+
+      L\in\NP \ \redp\ \prob{Dlaždičkování}\ \redp\ \prob{SAT}.
+
+
+.Figure:
+  label: fig-cookchain
+
+  !tikz:
+    filename: 06a-cook-levinova-veta-01
+    options: 'node distance=13mm'
+
+    % 1 NDTS
+    \node[blokd,minimum width=25mm,minimum height=27mm] (m) {};
+    \node[font=\small\bfseries,anchor=north] at (m.north) {NDTS $M$};
+    \begin{scope}[shift={($(m.center)+(0,-0.15)$)},scale=0.55]
+      \node[st,minimum size=6mm,font=\tiny] (a) at (-1.1,0.3) {$q_0$};
+      \node[st,minimum size=6mm,font=\tiny] (b) at (0.9,0.6) {$q_1$};
+      \node[stacc,minimum size=6mm,font=\tiny] (c) at (0.6,-1.0) {$q_A$};
+      \draw[tr,thin] (a)--(b); \draw[tr,thin] (b)--(c); \draw[tr,thin] (a)--(c);
+    \end{scope}
+    % 2 tabulka
+    \node[blokd,minimum width=25mm,minimum height=27mm,right=of m] (t) {};
+    \node[font=\small\bfseries,anchor=north] at (t.north) {tabulka};
+    \begin{scope}[shift={($(t.center)+(-0.9,-0.95)$)}]
+      \draw[step=0.3,black!40] (0,0) grid (1.8,1.5);
+      \fill[hl] (0.6,1.2) rectangle (0.9,1.5); \fill[hl] (0.9,0.9) rectangle (1.2,1.2);
+      \fill[hl] (0.6,0.6) rectangle (0.9,0.9); \fill[hl] (0.9,0.3) rectangle (1.2,0.6);
+      \fill[hl] (1.2,0) rectangle (1.5,0.3);
+      \draw[step=0.3,black!40] (0,0) grid (1.8,1.5);
+    \end{scope}
+    % 3 dlazdice
+    \node[blokd,minimum width=25mm,minimum height=27mm,right=of t] (d) {};
+    \node[font=\small\bfseries,anchor=north] at (d.north) {dlaždice};
+    \begin{scope}[shift={($(d.center)+(-0.9,-1.0)$)},scale=0.6]
+      \chRA{0}{1}\chRB{1}{1}\chRC{2}{1}
+      \chRD{0}{0}\chRB{1}{0}\chRE{2}{0}
+    \end{scope}
+    % 4 formule
+    \node[blokd,minimum width=25mm,minimum height=27mm,right=of d] (f) {};
+    \node[font=\small\bfseries,anchor=north] at (f.north) {formule $\varphi$};
+    \node[font=\scriptsize,align=center] at ($(f.center)+(0,-0.2)$) {$(\ell_1\lor\ell_2)$\\ $\land(\lnot\ell_3)$\\ $\land\ \dots$};
+    \draw[flow] (m)--node[above,font=\tiny]{výpočet}(t);
+    \draw[flow] (t)--node[above,font=\tiny]{$\delta\mapsto$}(d);
+    \draw[flow] (d)--node[above,font=\tiny]{podmínky}(f);
+    \node[note,below=2mm of m] {výpočet na $x$};
+    \node[note,below=2mm of t] {čas $\times$ páska};
+    \node[note,below=2mm of d] {mřížka + okraje};
+    \node[note,below=2mm of f] {klauzule = podmínky};
+
+  .caption:
+
+    Celý důkaz v jednom obrázku. Každá šipka zachovává odpověď:
+    $\varphi$ je splnitelná $\iff$ $M$ přijímá $x$.
+
+
+.Subsection Mezikrok: problém Dlaždičkování
+  label: ch-cook-mezikrok-problem-dlazdickovani
+
+
+Máme čtvercové dlaždice $1\times1$, každá je úhlopříčkami rozdělena na čtyři barevné
+trojúhelníky (horní, pravý, spodní, levý). Dlaždice "nelze otáčet".emphasize a každého typu máme
+neomezeně kusů. (Takovým dlaždicím se říká "Wangovy dlaždice".emphasize.)
+
+
+.Figure:
+  label: ch-cook-fig-wangova-dlazdice
+
+  !tikz:
+    filename: 06a-cook-levinova-veta-02
+
+    \begin{scope}[scale=2]
+      \chRtile{0}{0}{chRr}{chRy}{chRb}{chRz}{}
+      \node[font=\scriptsize] at (0.5,0.82) {horní};
+      \node[font=\scriptsize] at (0.5,0.18) {spodní};
+      \node[font=\scriptsize,rotate=90] at (0.15,0.5) {levý};
+      \node[font=\scriptsize,rotate=-90] at (0.85,0.5) {pravý};
+    \end{scope}
+    \begin{scope}[xshift=4cm,scale=1.6]
+      \chRA{0}{0.3}\chRB{1}{0.3}
+      \draw[acc!70!black,line width=2.5pt] (1,0.3)--(1,1.3);
+      \node[font=\scriptsize,acc!70!black,align=center] at (1,-0.1) {šedá $=$ šedá};
+      \chRA{3}{0.3}\chRC{4}{0.3}
+      \draw[rej,line width=2.5pt] (4,0.3)--(4,1.3);
+      \node[font=\scriptsize,rej,align=center] at (4,-0.1) {šedá $\neq$ oranžová};
+    \end{scope}
+
+  .caption:
+
+    Dlaždice a pravidlo sousedství: sousedící hrany musí mít stejnou barvu.
+
+
+.Definition:
+  title: 'Problém $\prob{Dlaždičkování}$'
+  label: prob-dlazdickovani
+
+  "Vstup:".notion množina typů dlaždic, rozměry obdélníkové plochy $n\times m$, předbarvené okraje plochy.
+
+
+  "Otázka:".notion lze plochu vydláždit tak, aby barvy sousedících hran vždy souhlasily
+  (i s okraji plochy)?
+
+
+.Example:
+  title: 'Backtracking na mřížce $3\times3$'
+  label: ex-dlazdice33
+
+  Máme k dispozici dlaždice A–H. Okraj plochy je nahoře červený, vlevo zelený, vpravo žlutý a dole modrý.
+
+
+  .centered:
+
+    !tikz:
+      filename: 06a-cook-levinova-veta-03
+      options: 'scale=0.85'
+
+      \chRA{0}{0}\chRB{1.4}{0}\chRC{2.8}{0}\chRD{4.2}{0}\chRE{5.6}{0}\chRF{7.0}{0}\chRG{8.4}{0}\chRH{9.8}{0}
+
+
+  "Pokus 1 (slepá ulička).".notion Horní řadu vyplníme A, H, C – H se zdá jako dobrá volba
+  (nahoře červená, vlevo šedá jako pravý okraj A, vpravo oranžová jako levý okraj C). Pod A dáme D.
+  Na prostřední políčko teď potřebujeme dlaždici se "šedou nahoře".emphasize (spodek H) a
+  "šedou vlevo".emphasize (pravý okraj D). Takovou nemáme – musíme se vrátit.
+
+
+  "Pokus 2 (řešení).".notion Nahradíme H dlaždicí B. Pak už to jde: viz pravý obrázek.
+  Všimněte si, že B i D jsme použili dvakrát.
+
+
+  .centered:
+
+    !tikz:
+      filename: 06a-cook-levinova-veta-04
+      options: 'scale=0.95'
+
+      % slepa ulicka
+      \chRA{0}{2}\chRH{1}{2}\chRC{2}{2}
+      \chRD{0}{1}
+      \draw[black!50,dashed] (1,1) rectangle (2,2) (2,1) rectangle (3,2) (0,0) rectangle (3,1) (1,0)--(1,1) (2,0)--(2,1);
+      \node[font=\Large\bfseries,rej] at (1.5,1.5) {?};
+      \draw[rej,line width=2pt] (1,1.05)--(1,1.95) (1.05,2)--(1.95,2);
+      \node[font=\small\bfseries,rej,align=center] at (1.5,-0.5) {kolize!};
+      \node[note,text width=34mm,align=flush center] at (1.5,-1.25) {potřebuji šedou shora i zleva -- taková dlaždice není};
+      \draw[chRr,line width=3pt] (0,3.05)--(3,3.05);
+      \draw[chRz!80!black,line width=3pt] (-0.05,0)--(-0.05,3);
+      \draw[chRy!70!black,line width=3pt] (3.05,0)--(3.05,3);
+      \draw[chRb,line width=3pt] (0,-0.05)--(3,-0.05);
+      % reseni
+      \begin{scope}[xshift=5.5cm]
+        \chRA{0}{2}\chRB{1}{2}\chRC{2}{2}
+        \chRD{0}{1}\chRB{1}{1}\chRE{2}{1}
+        \chRD{0}{0}\chRF{1}{0}\chRG{2}{0}
+        \draw[chRr,line width=3pt] (0,3.05)--(3,3.05);
+        \draw[chRz!80!black,line width=3pt] (-0.05,0)--(-0.05,3);
+        \draw[chRy!70!black,line width=3pt] (3.05,0)--(3.05,3);
+        \draw[chRb,line width=3pt] (0,-0.05)--(3,-0.05);
+        \node[font=\small\bfseries,acc] at (1.5,-0.5) {úspěch};
+      \end{scope}
+
+
+.Concept:
+  title: 'Intuice'
+
+  Dlaždičkování je „lokální“ problém: každá dlaždice vidí jen své čtyři sousedy, a přesto celá
+  mřížka umí zachytit globální výpočet. Přesně tohle o výpočtu Turingova stroje platí taky –
+  obsah buňky v čase $t+1$ závisí jen na okolí této buňky v čase $t$.
+
+
+.Subsection $L\redp\prob{Dlaždičkování}$: výpočetní tabulka
+  label: ch-cook-l-dlazdickovani-vypocetni-tabulka
+  pdf_string: 'L ≤p Dlaždičkování: výpočetní tabulka'
+
+
+.Remark:
+  title: 'Redukce: libovolný $L\in\NP \redp \prob{Dlaždičkování}$'
+  label: red-dlazd
+
+  slovo $x$ $\;\longmapsto\;$ dlaždice z $\delta$, mřížka, okraje
+
+
+Nechť $L\in\NP$ rozhoduje jednopáskový NDTS $M$ v čase $p(n)$. Historii výpočtu $M$ na slově $x$
+zakreslíme jako "tabulku v čase a prostoru".notion:
+
+.itemize:
+
+  .item:
+
+    "řádky".notion jsou časové kroky $t=0,1,\dots,p(|x|)$,
+
+  .item:
+
+    "sloupce".notion jsou políčka pásky, řádek $t$ je konfigurace (obsah pásky + stav + hlava) v čase $t$.
+
+Stroj za $p(|x|)$ kroků nedojede dál než na pozici $-p(|x|)$ vlevo a $+p(|x|)$ vpravo od
+startu, tabulka je tedy konečná a má polynomiální rozměry $(p(|x|)+1)\times(2p(|x|)+1)$.
+
+
+.Figure:
+  label: ch-cook-fig-vypocetni-tabulka
+
+  !tikz:
+    filename: 06a-cook-levinova-veta-05
+    options: 'x=0.55cm,y=0.55cm'
+
+    \fill[intc!12] (6.5,8) -- (0,1.5) -- (0,0) -- (13,0) -- (13,1.5) -- cycle;
+    \draw[step=1,black!25] (0,0) grid (13,8);
+    \draw[thick] (0,0) rectangle (13,8);
+    \draw[rej,dashed,very thick] (6.5,8) -- (0,1.5) (6.5,8) -- (13,1.5);
+    \node[font=\small\bfseries,rej,align=center] at (6.5,3.3) {dosažitelná\\ část pásky};
+    % startovni radek
+    \foreach \s [count=\i from 0] in {$\sqcup$,$\sqcup$,$\sqcup$,$\sqcup$,$\sqcup$,$\sqcup$,{$q_0x_1$},$x_2$,$x_3$,$\sqcup$,$\sqcup$,$\sqcup$,$\sqcup$}{%
+      \node[font=\tiny] at (\i+0.5,7.5) {\s};}
+    \node[font=\small,anchor=south] at (0,8.1) {$-p(|x|)$};
+    \node[font=\small,anchor=south] at (6.5,8.1) {start (0)};
+    \node[font=\small,anchor=south] at (13,8.1) {$+p(|x|)$};
+    \draw[->,thick] (-0.6,8) -- (-0.6,0) node[below=3pt,font=\small]{čas $t$};
+    \node[font=\small,anchor=east] at (-0.7,7.5) {$t=0$};
+    \node[font=\small,anchor=east] at (-0.7,0.5) {$t=p(|x|)$};
+    \draw[decorate,decoration={brace,amplitude=6pt,mirror},thick,defc] (0,-0.3) -- (13,-0.3)
+       node[midway,below=7pt,font=\small,defc]{šířka $2p(|x|)+1$};
+
+  .caption:
+
+    Výpočetní tabulka. Řádek = konfigurace v jednom čase. Šířka i výška jsou polynomiální v $|x|$.
+
+
+"Od pravidel k dlaždicím.".notion Z přechodové relace $\delta$ vytvoříme "konečnou".emphasize sadu typů
+dlaždic. Jedna dlaždice = jedna buňka tabulky; barvy nesou informaci:
+
+.itemize:
+
+  .item:
+
+    "svisle".notion (horní/spodní hrana): obsah políčka pásky v čase $t$ a $t+1$, případně
+    i se stavem, je-li tam hlava – „barva“ je dvojice $(q,a)$ nebo jen symbol $a$;
+
+  .item:
+
+    "vodorovně".notion (levá/pravá hrana): předávání stavu sousední buňce, když se hlava posouvá.
+
+
+.Figure:
+  label: ch-cook-fig-dlazdice-z-prechodu
+
+  !tikz:
+    filename: 06a-cook-levinova-veta-06
+    options: 'scale=0.95'
+
+    \chRltile{0}{0}{$c$}{$-$}{$c$}{$-$}
+    \chRltile{2.6}{0}{$(q,a)$}{$r$}{$b$}{$-$}
+    \chRltile{4.6}{0}{$d$}{$-$}{$(r,d)$}{$r$}
+    \draw[intc,line width=2.5pt] (4.6,0)--(4.6,2);
+    \node[note,text width=26mm,anchor=north] at (1,-0.15) {(2) přepis: hlava je jinde, symbol se jen opíše};
+    \node[note,text width=50mm,anchor=north] at (4.6,-0.15) {(1) krok $\delta(q,a)\ni(r,b,\Rgt)$: buňka s hlavou zapíše $b$ a stav $r$ „předá“ doprava; v čase $t+1$ je hlava v pravé buňce};
+    \node[font=\scriptsize\sffamily,anchor=west] at (7.0,1.6) {horní hrana: čas $t$};
+    \node[font=\scriptsize\sffamily,anchor=west] at (7.0,0.4) {spodní hrana: čas $t+1$};
+    \draw[->,thick,warnc] (3.6,2.35) node[above,font=\scriptsize]{hlava v čase $t$} -- (3.6,2.05);
+
+  .caption:
+
+    Dlaždice z přechodu $\delta(q,a)\ni(r,b,\Rgt)$. Pravý okraj levé dlaždice a levý okraj
+    pravé dlaždice nesou „barvu“ $r$, takže je lze položit vedle sebe jen společně.
+
+
+Dlaždice jsou tří druhů:
+
+.enumerate:
+
+  .item:
+
+    "čtení/zápis".notion – pro každý přechod v $\delta$ (pohyb hlavy doleva, doprava, na místě),
+
+  .item:
+
+    "přepis symbolu".notion – „čekání“: hlava operuje jinde, symbol se jen opíše dolů,
+
+  .item:
+
+    "okrajové".notion – pro předbarvené okraje plochy.
+
+Protože $\delta$ je relace, k jedné konfiguraci může pasovat víc dlaždic –
+"volba dlaždice odpovídá nedeterministické volbě stroje".emphasize. Jak do sebe dlaždice dvou kroků zapadnou, ukazuje
+obr. .reference:ch-cook-fig-dva-kroky-dlazdicemi.
+
+
+.Figure:
+  label: ch-cook-fig-dva-kroky-dlazdicemi
+
+  !tikz:
+    filename: 06a-cook-levinova-veta-10
+    options: 'scale=0.9'
+
+    % radek 1: krok t=0 -> t=1, delta(q0,a) obsahuje (q1,b,R)
+    \chRltile{0}{2}{$\sqcup$}{$-$}{$\sqcup$}{$-$}
+    \chRltile{2}{2}{$(q_0,a)$}{$q_1$}{$b$}{$-$}
+    \chRltile{4}{2}{$b$}{$-$}{$(q_1,b)$}{$q_1$}
+    \chRltile{6}{2}{$\sqcup$}{$-$}{$\sqcup$}{$-$}
+    % radek 2: krok t=1 -> t=2, delta(q1,b) obsahuje (q2,a,L)
+    \chRltile{0}{0}{$\sqcup$}{$-$}{$\sqcup$}{$-$}
+    \chRltile{2}{0}{$b$}{$q_2$}{$(q_2,b)$}{$-$}
+    \chRltile{4}{0}{$(q_1,b)$}{$-$}{$a$}{$q_2$}
+    \chRltile{6}{0}{$\sqcup$}{$-$}{$\sqcup$}{$-$}
+    \fill[hl,opacity=0.35] (2,2) rectangle (4,4) (4,0) rectangle (6,2);
+    \draw[intc,line width=2.5pt] (4,2)--(4,4) (4,0)--(4,2);
+    \foreach \p [count=\i from 0] in {-1,0,1,2} {\node[font=\scriptsize\sffamily,gr] at (2*\i+1,4.3) {pozice $\p$};}
+    \node[font=\small,anchor=east] at (-0.2,4) {$t=0$};
+    \node[font=\small,anchor=east] at (-0.2,2) {$t=1$};
+    \node[font=\small,anchor=east] at (-0.2,0) {$t=2$};
+    \node[font=\small,anchor=west,align=left] at (8.3,3) {krok 1: $\delta(q_0,a)\ni(q_1,b,\Rgt)$\\ \scriptsize stav $q_1$ jde hranou doprava};
+    \node[font=\small,anchor=west,align=left] at (8.3,1) {krok 2: $\delta(q_1,b)\ni(q_2,a,\Lft)$\\ \scriptsize stav $q_2$ jde hranou doleva};
+    \node[font=\scriptsize,anchor=west,align=left,text=black!65] at (8.3,4.15) {$t=0$: \ $\sqcup\ (q_0,a)\ b\ \sqcup$};
+    \node[font=\scriptsize,anchor=west,align=left,text=black!65] at (8.3,2) {$t=1$: \ $\sqcup\ b\ (q_1,b)\ \sqcup$};
+    \node[font=\scriptsize,anchor=west,align=left,text=black!65] at (8.3,-0.15) {$t=2$: \ $\sqcup\ (q_2,b)\ a\ \sqcup$};
+
+  .caption:
+
+    Dva kroky výpočtu stroje na vstupu $ab$ jako dva řádky dlaždic "(nad rámec přednášky)".emphasize. Žlutě
+    dlaždice s hlavou (čtení/zápis), ostatní jen opisují symbol. "Všimni si:".emphasize spodní hrany prvního řádku
+    jsou přesně horní hrany druhého (konfigurace v čase $t=1$) a stav po kroku putuje vodorovnou hranou do
+    buňky, kam se pohnula hlava – doprava i doleva.
+
+
+"Proč potřebujeme „vychovaný“ TS?".notion Okraje dláždění musíme znát předem, tedy i přesnou
+"koncovou".emphasize konfiguraci. Běžný NDTS ale může přijmout kdykoliv, s hlavou kdekoliv a s čímkoliv
+na pásce. Každý NDTS ale umíme upravit, aby před přijetím „uklidil“:
+
+.enumerate:
+
+  .item:
+
+    přepíše celou (použitou) pásku na $\blank$,
+
+  .item:
+
+    vrátí hlavu na startovní pozici $0$,
+
+  .item:
+
+    teprve pak přejde do $\qA$ (a v něm už jen „stojí“ až do času $p(|x|)$).
+
+
+.Figure:
+  label: ch-cook-fig-vychovany-konec
+
+  !tikz:
+    filename: 06a-cook-levinova-veta-07
+
+    \node[font=\small\bfseries,anchor=east] at (-0.3,0) {běžný konec:};
+    \tmtape{0}{0}{a,b,_,c,a,_,b}{5}
+    \node[font=\scriptsize,warnc] at (3.15,-1.05) {\qA};
+    \node[note,anchor=west] at (5.2,0) {cokoliv, kdekoliv};
+    \node[font=\small\bfseries,anchor=east] at (-0.3,-2.0) {vychovaný konec:};
+    \tmtape{0}{-2.0}{_,_,_,_,_,_,_}{4}
+    \node[font=\scriptsize,acc] at (2.45,-3.05) {\qA\ na pozici 0};
+    \node[note,anchor=west] at (5.2,-2.0) {vždy stejně};
+
+  .caption:
+
+    Přijímající výpočet vychovaného stroje má jedinou možnou finální konfiguraci, a tu
+    natvrdo předepíšeme jako spodní okraj mřížky.
+
+
+"Předbarvení okrajů.".notion Celou redukci uzavřeme do rámečku velikosti
+$(2p(|x|)+1)\times p(|x|)$ dlaždic:
+
+
+.Figure:
+  label: ch-cook-fig-okrajove-podminky
+
+  !tikz:
+    filename: 06a-cook-levinova-veta-08
+    options: 'x=0.6cm,y=0.6cm'
+
+    \fill[defc!5] (0,0) rectangle (13,6);
+    \draw[step=1,black!15] (0,0) grid (13,6);
+    \draw[very thick,defc] (0,6.05) -- (13,6.05);
+    \draw[very thick,acc] (0,-0.05) -- (13,-0.05);
+    \draw[very thick,gr] (-0.05,0) -- (-0.05,6) (13.05,0) -- (13.05,6);
+    \foreach \s [count=\i from 0] in {$\sqcup$,$\sqcup$,$\sqcup$,$\sqcup$,$\sqcup$,$\sqcup$,{$q_0,x_1$},$x_2$,$\cdots$,$x_n$,$\sqcup$,$\sqcup$,$\sqcup$}{%
+      \node[font=\tiny,fill=defc!15,minimum size=5.5mm,inner sep=0pt] at (\i+0.5,6.6) {\s};}
+    \foreach \s [count=\i from 0] in {$\sqcup$,$\sqcup$,$\sqcup$,$\sqcup$,$\sqcup$,$\sqcup$,{$q_A,\sqcup$},$\sqcup$,$\sqcup$,$\sqcup$,$\sqcup$,$\sqcup$,$\sqcup$}{%
+      \node[font=\tiny,fill=acc!15,minimum size=5.5mm,inner sep=0pt] at (\i+0.5,-0.6) {\s};}
+    \node[font=\small\bfseries,defc,anchor=west] at (13.5,6.6) {počáteční konfigurace ($t=0$)};
+    \node[font=\small\bfseries,acc,anchor=west] at (13.5,-0.6) {přijímací konfigurace ($t=p(|x|)$)};
+    \node[font=\small,gr,rotate=90] at (-0.6,3) {samé $\sqcup$};
+    \node[font=\small,gr,rotate=-90] at (13.6,3) {samé $\sqcup$};
+    \node[font=\small,align=center,fill=white,fill opacity=0.85,text opacity=1] at (6.5,3) {vnitřní plocha: dlaždice z pravidel $\delta$\\ vyplnění mřížky $=$ přijímající výpočet};
+
+  .caption:
+
+    Okrajové podmínky: horní okraj je počáteční konfigurace, spodní jediná přijímací konfigurace
+    vychovaného stroje, boky jsou prázdné (hlava se k nim nikdy nedostane).
+
+
+.Lemma:
+  title: '$L\redp{}$ Dlaždičkování'
+  label: lem-lredtiling
+
+  Mřížku s těmito okraji lze vydláždit zkonstruovanou sadou dlaždic "právě tehdy".emphasize, když
+  existuje přijímající výpočet $M$ na $x$. Konstrukce je polynomiální: počet typů dlaždic závisí jen na
+  (pevném) $M$, rozměry mřížky jsou polynomiální v $|x|$ a okraje vypíšeme v polynomiálním čase.
+
+
+"Technický detail".notion "(nad rámec přednášky)".emphasize: aby ekvivalence platila pro "každý".emphasize stroj,
+musí barva boční hrany nést kromě stavu i "směr".emphasize, kterým se hlava pohybuje. Jinak by šlo vedle sebe
+položit dlaždici „přijmi stav zprava“ a dlaždici „přijmi stav zleva“ a hlava by vznikla z ničeho. Na obrázcích
+směr nekreslíme: ve zdejších příkladech se do každého stavu vstupuje jen z jedné strany a rozdíl se neprojeví.
+Protipříklad i oprava jsou v "úloze 6.8"#un-6-8.
+
+
+.Remark:
+  title: 'Od stroje k dláždění'
+
+  .itemize:
+
+    .item:
+
+      Čas a prostor výpočtu jsme převedli na rozměry mřížky (polynomiálně velké).
+
+    .item:
+
+      Pravidla stroje ($\delta$) jsme zakódovali do konečné sady typů dlaždic.
+
+    .item:
+
+      Začátek a úspěšný konec výpočtu jsme zafixovali jako předbarvené okraje.
+
+
+.Subsection $\prob{Dlaždičkování}\redp\prob{SAT}$
+  label: ch-cook-dlazdickovani-sat
+  pdf_string: 'Dlaždičkování ≤p SAT'
+
+
+.Remark:
+  title: 'Redukce: $\prob{Dlaždičkování} \redp \prob{SAT}$'
+  label: red-sat
+
+  dlaždice, mřížka, okraje $\;\longmapsto\;$ formule $\varphi$
+
+
+Hledáme formuli $\varphi$, která je splnitelná, právě když lze mřížku vydláždit. Máme $t$ typů
+dlaždic a pozice $(x,y)$ mřížky.
+
+
+"Proměnné:".notion $u^{(x,y)}_i = 1 \iff$ na pozici $(x,y)$ leží dlaždice typu $i$.
+
+
+.Table:
+  label: ch-cook-tab-klauzule
+
+  .table:
+    columns: 'clp{6.2cm}'
+
+    .row:
+      head: true
+
+      ~
+
+      Podmínka
+
+      Klauzule
+
+    .row:
+
+      1
+
+      alespoň jeden typ na pozici
+
+      $\bigl(u^{(x,y)}_1\lor u^{(x,y)}_2\lor\dots\lor u^{(x,y)}_t\bigr)$ pro každé $(x,y)$
+
+    .row:
+
+      2
+
+      nejvýše jeden typ na pozici
+
+      $\bigl(\lnot u^{(x,y)}_p\lor\lnot u^{(x,y)}_q\bigr)$ pro každé $(x,y)$ a $p\neq q$
+
+    .row:
+
+      3
+
+      sousedé pasují
+
+      $\bigl(\lnot u^{(x,y)}_p\lor\lnot u^{(x+1,y)}_q\bigr)$, nesedí-li pravá hrana $p$ s levou hranou $q$; svisle analogicky
+
+    .row:
+
+      4
+
+      okraje sedí
+
+      $\bigl(\lnot u^{(x,y)}_p\bigr)$, nesedí-li dlaždice $p$ na okraj u krajní pozice $(x,y)$
+
+  .caption:
+
+    Klauzule formule $\varphi$. Všechny jsou v CNF.
+
+
+.Figure:
+  label: ch-cook-fig-klauzule-typu-3
+
+  !tikz:
+    filename: 06a-cook-levinova-veta-09
+    options: 'scale=1.3'
+
+    \chRA{0}{0}\chRC{1}{0}
+    \node[font=\scriptsize,above] at (0.5,1) {pozice $(x,y)$, typ $p$};
+    \node[font=\scriptsize,above] at (1.5,1.25) {pozice $(x+1,y)$, typ $q$};
+    \draw[rej,line width=3pt] (1,0)--(1,1);
+    \node[font=\Large\bfseries,rej] at (1,-0.3) {$\times$};
+    \node[anchor=west,align=left,font=\small] at (2.4,0.5) {tato kombinace je zakázána:\\[2pt]
+          $\bigl(\lnot u^{(x,y)}_p\lor\lnot u^{(x+1,y)}_q\bigr)$};
+
+  .caption:
+
+    Klauzule typu 3: „nesmí současně platit, že vlevo leží $p$ a vpravo $q$“.
+
+
+"Velikost:".notion pro mřížku s $N$ pozicemi je proměnných $N\cdot t$ a klauzulí $O(N t^2)$ – formule je
+polynomiální ve velikosti mřížky, a ta je polynomiální v $|x|$. Splňující ohodnocení přesně odpovídá
+korektnímu dláždění (klauzule 1+2 vybírají na každé pozici "právě jednu".emphasize dlaždici, 3+4 hlídají barvy).
+Složením s~lemmatem .reference:lem-lredtiling dostáváme $L\redp\prob{SAT}$ pro každé $L\in\NP$, a tedy
+Cook–Levinovu větu. $\square$

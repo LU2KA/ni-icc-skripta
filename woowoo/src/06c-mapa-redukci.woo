@@ -1,0 +1,89 @@
+.Section Mapa redukcí a recept na důkaz NP-úplnosti
+  label: ch-cook-mapa-redukci-a-recept-na-dukaz-np-uplnosti
+
+
+Díky Cook–Levinově větě a principu štafety teď stačí z $\prob{SAT}$u (a $\prob{3-SAT}$u, kapitola .reference:ch-sat)
+stavět další a další NP-úplné problémy. Následující kapitoly 7–10 tvoří jejich "katalog".emphasize.
+Každá redukce v něm je ukázkou nějaké "techniky".emphasize, kterou se vyplatí umět použít i jinde.
+
+
+.Figure:
+  label: fig-zoo
+
+  !tikz:
+    filename: 06c-mapa-redukci-01
+    options: 'zz/.style={blokd,minimum width=21mm,font=\sffamily\small\bfseries}, zapp/.style={bloka,minimum width=21mm,font=\sffamily\small\itshape}, rr/.style={->,thick,draw=defc!80!black}, rpp/.style={->,thick,draw=gr,dashed}'
+
+    \node[blok,font=\scriptsize\sffamily] (cl) at (0,1.3) {Cook--Levin};
+    \node[zz] (sat) at (0,0) {3-SAT};
+    \node[zz,fill=black!5,draw=gr] (is) at (-4.2,0) {IS, VC};
+    \node[zz] (mapf) at (-5.4,-1.8) {MAPF};
+    \node[zz] (col) at (-2.1,-1.8) {3-Coloring};
+    \node[zz] (nae) at (2.4,-1.8) {NAE-3-SAT};
+    \node[zz] (x3c) at (6.9,-1.8) {X3C};
+    \node[zapp] (rz) at (-5.0,-3.6) {Rozvrh zkoušek};
+    \node[zz] (pl) at (-2.1,-3.6) {Planar 3-Col};
+    \node[zz] (one) at (0.6,-5.2) {1-in-3 SAT};
+    \node[zz] (pn) at (1.9,-3.6) {Pozit.\ NAE};
+    \node[zz] (mc) at (4.6,-3.6) {MaxCut};
+    \draw[gr,dashed] (cl)--(sat);
+    \draw[rpp] (sat)--node[above,font=\scriptsize]{kap.~8}(is);
+    \draw[rr] (sat)--(mapf);
+    \draw[rr] (sat)--(col);
+    \draw[rr] (sat)--(nae);
+    \draw[rr] (sat)--(x3c);
+    \draw[rr] (col)--(rz);
+    \draw[rr] (col)--(pl);
+    \draw[rr] (col.south east)--(one);
+    \draw[rr] (nae)--(pn);
+    \draw[rr] (nae)--(mc);
+    \draw[rr,dashed] (one.east) -| node[pos=0.75,right,font=\scriptsize]{2.~cesta} (x3c.south);
+
+  .caption:
+
+    Mapa redukcí v kapitolách 7–10 („Problem ZOO“). Šipka $A\to B$ znamená redukci $A\redp B$.
+    Zeleně je praktická aplikace.
+
+
+.Concept:
+  title: 'Recept na důkaz NP-úplnosti problému $Q$'
+
+  .enumerate:
+
+    .item:
+
+      $Q\in\NP$: řekni, co je certifikát, a že ho lze ověřit v polynomiálním čase.
+
+    .item:
+
+      Vyber vhodný známý NP-těžký problém $A$ a sestroj redukci $A\redp Q$ (v polynomiálním čase).
+
+    .item:
+
+      Dokaž "obě".emphasize implikace: ANO-instance $A$ $\Rightarrow$ ANO-instance $Q$ a naopak.
+
+
+.Remark:
+  title: 'Co si odnést'
+
+  .itemize:
+
+    .item:
+
+      "Cook–Levin:".notion $\prob{SAT}$ je NP-úplný; důkaz vede přes výpočetní tabulku: $L\redp\prob{Dlaždičkování}\redp\prob{SAT}$.
+
+    .item:
+
+      Výpočetní tabulka má polynomiální rozměry, pravidla $\delta$ se stanou konečnou sadou dlaždic, vstup a (vychovaný) konec výpočtu předbarvené okraje.
+
+    .item:
+
+      Dláždění převedeme na CNF: proměnná „na pozici $(x,y)$ leží dlaždice $i$“ a čtyři typy klauzulí.
+
+    .item:
+
+      "Karpův strom / štafeta:".notion pro NP-těžkost nového problému stačí jediná redukce ze známého NP-těžkého.
+
+    .item:
+
+      Recept: $Q\in\NP$ + vhodný zdroj $A$ + redukce $A\redp Q$ + obě implikace.

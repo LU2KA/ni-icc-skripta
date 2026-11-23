@@ -1,0 +1,32 @@
+% Makra a styly obrazku kapitoly 13 (PSPACE-uplnost a hry) -- opsano z ../skripta/kapitoly/13-pspace-hry.tex
+\tikzset{
+  city/.style={draw=black!70,thick,rounded corners=3pt,fill=white,font=\scriptsize,inner sep=3pt,minimum height=6mm},
+  ge/.style={->,thick,draw=black!60},
+  gA/.style={->,line width=1.8pt,draw=defc},
+  gB/.style={->,line width=1.8pt,draw=rej},
+}
+\newcommand{\mesta}[2]{% #1 prefix, #2 posun
+  \begin{scope}[xshift=#2]
+    \node[city,fill=hl] (#1R) at (0,1.2) {Rakovník};
+    \node[city] (#1K) at (2.4,2.2) {Kolín};
+    \node[city] (#1KH) at (2.4,0.2) {Kutná Hora};
+    \node[city] (#1N) at (4.8,2.2) {Náchod};
+    \node[city] (#1A) at (2.4,-1.2) {Aš};
+    \node[city] (#1S) at (4.8,-0.5) {Šumperk};
+    \draw[ge] (#1R)--(#1K); \draw[ge] (#1R)--(#1KH); \draw[ge] (#1K)--(#1N); \draw[ge] (#1KH)--(#1A);
+    \draw[ge] (#1A)--(#1S); \draw[ge] (#1S)--(#1K); \draw[ge] (#1S)--(#1KH);
+  \end{scope}}
+\tikzset{
+  gd/.style={circle,draw=black!75,thick,fill=white,minimum size=5mm,inner sep=0pt,font=\tiny},
+  gdT/.style={gd,fill=tT!25},
+  gdF/.style={gd,fill=tF!20},
+  gc/.style={gd,fill=intc!25,minimum size=5.5mm},
+  pA/.style={->,line width=1.7pt,draw=defc},
+  pB/.style={->,line width=1.7pt,draw=rej},
+}
+\newcommand{\diamant}[3]{% #1 jmeno, #2 x, #3 y (horni vrchol)
+  \node[gd] (#1t) at (#2,#3) {};
+  \node[gdT] (#1T) at ({#2-0.7},{#3-0.7}) {T};
+  \node[gdF] (#1F) at ({#2+0.7},{#3-0.7}) {F};
+  \node[gd] (#1b) at (#2,{#3-1.4}) {};
+  \draw[ge] (#1t)--(#1T); \draw[ge] (#1t)--(#1F); \draw[ge] (#1T)--(#1b); \draw[ge] (#1F)--(#1b);}

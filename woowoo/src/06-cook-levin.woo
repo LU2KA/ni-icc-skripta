@@ -1,0 +1,17 @@
+.Chapter Cook–Levinova věta
+  label: ch-cook
+
+
+Zdroje: přednáška 3, přednáška 4.
+
+
+.Concept:
+  title: 'Proč to děláme'
+
+  Abychom o nějakém problému řekli, že je NP-úplný, musíme z definice ukázat, že se na něj redukuje každý
+  z nekonečně mnoha problémů v $\NP$. Cook–Levinova věta to jednou provždy udělá pro $\prob{SAT}$, první
+  přirozený NP-úplný problém: výpočet libovolného NDTS polynomiálně překóduje do formule, a to přes vizuální
+  mezikrok – problém $\prob{Dlaždičkování}$. Jakmile víme, že $\prob{SAT}$ je NP-úplný, už nikdy nemusíme
+  simulovat Turingův stroj: díky tranzitivitě redukcí stačí pro NP-těžkost nového problému jediná redukce
+  z libovolného známého NP-těžkého problému (princip štafety). Na tom stojí katalog redukcí v kapitolách 7–10
+  i recept na důkaz NP-úplnosti na konci této kapitoly.

@@ -1,0 +1,605 @@
+.Section Podezřelé redukce z batohu (proseminář 5)
+  label: sec-podezrele
+
+
+$\prob{Subset Sum}$ a $\prob{Knapsack}$ jsou NP-úplné, ale jen "slabě".emphasize. Redukce z nich proto nabízejí řadu
+nenápadných chyb: často se objevují jako „důkaz“ NP-těžkosti, a přitom je cílový problém polynomiální.
+Projdeme čtyři takové redukce; u každé si nejdřív zkuste chybu najít sami.
+
+
+.Subsection $\prob{Subset Sum}\to\prob{Exact Path (DAG)}$: velikost výstupu
+  label: ch-cisla-subset-sum-exact-path
+  pdf_string: 'Subset Sum → Exact Path (DAG)'
+
+
+.Definition:
+  title: 'Problém $\prob{Exact Path (DAG)}$'
+  label: prob-exactpath
+
+  "Vstup:".notion orientovaný acyklický graf $G$, vrcholy $s,t$ a číslo $L$.
+
+
+  "Otázka:".notion existuje orientovaná cesta z $s$ do $t$ s "přesně".emphasize $L$ hranami?
+
+
+.Remark:
+  title: 'Redukce: $\prob{Subset Sum} \redp \prob{Exact Path (DAG)}$'
+
+  $(a_1,\dots,a_n;\ T)$ $\;\longmapsto\;$ $\textcolor{rej}{\text{(chybná!)}}$ řetěz, $L=T+n$
+
+
+"„Důkaz“.".notion Vrcholy $s=u_0,u_1,\dots,u_n=t$. Mezi $u_{i-1}$ a $u_i$ vedou dvě trasy:
+"přeskoč $a_i$".emphasize – jediná hrana $u_{i-1}\to u_i$ (délka 1); "vezmi $a_i$".emphasize – cesta přes $a_i$ nových
+vrcholů (délka $a_i+1$). Položíme $L=T+n$. Každá cesta z $s$ do $t$ projde všemi $u_i$ a v každém úseku zvolí
+jednu trasu; je-li $I$ množina úseků s volbou „vezmi“, má cesta délku $n+\sum_{i\in I}a_i$. Odtud
+($\Rightarrow$) i ($\Leftarrow$). „Konstrukci zjevně provedeme v polynomiálním čase.“
+
+
+.Figure:
+  label: ch-cisla-fig-exact-path
+
+  !tikz:
+    filename: 11e-podezrele-redukce-01
+    options: 'x=1cm,y=1cm'
+
+    \node[pu] (u0) at (0,0) {$u_0$}; \node[pu] (u1) at (3,0) {$u_1$};
+    \node[pu] (u2) at (5.2,0) {$u_2$}; \node[pu] (u3) at (9.2,0) {$u_3$};
+    \draw[pe] (u0)--(u1); \draw[pe] (u1)--(u2); \draw[pe] (u2)--(u3);
+    % a1 = 2
+    \node[pm] (a11) at (1,1) {}; \node[pm] (a12) at (2,1) {};
+    \draw[pe] (u0)--(a11); \draw[pe] (a11)--(a12); \draw[pe] (a12)--(u1);
+    % a2 = 1
+    \node[pm] (a21) at (4.1,1) {};
+    \draw[pe] (u1)--(a21); \draw[pe] (a21)--(u2);
+    % a3 = 3
+    \node[pm] (a31) at (6.2,1) {}; \node[pm] (a32) at (7.2,1) {}; \node[pm] (a33) at (8.2,1) {};
+    \draw[pe] (u2)--(a31); \draw[pe] (a31)--(a32); \draw[pe] (a32)--(a33); \draw[pe] (a33)--(u3);
+    \node[font=\scriptsize] at (1.5,1.45) {$a_1=2$}; \node[font=\scriptsize] at (4.1,1.45) {$a_2=1$};
+    \node[font=\scriptsize] at (7.2,1.45) {$a_3=3$};
+    % D mnoziny
+    \node[font=\scriptsize,defc,below=2pt] at (u0.south) {$\{0\}$};
+    \node[font=\scriptsize,defc,below=2pt] at (u1.south) {$\{1,3\}$};
+    \node[font=\scriptsize,defc,below=2pt] at (u2.south) {$\{2,3,4,5\}$};
+    \node[font=\scriptsize,defc,below=2pt] at (u3.south) {$\{3,\dots,9\}$};
+
+  .caption:
+
+    Instance $a=(2,1,3)$. Pro $T=4=1+3$ je cesta délky $1+2+4=7=T+n$. Modře množiny $D[u_i]$
+    délek cest z $s$ (viz algoritmus níže).
+
+
+.Exercise:
+  title: 'Cvičení – najděte chybu (proseminář 5)'
+  label: ch-cisla-cv-exact-path
+
+  Ekvivalence ($\Rightarrow$) i ($\Leftarrow$) je v pořádku. Kde je chyba? Zkuste navíc vymyslet algoritmus pro
+  $\prob{Exact Path (DAG)}$. Pokud by byl polynomiální, co by to znamenalo?
+  "Nápověda:".emphasize kolik bitů zabírá číslo $a_i$ na vstupu a kolik vrcholů za něj přidáme do grafu?
+
+
+.Solution:
+
+  "Chyba je ve velikosti výstupu.".notion Věta „konstrukci zjevně provedeme v polynomiálním čase“ není pravda: číslo
+  $a_i$ zabírá na vstupu $k\approx\log_2 a_i$ bitů, v grafu za něj ale přidáme $a_i\approx 2^k$ vrcholů. Graf má
+  celkem $n+1+\sum_i a_i$ vrcholů – exponenciálně mnoho vůči délce vstupu ($a_i=1\,000\,000$: 20 bitů, ale cesta
+  s milionem vrcholů). Konstrukce je ve skutečnosti $\prob{Subset Sum}$ zapsaný "unárně".emphasize: číslo $a_i$ je
+  „namalované“ jako $a_i$ vrcholů.
+
+
+  "$\prob{Exact Path (DAG)}$ je dokonce v $\PP$.".notion Pro každý vrchol $v$ spočítáme množinu $D[v]$ délek všech cest
+  z $s$ do $v$: $D[s]=\{0\}$ a vrcholy procházíme v topologickém pořadí,
+
+  .equation:
+
+    D[v]=\bigcup_{(u,v)\in E}\{\,d+1 : d\in D[u]\,\}.
+
+  Délka cesty je nejvýš $|V|-1$, takže $|D[v]|\le|V|$ a čas je $O(|V|\cdot|E|)$. Je to přesně DP pro Subset Sum –
+  pro unárně zapsaná čísla je pseudopolynomiální čas $O(n\cdot T)$ polynomiální. Kdyby byla redukce správná,
+  plynulo by z toho $\PP=\NP$.
+
+
+.Subsection Oprava: čísla nechme zapsaná binárně
+  label: ch-cisla-oprava-wexactpath
+
+
+.Remark:
+  title: 'Redukce: $\prob{Subset Sum} \redp \prob{Weighted Exact Path}$'
+  label: red-wexactpath
+
+  $(a_1,\dots,a_n;\ T)$ $\;\longmapsto\;$ řetěz s vahami, $L=T$
+
+
+.Definition:
+  title: 'Problém $\prob{Weighted Exact Path}$'
+  label: prob-wexactpath
+
+  "Vstup:".notion orientovaný acyklický graf $G$ s nezápornými celočíselnými vahami hran (binárně), vrcholy $s,t$ a
+  číslo $L$.
+
+
+  "Otázka:".notion existuje cesta z $s$ do $t$ se součtem vah přesně $L$?
+
+
+Místo cesty s $a_i$ vrcholy stačí "jediný".emphasize pomocný vrchol $m_i$: "přeskoč".emphasize = hrana $u_{i-1}\to u_i$ s
+vahou 0, "vezmi".emphasize = hrany $u_{i-1}\to m_i\to u_i$ s vahami $a_i$ a 0. Položíme $L=T$. Graf má $2n+1$
+vrcholů a váhy jsou kopie čísel $a_i$ $\Rightarrow$ redukce je polynomiální; korektnost je stejná jako předtím.
+Algoritmus s množinami $D[v]$ teď běží v čase $O(L\cdot|E|)$ – je jen pseudopolynomiální.
+
+
+.Figure:
+  label: ch-cisla-fig-weighted-exact-path
+
+  !tikz:
+    filename: 11e-podezrele-redukce-02
+    options: 'x=1cm,y=1cm'
+
+    \foreach \i/\x in {0/0,1/2.4,2/4.8,3/7.2} \node[pu] (u\i) at (\x,0) {$u_\i$};
+    \foreach \i/\x/\a in {1/1.2/2,2/3.6/1,3/6.0/3} {
+      \node[pm,minimum size=3.4mm] (m\i) at (\x,1) {};
+      \pgfmathtruncatemacro{\p}{\i-1}
+      \draw[pe] (u\p)--node[wt]{0}(u\i);
+      \draw[pe] (u\p)--node[wt,pos=0.45]{\a}(m\i);
+      \draw[pe] (m\i)--node[wt,pos=0.55]{0}(u\i);
+    }
+
+  .caption:
+
+    Weighted Exact Path: za každé číslo jen jeden vrchol $m_i$, číslo $a_i$ je váha hrany.
+
+
+.Concept:
+  title: 'Poučení'
+
+  Chybná redukce je často správnou redukcí na "jiný".emphasize problém – zde na váženou variantu, kde čísla zůstanou
+  zapsaná binárně. Problém bez vah je snadný, problém s vahami je (slabě) NP-těžký.
+
+
+.Subsection $\prob{Knapsack}\to\prob{Longest Path in DAG}$: zapomenuté kritérium
+  label: ch-cisla-knapsack-longest-path-dag
+
+
+.Remark:
+  title: 'Redukce: $\prob{Knapsack} \redp \prob{Longest Path (DAG)}$'
+
+  $(w,c,W,C)$ $\;\longmapsto\;$ $\textcolor{rej}{\text{(chybná!)}}$ řetěz, váha $\ge C$?
+
+
+Stejný řetěz, „vezmi“ má váhu $c_i$, „přeskoč“ váhu 0; ptáme se, zda existuje cesta s váhou $\ge C$.
+
+
+.Exercise:
+  title: 'Cvičení – najděte chybu (proseminář 5)'
+  label: ch-cisla-cv-longest-path-dag
+
+  Kde je chyba?
+
+
+.Solution:
+
+  "Na nosnost $W$ jsme zapomněli!".notion Nejdelší cesta „vezme“ všechny předměty, implikace ($\Leftarrow$)
+  neplatí. Nejdelší cesta v acyklickém grafu je navíc v $\PP$ (DP v topologickém pořadí). Těžkost Knapsacku je
+  v "souboji dvou kritérií".emphasize – jedno kritérium nestačí.
+
+
+.Subsection Oprava: dvě kritéria na hranách
+  label: ch-cisla-oprava-rsp
+
+
+.Remark:
+  title: 'Redukce: $\prob{Knapsack} \redp \prob{Restricted Shortest Path}$'
+  label: red-rsp
+
+  $(w,c,W,C)$ $\;\longmapsto\;$ řetěz s dvojicemi $(\ell,p)$, $L=W$, $P=\sum c_i-C$
+
+
+.Definition:
+  title: 'Problém $\prob{Restricted Shortest Path}$'
+  label: prob-rsp
+
+  "Vstup:".notion orientovaný graf, každá hrana $e$ má délku $\ell(e)\ge0$ a cenu $p(e)\ge0$; vrcholy $s,t$, meze $L$ a $P$.
+
+
+  "Otázka:".notion existuje cesta z $s$ do $t$ s délkou $\le L$ a zároveň cenou $\le P$?
+
+
+Hrany nesou dvojici (délka, cena): "vezmi".emphasize = délka $w_i$ (spotřebuje nosnost), "přeskoč".emphasize = cena $c_i$
+(„ušlý zisk“). Cesta s množinou vzatých předmětů $I$ má délku $\sum_{i\in I}w_i$ a cenu $\sum_{i\notin I}c_i$; a
+
+.equation:
+
+  \sum_{i\notin I}c_i\le\sum_i c_i-C\iff\sum_{i\in I}c_i\ge C.
+
+$\prob{Restricted Shortest Path}$ je tedy slabě NP-těžký.
+
+
+.Figure:
+  label: ch-cisla-fig-restricted-shortest-path
+
+  !tikz:
+    filename: 11e-podezrele-redukce-03
+    options: 'x=1cm,y=1cm'
+
+    \node[pu] (a) at (0,0) {$u_{i-1}$}; \node[pu] (b) at (4,0) {$u_i$};
+    \node[pm,minimum size=3.4mm] (m) at (2,1.1) {};
+    \draw[pe] (a)--node[wt]{$(0,c_i)$ přeskoč}(b);
+    \draw[pe] (a)--node[wt,pos=0.4]{$(w_i,0)$}(m);
+    \draw[pe] (m)--node[wt,pos=0.6]{$(0,0)$}(b);
+    \node[font=\scriptsize] at (2,1.55) {vezmi};
+
+  .caption:
+
+    Úsek řetězu pro Restricted Shortest Path: (délka, cena).
+
+
+.Remark:
+
+  Pomocné kritérium („ze stejně krátkých cest tu nejlevnější“) Dijkstra zvládne. Těžké je až kritérium jako
+  "omezení".emphasize („cena nejvýš $P$“).
+
+
+.Subsection $\prob{Subset Sum}\to\prob{Power Subset Sum}$: gadget jen zčásti
+  label: ch-cisla-subset-sum-power-subset-sum
+
+
+.Definition:
+  title: 'Problém $\prob{Power Subset Sum}$'
+  label: prob-powerss
+
+  "Vstup:".notion čísla $b_1,\dots,b_m$, každé je mocnina dvojky (mohou se opakovat), a cíl $T$.
+
+
+  "Otázka:".notion existuje podmnožina se součtem přesně $T$?
+
+
+.Remark:
+  title: 'Redukce: $\prob{Subset Sum} \redp \prob{Power Subset Sum}$'
+
+  $(a_1,\dots,a_n;\ T)$ $\;\longmapsto\;$ $\textcolor{rej}{\text{(chybná!)}}$ binární kousky čísel, cíl $T$
+
+
+"„Důkaz“.".notion Každé číslo $a_i$ rozložíme podle binárního zápisu na kousky: za každou jedničku na pozici
+$j$ vytvoříme číslo $2^j$. Např. $13=1101_2\leadsto 8,4,1$ a $6=110_2\leadsto4,2$. Číslo s $k$ bity dá nejvýš $k$
+kousků po nejvýš $k$ bitech, výstup je polynomiální. ($\Rightarrow$) vybereme všechny kousky čísel z $I$.
+($\Leftarrow$) „Kousky složíme zpět do původních čísel.“
+
+
+.Exercise:
+  title: 'Cvičení – najděte chybu (proseminář 5)'
+  label: ch-cisla-cv-power-subset-sum
+
+  Velikost výstupu je tentokrát v pořádku. Chyba je jinde – zkuste důkaz na malém příkladu.
+  "Nápověda:".emphasize čísla 13 a 6, cíl $T=9$. Jaká je odpověď pro Subset Sum a jaká pro vyrobenou instanci?
+
+
+.Solution:
+
+  "Protipříklad:".notion Subset Sum pro $13,6$ a $T=9$: možné součty jsou $0,6,13,19$ $\Rightarrow$ $\NE$. Vyrobená
+  instance $8,4,1,4,2$: $8+1=9$ $\Rightarrow$ $\ANO$ – z čísla 13 jsme vzali jen "část".emphasize.
+
+
+  .centered:
+
+    !tikz:
+      filename: 11e-podezrele-redukce-06
+      options: 'x=0.42cm,y=1cm, kus/.style={draw=black!60,dashed,fill=white,font=\scriptsize}, kussel/.style={draw=acc!80!black,thick,fill=acc!30,font=\scriptsize}'
+
+      \node[font=\small,anchor=east] at (-0.3,0.3) {$13$:};
+      \draw[kussel] (0,0) rectangle node{$8$} (8,0.6);
+      \draw[kus] (8,0) rectangle node{$4$} (12,0.6);
+      \draw[kussel] (12,0) rectangle node{$1$} (13,0.6);
+      \node[font=\small,anchor=east] at (-0.3,-0.7) {$6$:};
+      \draw[kus] (0,-1) rectangle node{$4$} (4,-0.4);
+      \draw[kus] (4,-1) rectangle node{$2$} (6,-0.4);
+      \node[font=\scriptsize,rej,anchor=south] (pozn) at (10,1.2) {z čísla 13 jen část!};
+      \draw[->,thick,rej] (pozn.south)--(10,0.65);
+      \node[font=\scriptsize,anchor=west,align=left] at (14.2,0.3) {vybrané kousky (zeleně):\\ $8+1=9=T$};
+      \node[font=\scriptsize,anchor=west,align=left,black!65] at (14.2,-0.7) {možné součty Subset Sum:\\ $0,6,13,19\neq9$};
+
+
+  "Všimni si:".emphasize vybrané kousky $8$ a $1$ pocházejí z čísla 13, ale jeho kousek $4$ zůstal nevybraný – konstrukce
+  nic takového nezakazuje.
+
+
+  "Kde důkaz selhal:".notion v ($\Leftarrow$) jsme tiše předpokládali, že řešení bere kousky čísla buď všechny,
+  nebo žádný. Nic v konstrukci to nevynucuje. Gadget musí vynutit volbu „všechno, nebo nic“. Stejně selže
+  „redukce“ na $\prob{Fractional Knapsack}$, kde lze vzít část předmětu.
+
+
+.Theorem:
+  title: 'Power Subset Sum je v $\PP$'
+  label: thm-powersshlad
+
+  Hladový algoritmus – seřaď kousky sestupně, $R:=T$, kousek $2^j$ vezmi, pokud $2^j\le R$ (a sniž $R$), na konci
+  odpověz ANO $\iff R=0$ – je korektní a běží v čase $O(m\log m)$.
+
+
+.Lemma:
+  title: 'Výměnné lemma'
+  label: lem-vymena
+
+  Mají-li mocniny dvojky $p_1\ge p_2\ge\dots$, všechny $\le2^j$, součet $\ge2^j$, pak součet nějakého jejich
+  "prefixu".emphasize je přesně $2^j$.
+
+
+.Proof:
+  title: 'Důkaz lemmatu'
+
+  Prefixový součet před přidáním $p_k$ je násobkem $p_k$ (předchozí kousky jsou větší mocniny dvojky), stejně tak
+  $2^j$ je násobkem $p_k$. Je-li prefixový součet $<2^j$, je tedy $\le 2^j-p_k$, a přidáním $p_k$ proto $2^j$
+  nemůžeme „přeskočit“. Protože celkový součet je $\ge2^j$, někde ho trefíme přesně.
+
+
+.Proof:
+  title: 'Důkaz věty'
+
+  Je-li největší zbývající kousek $2^j\le R$ a nějaké řešení ho nepoužije: kousky řešení jsou všechny $\le2^j$
+  (větší než $2^j$ už nezbyly nebo byly vyřazeny jako $>R$) a mají součet $R\ge2^j$. Podle lemmatu mezi nimi je
+  skupina se součtem přesně $2^j$; tu vyměníme za náš kousek $2^j$ a dostaneme řešení, které ho používá. Je-li naopak
+  $2^j>R$, kousek použít nelze. Kdyby byla redukce správná, plynulo by $\PP=\NP$.
+
+
+.Figure:
+  label: ch-cisla-fig-vymenne-lemma
+
+  !tikz:
+    filename: 11e-podezrele-redukce-04
+    options: 'x=0.55cm,y=0.55cm'
+
+    \foreach \s/\w/\c in {0/4/defc, 4/2/intc, 6/1/acc, 7/1/thmc} \fill[\c!30,draw=\c] (\s,0) rectangle (\s+\w,1);
+    \fill[black!8,draw=black!40] (8,0) rectangle (9,1);
+    \foreach \s/\w/\l in {0/4/4, 4/2/2, 6/1/1, 7/1/1, 8/1/1} \node[font=\scriptsize] at (\s+\w/2,0.5) {\l};
+    \foreach \x/\l in {4/4,6/6,7/7,8/8} {\draw[black!60] (\x,-0.2)--(\x,-0.5); \node[font=\scriptsize,below] at (\x,-0.5) {\l};}
+    \draw[very thick,rej] (8,-0.3)--(8,1.6) node[above,font=\scriptsize]{$2^j=8$};
+
+  .caption:
+
+    Výměnné lemma: prefixové součty kousků $4,2,1,1,1$ trefí $2^j=8$ přesně.
+
+
+.Subsection $\prob{Partition}\to\prob{Balanced Split}$: opět velikost
+  label: ch-cisla-partition-balanced-split
+
+
+.Definition:
+  title: 'Problém $\prob{Balanced Split}$'
+  label: prob-balsplit
+
+  "Vstup:".notion neorientovaný graf $G$ a číslo $q$.
+
+
+  "Otázka:".notion lze vrcholy rozdělit na $q$ stejně velkých částí tak, aby žádná hrana nevedla mezi různými částmi?
+  (Ekvivalentně: komponenty souvislosti lze seskupit do $q$ skupin se stejným počtem vrcholů.)
+
+
+.Remark:
+  title: 'Redukce: $\prob{Partition} \redp \prob{Balanced Split}$, $q=2$'
+
+  $(a_1,\dots,a_n)$ $\;\longmapsto\;$ $\textcolor{rej}{\text{(chybná!)}}$ cesty s $a_i$ vrcholy
+
+
+"„Důkaz“.".notion Pro každé číslo $a_i$ přidáme cestu s $a_i$ vrcholy, graf je disjunktní sjednocení těchto
+cest. Cesta je souvislá, leží tedy celá v jedné části; dvě stejně velké části odpovídají rozdělení čísel na dvě
+skupiny se součtem $\frac12\sum_i a_i$. „Konstrukci zjevně provedeme v polynomiálním čase.“
+
+
+.Figure:
+  label: ch-cisla-fig-partition-balanced-split
+
+  !tikz:
+    filename: 11e-podezrele-redukce-07
+    options: 'x=0.8cm,y=0.8cm,dot/.style={circle,fill=black!75,inner sep=0pt,minimum size=2.4mm}'
+
+    \node[font=\small,anchor=east] at (0.2,0) {$3,2,2,1$:};
+    % skupina 3+1
+    \foreach \k in {1,2,3} \node[dot,fill=defc] (a\k) at (\k,0) {};
+    \draw[defc,thick] (a1)--(a2)--(a3);
+    \node[dot,fill=thmc] (d1) at (4.2,0) {};
+    \draw[rounded corners,dashed,black!50] (0.5,0.6) rectangle (4.7,-0.6);
+    \node[font=\scriptsize] at (2.6,-1.2) {$3+1=4$};
+    % skupina 2+2
+    \foreach \k in {1,2} \node[dot,fill=intc] (b\k) at (\k+5.6,0) {};
+    \draw[intc,thick] (b1)--(b2);
+    \foreach \k in {1,2} \node[dot,fill=acc] (c\k) at (\k+7.8,0) {};
+    \draw[acc,thick] (c1)--(c2);
+    \draw[rounded corners,dashed,black!50] (6.1,0.6) rectangle (10.3,-0.6);
+    \node[font=\scriptsize] at (8.2,-1.2) {$2+2=4$};
+
+  .caption:
+
+    „Redukce“ $\prob{Partition}\to\prob{Balanced Split}$ pro čísla $3,2,2,1$: za každé číslo cesta s tolika vrcholy,
+    obě části mají $4$ vrcholy. "Všimni si:".emphasize počet vrcholů je součet "hodnot".emphasize čísel, ne délka jejich zápisu.
+
+
+.Exercise:
+  title: 'Cvičení – dvě otázky (proseminář 5)'
+  label: ch-cisla-cv-balanced-split
+
+  (1) Je redukce v pořádku? (2) Je $\prob{Balanced Split}$ s $q=2$ vůbec NP-těžký?
+  "Nápověda:".emphasize jak velké mohou být komponenty grafu s $n$ vrcholy? Vzpomeňte si na DP pro Subset Sum.
+
+
+.Solution:
+
+  (1) "Redukce není polynomiální.".notion Graf má $\sum_i a_i$ vrcholů, exponenciálně mnoho vůči bitové délce čísel –
+  stejná chyba jako u Exact Path (DAG), jen v jiném převleku.
+
+
+  (2) "Pro $q=2$ je problém v $\PP$.".notion Velikosti komponent jsou čísla $\le n$, zadaná „unárně“ samotným
+  grafem; DP pro Subset Sum s cílem $n/2$ tedy běží v polynomiálním čase.
+
+
+.Subsection Oprava: $\prob{3-Partition}\redp\prob{Balanced Split}$
+  label: ch-cisla-oprava-balsplit
+  pdf_string: 'Oprava: 3-Partition ≤p Balanced Split'
+
+
+.Remark:
+  title: 'Redukce: $\prob{3-Partition} \redp \prob{Balanced Split}$'
+  label: red-balsplit
+
+  $(a_1,\dots,a_{3q};\ B)$ $\;\longmapsto\;$ cesty s $a_i$ vrcholy, $q$ částí
+
+
+Chceme-li čísla převést na strukturu (vrcholy, cesty, políčka), musíme redukovat z problému, který je těžký i pro
+malá čísla – ze "silně".emphasize NP-těžkého. Pro obecné $q$ (zadané na vstupu) to vyjde:
+
+Konstrukce stejná jako předtím: pro každé $a_i$ cesta s $a_i$ vrcholy, počet částí $q$. Graf má $qB=\sum_i a_i$
+vrcholů – to je teď v pořádku, protože redukujeme z instance zapsané "unárně".emphasize, jejíž délka je také aspoň
+$\sum_i a_i$.
+
+
+.Proof:
+  title: 'Korektnost'
+
+  ($\Rightarrow$) Každá trojice se součtem $B$ dá jednu část: tři cesty, celkem $B$ vrcholů, žádná hrana mezi částmi.
+
+
+  ($\Leftarrow$) Mějme $q$ částí po $B$ vrcholech bez hran mezi nimi. Každá cesta je souvislá $\Rightarrow$ leží celá
+  v jedné části; čísla v každé části dávají součet $B$; každé je ostře mezi $B/4$ a $B/2$ $\Rightarrow$ v každé
+  části jsou přesně tři.
+
+
+Závěr: $\prob{Balanced Split}$ je NP-těžký, pokud je $q$ součástí vstupu; pro $q=2$ je polynomiální.
+
+
+.Figure:
+  label: ch-cisla-fig-balanced-split
+
+  !tikz:
+    filename: 11e-podezrele-redukce-05
+    options: 'x=0.42cm,y=0.42cm,dot/.style={circle,fill=black!75,inner sep=0pt,minimum size=1.7mm}'
+
+    \foreach \row/\len/\c in {0/4/defc,1/5/intc,2/6/acc} {
+      \foreach \k in {1,...,\len} \node[dot,fill=\c] (p\row\k) at (\k,-\row) {};
+      \foreach \k [evaluate=\k as \kk using int(\k+1)] in {1,...,\len} {\ifnum\k<\len \draw[\c,thick] (p\row\k)--(p\row\kk);\fi}}
+    \draw[rounded corners,dashed,black!50] (0.3,0.7) rectangle (6.7,-2.7);
+    \node[font=\scriptsize] at (3.5,-3.4) {$4+5+6=15$};
+    \begin{scope}[xshift=4cm]
+    \foreach \row/\len/\c in {0/4/defc,1/4/thmc,2/7/rej} {
+      \foreach \k in {1,...,\len} \node[dot,fill=\c] (q\row\k) at (\k,-\row) {};
+      \foreach \k [evaluate=\k as \kk using int(\k+1)] in {1,...,\len} {\ifnum\k<\len \draw[\c,thick] (q\row\k)--(q\row\kk);\fi}}
+    \draw[rounded corners,dashed,black!50] (0.3,0.7) rectangle (7.7,-2.7);
+    \node[font=\scriptsize] at (4,-3.4) {$4+4+7=15$};
+    \end{scope}
+
+  .caption:
+
+    $\prob{3-Partition}\redp\prob{Balanced Split}$ pro $B=15$, $q=2$: každá část je trojice cest s $B$ vrcholy.
+
+
+.Subsection Jak poznat a opravit podezřelou redukci z čísel
+  label: ch-cisla-jak-poznat-podezrelou-redukci
+
+
+.Remark:
+  title: 'Kontrolní seznam'
+
+  .enumerate:
+
+    .item:
+
+      "Velikost:".notion vyrábí konstrukce něco úměrného "hodnotě".emphasize čísla („pro $j=1,\dots,a_i$…“)?
+      Pak je výstup exponenciální.
+
+    .item:
+
+      "Zdravý rozum:".notion umím cílový problém vyřešit přímo, třeba DP přes malý parametr? Pak by redukce
+      dokazovala $\PP=\NP$, takže je v ní chyba.
+
+    .item:
+
+      "Implikace ($\Leftarrow$):".notion může řešení použít gadget jen zčásti? Vyzkoušejte malý protipříklad.
+
+    .item:
+
+      "Celý vstup:".notion použili jsme všechno (ceny i nosnost)? Pokud ne, redukujeme ze speciálního případu,
+      a ten může být snadný.
+
+  "Opravy:".notion "čísla zůstanou čísly".emphasize (váhy hran, velikosti, kapacity binárně: Weighted Exact Path,
+  Restricted Shortest Path), nebo "čísla se stanou strukturou".emphasize – pak redukujte ze silně NP-těžkého problému
+  (3-Partition $\to$ Balanced Split). A pokud oprava nejde, možná je cílový problém prostě snadný.
+
+
+.Table:
+  label: ch-cisla-tab-prosem5
+
+  .table:
+    columns: 'lll'
+
+    .row:
+      head: true
+
+      "Chybná redukce".notion
+
+      "Chyba".notion
+
+      "Cíl je ve skutečnosti".notion
+
+    .row:
+
+      Subset Sum $\to$ Exact Path (DAG)
+
+      velikost
+
+      v $\PP$ (DP)
+
+    .row:
+
+      Knapsack $\to$ Longest Path (DAG)
+
+      zapomenutá nosnost
+
+      v $\PP$ (DP)
+
+    .row:
+
+      Subset Sum $\to$ Power Subset Sum
+
+      ($\Leftarrow$) – kousky
+
+      v $\PP$ (hladově)
+
+    .row:
+
+      Partition $\to$ Balanced Split, $q=2$
+
+      velikost
+
+      v $\PP$ (DP)
+
+    .row:
+
+      "Správná redukce".notion
+
+      ~
+
+      "Výsledek".notion
+
+    .row:
+
+      $\prob{Subset Sum}\redp\prob{Weighted Exact Path}$
+
+      ~
+
+      slabě NP-těžký
+
+    .row:
+
+      $\prob{Knapsack}\redp\prob{Restricted Shortest Path}$
+
+      ~
+
+      slabě NP-těžký
+
+    .row:
+
+      $\prob{3-Partition}\redp\prob{Balanced Split}$
+
+      ~
+
+      NP-těžký ($q$ na vstupu)
+
+  .caption:
+
+    Přehled prosemináře 5. Když redukce z Knapsacku vypadá podezřele jednoduše, zeptejte se, zda nevede do
+    problému, který umíte vyřešit.

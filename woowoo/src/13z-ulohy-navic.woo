@@ -1,0 +1,1004 @@
+.Section Úlohy navíc
+  label: ch-pspace-ulohy-navic
+
+
+Úlohy procvičují vyhodnocení kvantifikované formule a její čtení jako hry (oddíly .reference:ch-pspace-tqbf
+a .reference:ch-pspace-pspace-a-hry), hru $\prob{Generalized Geography}$ a redukci $\prob{TQBF}\redp\prob{GG}$
+(oddíl .reference:sec-geografie) a argument „rekurze polynomiální hloubky = polynomiální prostor“, na kterém stojí
+každé tvrzení typu „… je v $\PSPACE$“.
+
+
+.Warning:
+  title: 'Neoficiální úlohy'
+
+  Úlohy v tomto oddílu "nejsou".notion oficiální zadání předmětu. Jsou to procvičovací úlohy navíc k látce kapitoly;
+  pravdivostní hodnoty formulí, vítěze všech her a obě nové redukce jsme ověřili krátkými programy (rekurzivní
+  vyhodnocení QBF a hry, srovnání redukce s hrubou silou na stovkách náhodných instancí), důkazy jsme prošli ručně.
+
+
+.Subsection Rozcvička
+  label: ch-pspace-ulohy-navic-rozcvicka
+
+
+.Exercise:
+  title: 'Úloha 13.1 (vyhodnoť QBF a přečti ji jako hru)'
+  label: un-13-1
+
+  Rozhodněte, které z formulí jsou pravdivé. U každé řekněte, který hráč ($\exists$, nebo $\forall$) má vítěznou
+  strategii, a strategii popište.
+
+  .enumerate:
+    type: a
+
+    .item:
+
+      $\Psi_a=\forall x\,\exists y:\ (x\lor y)\land(\lnot x\lor\lnot y)$,
+
+    .item:
+
+      $\Psi_b=\exists y\,\forall x:\ (x\lor y)\land(\lnot x\lor\lnot y)$,
+
+    .item:
+
+      $\Psi_c=\exists x_1\,\forall x_2\,\exists x_3:\ (x_2\lor x_3)\land(\lnot x_2\lor\lnot x_3)\land(\lnot x_1\lor x_2)$.
+      Nakreslete strom vyhodnocení a vyznačte v něm vítěznou strategii.
+
+
+.Solution:
+
+  "Matice v a), b).".notion Klauzule $(x\lor y)$ říká „aspoň jedna z $x,y$ je 1“, klauzule $(\lnot x\lor\lnot y)$
+  „aspoň jedna je 0“. Dohromady: matice je pravdivá $\iff x\neq y$.
+
+
+  "a) Pravdivá.".notion Vyhodnotíme stromem jako v oddílu .reference:ch-pspace-tqbf-v-pspace. Pro $x=0$ dá uzel
+  $\exists y$ hodnotu $\mathrm{OR}(0,1)=1$ (při $y=1$ je $x\neq y$), pro $x=1$ hodnotu $\mathrm{OR}(1,0)=1$. Kořen
+  $\forall x$ dá $\mathrm{AND}(1,1)=1$. Vítěznou strategii má $\exists$: "$y:=\lnot x$".notion – hráč $\exists$ táhne
+  až po $\forall$, a proto smí na jeho volbu reagovat.
+
+
+  "b) Nepravdivá.".notion Teď $\exists$ volí $y$ dřív, než $\forall$ zvolí $x$. Pro $y=0$ dá uzel $\forall x$
+  $\mathrm{AND}(0,1)=0$ (při $x=0$ je $x=y$), pro $y=1$ dá $\mathrm{AND}(1,0)=0$. Kořen $\exists y$:
+  $\mathrm{OR}(0,0)=0$. Vítěznou strategii má $\forall$: "$x:=y$".notion (zopakuje volbu soupeře).
+
+
+  "Poučení.".notion Stejná matice, jen prohozené pořadí kvantifikátorů, a opačná hodnota. U $\forall x\,\exists y$
+  smí $y$ záviset na $x$; u $\exists y\,\forall x$ musí jedno $y$ fungovat pro všechna $x$.
+
+
+  "c) Pravdivá.".notion První dvě klauzule znamenají $x_3\neq x_2$, třetí klauzule je $x_1\Rightarrow x_2$.
+
+  .itemize:
+
+    .item:
+
+      $x_1=1$: hráč $\forall$ zvolí $x_2=0$; pak je klauzule $(\lnot x_1\lor x_2)$ nepravdivá pro obě hodnoty $x_3$,
+      uzel $\exists x_3$ má hodnotu $\mathrm{OR}(0,0)=0$ a uzel $\forall x_2$ hodnotu 0.
+
+    .item:
+
+      $x_1=0$: třetí klauzule platí vždy. Pro $x_2=0$ zvolí $\exists$ $x_3=1$, pro $x_2=1$ zvolí $x_3=0$; oba uzly
+      $\exists x_3$ mají hodnotu 1, uzel $\forall x_2$ také.
+
+  Kořen: $\mathrm{OR}(1,0)=1$. Vítězná strategie hráče $\exists$: "$x_1:=0$ a $x_3:=\lnot x_2$".notion. Strategie má
+  dva listy (hráč $\forall$ táhne jednou), ohodnocení $(0,0,1)$ a $(0,1,0)$, a v obou je matice pravdivá.
+
+
+  .centered:
+
+    !tikz:
+      filename: 13z-ulohy-navic-01
+      options: 'x=1cm,y=1cm,qn/.style={circle,draw,thick,minimum size=6mm,inner sep=0pt,font=\scriptsize},qE/.style={qn,fill=defc!15},qA/.style={qn,fill=intc!20},q0/.style={qn,fill=rej!20},q1/.style={qn,fill=acc!30},se/.style={line width=2pt,draw=acc!80!black},ne/.style={thick,draw=black!30},hv/.style={font=\scriptsize\bfseries,anchor=west,inner sep=1pt,xshift=1pt}'
+
+      \node[qE] (r) at (3.15,0) {$\exists$};
+      \node[qA] (a0) at (1.35,-1.2) {$\forall$}; \node[qA] (a1) at (4.95,-1.2) {$\forall$};
+      \foreach \i/\x in {0/0.45,1/2.25,2/4.05,3/5.85} \node[qE] (e\i) at (\x,-2.4) {$\exists$};
+      \foreach \i/\w in {0/0,1/1,2/1,3/0,4/0,5/0,6/1,7/0} \node[q\w] (l\i) at ({0.9*\i},-3.6) {\w};
+      \foreach \n in {r,a0,e0,e1,e3} \node[hv,text=acc!70!black] at (\n.east) {$=1$};
+      \foreach \n in {a1,e2} \node[hv,text=rej] at (\n.east) {$=0$};
+      \draw[se] (r)--node[left,font=\tiny]{0}(a0);
+      \draw[ne] (r)--node[right,font=\tiny]{1}(a1);
+      \draw[se] (a0)--node[left,font=\tiny]{0}(e0); \draw[se] (a0)--node[right,font=\tiny]{1}(e1);
+      \draw[ne] (a1)--(e2); \draw[ne] (a1)--(e3);
+      \draw[ne] (e0)--(l0); \draw[se] (e0)--node[right,font=\tiny]{1}(l1);
+      \draw[se] (e1)--node[left,font=\tiny]{0}(l2); \draw[ne] (e1)--(l3);
+      \draw[ne] (e2)--(l4); \draw[ne] (e2)--(l5); \draw[ne] (e3)--(l6); \draw[ne] (e3)--(l7);
+      \foreach \y/\lab in {0/{$x_1$},-1.2/{$x_2$},-2.4/{$x_3$},-3.6/{matice}} \node[font=\scriptsize,anchor=east] at (-0.5,\y) {\lab};
+      \node[font=\scriptsize,align=left,anchor=west] at (7.0,-0.6) {$(x_2\lor x_3)\land(\lnot x_2\lor\lnot x_3)\land(\lnot x_1\lor x_2)$};
+      \node[font=\scriptsize,align=left,anchor=west] at (7.0,-1.9) {\textcolor{acc!70!black}{\textbf{strategie hráče $\exists$:}}\\ $x_1:=0$, \ $x_3:=\lnot x_2$};
+      \node[font=\scriptsize,align=left,anchor=west] at (7.0,-3.1) {větev $x_1=1$: $\forall$ odpoví $x_2=0$\\ a třetí klauzule padne};
+
+
+  Strom vyhodnocení $\Psi_c$ (levá hrana = hodnota 0, pravá = 1). U vnitřních uzlů je napsaná jejich hodnota,
+  zeleně je podstrom vítězné strategie hráče $\exists$: v uzlu $\exists$ jedna hrana, v uzlu $\forall$ obě.
+  "Všimni si:".emphasize kdyby $\exists$ musel zvolit $x_3$ dřív než $\forall$ zvolí $x_2$ (prefix
+  $\exists x_1\exists x_3\forall x_2$), formule by byla nepravdivá – žádné pevné $x_3$ není různé od obou hodnot $x_2$.
+
+
+.Exercise:
+  title: 'Úloha 13.2 (geografie na malém grafu)'
+  label: un-13-2
+
+  Hrajeme $\prob{Generalized Geography}$ (definice .reference:prob-gg) na grafu níže se startem v $s$; začíná Alice.
+
+  .centered:
+
+    !tikz:
+      filename: 13z-ulohy-navic-02
+      options: 'x=1cm,y=1cm'
+
+      \node[v,fill=hl] (s) at (0,0) {$s$};
+      \node[v] (a) at (1.9,1.3) {$a$};
+      \node[v] (d) at (1.9,0) {$d$};
+      \node[v] (c) at (1.9,-1.3) {$c$};
+      \node[v] (e) at (3.9,1.3) {$e$};
+      \node[v] (b) at (3.9,-1.3) {$b$};
+      \draw[ge] (s)--(a); \draw[ge] (s)--(c); \draw[ge] (s) to[out=80,in=150] (e);
+      \draw[ge] (a)--(d); \draw[ge] (a)--(e); \draw[ge] (c)--(b);
+      \draw[ge] (d) to[bend left=25] (c); \draw[ge] (c) to[bend left=25] (d);
+      \draw[ge] (e) to[bend left=25] (b); \draw[ge] (b) to[bend left=25] (e);
+
+
+  Hrany: $s\to a$, $s\to c$, $s\to e$, $a\to d$, $a\to e$, $c\to b$, $c\to d$, $d\to c$, $b\to e$, $e\to b$.
+
+  .enumerate:
+    type: a
+
+    .item:
+
+      Kdo vyhraje, hrají-li oba nejlépe? Kterým tahem musí Alice začít?
+
+    .item:
+
+      Popište vítěznou strategii: odpověď na každý možný tah soupeře.
+
+    .item:
+
+      Ukažte, že tentýž vrchol $c$ je pro hráče na tahu jednou vyhrávající a jindy prohrávající. Co to říká
+      o algoritmu $\mathrm{Win}$ z oddílu .reference:ch-pspace-gg-v-pspace?
+
+
+.Solution:
+
+  Projdeme strom hry odzadu, přesně jako rekurze $\mathrm{Win}$: pozice je vyhrávající pro hráče na tahu, má-li
+  tah do pozice prohrávající pro soupeře. Alice má v $s$ tři tahy.
+
+  .itemize:
+
+    .item:
+
+      "$s\to e$:".notion Bob v $e$ má jediný tah $e\to b$. Alice v $b$ má jen hranu do navštíveného $e$ –
+      nemůže táhnout a prohrála. "Tah do $e$ prohrává.".emphasize
+
+    .item:
+
+      "$s\to c$:".notion Bob v $c$ zvolí $c\to d$. Alice v $d$ má jen hranu do navštíveného $c$ a prohrála.
+      "Tah do $c$ prohrává".emphasize (Bob má vítěznou odpověď $d$).
+
+    .item:
+
+      "$s\to a$:".notion Bob v $a$ má dva tahy.
+
+      .itemize:
+
+        .item:
+
+          $a\to e$: Alice $e\to b$; Bob v $b$ má jen hranu do navštíveného $e$ a prohrál.
+
+        .item:
+
+          $a\to d$: Alice $d\to c$ (vynucené); Bob v $c$ nemůže do navštíveného $d$, zbývá $c\to b$; Alice
+          $b\to e$; Bob v $e$ má jen hranu do navštíveného $b$ a prohrál.
+
+      Obě odpovědi Boba prohrávají, "tah do $a$ vyhrává".emphasize.
+
+
+  "a)".notion Alice vyhraje, a to "jen".emphasize tahem $s\to a$.
+
+
+  "b)".notion Strategie Alice: $s\to a$. Odpoví-li Bob $a\to e$, táhne $e\to b$ (Bob je zablokovaný). Odpoví-li
+  $a\to d$, táhne $d\to c$; Bob musí $c\to b$ a Alice táhne $b\to e$ (Bob je zablokovaný). Strategie má dva listy,
+  jeden za každou odpověď Boba na prvním rozcestí; ostatní tahy Boba jsou vynucené.
+
+
+  "c)".notion V obou situacích stojí žeton v $c$ a na tahu je Bob:
+
+  .itemize:
+
+    .item:
+
+      po partii $s\to c$ je $\mathrm{Nav}=\{s,c\}$ a Bob "vyhraje".emphasize tahem $c\to d$;
+
+    .item:
+
+      po partii $s\to a\to d\to c$ je $\mathrm{Nav}=\{s,a,d,c\}$, tah do $d$ už není možný a Bob
+      "prohraje".emphasize (viz rozbor výše).
+
+  Výsledek pozice tedy nezávisí jen na vrcholu, ale i na množině navštívených vrcholů. Proto $\mathrm{Win}$ nese
+  s sebou $\mathrm{Nav}$ a prohledává celý strom hry; tabulka „vyhrávající/prohrávající vrchol“ by na tomto grafu
+  dala špatnou odpověď. (Na acyklickém grafu tabulka stačí, viz úloha "13.7"#un-13-7.)
+
+
+.Subsection Na úrovni testu
+  label: ch-pspace-ulohy-navic-test
+
+
+.Exercise:
+  title: 'Úloha 13.3 (graf geografie pro konkrétní QBF)'
+  label: un-13-3
+
+  Je dána formule $\Psi=\forall x\,\exists y:\ (x\lor y)\land(\lnot x\lor\lnot y)$ (formule $\Psi_a$ z úlohy
+  "13.1"#un-13-1).
+
+  .enumerate:
+    type: a
+
+    .item:
+
+      Upravte $\Psi$ do tvaru, který vyžaduje konstrukce $\prob{TQBF}\redp\prob{GG}$ z oddílu
+      .reference:ch-pspace-tqbf-gg, a sestrojte graf $G_\Psi$ se startovním vrcholem. Kolik má vrcholů a hran?
+
+    .item:
+
+      Odvoďte ze strategie hráče $\exists$ vítěznou strategii Alice v $G_\Psi$ a zahrajte jednu partii do konce
+      (pro obě možné volby klauzule Bobem).
+
+    .item:
+
+      Totéž pro $\Psi'=\exists y\,\forall x:\ (x\lor y)\land(\lnot x\lor\lnot y)$: kdo vyhraje geografii
+      a jak má hrát?
+
+
+.Solution:
+
+  "Redukce:".notion $\prob{TQBF} \redp \prob{Generalized Geography}$ (konstrukce z kapitoly), formule $\Psi$
+  $\mapsto$ $(G_\Psi,\ t_1)$.
+
+
+  "a) Úprava formule.".notion Konstrukce chce střídající se kvantifikátory, které začínají i končí $\exists$, a matici
+  v KNF. Matice $\psi=C_1\land C_2$, $C_1=(x\lor y)$, $C_2=(\lnot x\lor\lnot y)$, v KNF je. Prefix začíná $\forall$,
+  proto doplníme na začátek fiktivní proměnnou $d$, která se v $\psi$ nevyskytuje:
+
+  .equation:
+
+    \Psi\equiv\exists d\,\forall x\,\exists y:\ (x\lor y)\land(\lnot x\lor\lnot y).
+
+  Hodnota $\psi$ na $d$ nezávisí, takže kvantifikátor $\exists d$ nic nemění. Proměnné v pořadí prefixu jsou
+  $d,x,y$, $k=3$ je liché.
+
+
+  "Graf $G_\Psi$.".notion
+
+  .itemize:
+
+    .item:
+
+      tři diamanty (pro $d$, $x$, $y$), každý s vrcholy $t$, $T$, $F$, $b$ a hranami $t\to T$, $t\to F$, $T\to b$,
+      $F\to b$;
+
+    .item:
+
+      řetěz $b_d\to t_x$, $b_x\to t_y$, $b_y\to c$;
+
+    .item:
+
+      klauzule: $c\to c_1$, $c\to c_2$; literál $x$ v $C_1$ dává hranu $c_1\to x_F$, literál $y$ hranu
+      $c_1\to y_F$; literály $\lnot x$, $\lnot y$ v $C_2$ dávají hrany $c_2\to x_T$, $c_2\to y_T$;
+
+    .item:
+
+      start ve vrcholu $t_d$.
+
+  Vrcholů je $4\cdot3+1+2=15$, hran $4\cdot3+2+1+2+4=21$ (diamanty, řetěz, hrana do $c$, hrany do klauzulí, výskyty
+  literálů).
+
+
+  .centered:
+
+    !tikz:
+      filename: 13z-ulohy-navic-03
+      options: 'x=1cm,y=1cm'
+
+      \diamant{d}{0}{0}
+      \diamant{x}{0}{-2.4}
+      \diamant{y}{0}{-4.8}
+      \draw[ge] (db)--(xt); \draw[ge] (xb)--(yt);
+      \node[gc] (c) at (0,-7.1) {$c$};
+      \draw[ge] (yb)--(c);
+      \node[gc] (c1) at (3.0,-6.2) {$c_1$};
+      \node[gc] (c2) at (3.0,-7.9) {$c_2$};
+      \draw[ge] (c)--(c1); \draw[ge] (c)--(c2);
+      \node[font=\scriptsize,anchor=east] at (-1.0,-0.7) {$d$};
+      \node[font=\scriptsize,anchor=east] at (-1.0,-3.1) {$x$};
+      \node[font=\scriptsize,anchor=east] at (-1.0,-5.5) {$y$};
+      % hrany klauzuli
+      \draw[ge,draw=intc!80!black] (c1) to[out=90,in=0] (xF);
+      \draw[ge,draw=intc!80!black] (c1) to[out=110,in=0] (yF);
+      \draw[ge,draw=intc!80!black] (c2) .. controls (-1.6,-9.4) and (-2.6,-4.4) .. (xT);
+      \draw[ge,draw=intc!80!black] (c2) .. controls (-0.9,-8.9) and (-1.9,-6.4) .. (yT);
+      % partie
+      \draw[pA] (dt)--(dT); \draw[pB] (dT)--(db); \draw[pA] (db)--(xt);
+      \draw[pB] (xt)--(xT); \draw[pA] (xT)--(xb); \draw[pB] (xb)--(yt);
+      \draw[pA] (yt)--(yF); \draw[pB] (yF)--(yb); \draw[pA] (yb)--(c);
+      \draw[pB] (c)--(c2); \draw[pA] (c2) .. controls (-0.9,-8.9) and (-1.9,-6.4) .. (yT);
+      \node[font=\scriptsize,align=left,anchor=west] at (4.2,-2.4) {%
+        $\exists d\,\forall x\,\exists y\,(x\lor y)\land(\lnot x\lor\lnot y)$\\[3pt]
+        $C_1=(x\lor y)$: hrany $c_1\to x_F$, $c_1\to y_F$\\
+        $C_2=(\lnot x\lor\lnot y)$: hrany $c_2\to x_T$, $c_2\to y_T$\\[4pt]
+        \textbf{Partie} (\textcolor{defc}{Alice}, \textcolor{rej}{Bob}):\\
+        Alice $d=T$, Bob $x=T$, Alice $y=F$ ($y:=\lnot x$).\\
+        Bob zvolí $C_2$, Alice táhne $c_2\to y_T$\\
+        (volný, protože $y=F$).\\
+        Bob z $y_T$ jen do navštíveného $b_y$.\\
+        \textbf{Bob prohrál.}};
+
+
+  Graf $G_\Psi$ a partie, v níž Bob zvolí $x=T$ a pak klauzuli $C_2$ (modře tahy Alice, červeně Boba, oranžově hrany
+  z vrcholů klauzulí). Levá strana diamantu je $T$, pravá $F$.
+
+
+  "b) Strategie Alice.".notion Hráč $\exists$ vyhrává strategií „$d$ libovolně, $y:=\lnot x$“ (úloha
+  "13.1"#un-13-1). Podle tabulky tahů v oddílu .reference:ch-pspace-tqbf-gg volí Alice v $t_d$ a $t_y$, Bob v $t_x$
+  a v $c$, ostatní tahy jsou vynucené. Alice tedy v $t_d$ táhne třeba do $d_T$, a v $t_y$ táhne do strany opačné,
+  než kterou Bob prošel v diamantu $x$.
+
+
+  "Partie pro $x=T$.".notion Alice $t_d\to d_T$, Bob $d_T\to b_d$, Alice $b_d\to t_x$, Bob $t_x\to x_T$, Alice
+  $x_T\to b_x$, Bob $b_x\to t_y$, Alice $t_y\to y_F$, Bob $y_F\to b_y$, Alice $b_y\to c$. Navštívené strany jsou
+  $x_T$ a $y_F$; volné zůstaly $x_F$ a $y_T$.
+
+  .itemize:
+
+    .item:
+
+      Bob $c\to c_1$: z $c_1$ vede hrana do volného $x_F$ (literál $x$ je pravdivý). Alice $c_1\to x_F$, Bob by musel
+      do navštíveného $b_x$ – prohrál.
+
+    .item:
+
+      Bob $c\to c_2$: z $c_2$ vede hrana do volného $y_T$ (literál $\lnot y$ je pravdivý). Alice $c_2\to y_T$, Bob by
+      musel do navštíveného $b_y$ – prohrál.
+
+  Pro $x=F$ je to symetrické: Alice zvolí $y=T$, volné zůstanou $x_T$ a $y_F$; z $c_1$ vede hrana do $y_F$,
+  z $c_2$ do $x_T$. Alice tedy vyhraje proti každé hře Boba.
+
+
+  "c) Formule $\Psi'$.".notion Prefix $\exists y\,\forall x$ končí $\forall$, doplníme fiktivní $\exists d$ na konec:
+  $\Psi'\equiv\exists y\,\forall x\,\exists d:\psi$. Graf má diamanty v pořadí $y,x,d$, start $t_y$, a stejnou
+  klauzulovou část (hrany vedou do diamantů $x$ a $y$); opět 15 vrcholů a 21 hran. Podle úlohy "13.1"#un-13-1 je
+  $\Psi'$ nepravdivá, vítěznou strategii má $\forall$: $x:=y$. Bob tedy v $t_x$ projde "stejnou".emphasize stranou,
+  jakou Alice prošla v diamantu $y$, a v $c$ zvolí nesplněnou klauzuli:
+
+  .itemize:
+
+    .item:
+
+      $y=x=T$: nesplněná je $C_2=(\lnot x\lor\lnot y)$. Její hrany vedou do $x_T$ a $y_T$, obě navštívené –
+      Alice nemůže táhnout a prohrála.
+
+    .item:
+
+      $y=x=F$: nesplněná je $C_1=(x\lor y)$, hrany do $x_F$, $y_F$ jsou navštívené – Alice prohrála.
+
+  Geografii na $G_{\Psi'}$ tedy vyhraje Bob, jak má podle důkazu věty .reference:thm-ggpspace být.
+
+
+.Exercise:
+  title: 'Úloha 13.4 (SAT a TAUT jako speciální případy TQBF)'
+  label: un-13-4
+
+  .enumerate:
+    type: a
+
+    .item:
+
+      Ukažte $\prob{SAT}\redp\prob{TQBF}$ a $\prob{TAUT}\redp\prob{TQBF}$.
+
+    .item:
+
+      Dokažte: je-li $A\redp B$ a $B\in\PSPACE$, pak $A\in\PSPACE$.
+
+    .item:
+
+      Odvoďte z toho $\NP\subseteq\PSPACE$ a $\coNP\subseteq\PSPACE$.
+
+    .item:
+
+      Plyne z a), že $\prob{TQBF}\in\NP$? Co by znamenalo, kdybychom našli redukci $\prob{TQBF}\redp\prob{SAT}$?
+
+
+.Solution:
+  label: red-un-13-4
+
+  "Redukce:".notion $\prob{SAT} \redp \prob{TQBF}$, formule $\varphi(x_1,\dots,x_n)$ $\mapsto$
+  $\exists x_1\dots\exists x_n:\varphi$; $\prob{TAUT} \redp \prob{TQBF}$, formule $\varphi(x_1,\dots,x_n)$
+  $\mapsto$ $\forall x_1\dots\forall x_n:\varphi$.
+
+
+  "a) Konstrukce.".notion Pro formuli $\varphi$ s proměnnými $x_1,\dots,x_n$ položme
+  $f(\varphi)=\exists x_1\dots\exists x_n:\varphi$ a $g(\varphi)=\forall x_1\dots\forall x_n:\varphi$. Vstup, který
+  není zápisem formule, zobrazíme na pevnou NE-instanci, např. $\exists x:\ x\land\lnot x$.
+
+
+  "Polynomialita.".notion Stačí projít $\varphi$, sebrat jména proměnných ($n\le|\varphi|$) a před $\varphi$ připsat
+  $n$ kvantifikátorů; výstup má délku $|\varphi|+O(n\log n)$ a vznikne v polynomiálním čase.
+
+
+  "Správnost $f$.".notion Strom vyhodnocení $\exists x_1\dots\exists x_n:\varphi$ má ve všech vnitřních uzlech OR
+  a v listech hodnoty $\varphi$ pro všech $2^n$ ohodnocení. Kořen má hodnotu 1 $\iff$ aspoň jeden list má
+  hodnotu 1.
+
+  .itemize:
+
+    .item:
+
+      ($\Rightarrow$) Je-li $\varphi$ splnitelná ohodnocením $\sigma$, má list $\sigma$ hodnotu 1, tedy i kořen:
+      $f(\varphi)$ je pravdivá.
+
+    .item:
+
+      ($\Leftarrow$) Je-li $f(\varphi)$ pravdivá, má nějaký list hodnotu 1; jeho ohodnocení splňuje $\varphi$.
+
+  "Správnost $g$".notion je stejná s AND místo OR: kořen má hodnotu 1 $\iff$ všechny listy mají hodnotu 1 $\iff$
+  $\varphi$ je pravdivá pro každé ohodnocení, tj. $\varphi\in\prob{TAUT}$.
+
+
+  "b) Uzavřenost $\PSPACE$ na redukce.".notion Nechť $f$ počítá stroj v čase $p(n)$ a $B$ rozhoduje stroj $M_B$
+  v prostoru $q(m)$, $p,q$ polynomy. Pro vstup $x$, $|x|=n$:
+
+  .enumerate:
+
+    .item:
+
+      spočítáme $y=f(x)$ na pracovní pásce; za $p(n)$ kroků stroj zapíše nejvýš $p(n)$ buněk (lemma
+      .reference:lem-casprostor), takže $|y|\le p(n)$ a prostor je $O(p(n))$;
+
+    .item:
+
+      spustíme $M_B$ na $y$ a odpověď převezmeme; prostor $q(|y|)\le q(p(n))$ (bez újmy na obecnosti je $q$
+      neklesající).
+
+  Celkem $O(p(n)+q(p(n)))$ – složení polynomů je polynom. Správnost: $x\in A\iff f(x)\in B\iff M_B$ přijme $y$.
+
+
+  "c) Důsledky.".notion
+
+  .itemize:
+
+    .item:
+
+      $A\in\NP$: podle Cookovy–Levinovy věty (.reference:thm-cooklevin) je $A\redp\prob{SAT}$, s a) a tranzitivitou
+      redukcí $A\redp\prob{TQBF}$. Protože $\prob{TQBF}\in\PSPACE$ (oddíl .reference:ch-pspace-tqbf-v-pspace),
+      dává b) $A\in\PSPACE$.
+
+    .item:
+
+      $A\in\coNP$: $\overline A\in\NP$, tedy $\overline A\redp\prob{SAT}$ nějakou redukcí $h$. Pak
+      $x\in A\iff h(x)\notin\prob{SAT}\iff\lnot h(x)\in\prob{TAUT}$, takže
+      $x\mapsto\forall x_1\dots\forall x_n:\lnot h(x)$ je polynomiální redukce $A\redp\prob{TQBF}$ a opět
+      $A\in\PSPACE$. (Jinak: $\PSPACE$ je uzavřený na doplněk – deterministický stroj stačí prohodit přijímající
+      a odmítající stav –, a tak z $\overline A\in\NP\subseteq\PSPACE$ plyne $A\in\PSPACE$.)
+
+  Je to jiný důkaz inkluze $\NP\subseteq\PSPACE$ než v lemmatu .reference:lem-nppspace, kde se procházely
+  certifikáty; tady stačí jeden $\PSPACE$-úplný problém, který obsahuje $\prob{SAT}$ jako speciální případ.
+
+
+  "d)".notion Neplyne. Redukce $\prob{SAT}\redp\prob{TQBF}$ říká, že $\prob{TQBF}$ je "aspoň tak těžký".emphasize jako
+  $\prob{SAT}$; o horní mezi pro $\prob{TQBF}$ neříká nic. (Pro $\prob{TQBF}$ přirozený krátký certifikát nemáme:
+  vítězná strategie je strom s exponenciálně mnoha listy, oddíl .reference:ch-pspace-proc-verime-ze-pspace-je-vetsi-nez-np.)
+  Kdyby platilo $\prob{TQBF}\redp\prob{SAT}$, pak pro každé $Y\in\PSPACE$ je $Y\redp\prob{TQBF}\redp\prob{SAT}$
+  a $\prob{SAT}\in\NP$. Třída $\NP$ je uzavřená na redukce (certifikát pro $x$ je certifikát pro $f(x)$, ověřovatel
+  nejdřív spočítá $f(x)$), tedy $Y\in\NP$. Dostali bychom $\PSPACE\subseteq\NP$, a s c) $\NP=\PSPACE$ – což se
+  považuje za velmi nepravděpodobné.
+
+
+.Exercise:
+  title: 'Úloha 13.5 (prenexní tvar)'
+  label: un-13-5
+
+  Je dána formule (zápis $x\oplus y$ je zkratka za $(x\lor y)\land(\lnot x\lor\lnot y)$)
+
+  .equation:
+
+    \Psi=\bigl[\forall x\,\exists y:\ x\oplus y\bigr]\ \Rightarrow\ \bigl[\exists x\,\forall y:\ x\land y\bigr].
+
+  .enumerate:
+    type: a
+
+    .item:
+
+      Určete pravdivostní hodnotu $\Psi$.
+
+    .item:
+
+      Převeďte $\Psi$ do prenexního tvaru $Q_1z_1\dots Q_mz_m:\varphi$ ($\varphi$ bez kvantifikátorů); každý krok
+      zdůvodněte ekvivalencí.
+
+    .item:
+
+      Student napsal $\forall x\,\exists y\,\exists u\,\forall v:\ (x\oplus y)\Rightarrow(u\land v)$. Najděte chybu
+      a ukažte, že jeho formule má jinou hodnotu.
+
+    .item:
+
+      Ve formuli $\varphi(C_1,C_2,t)$ z oddílu .reference:ch-pspace-tqbf-je-pspace-tezky stojí kvantifikátory
+      vnořené kopie $\varphi(A,B,t/2)$ za implikací. Proč je smíme beze změny přesunout dopředu a jak vypadá
+      prefix celé formule $\Psi_x$?
+
+
+.Solution:
+
+  "a)".notion Levá strana je formule $\Psi_a$ z úlohy "13.1"#un-13-1, je pravdivá. Pravá strana: pro $x=0$ je
+  $x\land y=0$, pro $x=1$ zvolí $\forall$ hodnotu $y=0$ a opět $x\land y=0$; pravá strana je nepravdivá. Celkem
+  $1\Rightarrow0$, tedy "$\Psi$ je nepravdivá".notion.
+
+
+  "b) Pravidla.".notion Pro formule $P$, $Q$, kde proměnná $z$ "není volná v $Q$".emphasize:
+
+  .align:
+
+    (\forall z\,P)\land Q&\equiv\forall z\,(P\land Q), & (\exists z\,P)\land Q&\equiv\exists z\,(P\land Q),\ \text{totéž s }\lor,\\
+    \lnot\forall z\,P&\equiv\exists z\,\lnot P, & \lnot\exists z\,P&\equiv\forall z\,\lnot P,\\
+    Q\Rightarrow\forall z\,P&\equiv\forall z\,(Q\Rightarrow P), & Q\Rightarrow\exists z\,P&\equiv\exists z\,(Q\Rightarrow P),\\
+    (\forall z\,P)\Rightarrow Q&\equiv\exists z\,(P\Rightarrow Q), & (\exists z\,P)\Rightarrow Q&\equiv\forall z\,(P\Rightarrow Q).
+
+  Poslední řádek plyne z $P\Rightarrow Q\equiv\lnot P\lor Q$ a z druhého řádku: kvantifikátor z "levé".emphasize
+  strany implikace se při vytažení "otočí".emphasize.
+
+
+  "Postup.".notion
+
+  .enumerate:
+
+    .item:
+
+      Přejmenujeme vázané proměnné pravé strany ($x\to u$, $y\to v$), aby se jména na obou stranách lišila; hodnota
+      se nemění. $\Psi\equiv[\forall x\,\exists y:\ x\oplus y]\Rightarrow[\exists u\,\forall v:\ u\land v]$.
+      (Bez přejmenování by v kroku 4 vytažené $\exists x$ z pravé strany „zachytilo“ volné $x$ v levé části
+      $x\oplus y$; pravidlo $Q\Rightarrow\exists z\,P\equiv\exists z\,(Q\Rightarrow P)$ vyžaduje, aby $z$ nebylo
+      volné v $Q$.)
+
+    .item:
+
+      $\forall x$ z levé strany implikace: $\equiv\exists x\,\bigl([\exists y:\ x\oplus y]\Rightarrow[\exists u\,\forall v:\ u\land v]\bigr)$.
+
+    .item:
+
+      $\exists y$ z levé strany implikace: $\equiv\exists x\,\forall y\,\bigl((x\oplus y)\Rightarrow[\exists u\,\forall v:\ u\land v]\bigr)$.
+
+    .item:
+
+      $\exists u$, $\forall v$ z pravé strany se neotáčí: $\equiv\exists x\,\forall y\,\exists u\,\forall v:\ (x\oplus y)\Rightarrow(u\land v)$.
+
+  Kontrola: ať $\exists$ zvolí $x$ jakkoli, $\forall$ odpoví $y=\lnot x$, levá strana implikace je pravdivá a je třeba
+  $\exists u\,\forall v:\ u\land v$, což neplatí. Prenexní tvar je nepravdivý, souhlasí s a). Prenexní tvar není
+  jednoznačný: vytáhneme-li nejdřív pravou stranu, dostaneme $\exists u\,\forall v\,\exists x\,\forall y$ se stejnou
+  maticí, i to je správně (ověřeno vyhodnocením).
+
+
+  "c)".notion Student vytáhl kvantifikátory z levé strany implikace bez otočení. V jeho formuli
+  $\forall x\,\exists y\,\exists u\,\forall v:\ (x\oplus y)\Rightarrow(u\land v)$ zvolí $\exists$ ke každému $x$
+  hodnotu $y=x$; pak je $x\oplus y=0$ a implikace platí pro jakákoli $u,v$. Formule je "pravdivá".emphasize,
+  kdežto $\Psi$ je nepravdivá.
+
+
+  "d)".notion V $\varphi(C_1,C_2,t)=\exists C_{\mathrm{mid}}\,\forall A\,\forall B\,[\mathit{cond}\Rightarrow\varphi(A,B,t/2)]$
+  je vnořená kopie (a s ní její kvantifikátory) na "pravé".emphasize straně implikace a podmínka $\mathit{cond}$
+  obsahuje jen $C_1,C_{\mathrm{mid}},C_2,A,B$. Když proměnné každého patra pojmenujeme nově
+  ($C^{(i)}_{\mathrm{mid}},A^{(i)},B^{(i)}$ pro patro $i$), nejsou proměnné hlubších pater v $\mathit{cond}$ volné
+  a pravidla $Q\Rightarrow\exists z\,P\equiv\exists z\,(Q\Rightarrow P)$, $Q\Rightarrow\forall z\,P\equiv\forall z\,(Q\Rightarrow P)$
+  je přesunou dopředu beze změny. Pro $h=dS(n)$ pater (parametr $t=2^{dS(n)}$ půlíme až na 1) vyjde prefix
+
+  .equation:
+
+    \exists C^{(1)}_{\mathrm{mid}}\,\forall A^{(1)}\,\forall B^{(1)}\ \exists C^{(2)}_{\mathrm{mid}}\,\forall A^{(2)}\,\forall B^{(2)}\ \cdots\ \exists C^{(h)}_{\mathrm{mid}}\,\forall A^{(h)}\,\forall B^{(h)}
+
+  a za ním matice $\mathit{cond}_1\Rightarrow(\mathit{cond}_2\Rightarrow(\cdots\Rightarrow\varphi(A^{(h)},B^{(h)},1)))$
+  bez kvantifikátorů (základní kámen kvantifikátory nemá). Každé $C,A,B$ je blok $O(S(n))$ booleovských proměnných,
+  celkem $O(S^2(n))$ kvantifikovaných proměnných. Chceme-li přísné střídání $\exists\forall\exists\forall\dots$
+  (pro geografii), vložíme mezi sousední stejné kvantifikátory fiktivní proměnné jako v oddílu
+  .reference:ch-pspace-tqbf-gg; velikost zůstane polynomiální.
+
+
+.Exercise:
+  title: 'Úloha 13.6 (hra s polynomiálně dlouhou partií je v PSPACE)'
+  label: un-13-6
+
+  Hra dvou hráčů (začíná Alice) je zadaná vstupem délky $n$ a splňuje:
+
+  .enumerate:
+
+    .item:
+
+      pozice se zapíše $p(n)$ bity;
+
+    .item:
+
+      z pozice umíme v polynomiálním čase vyjmenovat všechny tahy, poznat, zda je pozice koncová, a kdo vyhrál
+      (nebo zda je remíza);
+
+    .item:
+
+      každá partie skončí po nejvýše $q(n)$ tazích ($p,q$ polynomy).
+
+  .enumerate:
+    type: a
+
+    .item:
+
+      Navrhněte algoritmus, který rozhodne, zda si Alice z počáteční pozice umí vynutit výhru, a dokažte, že pracuje
+      v polynomiálním prostoru.
+
+    .item:
+
+      Použijte to na zobecněné piškvorky na desce $n\times n$ (pět v řadě, plná deska je remíza) a na $\prob{TQBF}$:
+      co je pozice, tah a délka partie, kolik paměti vyjde?
+
+    .item:
+
+      Jak hluboká je rekurze a kolik koncových uzlů stromu hry (dohraných partií) projde algoritmus pro obyčejné
+      piškvorky $3\times3$ (tři v řadě)?
+
+
+.Solution:
+
+  "a) Algoritmus.".notion $\mathrm{Vyhra}(P)$ = „Alice si z pozice $P$ umí vynutit výhru“:
+
+  .itemize:
+
+    .item:
+
+      je-li $P$ koncová, vrať $\ANO$, právě když v $P$ vyhrála Alice (remíza i prohra je $\NE$);
+
+    .item:
+
+      je-li na tahu Alice: pro každý tah $P\to P'$ zavolej $\mathrm{Vyhra}(P')$; vrať $\ANO$, jakmile některé volání
+      vrátí $\ANO$, jinak $\NE$ (OR, jako uzel $\exists$);
+
+    .item:
+
+      je-li na tahu Bob: vrať $\NE$, jakmile některé $\mathrm{Vyhra}(P')$ vrátí $\NE$, jinak $\ANO$ (AND, jako uzel
+      $\forall$).
+
+
+  "Korektnost".notion indukcí podle počtu tahů, které z $P$ ještě mohou proběhnout (nejvýše $q(n)$). Koncová pozice
+  je vyhodnocena správně. Je-li na tahu Alice, vynutí si výhru, právě když má tah do pozice, odkud si ji vynutí;
+  je-li na tahu Bob, vynutí si ji Alice, právě když se jí to podaří po každém tahu Boba. Podle indukčního
+  předpokladu vracejí volání pro $P'$ správné odpovědi, tedy i volání pro $P$.
+
+
+  "Prostor.".notion Každé vnořené volání odpovídá jednomu tahu, takže hloubka rekurze je nejvýše $q(n)$. Jedno
+  patro si pamatuje pozici ($p(n)$ bitů) a kde je ve výčtu tahů (pořadí tahu nebo poslední vyzkoušený tah,
+  polynomiálně mnoho bitů). Výpočet tahů a test konce běží v polynomiálním čase $r(n)$, tedy i v prostoru $r(n)$
+  (lemma .reference:lem-casprostor); tuto paměť po každém použití smažeme a znovu použijeme. Celkem
+
+  .equation:
+
+    O\bigl(q(n)\cdot\mathrm{poly}(n)+r(n)\bigr)=\mathrm{poly}(n).
+
+  Čas je exponenciální (strom hry může mít až $(\text{počet tahů})^{q(n)}$ listů), ale paměť se po návratu z větve
+  recykluje – stejně jako u $\prob{TQBF}$ a $\mathrm{Win}$ pro geografii. "Bez podmínky 3".emphasize argument
+  neprojde: partie by mohla trvat exponenciálně dlouho a stejně hluboký by byl zásobník (tak se dostávají
+  zobecněné šachy do $\EXP$, obr. .reference:ch-pspace-fig-slozitost-her).
+
+
+  "b) Piškvorky $n\times n$.".notion Pozice: obsah $n^2$ políček (prázdné, křížek, kolečko: 2 bity na políčko) a kdo
+  je na tahu, $p=O(n^2)$. Tah: položit kámen na prázdné políčko, nejvýše $n^2$ tahů; pětku v řadě najdeme
+  v polynomiálním čase. Délka partie: každý tah přidá kámen, tedy $q\le n^2$. Prostor
+  $O(n^2\cdot n^2)=O(n^4)$; úspornější je jedna sdílená deska, na každém patře jen index položeného kamene
+  ($O(\log n)$ bitů) a po návratu kámen odebrat – $O(n^2\log n)$, stejný trik jako sdílené $\mathrm{Nav}$ v geografii.
+
+
+  "$\prob{TQBF}$.".notion Pozice je částečné ohodnocení $x_1,\dots,x_i$, tah je volba hodnoty $x_{i+1}$, na tahu je
+  hráč podle kvantifikátoru $Q_{i+1}$ (nemusí se střídat), partie má právě $n$ tahů a na konci se vyhodnotí
+  $\varphi$. Ohodnocení stačí držet jednou ($n$ bitů), patro si pamatuje jen, kterou hodnotu právě zkouší, a výsledek
+  první větve ($O(1)$ bitů); vyhodnocení $\varphi$ potřebuje $O(|\varphi|)$. Celkem $O(n+|\varphi|)$ jako v oddílu
+  .reference:ch-pspace-tqbf-v-pspace; rekurze projde nejvýše $2^{n+1}-1$ uzlů stromu.
+
+
+  "c) Piškvorky $3\times3$.".notion Hloubka rekurze je 9 (nejvýš 9 tahů; s kořenem 10 pater). Strom hry má
+  $255\,168$ koncových uzlů, tj. různých dohraných partií (méně než $9!=362\,880$, protože partie končí výhrou
+  dřív). Všechny by prošla verze bez předčasného návratu (každé patro zkouší všechny tahy). Algoritmus z a) se vrací,
+  jakmile výsledek zná, a projde jich méně, kolik přesně, závisí na pořadí zkoušených tahů: při zkoušení políček po
+  řádcích $6\,470$. Vrátí $\NE$: první hráč si výhru vynutit nedokáže. Totéž pro druhého hráče, hra je tedy při
+  nejlepší hře obou remíza. Paměť: 10 pater po jedné desce – zanedbatelná proti počtu prošlých partií. (Čísla jsme
+  spočítali programem, který rekurzi provádí.)
+
+
+.Subsection Těžší úlohy
+  label: ch-pspace-ulohy-navic-tezsi
+
+
+.Exercise:
+  title: 'Úloha 13.7 (geografie na acyklickém grafu je v P)'
+  label: un-13-7
+
+  .enumerate:
+    type: a
+
+    .item:
+
+      Dokažte, že $\prob{Generalized Geography}$ na orientovaném "acyklickém".emphasize grafu (DAG) lze rozhodnout
+      v čase $O(|V|+|E|)$.
+
+    .item:
+
+      Proveďte algoritmus na DAG níže se startem v $s$. Kdo vyhraje a jak má táhnout?
+
+    .item:
+
+      Proč tentýž postup nefunguje na obecném grafu a proč to neodporuje větě .reference:thm-ggpspace?
+
+  Hrany: $s\to a$, $s\to b$, $a\to c$, $a\to e$, $b\to d$, $b\to g$, $c\to f$, $d\to g$, $d\to h$, $e\to g$,
+  $f\to h$, $g\to h$.
+
+
+.Solution:
+
+  "a) Klíčové pozorování.".notion V DAG je pravidlo „jen do nenavštíveného vrcholu“ "prázdné".emphasize: stojí-li
+  žeton ve $v$ a hrana $v\to u$ vede do vrcholu $u$, který už byl navštívený, pak partie vedla z $u$ do $v$; spolu
+  s hranou $v\to u$ je to orientovaný cyklus – spor. Každý následník aktuálního vrcholu je tedy volný a výsledek
+  pozice závisí jen na vrcholu $v$, ne na historii.
+
+
+  "Algoritmus.".notion Definujme $W(v)=\ANO$, právě když hráč na tahu ve $v$ vyhraje. Platí
+
+  .equation:
+
+    W(v)=\ANO\iff\text{existuje hrana }v\to u\text{ s }W(u)=\NE;\qquad\text{speciálně }W(v)=\NE\text{ pro }v\text{ bez následníků.}
+
+  Graf topologicky uspořádáme ($O(|V|+|E|)$) a $W$ počítáme v opačném pořadí, takže $W(u)$ všech následníků známe
+  dřív než $W(v)$. Každou hranu zkoumáme jednou, celkem $O(|V|+|E|)$. Odpověď je $W(s)$.
+
+
+  "Korektnost.".notion Indukcí podle délky nejdelší cesty z $v$ dokážeme: je-li $W(v)=\ANO$, má vítěznou strategii
+  hráč na tahu ve $v$; je-li $W(v)=\NE$, má ji jeho soupeř. Bez následníků hráč na tahu nemůže táhnout a prohrál,
+  $W(v)=\NE$ je správně. Jinak se hráč na tahu může (podle pozorování) posunout do kteréhokoli následníka $u$, kde je
+  na tahu soupeř; nejdelší cesta z $u$ je kratší, takže pro $u$ tvrzení platí.
+
+  .itemize:
+
+    .item:
+
+      $W(v)=\ANO$: hráč táhne do $u$ s $W(u)=\NE$; podle indukčního předpokladu má z $u$ vítěznou strategii soupeř
+      hráče na tahu v $u$, tedy on sám, a podle ní hraje dál.
+
+    .item:
+
+      $W(v)=\NE$: všichni následníci mají $W(u)=\ANO$, takže ať hráč táhne kamkoli, soupeř je v $u$ na tahu a má
+      odtud vítěznou strategii.
+
+  Mimochodem tím vidíme, že v každé pozici má vítěznou strategii "právě jeden".emphasize z hráčů (remíza nenastane,
+  hra je konečná).
+
+
+  .centered:
+
+    !tikz:
+      filename: 13z-ulohy-navic-04
+      options: 'x=1cm,y=1cm,wl/.style={font=\scriptsize\bfseries,inner sep=1pt}'
+
+      \node[vsel] (s) at (0,0) {$s$};
+      \node[vsel] (a) at (1.8,1.2) {$a$};
+      \node[vbad] (b) at (1.8,-1.2) {$b$};
+      \node[vbad] (c) at (3.6,1.8) {$c$};
+      \node[vbad] (e) at (3.6,0.4) {$e$};
+      \node[vsel] (d) at (3.6,-1.4) {$d$};
+      \node[vsel] (f) at (5.4,1.8) {$f$};
+      \node[vsel] (g) at (5.4,0) {$g$};
+      \node[vbad] (h) at (7.2,-0.2) {$h$};
+      \foreach \n in {s,a,d,f,g} \node[wl,text=acc!70!black,above=0.5mm of \n] {V};
+      \foreach \n in {b,c,e,h} \node[wl,text=rej,above=0.5mm of \n] {P};
+      \draw[ge] (s)--(a); \draw[ge] (a)--(c); \draw[ge] (a)--(e); \draw[ge] (c)--(f);
+      \draw[ge] (e)--(g); \draw[ge] (f)--(h); \draw[ge] (d)--(g);
+      \draw[pA] (s)--(b);
+      \draw[pB] (b)--(d); \draw[pB] (b)--(g);
+      \draw[pA] (d)--(h); \draw[pA] (g)--(h);
+
+
+  DAG z úlohy: zeleně vrcholy s $W=\ANO$ (V – vyhrává hráč na tahu), červeně s $W=\NE$ (P – prohrává). Modře
+  vítězný tah Alice $s\to b$ a její odpovědi, červeně oba možné tahy Boba z $b$.
+
+
+  "b) Výpočet.".notion Opačné topologické pořadí $h,g,f,e,d,c,b,a,s$:
+
+  .table:
+    columns: 'lll'
+
+    .row:
+      head: true
+
+      vrchol
+
+      následníci (jejich $W$)
+
+      $W$
+
+    .row:
+
+      $h$
+
+      žádní
+
+      $\NE$
+
+    .row:
+
+      $g$, $f$
+
+      $h$ ($\NE$)
+
+      $\ANO$
+
+    .row:
+
+      $e$
+
+      $g$ ($\ANO$)
+
+      $\NE$
+
+    .row:
+
+      $d$
+
+      $g$ ($\ANO$), $h$ ($\NE$)
+
+      $\ANO$
+
+    .row:
+
+      $c$
+
+      $f$ ($\ANO$)
+
+      $\NE$
+
+    .row:
+
+      $b$
+
+      $d$ ($\ANO$), $g$ ($\ANO$)
+
+      $\NE$
+
+    .row:
+
+      $a$
+
+      $c$ ($\NE$), $e$ ($\NE$)
+
+      $\ANO$
+
+    .row:
+
+      $s$
+
+      $a$ ($\ANO$), $b$ ($\NE$)
+
+      $\ANO$
+
+  Alice vyhraje, a to jen tahem $s\to b$ (do $a$ by prohrála, $W(a)=\ANO$ pro Boba). Bob z $b$ táhne do $d$ nebo $g$;
+  Alice odpoví $d\to h$, resp. $g\to h$, a Bob v $h$ nemůže táhnout.
+
+
+  "c)".notion Na grafu s cyklem pozorování neplatí: následník může být navštívený a výsledek pozice závisí na množině
+  $\mathrm{Nav}$ (úloha "13.2"#un-13-2, vrchol $c$). Rekurze $W$ přes vrcholy tam navíc nemá pořadí, ve kterém by se dala
+  spočítat (na cyklu $c\leftrightarrow d$ závisí $W(c)$ na $W(d)$ a naopak). Rozlišovat musíme dvojice
+  $(v,\mathrm{Nav})$, kterých je až $n\cdot2^n$. Sporu s PSPACE-úplností není: DAG je speciální třída vstupů a těžkost
+  se týká obecných grafů. Graf $G_\Psi$ z redukce $\prob{TQBF}\redp\prob{GG}$ cykly opravdu má:
+  $c\to c_j\to\text{strana diamantu}\to b_i\to t_{i+1}\to\dots\to c$. (Kdyby GG na DAG byla $\PSPACE$-úplná, plynulo by z
+  a) $\PP=\PSPACE$.)
+
+
+.Exercise:
+  title: 'Úloha 13.8 (geografie naruby)'
+  label: un-13-8
+
+  "Geografie naruby".notion ($\prob{Misère GG}$): pravidla jako $\prob{Generalized Geography}$, ale hráč, který
+  nemůže táhnout, "vyhrál".emphasize. Otázka: má Alice vítěznou strategii?
+
+
+  Dokažte, že $\prob{Misère GG}$ je $\PSPACE$-úplná. Vysvětlete také, proč nestačí vzít instanci GG beze změny
+  a odpověď obrátit. "Nápověda: převádějte z GG; ke každému vrcholu přidejte nový vrchol.".emphasize
+
+
+.Solution:
+  label: red-un-13-8
+
+  "Redukce:".notion $\prob{Generalized Geography} \redp \prob{Misère GG}$, instance $(G,s)$ $\mapsto$ $(G',s)$, kde
+  $G'$ vznikne z $G$ přidáním nového listu $v'$ a hrany $v\to v'$ ke každému vrcholu $v$.
+
+
+  "1. $\prob{Misère GG}\in\PSPACE$.".notion Algoritmus $\mathrm{Win}$ z oddílu .reference:ch-pspace-gg-v-pspace
+  s jedinou změnou: na začátek přidáme test „nemá-li $v$ žádného nenavštíveného následníka (hráč nemá tah), vrať
+  $\ANO$“; zbytek zůstane (projdou-li se tahy a žádný nevede do pozice prohrávající pro soupeře, vrátí $\NE$). Korektnost
+  stejně: hráč na tahu vyhraje $\iff$ nemá tah, nebo má tah do pozice, kde soupeř prohraje. Hloubka rekurze je
+  nejvýše $|V|$, každé patro $O(\log n)$ bitů a sdílený vektor $\mathrm{Nav}$ $O(n)$; celkem $O(n\log n)$.
+
+
+  "2. Konstrukce.".notion Pro $G=(V,E)$ položme $V'=V\cup\{v'\mid v\in V\}$ (nové vrcholy) a
+  $E'=E\cup\{(v,v')\mid v\in V\}$; start zůstává $s$. Vrchol $v'$ nemá následníky a jediná hrana do něj vede z $v$.
+
+
+  .centered:
+
+    !tikz:
+      filename: 13z-ulohy-navic-05
+      options: 'x=1cm,y=1cm,vp/.style={v,dashed,fill=black!6,font=\scriptsize},gp/.style={ge,dashed}'
+
+      \node[v,fill=hl] (s) at (0,0) {$s$};
+      \node[v] (a) at (1.5,0.9) {$a$};
+      \node[v] (b) at (1.5,-0.9) {$b$};
+      \draw[ge] (s)--(a); \draw[ge] (s)--(b); \draw[ge] (a)--(b);
+      \node[font=\small] at (0.8,-1.9) {$G$};
+      \begin{scope}[xshift=5cm]
+        \node[v,fill=hl] (s2) at (0,0) {$s$};
+        \node[v] (a2) at (1.5,0.9) {$a$};
+        \node[v] (b2) at (1.5,-0.9) {$b$};
+        \node[vp] (s3) at (-1.4,0) {$s'$};
+        \node[vp] (a3) at (3.0,0.9) {$a'$};
+        \node[vp] (b3) at (3.0,-0.9) {$b'$};
+        \draw[ge] (s2)--(a2); \draw[ge] (a2)--(b2);
+        \draw[gp] (s2)--(s3); \draw[gp] (a2)--(a3);
+        \draw[pA] (s2)--(b2); \draw[pB] (b2)--(b3);
+        \node[font=\small] at (0.8,-1.9) {$G'$};
+      \end{scope}
+      \node[font=\scriptsize,align=left,anchor=west] at (9.0,0) {v $G'$: Alice $s\to b$,\\ Bob musí $b\to b'$,\\ Alice v $b'$ nemůže táhnout\\ $\Rightarrow$ vyhrála (naruby)};
+
+
+  Vlevo instance $G$, vpravo $G'$ s přidanými listy (čárkovaně). V GG na $G$ vyhraje Alice tahem $s\to b$ (Bob je
+  zablokovaný); v geografii naruby na $G'$ vyhraje stejným tahem, protože Bob z $b$ může jen do listu $b'$.
+
+
+  "3. Polynomialita.".notion $|V'|=2|V|$, $|E'|=|E|+|V|$, konstrukce v lineárním čase.
+
+
+  "Pozorování.".notion V partii na $G'$ platí, dokud žeton stojí v původním vrcholu $v$:
+
+  .enumerate:
+
+    .item:
+
+      list $v'$ je volný – vede do něj jen hrana z $v$ a žeton je ve $v$ poprvé (vrcholy se neopakují);
+
+    .item:
+
+      hráč na tahu tedy "vždy může táhnout".emphasize, partie skončí teprve tahem do nějakého listu $w'$;
+
+    .item:
+
+      kdo táhne do listu, prohrál: soupeř v listu nemůže táhnout, a v geografii naruby tím vyhrál.
+
+  Tahy mezi původními vrcholy jsou v $G'$ povolené, právě když jsou povolené v $G$ (navštívené původní vrcholy jsou
+  v obou hrách stejné). Hra na $G'$ je tedy hra na $G$, v níž má hráč navíc „sebevražedný“ tah do svého listu,
+  a hráč, který v $G$ nemá tah, je v $G'$ k sebevraždě "donucen".emphasize.
+
+
+  "4. ($\Rightarrow$)".notion Nechť Alice vyhrává GG na $(G,s)$ strategií $\sigma$. Na $G'$ hraje Alice podle
+  $\sigma$ a do listů nikdy netáhne; tah podle $\sigma$ má vždy k dispozici, protože $\sigma$ je vítězná a Alice
+  v partii podle ní nikdy nezůstane bez tahu v $G$. Táhne-li Bob do listu, podle pozorování prohrál. Jinak táhne
+  po původní hraně a partie pokračuje jako partie v $G$ podle $\sigma$. Ta je konečná a vítězná pro Alici, takže
+  jednou bude Bob ve vrcholu $v$ bez volného původního následníka; v $G'$ musí táhnout $v\to v'$ a prohrál. Alice
+  vyhrává $\prob{Misère GG}$ na $(G',s)$.
+
+
+  "5. ($\Leftarrow$)".notion Obměnou: nechť Alice GG na $(G,s)$ nevyhrává, tj. nemá vítěznou strategii. Pak
+  $\mathrm{Win}(s)=\NE$ (při $\mathrm{Win}(s)=\ANO$ by Alice vyhrála podle korektnosti $\mathrm{Win}$). Hra je konečná
+  a bez remíz a z $\mathrm{Win}(s)=\NE$ sestrojíme vítěznou strategii $\tau$ Boba: $\mathrm{Win}=\NE$ v pozici Alice
+  znamená, že každý její tah vede do pozice s $\mathrm{Win}=\ANO$ pro Boba, tj. Bob má tah do pozice
+  s $\mathrm{Win}=\NE$ pro Alici; ten zvolí, a tak dál, dokud Alice nemůže táhnout. Stejný argument jako v bodě 4
+  s prohozenými rolemi: Bob hraje na $G'$ podle $\tau$, tah Alice do listu ji stojí partii a jinak Alice dřív nebo
+  později uvízne ve vrcholu bez volného původního následníka a musí do listu. Alice tedy na $(G',s)$ nevyhrává.
+
+
+  "6. Závěr.".notion $\prob{GG}$ je $\PSPACE$-úplná (věta .reference:thm-ggpspace) a
+  $\prob{GG}\redp\prob{Misère GG}$; pro každé $Y\in\PSPACE$ je tedy $Y\redp\prob{GG}\redp\prob{Misère GG}$
+  a $\prob{Misère GG}$ je $\PSPACE$-těžká. S bodem 1 je $\PSPACE$-úplná.
+
+
+  "Proč ne jen obrátit odpověď.".notion Odpověď geografie naruby na "témž".emphasize grafu není negací odpovědi GG.
+  Na grafu $G$ z obrázku ($s\to a$, $s\to b$, $a\to b$) vyhraje Alice obě hry: v GG tahem $s\to b$, naruby tahem
+  $s\to a$ (Bob musí $a\to b$ a Alice v $b$ nemůže táhnout, tedy vyhrála). Nejde o výjimku: na všech
+  $2^{12}=4096$ orientovaných grafech (bez smyček) na čtyřech vrcholech s pevným startem se negace odpovědi GG od
+  odpovědi geografie naruby liší v $1\,248$ případech, asi ve 30 % (spočítáno programem). Proto je potřeba gadget,
+  který převede „nemít tah“ zpět na prohru.

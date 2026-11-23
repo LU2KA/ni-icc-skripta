@@ -1,0 +1,252 @@
+.Section Úloha 2: Self-redukce
+  label: ch-ukazkovy-uloha-2-self-redukce
+
+
+.Exercise:
+  title: 'Úloha 2: Self-redukce [6 bodů]'
+  label: ut-2
+
+  Máte k dispozici orákulum, které pro zadaný graf $G$ a číslo $k$ v jednom kroku odpoví, zda $G$
+  obsahuje "kliku velikosti alespoň $k$".notion.
+
+  .enumerate:
+    type: a
+
+    .item:
+
+      Pomocí orákula spočtěte velikost $\omega(G)$ největší kliky v grafu $G$.
+
+    .item:
+
+      Pomocí orákula "najděte".notion některou největší kliku grafu $G$ (tj. vydejte její vrcholy).
+
+  U obou částí odhadněte počet dotazů na orákulum vzhledem k $n = |V(G)|$ a zdůvodněte, proč je
+  výstup správný.
+
+
+.Solution:
+  label: red-ut-klika
+
+  "Redukce s orákulem:".notion $\prob{Clique}$ – největší klika $\to$ $\prob{Clique}$ – rozhodovací verze.
+  Jak: velikost $\omega(G)$ najdeme dotazy na práh $k$ (lineárně nebo binárním vyhledáváním), samotnou kliku
+  mazáním vrcholů, přičemž orákulem hlídáme, že v grafu klika velikosti $\omega(G)$ zůstává.
+
+
+  Značení: $O(H,k)$ je odpověď orákula na graf $H$ a číslo $k$, tj. $\ANO$, právě když $H$ má kliku
+  velikosti aspoň $k$. Pro $n=0$ je $\omega(G)=0$ a výstupem je prázdná klika bez jediného dotazu, dál
+  tedy $n\ge 1$.
+
+
+  "a) Velikost $\omega(G)$".notion
+
+
+  "Monotonie.".notion Odpověď $O(G,k)$ je monotónní v $k$: má-li $G$ kliku velikosti $k$, má i kliku každé
+  menší velikosti $k'\le k$ (libovolných $k'$ jejích vrcholů je zase klika). Pro $k=1,2,\dots,n+1$ tedy
+  odpovědi vypadají jako $\ANO,\dots,\ANO,\NE,\dots,\NE$, přičemž $O(G,1)=\ANO$ (jeden vrchol je klika) a
+  $O(G,n+1)=\NE$. Hledané $\omega(G)=\max\{k : O(G,k)=\ANO\}$ je poslední $\ANO$.
+
+
+  "Lineárně.".notion Ptej se postupně na $k=n,n-1,\dots,2$; první $k$ s odpovědí $\ANO$ je $\omega(G)$, a když
+  všechny odpovědi jsou $\NE$, je $\omega(G)=1$. Správnost: první $\ANO$ shora je největší $k$ s $\ANO$.
+  Počet dotazů nejvýše $n-1$, tedy $O(n)$.
+
+
+  "Binárním vyhledáváním.".notion Udržuj $lo=1$, $hi=n+1$ s invariantem $O(G,lo)=\ANO$, $O(G,hi)=\NE$
+  (na začátku platí bez ptaní). Dokud $hi-lo>1$: $mid=\lfloor(lo+hi)/2\rfloor$; při $O(G,mid)=\ANO$ polož
+  $lo=mid$, jinak $hi=mid$. Na konci vydej $lo$.
+
+  .itemize:
+
+    .item:
+
+      "Správnost:".notion díky monotonii platí $lo\le\omega(G)<hi$ po celou dobu; skončíme s $hi=lo+1$, takže
+      $\omega(G)=lo$.
+
+    .item:
+
+      "Počet dotazů:".notion délka intervalu $hi-lo$ začíná na $n$ a každým dotazem klesne na nejvýše
+      polovinu (zaokrouhleno nahoru), tedy nejvýše $\lceil\log_2 n\rceil$ dotazů.
+
+
+  "b) Nalezení největší kliky".notion
+
+  .enumerate:
+
+    .item:
+
+      Spočti $w=\omega(G)$ podle a) ($\lceil\log_2 n\rceil$ dotazů).
+
+    .item:
+
+      Polož $H:=G$. Pro každý vrchol $v\in V(G)$ v libovolném pevném pořadí: zeptej se $O(H-v,\,w)$.
+      Je-li odpověď $\ANO$, vrchol trvale smaž ($H:=H-v$); je-li $\NE$, vrchol v $H$ ponech.
+
+    .item:
+
+      Vydej $V(H)$.
+
+
+  "Invariant:".notion „$H$ obsahuje kliku velikosti $w$.“ Na začátku platí podle definice $w=\omega(G)$ a
+  vrchol mažeme jen tehdy, když orákulo potvrdí, že klika velikosti $w$ v $H-v$ zůstane.
+
+
+  "Proč zbylé vrcholy tvoří největší kliku.".notion Podle invariantu má výsledný graf $H$ nějakou kliku $C$
+  velikosti $w$. Kdyby v $H$ zůstal vrchol $v\notin C$, pak v okamžiku, kdy jsme se na $v$ ptali, byl
+  tehdejší graf $H'$ nadgrafem výsledného $H$ (vrcholy jen ubývají), takže $H'-v$ obsahoval kliku $C$.
+  Orákulum by odpovědělo $\ANO$ a $v$ bychom smazali – spor. Tedy $V(H)=C$: výstup je klika velikosti
+  $w=\omega(G)$, tedy největší klika grafu $G$ (hrany jsme nemazali, $H$ je indukovaný podgraf $G$).
+
+
+  "Počet dotazů:".notion v kroku 2 přesně $n$ dotazů (jeden na vrchol), celkem $n+\lceil\log_2 n\rceil=O(n)$.
+  S lineárním hledáním $\omega$ z a) to je nejvýše $2n-1$, také $O(n)$. Každý dotaz je na graf s nejvýše $n$
+  vrcholy a mezi dotazy počítáme polynomiálně, takže celý algoritmus je polynomiální vzhledem k orákulu.
+  (Krok 2 lze ukončit dřív, jakmile má $H$ jen $w$ vrcholů; v nejhorším případě to ale nic nemění.)
+
+
+  "Příklad.".notion Graf se šesti vrcholy a $\omega=4$, stejný jako v .reference:cv-2-4:
+
+  .centered:
+
+    !tikz:
+      filename: 18b-self-redukce-01
+      options: 'scale=0.95'
+
+      \foreach \n/\p in {a/{(0,1.2)},b/{(1.2,1.6)},c/{(2.4,0.8)},d/{(1.4,-0.2)},e/{(0.1,-0.1)},f/{(3.4,1.6)}}
+         {\node[v] (\n) at \p {$\n$};}
+      \draw[e] (b)--(c) (c)--(d) (c)--(f) (b)--(f);
+      \draw[esel] (a)--(b) (a)--(d) (a)--(e) (b)--(d) (b)--(e) (d)--(e);
+      \node[vbad] at (c) {$c$};
+      \node[vbad] at (f) {$f$};
+
+  Zeleně výsledná klika $\{a,b,d,e\}$, červeně smazané vrcholy.
+
+
+  .table:
+    columns: 'llll'
+
+    .row:
+      head: true
+
+      dotaz
+
+      odpověď
+
+      akce
+
+      poznámka
+
+    .row:
+
+      $O(G,4)$
+
+      $\ANO$
+
+      $lo=4$
+
+      $lo=1$, $hi=7$, $mid=4$
+
+    .row:
+
+      $O(G,5)$
+
+      $\NE$
+
+      $hi=5$
+
+      $mid=5$; konec, $w=4$
+
+    .row:
+
+      $O(G-a,4)$
+
+      $\NE$
+
+      $a$ ponech
+
+      ~
+
+    .row:
+
+      $O(G-b,4)$
+
+      $\NE$
+
+      $b$ ponech
+
+      ~
+
+    .row:
+
+      $O(G-c,4)$
+
+      $\ANO$
+
+      $c$ smaž
+
+      $H=G-c$
+
+    .row:
+
+      $O(H-d,4)$
+
+      $\NE$
+
+      $d$ ponech
+
+      ~
+
+    .row:
+
+      $O(H-e,4)$
+
+      $\NE$
+
+      $e$ ponech
+
+      ~
+
+    .row:
+
+      $O(H-f,4)$
+
+      $\ANO$
+
+      $f$ smaž
+
+      zbývá $\{a,b,d,e\}$
+
+  Celkem $2+6=8$ dotazů.
+
+
+.Remark:
+  title: 'Co se boduje / na co si dát pozor'
+
+  Zadání chce u obou částí tři věci: "postup".emphasize, "počet dotazů".emphasize vzhledem k $n$ a
+  "zdůvodnění správnosti".emphasize. Doporučujeme je v odpovědi oddělit nadpisy, ať nic nechybí.
+
+  .itemize:
+
+    .item:
+
+      U a) zmiň monotonii odpovědí v $k$ – bez ní binární vyhledávání není zdůvodněné. Stačí i lineární
+      průchod ($O(n)$ dotazů); binární vyhledávání ($\lceil\log_2 n\rceil$) je hezčí, ne nutné.
+
+    .item:
+
+      U b) je jádrem důkazu invariant („klika velikosti $\omega$ v grafu zůstává“) a argument, proč na konci
+      nezbude žádný vrchol navíc. Tvrzení „zbylé vrcholy tvoří kliku“ bez zdůvodnění je nejčastější mezera.
+
+    .item:
+
+      Mazání musí běžet s "přesným".emphasize $\omega(G)$. S menším prahem $k<\omega$ by postup vydal kliku
+      velikosti jen $k$ – stejná past jako u TSP s nepřesným optimem (kapitola .reference:ch-ts).
+
+    .item:
+
+      Smazaný vrchol se už nevrací a dotazy jdou vždy na "aktuální".emphasize graf $H$, ne na původní $G$.
+      Kdo se ptá na $O(G-v,\omega)$ v původním grafu a vydá vrcholy s odpovědí $\NE$, dostane jen průnik
+      všech největších klik – a ten může být prázdný (např. pro dva disjunktní trojúhelníky).
+
+  Teorie: binární vyhledávání a samo-redukovatelnost u TSP v kapitole .reference:ch-ts
+  (důsledek .reference:cor-binsearch; .reference:red-tspopt; .reference:red-tspsearch). Tatáž úloha je
+  .reference:cv-2-4, hledání 3-obarvení orákulem je .reference:cv-3-1.

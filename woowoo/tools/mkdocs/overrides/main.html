@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{#
+  Světlý / tmavý režim, který vydrží mezi stránkami i u webu otevřeného ze souboru.
+  Motiv si volbu ukládá do localStorage. Firefox (a prohlížeče z něj odvozené) ale u adres file://
+  drží úložiště pro každý soubor zvlášť, takže se na další stránce volba ztratila. Proto ji skript
+  javascripts/woo.js přidává do odkazů jako ?mode=dark / ?mode=light a tady, ještě před vykreslením
+  stránky, se zapíše do úložiště této stránky ve tvaru, který si motiv sám přečte (bez probliknutí).
+  Při obnovení stránky (F5) platí to, co je uložené, ne parametr v adrese.
+#}
+{% block extrahead %}
+<script>
+(function () {
+  try {
+    var m = new URLSearchParams(location.search).get("mode");
+    var nav = performance.getEntriesByType && performance.getEntriesByType("navigation")[0];
+    if ((m === "dark" || m === "light") && !(nav && nav.type === "reload")) {
+      var scope = new URL("{{ config.extra.scope | d(base_url) }}", location);
+      localStorage.setItem(scope.pathname + ".__palette", JSON.stringify(m === "dark"
+        ? { index: 1, color: { media: "", scheme: "slate", primary: "custom", accent: "custom" } }
+        : { index: 0, color: { media: "", scheme: "default", primary: "custom", accent: "custom" } }));
+    }
+  } catch (e) {}
+})();
+</script>
+{% endblock %}

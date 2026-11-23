@@ -1,0 +1,37 @@
+.Chapter Časová složitost: třídy P a EXP
+  label: ch-cas
+
+
+Zdroje: přednáška 1.
+
+
+.Concept:
+  title: 'Proč to děláme'
+
+  Z kapitoly .reference:ch-vycisl víme, co nelze spočítat vůbec. U rekurzivních problémů ale v praxi nestačí, že
+  algoritmus „jednou skončí“ – zajímá nás, kolik spotřebuje času a prostoru. Kapitola proto zavádí časovou složitost
+  Turingova stroje, vysvětluje, proč čas zapisujeme v $O$-notaci (lineární zrychlení), a definuje třídy $\PP$ a $\EXP$.
+  Věta o časové hierarchii nakonec dá bezpodmínečně $\PP\subsetneq\EXP$: s asymptoticky víc časem rozhodneme striktně víc jazyků.
+
+
+"Čas jako míra složitosti.".notion Zajímají nás spotřebované zdroje:
+
+.enumerate:
+
+  .item:
+
+    "čas".notion – počet kroků Turingova stroje,
+
+  .item:
+
+    "prostor".notion – počet různých buněk pásky, které hlava navštíví.
+
+Odteď se zabýváme jen rekurzivními jazyky.
+
+
+.Definition:
+  title: 'Časová složitost'
+  label: def-casova
+
+  TS $M$ pracuje v čase $T_M(n)$, pokud výpočet $M$ na "libovolném".emphasize vstupu délky $n$
+  skončí po nejvýše $T_M(n)$ krocích (jde o analýzu nejhoršího případu).

@@ -1,0 +1,147 @@
+.Section Univerzální Turingův stroj
+  label: ch-ts-univerzalni-turinguv-stroj
+
+
+Každý TS $M$ lze popsat konečným binárním řetězcem $\enc{M}$ (zakódujeme stavy, abecedu
+a tabulku $\delta$). Existuje "univerzální TS".notion $U$, který pro vstupy $x$ (data)
+a $\enc{M}$ (program) vrátí $U(x,\enc{M}) = M(x)$ – tedy $M$ "simuluje".emphasize. Je to „hardware“,
+na kterém lze spustit libovolný „program“.
+
+
+.centered:
+
+  !tikz:
+    filename: 01e-univerzalni-ts-01
+    options: 'node distance=8mm and 14mm'
+
+    \node[blokd,text width=28mm] (m) {popis stroje\\ $\enc{M}$ \footnotesize(program)};
+    \node[blokd,text width=28mm,below=of m] (x) {vstupní data\\ $x$};
+    \node[draw,very thick,fill=thmc!10,draw=thmc,minimum width=30mm,minimum height=22mm,rounded corners=4pt,
+          align=center,font=\sffamily\bfseries] (u) at ($(m)!0.5!(x)+(48mm,0)$) {univerzální\\ TS $U$};
+    \node[bloka,right=of u] (out) {výsledek\\ $M(x)$};
+    \draw[flow] (m.east) -- (u.west|-m.east);
+    \draw[flow] (x.east) -- (u.west|-x.east);
+    \draw[flow] (u) -- node[above,font=\scriptsize]{simulace} (out);
+
+
+"Kolik simulace stojí?".notion
+
+.itemize:
+
+  .item:
+
+    "Hledání instrukce:".notion pro pevné $M$ má $\enc{M}$ konstantní délku, nalezení
+    správného řádku $\delta$ stojí jen konstantu.
+
+  .item:
+
+    "Pásky:".notion $M$ může mít $k$ pásek. Na "jediné".emphasize pásce je simulujeme ve
+    stopách za $O(T^2)$ – hlava musí přebíhat mezi pozicemi vzdálenými až $T$.
+
+  .item:
+
+    "Chytrá simulace na dvou páskách".notion (obsahy pásek ve stopách, hlavy držíme
+    pohromadě a pásky „posouváme“ pod nimi) sníží zpomalení na $O(T\log T)$.
+
+
+.Figure:
+
+  !tikz:
+    filename: 01e-univerzalni-ts-02
+
+    \foreach \r/\lab/\syms/\h in {0/{stopa 1}/{a,b,b,a,_,_,_,_}/3,-0.7/{stopa 2}/{1,0,0,_,_,_,_,_}/2,-1.4/{stopa 3}/{_,x,y,x,x,_,_,_}/5}{
+      \node[font=\scriptsize,anchor=east] at (-0.2,\r) {\lab};
+      \foreach \s [count=\i] in \syms {
+        \ifnum\i=\h \node[cellhl] at ({(\i-1)*0.7},\r) {\tmsym{\s}};
+        \else \node[cell] at ({(\i-1)*0.7},\r) {\tmsym{\s}}; \fi }
+    }
+    \draw[thick,decorate,decoration={brace,amplitude=5pt,mirror}] (5.75,-1.75) -- (5.75,0.35)
+       node[midway,right=6pt,font=\small,align=left]{jedna páska s abecedou $G^k\times\{\text{hlava?}\}$:\\ každá buňka nese $k$ symbolů\\ a značky, kde jsou hlavy};
+
+  .caption:
+
+    Simulace $k$ pásek na jedné pásce pomocí stop. Pro jeden simulovaný krok musí hlava
+    projít úsek, kde jsou všechny značky hlav.
+
+
+.Corollary:
+  title: 'Cena univerzálnosti'
+  label: cor-uts
+
+  Univerzální stroj $U$ simuluje $T$ kroků libovolného stroje $M$ v čase $O(T\log T)$.
+
+
+"„Budík“ – simulace po omezenou dobu.".notion Univerzálnímu stroji přidáme pásku, na
+kterou na začátku zapíšeme požadovaný počet kroků. Po každém simulovaném kroku čítač
+snížíme o 1; jakmile je nulový, simulaci zastavíme. Snížení binárního čítače stojí
+"amortizovaně".emphasize $O(1)$ (stejně jako binární přičítání), celkem tedy jen konstantní zpomalení.
+Budík použijeme v důkazu věty o časové hierarchii (věta .reference:thm-hierarchie).
+Proč je snížení čítače levné, ukazuje obr. .reference:fig-ts-budik.
+
+
+.Figure:
+  label: fig-ts-budik
+
+  !tikz:
+    filename: 01e-univerzalni-ts-03
+
+    \node[font=\scriptsize\bfseries,anchor=east] at (-0.3,0.7) {hodnota};
+    \node[font=\scriptsize\bfseries] at (0.9,0.7) {čítač};
+    \node[font=\scriptsize\bfseries,anchor=west] at (2.4,0.7) {změn};
+    \chTSctr{0}{8}{1,0,0,0}{0}
+    \chTSctr{-0.7}{7}{0,1,1,1}{4}
+    \chTSctr{-1.4}{6}{0,1,1,0}{1}
+    \chTSctr{-2.1}{5}{0,1,0,1}{2}
+    \chTSctr{-2.8}{4}{0,1,0,0}{1}
+    \chTSctr{-3.5}{3}{0,0,1,1}{3}
+    \chTSctr{-4.2}{2}{0,0,1,0}{1}
+    \chTSctr{-4.9}{1}{0,0,0,1}{2}
+    \chTSctr{-5.6}{0}{0,0,0,0}{1}
+    \draw[thick] (2.5,-5.95) -- (3.2,-5.95);
+    \node[font=\small,anchor=west] at (2.4,-6.3) {$\Sigma=15$};
+    \node[note,anchor=west,align=left] at (3.7,-2.8) {nejnižší bit je vpravo;\\ snížení přepíše koncové nuly na jedničky\\ a poslední jedničku na nulu\\[4pt] 8 snížení $=$ 15 změněných bitů,\\ v průměru méně než 2 na jedno snížení};
+
+  .caption:
+
+    Budík jako binární čítač, který po každém simulovaném kroku snížíme o 1 (žlutě bity, které se změnily).
+    "Všimni si:".emphasize dlouhé „výpůjčky“ jsou vzácné: bit $i$ se mění jen při každém $2^i$-tém snížení,
+    takže $T$ snížení stojí celkem $O(T)$ kroků. Konkrétní výpočet je "(nad rámec přednášky)".emphasize.
+
+
+.Remark:
+  title: 'Nástroje jsou připraveny'
+
+  .enumerate:
+
+    .item:
+
+      Máme matematickou abstrakci počítače – Turingův stroj.
+
+    .item:
+
+      Máme jednotný způsob, jak se ptát – rozhodovací problémy a formální jazyky.
+
+  Model je dost rigorózní na neprůstřelné důkazy a díky zjednodušení na ANO/NE se
+  „neutopíme ve formalismu“. První otázka zní: "lze vůbec každý problém algoritmicky vyřešit?".emphasize
+
+
+.Remark:
+  title: 'Co si odnést'
+
+  .itemize:
+
+    .item:
+
+      Proč modelujeme algoritmy Turingovým strojem a rozhodovacími problémy (jazyky).
+
+    .item:
+
+      U optimalizačních problémů formálně o nic nepřicházíme: binární vyhledávání přes práh $k$ najde hodnotu optima, samo-redukovatelnost najde i řešení.
+
+    .item:
+
+      Stavový diagram TS, více pásek (palindromy v $O(n)$ místo $O(n^2)$), úplnost přechodové funkce.
+
+    .item:
+
+      Churchova–Turingova teze; univerzální TS simuluje $T$ kroků v čase $O(T\log T)$, „budík“ stojí jen konstantu.

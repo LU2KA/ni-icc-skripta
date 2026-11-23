@@ -1,0 +1,59 @@
+.Chapter Cesty, rovnice, sítě a čísla
+  label: ch-cisla
+
+
+Zdroje: přednáška 5, proseminář 5, cvičení 5 (pseudopolynomiální algoritmy pro Knapsack; oddíl .reference:sec-cv5).
+
+
+.Concept:
+  title: 'Proč to děláme'
+
+  Dosud jsme v zoo NP-úplných problémů měli logiku (varianty SATu), grafy (IS, VC, barvení, řezy) a množiny (Hitting Set, X3C).
+  Tato kapitola přidává problémy s úplně jinou strukturou: pořadí (hamiltonovské cesty, TSP), rovnice (celočíselné programování),
+  sítě (Steinerův strom) a čísla (Subset Sum, Partition, Knapsack, 3-Partition).
+  U čísel narazíme na jemnost, kterou jsme zatím nepotřebovali: záleží na tom, jak jsou čísla zapsaná.
+  Na ni navazuje proseminář 5 (podezřelé redukce z batohu) a cvičení 5 (pseudopolynomiální algoritmy pro Knapsack).
+
+
+.Figure:
+  label: fig-plancisla
+
+  !tikz:
+    filename: 11-cesty-ilp-cisla-01
+    options: 'x=1cm,y=1cm, pn/.style={draw,rounded corners=3pt,thick,font=\sffamily\scriptsize\bfseries,inner sep=3pt, minimum height=6mm,align=center,fill=white}, pz/.style={pn,draw=gr,fill=black!6}, ps/.style={pn,draw=defc,fill=defc!8}, pr/.style={pn,draw=thmc,fill=thmc!8}, pi/.style={pn,draw=exc,fill=exc!10}, pc/.style={pn,draw=intc,fill=intc!14}, ar/.style={->,thick,draw=black!65}'
+    include_options: 'width=\linewidth'
+
+    % zdroje
+    \node[pz] (S3)  at (0,0)    {3-SAT};
+    \node[pz] (VC)  at (5.6,0)  {VC};
+    \node[pz] (ONE) at (10.4,0) {1-in-3 SAT};
+    % sekvence
+    \node[ps] (DHP) at (-1.2,-1.4) {DHP};
+    \node[ps] (UHP) at (-2.6,-2.8) {UHP};
+    \node[ps] (HC)  at (-1.2,-2.8) {HC};
+    \node[ps] (LP)  at (0.3,-2.8)  {Longest Path};
+    \node[ps] (TSP) at (-1.2,-4.0) {TSP};
+    % rovnice
+    \node[pr] (ILP) at (2.6,-1.6)  {ILP};
+    % site
+    \node[pi] (ST)  at (5.6,-1.6)  {Steiner Tree};
+    % cisla
+    \node[pc] (SS)  at (10.4,-1.4) {Subset Sum};
+    \node[pc] (PAR) at (8.9,-2.8)  {Partition};
+    \node[pc] (KN)  at (11.9,-2.8) {Knapsack};
+    \node[pc] (TP)  at (14.0,-1.4) {3-Partition};
+    \node[pc] (BP)  at (14.0,-2.8) {Bin Packing};
+    \draw[ar] (S3)--(DHP); \draw[ar] (DHP)--(UHP); \draw[ar] (DHP)--(HC); \draw[ar] (DHP)--(LP);
+    \draw[ar] (HC)--(TSP);
+    \draw[ar] (S3)--(ILP); \draw[ar] (VC)--(ILP); \draw[ar] (VC)--(ST);
+    \draw[ar] (ONE)--(SS); \draw[ar] (SS)--(PAR); \draw[ar] (SS)--(KN); \draw[ar] (TP)--(BP);
+    % popisky rodin
+    \node[font=\sffamily\scriptsize,defc] at (-1.2,-4.7) {pořadí (sekvence)};
+    \node[font=\sffamily\scriptsize,thmc] at (2.6,-2.3) {rovnice};
+    \node[font=\sffamily\scriptsize,exc] at (5.6,-2.3) {sítě};
+    \node[font=\sffamily\scriptsize,intc!80!black] at (11.4,-3.6) {čísla};
+    \node[font=\sffamily\tiny,gr,align=center] at (14.0,-0.6) {Garey, Johnson\\ (bez důkazu)};
+
+  .caption:
+
+    Plán kapitoly: šipka $A\to B$ je redukce $A\redp B$. Šedé zdroje už známe z předchozích kapitol.

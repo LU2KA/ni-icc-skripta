@@ -1,0 +1,426 @@
+.Section NAE-3-SAT: Not-All-Equal
+  label: ch-sat-nae-3-sat-not-all-equal
+
+
+.Definition:
+  title: 'Problém NAE-3-SAT'
+  label: prob-nae
+
+  "Vstup:".notion formule $\Phi$ v 3-CNF (každá klauzule má právě 3 literály).
+
+
+  "Otázka:".notion existuje ohodnocení, při kterém v "žádné".emphasize klauzuli nemají všechny tři
+  literály stejnou hodnotu?
+
+
+Klasický $\prob{3-SAT}$ zakazuje v klauzuli „samé nuly“, $\prob{NAE-3-SAT}$ navíc i „samé
+jedničky“: každá klauzule musí obsahovat aspoň jednu pravdu "a".emphasize aspoň jednu nepravdu.
+$\prob{NAE-3-SAT}\in\NP$ (certifikát = ohodnocení). Hodí se pro redukce na problémy, kde se
+prvky „rozdělují do dvou skupin“.
+
+
+.Table:
+  label: ch-sat-tab-nae-klauzule
+
+  .table:
+    columns: 'cccccl'
+
+    .row:
+      head: true
+
+      $x$
+
+      $y$
+
+      $z$
+
+      3-SAT
+
+      NAE
+
+      důvod pro NAE
+
+    .row:
+
+      0
+
+      0
+
+      0
+
+      $\NE$
+
+      $\NE$
+
+      samé nuly
+
+    .row:
+
+      0
+
+      0
+
+      1
+
+      $\ANO$
+
+      $\ANO$
+
+      mix
+
+    .row:
+
+      0
+
+      1
+
+      0
+
+      $\ANO$
+
+      $\ANO$
+
+      mix
+
+    .row:
+
+      0
+
+      1
+
+      1
+
+      $\ANO$
+
+      $\ANO$
+
+      mix
+
+    .row:
+
+      1
+
+      0
+
+      0
+
+      $\ANO$
+
+      $\ANO$
+
+      mix
+
+    .row:
+
+      1
+
+      0
+
+      1
+
+      $\ANO$
+
+      $\ANO$
+
+      mix
+
+    .row:
+
+      1
+
+      1
+
+      0
+
+      $\ANO$
+
+      $\ANO$
+
+      mix
+
+    .row:
+
+      1
+
+      1
+
+      1
+
+      $\ANO$
+
+      $\NE$
+
+      samé jedničky!
+
+  .caption:
+
+    Klauzule $(x\vee y\vee z)$: NAE akceptuje 6 z 8 ohodnocení.
+
+
+.Lemma:
+  title: 'Symetrie vůči negaci (bit-flip)'
+  label: lem-bitflip
+
+  Pokud ohodnocení $h$ NAE-splňuje $\Phi$, pak ji NAE-splňuje i $\bar h$ (všechny hodnoty
+  prohozeny $0\leftrightarrow1$).
+
+
+.Proof:
+
+  Klauzule NAE-splněná $h$ obsahuje mix hodnot, např. $(1,0,0)$. Po překlopení dostaneme
+  $(0,1,1)$ – stále mix. Žádná klauzule se překlopením nerozbije.
+
+
+.centered:
+
+  !tikz:
+    filename: 07b-nae-3-sat-01
+    options: 'sq/.style={draw,minimum size=6mm,font=\small\ttfamily}'
+
+    \foreach \v/\cc [count=\i] in {1/tT!40,0/tF!30,0/tF!30} {\node[sq,fill=\cc] at (\i*0.65,0) {\v};}
+    \draw[->,thick,intc] (2.3,0) -- node[above,font=\scriptsize]{flip} (3.2,0);
+    \foreach \v/\cc [count=\i] in {0/tF!30,1/tT!40,1/tT!40} {\node[sq,fill=\cc] at (3.0+\i*0.65,0) {\v};}
+    \node[font=\scriptsize,acc,anchor=west] at (5.3,0) {stále NAE};
+    \foreach \v [count=\i] in {1,1,1} {\node[sq,fill=tT!40] at (7.2+\i*0.65,0) {\v};}
+    \draw[<->,thick,intc] (10.2,0) -- (11.0,0);
+    \foreach \v [count=\i] in {0,0,0} {\node[sq,fill=tF!30] at (10.8+\i*0.65,0) {\v};}
+    \node[font=\scriptsize,rej] at (10.0,-0.65) {NAE zakazuje obě};
+
+
+.Warning:
+  title: 'Pozor'
+
+  Klasický $\prob{SAT}$ tuto symetrii nemá: ohodnocení $x=1$, $y=z=0$ splňuje $(x\vee\neg y\vee\neg z)$
+  (všechny tři literály jsou pravdivé), ale překlopené $x=0$, $y=z=1$ ji nesplňuje. U SATu je
+  zakázána jen jedna „krajnost“ (samé nuly), u NAE obě – proto je NAE symetrický.
+
+
+.Subsection $\prob{3-SAT}\redp\prob{NAE-3-SAT}$
+  label: ch-sat-3-sat-nae-3-sat
+  pdf_string: '3-SAT ≤p NAE-3-SAT'
+
+
+.Remark:
+  title: 'Redukce: $\prob{3-SAT} \redp \prob{NAE-3-SAT}$'
+  label: red-nae4
+
+  formule $\varphi$ $\;\longmapsto\;$ formule $\varphi''$ (přes NAE-4-SAT)
+
+
+.centered:
+
+  !tikz:
+    filename: 07b-nae-3-sat-02
+    options: 'node distance=17mm'
+
+    \node[blokd,text width=30mm] (a) {$\varphi$ (3-SAT)\\ \footnotesize$(\ell_1\vee\ell_2\vee\ell_3)$};
+    \node[blokd,text width=34mm,right=of a] (b) {$\varphi'$ (NAE-4-SAT)\\ \footnotesize$\mathrm{NAE}(\ell_1,\ell_2,\ell_3,z)$};
+    \node[blokd,text width=36mm,right=of b] (c) {NAE-3-SAT\\ \footnotesize$\mathrm{NAE}(\ell_1,\ell_2,w)\wedge\mathrm{NAE}(\neg w,\ell_3,z)$};
+    \draw[flow] (a)--node[above,font=\scriptsize]{pólová $z$}(b);
+    \draw[flow] (b)--node[above,font=\scriptsize]{rozbití $w$}(c);
+
+
+.Subsection Krok 1: trik s pólovou proměnnou
+  label: ch-sat-krok-1-trik-s-polovou-promennou
+
+
+Ke "každé".emphasize klauzuli $C=(\ell_1\vee\ell_2\vee\ell_3)$
+přidáme novou "společnou".emphasize proměnnou $z$: $C'=(\ell_1\vee\ell_2\vee\ell_3\vee z)$
+a požadujeme NAE-splnění všech 4-klauzulí. Vznikne $\varphi'$.
+
+
+.Theorem:
+  label: thm-nae4
+
+  $\varphi$ je splnitelná $\iff$ $\varphi'$ je NAE-splnitelná.
+
+
+.Proof:
+
+  "($\Rightarrow$)".notion Vezmeme splňující ohodnocení a nastavíme $z=0$. Každá klauzule má
+  aspoň jednu 1 (z původního řešení) a aspoň jednu 0 (naše $z$).
+
+
+  "($\Leftarrow$)".notion Mějme NAE-splňující ohodnocení $\varphi'$. Je-li $z=1$, podle
+  lemmatu .reference:lem-bitflip celé ohodnocení překlopíme – nyní $z=0$. Aby v $C'$ nebyly samé nuly,
+  musí být mezi $\ell_1,\ell_2,\ell_3$ nějaká 1. To je splňující ohodnocení $\varphi$. Příklad je na
+  obr. .reference:ch-sat-fig-polova-promenna-priklad.
+
+
+.Figure:
+  label: ch-sat-fig-polova-promenna-priklad
+
+  !tikz:
+    filename: 07b-nae-3-sat-04
+
+    \node[font=\small] at (3.85,2.05) {$\varphi=(a\vee b\vee c)\wedge(\neg a\vee\neg b\vee c)$};
+    \node[font=\small] at (1.475,1.3) {$\mathrm{NAE}(a,b,c,z)$};
+    \node[font=\small] at (5.275,1.3) {$\mathrm{NAE}(\neg a,\neg b,c,z)$};
+    \foreach \t [count=\i] in {a,b,c,z} {\node[font=\scriptsize] at ({0.5+(\i-1)*0.65},0.62) {$\t$};}
+    \foreach \t [count=\i] in {\neg a,\neg b,c,z} {\node[font=\scriptsize] at ({4.3+(\i-1)*0.65},0.62) {$\t$};}
+    \node[font=\small,anchor=east,align=right] at (-0.2,0) {NAE-řešení $\varphi'$\\ s $z=1$};
+    \chNAEvals{0.5}{0}{0,0,0,1}  \node[acc,font=\large] at (3.25,0) {$\checkmark$};
+    \chNAEvals{4.3}{0}{1,1,0,1}  \node[acc,font=\large] at (7.05,0) {$\checkmark$};
+    \node[font=\scriptsize,rej,anchor=west,align=left] at (7.5,0) {$a=b=c=0$ ale nesplní\\ $(a\vee b\vee c)$};
+    \draw[->,very thick,intc] (1.475,-0.42) -- node[right,font=\scriptsize]{překlopíme všechny bity (lemma)} (1.475,-1.18);
+    \node[font=\small,anchor=east,align=right] at (-0.2,-1.6) {po překlopení\\ $z=0$};
+    \chNAEvals{0.5}{-1.6}{1,1,1,0}  \node[acc,font=\large] at (3.25,-1.6) {$\checkmark$};
+    \chNAEvals{4.3}{-1.6}{0,0,1,0}  \node[acc,font=\large] at (7.05,-1.6) {$\checkmark$};
+    \node[font=\scriptsize,acc!80!black,anchor=west,align=left] at (7.5,-1.6) {$a=b=c=1$ splňuje $\varphi$};
+
+  .caption:
+
+    Zpětný směr na malém příkladu "(nad rámec přednášky)".emphasize. NAE-řešení s $z=1$ samo o sobě $\varphi$
+    splňovat nemusí; po překlopení je $z=0$ a $z$ v žádné klauzuli nedodá jedničku. "Všimni si:".emphasize
+    NAE pak vynutí jedničku mezi původními literály každé klauzule – to je přesně splnění $\varphi$.
+
+
+.Subsection Krok 2: z NAE-4 na NAE-3
+  label: red-nae3
+
+
+Každou 4-klauzuli rozbijeme pomocí nové proměnné $w$
+(pro každou klauzuli jiné):
+
+.equation:
+
+  \mathrm{NAE}(\ell_1,\ell_2,\ell_3,z) \iff \exists w:\ \mathrm{NAE}(\ell_1,\ell_2,w)\wedge\mathrm{NAE}(\neg w,\ell_3,z).
+
+Proč: jsou-li $\ell_1,\ell_2$ různé, $w$ zvolíme tak, aby druhá klauzule byla NAE (stačí
+$\neg w\neq\ell_3$ nebo $\ell_3\neq z$); jsou-li $\ell_1=\ell_2$, musí $w$ být opačné, tedy
+$\neg w=\ell_1$, a druhá klauzule je NAE právě když $(\ell_1,\ell_3,z)$ nejsou všechny stejné –
+to je přesně $\mathrm{NAE}(\ell_1,\ell_2,\ell_3,z)$ při $\ell_1=\ell_2$. (Ekvivalenci jsme ověřili
+i tabulkou všech 16 případů.) Oba případy ukazuje obr. .reference:ch-sat-fig-rozbiti-nae4.
+
+
+.Figure:
+  label: ch-sat-fig-rozbiti-nae4
+
+  !tikz:
+    filename: 07b-nae-3-sat-05
+
+    \node[font=\small] at (1.475,1.3) {$\mathrm{NAE}(\ell_1,\ell_2,\ell_3,z)$};
+    \node[font=\small] at (5.05,1.3) {$\mathrm{NAE}(\ell_1,\ell_2,w)$};
+    \node[font=\small] at (7.85,1.3) {$\mathrm{NAE}(\neg w,\ell_3,z)$};
+    \foreach \t [count=\i] in {\ell_1,\ell_2,\ell_3,z} {\node[font=\scriptsize] at ({0.5+(\i-1)*0.65},0.62) {$\t$};}
+    \node[font=\scriptsize,intc] at (3.4,0.62) {$w$};
+    \foreach \t [count=\i] in {\ell_1,\ell_2,w} {\node[font=\scriptsize] at ({4.4+(\i-1)*0.65},0.62) {$\t$};}
+    \foreach \t [count=\i] in {\neg w,\ell_3,z} {\node[font=\scriptsize] at ({7.2+(\i-1)*0.65},0.62) {$\t$};}
+    \draw[black!20] (-2.4,-0.55) -- (9.6,-0.55);
+    % l1 != l2: w volne, zvolime podle druhe klauzule
+    \node[font=\small,anchor=east,align=right] at (-0.2,0) {$\ell_1\neq\ell_2$\\ \scriptsize $w$ volíme};
+    \chNAEvals{0.5}{0}{1,0,1,1}
+    \chNAEvals{3.4}{0}{1}  \draw[intc,very thick] (3.1,-0.3) rectangle (3.7,0.3);
+    \chNAEvals{4.4}{0}{1,0,1}  \node[acc,font=\large] at (6.3,0) {$\checkmark$};
+    \chNAEvals{7.2}{0}{0,1,1}  \node[acc,font=\large] at (9.1,0) {$\checkmark$};
+    \node[font=\scriptsize,anchor=west,text=black!65,align=left] at (9.45,0) {$w=0$ by dalo\\ $(1,1,1)$};
+    % l1 = l2: w vynuceno
+    \node[font=\small,anchor=east,align=right] at (-0.2,-1.1) {$\ell_1=\ell_2$\\ \scriptsize $w=\neg\ell_1$ vynuceno};
+    \chNAEvals{0.5}{-1.1}{1,1,0,1}
+    \chNAEvals{3.4}{-1.1}{0}  \draw[intc,very thick] (3.1,-1.4) rectangle (3.7,-0.8);
+    \chNAEvals{4.4}{-1.1}{1,1,0}  \node[acc,font=\large] at (6.3,-1.1) {$\checkmark$};
+    \chNAEvals{7.2}{-1.1}{1,0,1}  \node[acc,font=\large] at (9.1,-1.1) {$\checkmark$};
+    \node[font=\small,anchor=east,align=right] at (-0.2,-2.2) {$\ell_1=\ell_2$\\ \scriptsize $w=\neg\ell_1$ vynuceno};
+    \chNAEvals{0.5}{-2.2}{1,1,1,1}
+    \chNAEvals{3.4}{-2.2}{0}  \draw[intc,very thick] (3.1,-2.5) rectangle (3.7,-1.9);
+    \chNAEvals{4.4}{-2.2}{1,1,0}  \node[acc,font=\large] at (6.3,-2.2) {$\checkmark$};
+    \chNAEvals{7.2}{-2.2}{1,1,1}  \node[rej,font=\large\bfseries] at (9.1,-2.2) {$\times$};
+    \node[font=\scriptsize,anchor=west,rej,align=left] at (9.45,-2.2) {4-klauzule\\ také není NAE};
+
+  .caption:
+
+    Rozbití $\mathrm{NAE}(\ell_1,\ell_2,\ell_3,z)$ pomocnou proměnnou $w$ (rámeček). Při $\ell_1\neq\ell_2$ je první
+    3-klauzule splněná vždy a $w$ zvolíme tak, aby vyšla i druhá. Při $\ell_1=\ell_2$ je $w$ vynucené a
+    $\neg w=\ell_1$. "Všimni si:".emphasize druhá klauzule pak kontroluje trojici $(\ell_1,\ell_3,z)$ – selže
+    právě tehdy, když jsou všechny čtyři hodnoty stejné.
+
+
+.Subsection Pozitivní NAE-3-SAT
+  label: ch-sat-pozitivni-nae-3-sat
+
+
+.Remark:
+  title: 'Redukce: $\prob{NAE-3-SAT} \redp \prob{Pozitivní NAE-3-SAT}$'
+  label: red-poznae
+
+  formule $\Phi$ $\;\longmapsto\;$ formule $\Phi^+$ bez negací
+
+
+Co když zakážeme i negace? "Pozitivní (monotónní) NAE-3-SAT".notion zůstává NP-těžký.
+Musíme negaci „simulovat“ pouze pozitivními literály.
+
+.enumerate:
+
+  .item:
+
+    Pro každou proměnnou $x$ zavedeme její "stín".notion $x'$ (bude hrát roli $\neg x$).
+
+  .item:
+
+    Všechny výskyty $\neg x$ nahradíme pozitivní proměnnou $x'$.
+
+  .item:
+
+    Pro každou dvojici $(x,x')$ přidáme gadget, který "pozitivními".emphasize NAE-klauzulemi
+    (vždy na třech "různých".emphasize proměnných) vynutí $x\neq x'$.
+
+
+.Warning:
+  title: 'Naivní pokusy nefungují'
+
+  .itemize:
+
+    .item:
+
+      $\mathrm{NAE}(x,x',x')\iff x\neq x'$ – ale to opakuje proměnnou.
+
+    .item:
+
+      Globální $F$ a klauzule $\mathrm{NAE}(x,x',F)$ zakazuje jen $x=x'=F$. Ohodnocení
+      $F=0$, $x=x'=1$ dává $(1,1,0)$ – NAE-splněno, a přitom $x=x'$.
+
+
+.Figure:
+  label: ch-sat-fig-gadget-stin
+
+  !tikz:
+    filename: 07b-nae-3-sat-03
+    options: 'cl/.style={draw,rounded corners=3pt,thick,font=\small,inner sep=4pt,fill=white}'
+
+    \node[cl,draw=thmc,fill=thmc!6] (g) at (0,1.6) {$\mathrm{NAE}(F,T,B)$};
+    \node[note,right=3mm of g,text width=60mm,align=flush left] {jednou globálně: mezi $F,T,B$ je aspoň jedna 1 a aspoň jedna 0};
+    \node[cl] (c1) at (-3,0) {$\mathrm{NAE}(x,x',F)$};
+    \node[cl] (c2) at (0,0) {$\mathrm{NAE}(x,x',T)$};
+    \node[cl] (c3) at (3,0) {$\mathrm{NAE}(x,x',B)$};
+    \draw[decorate,decoration={brace,amplitude=5pt,mirror},thick] (-4.3,-0.45) -- (4.3,-0.45)
+        node[midway,below=6pt,font=\small]{pro každou dvojici $(x,x')$};
+    \node[blokr,font=\scriptsize] at (-2.7,-2.2) {$x=x'=1$: klauzule s nulou\\ je $(1,1,0)$ -- OK, ale klauzule\\ s jedničkou je $(1,1,1)$ -- \textbf{porušena}};
+    \node[blokr,font=\scriptsize] at (2.7,-2.2) {$x=x'=0$: klauzule s jedničkou OK,\\ klauzule s nulou je $(0,0,0)$\\ -- \textbf{porušena}};
+
+  .caption:
+
+    Gadget pro $x\neq x'$. Některá z $F,T,B$ má hodnotu 1 a některá 0, takže máme
+    k dispozici $\mathrm{NAE}(x,x',1)$ i $\mathrm{NAE}(x,x',0)$. Při $x\neq x'$ jsou všechny tři
+    klauzule splněné.
+
+
+.Remark:
+  title: 'Co si odnést'
+
+  .itemize:
+
+    .item:
+
+      $\prob{SAT}\redp\prob{3-SAT}$: krátké klauzule zopakováním literálu, dlouhé rozsekáním pomocnými proměnnými.
+
+    .item:
+
+      $\prob{NAE-3-SAT}$ zakazuje samé nuly i samé jedničky a je "symetrický".emphasize vůči překlopení všech bitů.
+
+    .item:
+
+      $\prob{3-SAT}\redp\prob{NAE-4-SAT}$ pólovou proměnnou $z$, pak rozbití na 3-klauzule.
+
+    .item:
+
+      Negaci lze simulovat pozitivními klauzulemi (stíny $x'$, globální $F,T,B$): pozitivní $\prob{NAE-3-SAT}$ je stále NP-úplný.

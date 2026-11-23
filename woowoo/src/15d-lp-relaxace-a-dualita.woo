@@ -1,0 +1,381 @@
+.Section LP relaxace a dualita
+  label: ch-resice-ilp-lp-relaxace-a-dualita
+
+
+ILP je NP-těžké, LP (stejný model s reálnými proměnnými) je v $\PP$. Řešiče ILP na tom stojí: LP neřeší původní
+úlohu, ale dává o ní "mez".emphasize. Tento oddíl vysvětluje, co ta mez je, proč nestačí LP řešení zaokrouhlit
+a jak mez "dokázat".emphasize pomocí duality. (Slajdy 31 a 32 jsou v přednášce až za shrnutím; patří sem.)
+
+
+.Subsection LP relaxace a proč nestačí zaokrouhlit
+  label: ch-resice-ilp-lp-relaxace-a-proc-nestaci-zaokrouhlit
+
+
+.Definition:
+  title: 'LP relaxace'
+  label: ch-resice-ilp-def-lp-relaxace
+
+  "LP relaxace".notion ILP vznikne zrušením celočíselnosti: $x\in\mathbb Z^n$ nahradíme $x\in\mathbb R^n$ (binární
+  $x\in\{0,1\}$ nahradíme $0\le x\le1$). Přípustná množina relaxace je "polyedr".notion
+  $P=\{x\in\mathbb R^n: Ax\le b\}$. Hodnotu jejího optima značíme $\mathrm{OPT}_{LP}$.
+
+
+.Example:
+  title: 'Relaxace ze slajdu 14'
+  label: ch-resice-ilp-ex-relaxace
+
+  $\max\ 3x+2y$ při $2x+y\le5$, $x+2y\le5$, $x,y\ge0$ celá.
+
+  .enumerate:
+
+    .item:
+
+      "LP optimum".notion leží ve "vrcholu".emphasize $P$: v průsečíku $2x+y=5$ a $x+2y=5$, tj.
+      $(\tfrac53,\tfrac53)$, s hodnotou $\tfrac{25}{3}\approx8{,}33$.
+
+    .item:
+
+      "ILP optimum".notion: celočíselné body v $P$ jsou $(0,0),(0,1),(0,2),(1,0),(1,1),(1,2),(2,0),(2,1)$; nejlepší je
+      $(2,1)$ s hodnotou $8$. Bod $(2,1)$ "není vrcholem".emphasize $P$ – leží uprostřed hrany $2x+y=5$.
+
+    .item:
+
+      "Zaokrouhlení".notion LP optima $(\tfrac53,\tfrac53)$ na nejbližší celý bod dá $(2,2)$, a ten je
+      "nepřípustný".emphasize: $2\cdot2+2=6>5$. Zaokrouhlení dolů $(1,1)$ je přípustné, ale má hodnotu jen 5.
+
+
+.Figure:
+  label: ch-resice-ilp-fig-relaxace
+
+  !tikz:
+    filename: 15d-lp-relaxace-a-dualita-01
+    options: 'x=1.6cm,y=1.6cm'
+
+    \chQpoly
+    \draw[warnc,dashed,thick] (7/9,3.0)--(25/9,0.0);
+    \node[lpopt] at (5/3,5/3) {};
+    \node[warnc,font=\footnotesize,anchor=north west] at (1.95,1.62) {LP $(\frac53,\frac53)$: $8{,}33$};
+    \node[ilpopt] at (2,1) {};
+    \node[defc,font=\footnotesize,anchor=west] at (2.12,1.0) {ILP: $8$};
+    \node[warnc,font=\small] at (2,2) {$\times$};
+    \node[warnc,font=\footnotesize,anchor=south west] at (2.08,2.05) {zaokr. $(2,2)$};
+    \draw[->,thick,black!70] (0.45,0.45)--++(0.45,0.3) node[right,font=\footnotesize]{$c$};
+    \node[defc,font=\small] at (0.55,1.15) {$P$};
+
+  .caption:
+
+    Polyedr $P$ relaxace a celočíselné body v něm (tmavé). Čárkovaná přímka $3x+2y=\tfrac{25}{3}$ se $P$ dotýká
+    ve vrcholu – LP optimu. "Všimni si:".emphasize celočíselné optimum $(2,1)$ vrcholem není a zaokrouhlené LP optimum
+    leží mimo $P$.
+
+
+.Remark:
+  title: 'Proč je relaxace mez'
+
+  Relaxace má "víc".emphasize přípustných řešení než ILP (každé celočíselné řešení je i reálné). U maximalizace je proto
+  $\mathrm{OPT}_{LP}\ge\mathrm{OPT}$ – "horní mez".notion; u minimalizace $\mathrm{OPT}_{LP}\le\mathrm{OPT}$ – dolní
+  mez. LP je v $\PP$, takže mez na optimum máme v polynomiálním čase. Celočíselné optimum ale může ležet
+  "uvnitř".emphasize $P$, daleko od LP optima.
+
+
+.Subsection LP relaxace: polynomiální mez
+  label: ch-resice-ilp-lp-relaxace-polynomialni-mez
+
+
+"LP je v $\PP$:".notion
+
+.itemize:
+
+  .item:
+
+    "simplexová metoda".notion (Dantzig 1947) – prakticky rychlá, v nejhorším případě exponenciální (Klee–Minty 1972);
+
+  .item:
+
+    "elipsoidová metoda".notion (Khachiyan 1979) – první polynomiální algoritmus;
+
+  .item:
+
+    "metody vnitřního bodu".notion (Karmarkar 1984) – polynomiální a praktické.
+
+
+"Co dává LP relaxace ILP:".notion
+
+.enumerate:
+  type: a
+
+  .item:
+
+    "mez".notion na optimum (pro max horní mez), spočitatelnou v polynomiálním čase;
+
+  .item:
+
+    "někdy".emphasize přímo celočíselné řešení – když má polyedr celočíselné vrcholy (oddíl
+    .reference:ch-resice-ilp-sila-formulace).
+
+
+.Example:
+  title: 'Mez pro batoh'
+  label: ch-resice-ilp-ex-batoh-lp
+
+  Batoh z oddílu .reference:ch-resice-ilp-od-slov-k-modelu: $w=(2,3,4)$, $c=(3,4,5)$, $W=6$, relaxace
+  $0\le x_i\le1$. Relaxace batohu se vyřeší "hladově".emphasize podle poměru cena/váha a poslední předmět se usekne:
+
+  .enumerate:
+
+    .item:
+
+      Poměry $c_i/w_i$: $\tfrac32=1{,}5$, $\tfrac43\approx1{,}33$, $\tfrac54=1{,}25$ – pořadí 1, 2, 3.
+
+    .item:
+
+      Předmět 1 celý (váha 2, cena 3), předmět 2 celý (váha 5, cena 7).
+
+    .item:
+
+      Zbývá kapacita 1, z předmětu 3 (váha 4) vezmeme $\tfrac14$ a přidáme cenu $\tfrac54$.
+
+  Mez je $3+4+1{,}25=8{,}25\ge\mathrm{OPT}=8$. Celočíselné optimum (předměty 1 a 3) vypadá úplně jinak než LP řešení
+  $(1,1,\tfrac14)$.
+
+
+.Figure:
+  label: ch-resice-ilp-fig-batoh-lp
+
+  !tikz:
+    filename: 15d-lp-relaxace-a-dualita-02
+    options: 'x=0.9cm,y=0.6cm'
+
+    \node[font=\scriptsize,anchor=east] at (-0.1,1) {LP};
+    \draw[thick,fill=defc!10] (0,0.7) rectangle (2,1.3); \node[font=\scriptsize] at (1,1) {1};
+    \draw[thick,fill=defc!10] (2,0.7) rectangle (5,1.3); \node[font=\scriptsize] at (3.5,1) {2};
+    \draw[thick,fill=warnc!20] (5,0.7) rectangle (6,1.3); \node[font=\tiny] at (5.5,1) {$\frac14$ z 3};
+    \node[font=\scriptsize,anchor=west] at (6.2,1) {$8{,}25$};
+    \node[font=\scriptsize,anchor=east] at (-0.1,0) {ILP};
+    \draw[thick,fill=acc!15] (0,-0.3) rectangle (2,0.3); \node[font=\scriptsize] at (1,0) {1};
+    \draw[thick,fill=acc!15] (2,-0.3) rectangle (6,0.3); \node[font=\scriptsize] at (4,0) {3};
+    \node[font=\scriptsize,anchor=west] at (6.2,0) {$8$};
+    \draw[very thick] (6,-0.5)--(6,1.5);
+    \node[font=\scriptsize,above] at (6,1.5) {$W=6$};
+
+  .caption:
+
+    Batoh: LP relaxace (nahoře) zaplní kapacitu hladově a z posledního předmětu vezme čtvrtinu; celočíselné
+    optimum (dole) volí jiné předměty.
+
+
+.Subsection Dualita: jak dostat mez kombinací omezení
+  label: ch-resice-ilp-dualita-jak-dostat-mez
+
+
+LP optimum $\tfrac{25}{3}$ z příkladu výše jsme spočítali. Jak ale "přesvědčit".emphasize někoho jiného, že víc to
+opravdu nejde, aniž by musel LP řešit znovu?
+
+
+"Nápad:".notion vynásob omezení $2x+y\le5$ a $x+2y\le5$ čísly $y_1,y_2\ge0$ a sečti:
+
+.equation:
+
+  (2y_1+y_2)\,x\ +\ (y_1+2y_2)\,y\ \le\ 5y_1+5y_2 .
+
+Je-li levá strana (pro $x,y\ge0$) aspoň $3x+2y$, tj. $2y_1+y_2\ge3$ a $y_1+2y_2\ge2$, je pravá strana
+"mez na účelovou funkci".notion: $3x+2y\le(2y_1+y_2)x+(y_1+2y_2)y\le5y_1+5y_2$.
+
+
+.table:
+  columns: 'ccc'
+
+  .row:
+    head: true
+
+    $(y_1,y_2)$
+
+    součet omezení
+
+    mez na $3x+2y$
+
+  .row:
+
+    $(2,0)$
+
+    $4x+2y\le10$
+
+    10
+
+  .row:
+
+    $(1,1)$
+
+    $3x+3y\le10$
+
+    10
+
+  .row:
+
+    $(\tfrac43,\tfrac13)$
+
+    $3x+2y\le\tfrac{25}{3}$
+
+    "8,33".notion
+
+
+Nejlepší (nejmenší) mez hledáme zase lineárním programem – to je "duál".notion:
+
+.equation:
+
+  \min\ 5y_1+5y_2\quad\text{při}\quad 2y_1+y_2\ge3,\quad y_1+2y_2\ge2,\quad y_1,y_2\ge0 .
+
+Jeho optimum je $(\tfrac43,\tfrac13)$ s hodnotou $\tfrac{25}{3}$ – přesně LP optimum primálu.
+
+
+.Subsection Primál, duál a věty o dualitě
+  label: ch-resice-ilp-primal-dual-a-vety
+
+
+.Definition:
+  title: 'Primál a duál'
+  label: ch-resice-ilp-def-dual
+
+  .table:
+    columns: 'll'
+
+    .row:
+      head: true
+
+      Primál (max)
+
+      Duál (min)
+
+    .row:
+
+      $\max\ c^Tx$ při $Ax\le b$, $x\ge0$
+
+      $\min\ b^Ty$ při $A^Ty\ge c$, $y\ge0$
+
+
+  Omezení primálu $\leftrightarrow$ proměnná duálu; $c$ a $b$ si vymění role; $A$ se transponuje.
+
+
+.Theorem:
+  title: 'Slabá dualita'
+  label: ch-resice-ilp-thm-slaba-dualita
+
+  Pro každé přípustné $x$ primálu a přípustné $y$ duálu platí $c^Tx\le b^Ty$.
+
+
+.Proof:
+
+  .equation:
+
+    c^Tx\ \le\ (A^Ty)^Tx\ =\ y^TAx\ \le\ y^Tb .
+
+  První nerovnost: $x\ge0$ a $c\le A^Ty$. Druhá: $y\ge0$ a $Ax\le b$.
+
+
+.Theorem:
+  title: 'Silná dualita (bez důkazu)'
+  label: ch-resice-ilp-thm-silna-dualita
+
+  Má-li primál konečné optimum, má ho i duál a obě hodnoty se rovnají: $\max c^Tx=\min b^Ty$.
+
+
+.Example:
+  title: 'Certifikát optimality'
+  label: ch-resice-ilp-ex-certifikat
+
+  Pro $\max 3x+2y$ při $2x+y\le5$, $x+2y\le5$, $x,y\ge0$ celá:
+
+  .enumerate:
+
+    .item:
+
+      $y=(\tfrac43,\tfrac13)$ je přípustné pro duál: $2\cdot\tfrac43+\tfrac13=3\ge3$ a $\tfrac43+2\cdot\tfrac13=2\ge2$.
+
+    .item:
+
+      Slabá dualita: každé přípustné $x$ (tím spíš každé celočíselné) má $3x+2y\le5\cdot\tfrac43+5\cdot\tfrac13=\tfrac{25}{3}$.
+
+    .item:
+
+      Na celých bodech je $3x+2y$ celé číslo, takže je nejvýš $\lfloor\tfrac{25}{3}\rfloor=8$.
+
+    .item:
+
+      Bod $(2,1)$ má hodnotu 8. Je to tedy "dokázané optimum".notion – stačí ukázat $y$ a $(2,1)$, nic dalšího
+      se počítat nemusí.
+
+
+.Subsection Dualita v obrázku
+  label: ch-resice-ilp-dualita-v-obrazku
+
+
+Geometricky: v LP optimu je vektor účelové funkce $c=(3,2)$ "nezápornou kombinací".emphasize normál omezení, která
+tam platí s rovností, $a_1=(2,1)$ a $a_2=(1,2)$:
+
+.equation:
+
+  c=\tfrac43\,a_1+\tfrac13\,a_2 ,\qquad\text{tj.}\quad(3,2)=\tfrac43(2,1)+\tfrac13(1,2).
+
+Koeficienty kombinace jsou přesně duální řešení $y$.
+
+
+.Figure:
+  label: ch-resice-ilp-fig-dualita
+
+  !tikz:
+    filename: 15d-lp-relaxace-a-dualita-03
+    options: 'x=1.5cm,y=1.5cm'
+
+    \chQpoly
+    \draw[warnc,dashed] (7/9,3.0)--(25/9,0.0);
+    \node[lpopt] (o) at (5/3,5/3) {};
+    \draw[->,thick,black!50] (o)--++(0.6,0.3) node[right,font=\footnotesize]{$a_1$};
+    \draw[->,thick,black!50] (o)--++(0.3,0.6) node[above,font=\footnotesize]{$a_2$};
+    \draw[->,very thick,warnc] (o)--++(0.75,0.5) node[right,font=\footnotesize]{$c$};
+    \node[ilpopt] at (2,1) {};
+    \node[defc,font=\footnotesize,anchor=west] at (2.1,0.95) {ILP};
+    \node[font=\footnotesize] at (1.3,-0.7) {$c=\frac43a_1+\frac13a_2$};
+    \begin{scope}[xshift=6.6cm,yshift=-3cm,y=0.75cm]
+      \draw[osa] (0,4)--(0,10.8);
+      \foreach \v in {5,8,10} \draw (-0.08,\v)--(0.08,\v) node[left=3pt,font=\footnotesize]{\v};
+      \node[circle,fill=gr,inner sep=1.5pt] at (0.25,10) {};
+      \node[font=\footnotesize,anchor=west] at (0.35,10) {duální $(1,1)$: mez 10};
+      \node[lpopt] at (0.25,8.333) {};
+      \node[warnc,font=\footnotesize,anchor=west] at (0.35,8.55) {$\mathrm{OPT}_{LP}=\frac{25}{3}$};
+      \node[ilpopt] at (0.25,8) {};
+      \node[defc,font=\footnotesize,anchor=west] at (0.35,7.7) {$(2,1)$: $\mathrm{OPT}=8$};
+      \node[ilpopt] at (0.25,5) {};
+      \node[defc,font=\footnotesize,anchor=west] at (0.35,5) {přípustné $(1,1)$: 5};
+      \node[font=\footnotesize] at (1.2,2.6) {zespodu řešení, shora duální meze};
+    \end{scope}
+
+  .caption:
+
+    Vlevo: v LP optimu leží $c$ mezi normálami $a_1,a_2$ aktivních omezení. Vpravo: hodnoty přípustných řešení
+    rostou zespodu, duální meze klesají shora; obě se potkají v $\mathrm{OPT}_{LP}$ a celočíselné optimum je pod tím.
+
+
+.Warning:
+  title: 'Typické chyby'
+
+  .itemize:
+
+    .item:
+
+      "Zaokrouhlit LP řešení a prohlásit ho za optimum.".notion Zaokrouhlené řešení může být nepřípustné ($(2,2)$
+      výše) a i přípustné zaokrouhlení může být daleko od optima.
+
+    .item:
+
+      "Opačný směr meze.".notion Pro maximalizaci je $\mathrm{OPT}_{LP}$ horní mez, pro minimalizaci dolní. Dolní mez
+      u maximalizace dává jakékoli přípustné (celočíselné) řešení.
+
+    .item:
+
+      "Zaokrouhlit mez bez důvodu.".notion Mez $\tfrac{25}{3}$ smíme stáhnout na 8 jen proto, že účelová funkce má
+      celočíselné koeficienty, takže na celých bodech nabývá celých hodnot.
+
+    .item:
+
+      "Duál se špatnými znaménky.".notion Tvar „$\max$, $\le$, $x\ge0$“ $\leftrightarrow$ „$\min$, $\ge$, $y\ge0$“ platí
+      jen pro tento standardní tvar. Jinak úlohu nejdřív do tohoto tvaru převeď.

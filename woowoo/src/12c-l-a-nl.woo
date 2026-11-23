@@ -1,0 +1,175 @@
+
+
+.Section Logaritmický prostor: L a NL
+  label: ch-prostor-logaritmicky-prostor-l-a-nl
+
+
+Co když máme jen logaritmicky mnoho paměti – méně, než kolik zabere samotný vstup? Aby to dávalo smysl,
+oddělíme „úložiště vstupu“ od „pracovní paměti“:
+
+.itemize:
+
+  .item:
+
+    "vstupní páska".notion – pouze ke čtení, "nepočítá se".emphasize do prostoru,
+
+  .item:
+
+    "pracovní páska".notion – čtení i zápis, počítá se její navštívená část,
+
+  .item:
+
+    "výstupní páska".notion – pouze pro zápis (hlava jen doprava), rovněž se nepočítá.
+
+
+.Figure:
+  label: ch-prostor-fig-tri-pasky
+
+  !tikz:
+    filename: 12c-l-a-nl-01
+    options: 'x=1cm,y=1cm'
+
+    \tmtape{0}{1.6}{0,1,1,0,1,0,0,1,1,0,1,1}{5}
+    \node[font=\scriptsize,anchor=east] at (-0.2,1.6) {vstup (jen čtení)};
+    \tmtape{0}{0}{1,0,1,_}{2}
+    \node[font=\scriptsize,anchor=east] at (-0.2,0) {pracovní ($O(\log n)$)};
+    \tmtape{0}{-1.6}{1,0,_,_,_,_}{3}
+    \node[font=\scriptsize,anchor=east] at (-0.2,-1.6) {výstup (jen zápis)};
+    \draw[decorate,decoration={brace,amplitude=4pt}] (0,2.05)--(8.4,2.05) node[midway,above=4pt,font=\scriptsize]{$n$ buněk -- nepočítá se};
+    \fill[warnc!8,draw=warnc,thick,rounded corners] (0,0.45) rectangle (2.8,-0.45);
+    \tmtape{0}{0}{1,0,1,_}{0}
+    \node[font=\scriptsize,warnc,anchor=west] at (3.0,0) {jen tohle se počítá do prostoru};
+
+  .caption:
+
+    Stroj se vstupní, pracovní a výstupní páskou.
+
+
+.Definition:
+  title: 'Třídy L a NL'
+  label: def-lnl
+
+  $\LL=\DSPACE(\log n)$ (deterministický logaritmický prostor), $\NL=\NSPACE(\log n)$.
+
+
+Do $\log n$ bitů se vejde konstantně mnoho "ukazatelů".emphasize (indexů) do vstupu – přesně ta správná míra. S menším
+prostorem by si stroj nemohl pamatovat ani to, kde ve vstupu je.
+
+
+.Subsection Nejtěžší problém třídy NL: ST-REACH
+  label: ch-prostor-nejtezsi-problem-tridy-nl-st-reach
+
+
+.Definition:
+  title: 'Problém $\prob{ST-REACH}$ (dosažitelnost v orientovaném grafu)'
+  label: prob-streach
+
+  "Vstup:".notion orientovaný graf $G$ a vrcholy $s,t$.
+
+
+  "Otázka:".notion existuje v $G$ orientovaná cesta z $s$ do $t$?
+
+
+Je to přirozený „reprezentační“ problém pro $\NL$ – analogicky k SATu pro $\NP$.
+
+.itemize:
+
+  .item:
+
+    $\prob{ST-REACH}\in\NL$: nedeterministicky „hádáme“ cestu krok za krokem. Stačí si pamatovat aktuální
+    vrchol a počítadlo kroků ($\le n$), obojí zabere $O(\log n)$ bitů. Celou cestu si pamatovat nemusíme!
+
+  .item:
+
+    $\prob{ST-REACH}$ je $\NL$-těžký: graf konfigurací stroje pracujícího v prostoru $\log n$ má polynomiálně
+    mnoho vrcholů a stroj přijímá $\iff$ v něm vede cesta $C_{\mathrm{start}}\leadsto C_{\mathrm{accept}}$.
+    (Formálně potřebujeme jemnější "log-space redukce".emphasize – polynomiální redukce jsou pro třídy uvnitř $\PP$
+    příliš silné; detaily vynecháme, intuice je stejná.)
+
+
+.Subsection $\LL\subseteq\NL\subseteq\PP$
+  label: ch-prostor-l-nl-p
+
+
+.Theorem:
+  label: thm-nlp
+
+  $\LL\subseteq\NL\subseteq\PP$ a $\NL\subseteq\DSPACE(\log^2 n)$.
+
+
+.Proof:
+
+  $\LL\subseteq\NL$: deterministický stroj je speciální případ nedeterministického.
+  $\NL\subseteq\PP$: spočítáme konfigurace stroje s prostorem $c\log n$:
+
+  .table:
+    columns: 'lc'
+    noheader: true
+
+    .row:
+
+      vnitřní stav
+
+      $|Q|$
+
+    .row:
+
+      hlava na vstupu
+
+      $n+2$
+
+    .row:
+
+      hlava na pracovní pásce
+
+      $c\log n$
+
+    .row:
+
+      obsah pracovní pásky
+
+      $|\Gamma|^{c\log n}=n^{c\log|\Gamma|}=n^{O(1)}$
+
+    .row:
+
+      "celkem".notion
+
+      $n^{O(1)}$ – polynom
+
+  Graf konfigurací tedy celý sestrojíme a prohledáme do šířky (BFS); přijmeme, je-li $C_{\mathrm{accept}}$
+  dosažitelná z $C_{\mathrm{start}}$ (obr. .reference:fig-nl-bfs-vrstvy). Polynomiální čas. Poslední inkluze je Savitchova věta pro $S(n)=\log n$.
+
+
+.Figure:
+  label: fig-nl-bfs-vrstvy
+
+  !tikz:
+    filename: 12c-l-a-nl-02
+    options: 'x=1cm,y=1cm,cv/.style={circle,draw=black!75,thick,fill=white,minimum size=5mm,inner sep=0pt},cvn/.style={cv,draw=black!30,fill=black!6}'
+
+    \begin{scope}[on background layer]
+      \foreach \x/\k in {0/0,1.8/1,3.6/2,5.4/3} {
+        \fill[defc!6,rounded corners=4pt] (\x-0.55,-1.75) rectangle (\x+0.55,1.75);
+        \node[font=\scriptsize,defc] at (\x,2.0) {vrstva \k};}
+    \end{scope}
+    \node[cv,fill=defc!25,label={[font=\scriptsize]below:$C_{\mathrm{start}}$}] (s) at (0,0) {};
+    \node[cv] (a) at (1.8,0.7) {}; \node[cv] (b) at (1.8,-0.7) {};
+    \node[cv] (c) at (3.6,1.2) {}; \node[cv] (d) at (3.6,0) {}; \node[cv] (e) at (3.6,-1.2) {};
+    \node[cv,fill=acc!30,label={[font=\scriptsize]above:$C_{\mathrm{accept}}$}] (acc) at (5.4,0.4) {};
+    \node[cv] (f) at (5.4,-1.2) {};
+    \node[cvn] (h) at (1.8,-2.6) {}; \node[cvn] (g) at (3.6,-2.6) {};
+    \draw[->,thick,black!65] (s)--(a); \draw[->,thick,black!65] (s)--(b);
+    \draw[->,thick,black!65] (a)--(c); \draw[->,thick,black!65] (a)--(d);
+    \draw[->,thick,black!65] (b)--(d); \draw[->,thick,black!65] (b)--(e);
+    \draw[->,thick,black!65] (c) to[bend right=30] (a);
+    \draw[->,thick,black!65] (d)--(acc); \draw[->,thick,black!65] (e)--(f);
+    \draw[->,thick,black!25] (h)--(g); \draw[->,thick,black!25] (g)--(e);
+    \node[font=\scriptsize,black!55,anchor=west] at (4.1,-2.6) {nedosažitelné -- BFS je nenavštíví};
+    \node[font=\scriptsize,align=left,anchor=west] at (6.4,0.4) {$C_{\mathrm{accept}}$ ve vrstvě 3\\ $\Rightarrow$ přijmi};
+    \node[font=\scriptsize,align=left,anchor=west] at (6.4,-1.0) {vrcholů je jen $n^{O(1)}$\\ $\Rightarrow$ BFS v čase $n^{O(1)}$};
+
+  .caption:
+
+    Graf konfigurací stroje s prostorem $c\log n$ prohledaný do šířky z $C_{\mathrm{start}}$. Vrstva $k$ obsahuje
+    konfigurace, do nichž vede nejkratší cesta délky $k$. "Všimni si:".emphasize na rozdíl od Savitche si tady celý graf
+    "smíme".emphasize sestrojit a pamatovat – má polynomiálně mnoho vrcholů, záleží jen na čase.

@@ -1,0 +1,109 @@
+/* Vzhled PDF verze skript. Načítá se jen na jednostránkové verzi (tools/woo2mkdocs.py --pdf),
+   kterou tools/build_pdf.sh vytiskne přes Chrome. Formát A4, číslo stránky dole uprostřed.
+   Pravidla platí i mimo tisk, aby rozložení na obrazovce (okno široké jako sazební obrazec, 666 px)
+   bylo stejné jako na papíře: podle něj skript pdf.js zmenšuje příliš široké tabulky a vzorce. */
+/* A4 v celých pixelech (794 × 1123 px) a okraje také: při zlomkové výšce sazebního obrazce prosvítala
+   na spodku stránky vlasová linka z rámečku, kterým začíná stránka další. Sazební obrazec: 666 × 983 px. */
+@page {
+  size: 794px 1123px;
+  margin: 64px 64px 76px;
+  @bottom-center { content: counter(page); font: 9pt/1 system-ui, sans-serif; color: #475569; }
+}
+@page :first { @bottom-center { content: none; } }
+
+/* titulní list a obsah */
+.woo-titlepage {
+  display: flex; flex-direction: column; justify-content: center; align-items: flex-start;
+  min-height: 225mm; break-after: page;
+  border-left: 5px solid var(--md-accent-fg-color); padding-left: 9mm;
+}
+.md-typeset .woo-titlepage p { margin: 0; }
+.md-typeset .woo-tp-subject { font-size: 1rem; font-weight: 600; color: var(--md-accent-fg-color); letter-spacing: 0.02em; }
+.md-typeset .woo-tp-title { font-size: 2.3rem; font-weight: 800; line-height: 1.15; margin-top: 0.3em; text-wrap: balance; }
+.md-typeset .woo-tp-topics { font-size: 0.8rem; margin-top: 1.4em; color: #334155; }
+.md-typeset .woo-tp-date { font-size: 0.7rem; margin-top: 3em; color: #475569; }
+
+.woo-toc { break-after: page; }
+.md-typeset .woo-toc-title { font-size: 1.5rem; font-weight: 800; margin: 0 0 0.5em; }
+.md-typeset .woo-toc-group {
+  font-size: 0.62rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em;
+  color: #475569; margin: 1.3em 0 0.3em; border-bottom: 1px solid #cbd5e1; padding-bottom: 0.2em;
+}
+.md-typeset .woo-toc ul { list-style: none; margin: 0; padding: 0; }
+.md-typeset .woo-toc-part { break-inside: avoid; }
+.md-typeset .woo-toc-part > ul { columns: 2; column-gap: 9mm; }
+.md-typeset .woo-toc-part > ul:has(> li:only-child) { columns: 1; }   /* jediná kapitola se nedělí do sloupců */
+.md-typeset .woo-toc li { margin: 0; }
+.md-typeset .woo-toc-part > ul > li { margin: 0 0 0.7em; break-inside: avoid; font-weight: 700; font-size: 0.66rem; }
+.md-typeset .woo-toc-part > ul > li > ul { margin-top: 0.15em; }
+.md-typeset .woo-toc-part > ul > li > ul > li { font-weight: 400; font-size: 0.62rem; line-height: 1.5; padding-left: 1.2em; }
+.md-typeset .woo-toc a { color: inherit; text-decoration: none; }
+.md-typeset .woo-toc-num { color: var(--md-accent-fg-color); font-variant-numeric: tabular-nums; margin-right: 0.3em; }
+
+/* kapitola začíná na nové stránce, oddíl je oddělen linkou */
+.md-typeset h1.woo-chapter {
+  break-before: page; font-size: 1.55rem; font-weight: 800; color: var(--md-primary-fg-color);
+  margin: 0 0 0.9em; padding-bottom: 0.35em; border-bottom: 3px solid var(--md-accent-fg-color); text-wrap: balance;
+}
+.md-typeset h2.woo-section {
+  font-size: 1.15rem; font-weight: 700; margin: 2em 0 0.7em; padding-top: 0.7em;
+  border-top: 2px solid var(--md-primary-fg-color); text-wrap: balance;
+}
+.md-typeset h1.woo-chapter + h2.woo-section { border-top: 0; padding-top: 0; margin-top: 1em; }
+.md-typeset h3 { font-size: 0.9rem; font-weight: 700; margin: 1.5em 0 0.5em; }
+.md-typeset h3.woo-part {
+  margin-top: 2em; padding-top: 0.6em; border-top: 1.5px solid var(--md-accent-fg-color); text-wrap: balance;
+}
+.md-typeset h2:not(.woo-section) { font-size: 0.95rem; font-weight: 700; }
+
+/* stránka je jen obsah: bez hlavičky, navigace a patičky (motiv to dělá jen pro tisk) */
+.md-header, .md-tabs, .md-sidebar, .md-footer, .md-top, .md-dialog, .md-content__button { display: none; }
+body, .md-container { display: block; }
+.md-typeset { font-size: 0.68rem; line-height: 1.5; }
+.md-typeset .headerlink { display: none; }
+.md-typeset table:not([class]) { display: table; }
+/* motiv na úzké obrazovce vytahuje tabulky a vzorce přes okraj (kvůli posouvání prstem); tady nesmí nic přesahovat */
+.md-typeset div.arithmatex, .md-typeset__scrollwrap { margin-left: 0; margin-right: 0; padding-left: 0; padding-right: 0; }
+.md-typeset__table { padding: 0; }
+mjx-assistive-mml { display: none !important; }
+html { scrollbar-width: none; }
+::-webkit-scrollbar { display: none; }
+
+.md-main__inner { margin-top: 0; }
+.md-content__inner { margin: 0; padding: 0; }
+.md-content__inner::before { display: none; }
+.md-grid { max-width: none; }
+.md-typeset p { orphans: 3; widows: 3; }
+
+/* rámečky: stejné písmo jako okolní text, tabulky o stupeň menší */
+.md-typeset .admonition { font-size: 0.66rem; margin: 0.9em 0; }
+.md-typeset table:not([class]) { font-size: 0.6rem; }
+.md-typeset .admonition table:not([class]) { font-size: 0.6rem; }
+.md-typeset table:not([class]) th,
+.md-typeset table:not([class]) td { padding: 0.4em 0.7em; }
+.md-typeset ol.woo-algo { font-size: 0.62rem; }
+
+/* zalomení stránek: nadpis neopouští svůj text, malé celky se nedělí, dlouhá řešení se dělit smějí */
+.md-typeset h1, .md-typeset h2, .md-typeset h3, .md-typeset h4,
+.md-typeset .admonition-title { break-after: avoid; }
+.md-typeset .admonition { break-inside: avoid; }
+.md-typeset .admonition.woo-solution,
+.md-typeset .admonition.woo-example,
+.md-typeset .admonition.woo-exercise { break-inside: auto; }
+.md-typeset .admonition.woo-tall { break-inside: auto; }      /* třídu přidává pdf.js rámečkům vyšším než třetina stránky */
+.md-typeset .admonition.woo-exercise { break-after: avoid; }
+.md-typeset tr, .md-typeset img, .md-typeset ol.woo-algo > li,
+.md-typeset .woo-centered, .md-typeset div.arithmatex, .md-typeset dl.woo-dl > dd { break-inside: avoid; }
+/* obrázek/tabulka a jejich popisek zůstávají na jedné stránce (jinak popisek odskočil na další stranu) */
+.md-typeset figure.woo-figure { break-inside: avoid; }
+.md-typeset figure.woo-figure > figcaption { break-before: avoid; break-inside: avoid; }
+.md-typeset figure.woo-float > figcaption { break-inside: avoid; }
+/* poslední odrážka seznamu v rámečku nezůstane sama na další stránce */
+.md-typeset .admonition li:last-child { break-before: avoid; }
+/* shrnutí „Co si odnést“ zůstává vcelku, i když je vysoké (jinak na poslední stránce kapitoly zbyly dvě odrážky) */
+.md-typeset .admonition.woo-summary.woo-tall { break-inside: avoid; }
+
+/* na papíře se nedá posouvat: nic nesmí být oříznuté */
+.md-typeset div.arithmatex, .md-typeset ol.woo-algo, .md-typeset__scrollwrap, .md-typeset__table { overflow: visible; }
+.md-typeset__table { display: block; }
+.md-typeset a { text-decoration: none; }

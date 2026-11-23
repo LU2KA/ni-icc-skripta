@@ -1,0 +1,1271 @@
+.Section Úlohy navíc
+  label: ch-resice-ilp-ulohy-navic
+
+
+Úlohy procvičují obě strany kapitoly: modelování (logické podmínky, fixní náklady a „buď, anebo“ z oddílu
+.reference:ch-resice-ilp-modelovaci-triky) a práci s mezí – LP relaxaci a dualitu (oddíl
+.reference:ch-resice-ilp-lp-relaxace-a-dualita), branch & bound (oddíl .reference:ch-resice-ilp-branch-and-bound),
+řezy a sílu formulace (oddíly .reference:ch-resice-ilp-rezy-a-separace a .reference:ch-resice-ilp-sila-formulace).
+Modelovací úlohy řeš podle rámečku "Postup na papíře"#ch-resice-ilp-proc-formulace.
+
+
+.Warning:
+  title: 'Neoficiální úlohy'
+
+  Úlohy v tomto oddílu "nejsou".notion oficiální zadání předmětu. Jsou to procvičovací úlohy navíc k látce kapitoly;
+  všechna čísla v řešeních (optima, LP meze, vrcholy, stromy branch & bound, počty omezení) jsme přepočítali skripty
+  a modely porovnali s hrubou silou: výčtem všech celočíselných řešení, LP/ILP řešičem a na náhodných malých
+  instancích.
+
+
+.Subsection Rozcvička
+  label: ch-resice-ilp-ulohy-navic-rozcvicka
+
+
+.Exercise:
+  title: 'Úloha 15.1 (batoh s logickými podmínkami)'
+  label: un-15-1
+
+  Na víkendový přechod hor vybíráme vybavení. Batoh unese nanejvýš 6 kg; každá věc má váhu a „užitek“:
+
+  .table:
+    columns: 'lccc'
+
+    .row:
+      head: true
+
+      věc
+
+      zkratka
+
+      váha [kg]
+
+      užitek
+
+    .row:
+
+      stan
+
+      $T$
+
+      3
+
+      8
+
+    .row:
+
+      hamaka
+
+      $H$
+
+      1
+
+      5
+
+    .row:
+
+      plachta
+
+      $P$
+
+      1
+
+      3
+
+    .row:
+
+      vařič
+
+      $V$
+
+      1
+
+      4
+
+    .row:
+
+      plynová kartuše
+
+      $K$
+
+      1
+
+      2
+
+    .row:
+
+      foťák
+
+      $F$
+
+      1
+
+      4
+
+    .row:
+
+      powerbanka
+
+      $B$
+
+      1
+
+      3
+
+    .row:
+
+      solární nabíječka
+
+      $S$
+
+      1
+
+      1
+
+
+  Platí čtyři podmínky:
+
+  .enumerate:
+
+    .item:
+      bullet: '(P1)'
+
+      Vařič bez kartuše je k ničemu a kartuše bez vařiče také: buď beru obojí, nebo nic z toho.
+
+    .item:
+      bullet: '(P2)'
+
+      Spím buď ve stanu, nebo v hamace – právě v jednom z nich.
+
+    .item:
+      bullet: '(P3)'
+
+      Beru-li hamaku, beru i plachtu.
+
+    .item:
+      bullet: '(P4)'
+
+      Beru-li foťák, musím ho mít čím nabíjet: powerbankou nebo solární nabíječkou.
+
+
+  .enumerate:
+    type: a
+
+    .item:
+
+      Zapište úlohu jako ILP (proměnné, omezení, účelová funkce, velikost).
+
+    .item:
+
+      Ověřte tabulkou všech kombinací, že nerovnice pro (P4) zakazuje přesně to, co věta.
+
+    .item:
+
+      Které z výběrů $\{T,V,K,F\}$, $\{H,V,K,F,B\}$, $\{T,F,B\}$ jsou přípustné?
+
+    .item:
+
+      Najděte optimum a zdůvodněte, že lepší není.
+
+
+.Solution:
+
+  "a) Proměnné.".notion $x_i\in\{0,1\}$ pro $i\in\{T,H,P,V,K,F,B,S\}$: $x_i=1$ právě když věc $i$ beru.
+
+
+  "Omezení.".notion
+
+  .itemize:
+
+    .item:
+
+      (O0) $3x_T+x_H+x_P+x_V+x_K+x_F+x_B+x_S\le 6$ – batoh unese 6 kg.
+
+    .item:
+
+      (P1) $x_V=x_K$ – ekvivalence. Je to dvojice implikací $x_V\le x_K$ a $x_K\le x_V$; zakáže kombinace
+      $(1,0)$ i $(0,1)$.
+
+    .item:
+
+      (P2) $x_T+x_H=1$ – „právě jeden“: $\ge1$ je „aspoň jeden“, $\le1$ „nejvýš jeden“.
+
+    .item:
+
+      (P3) $x_H\le x_P$ – implikace $H\Rightarrow P$.
+
+    .item:
+
+      (P4) $x_F\le x_B+x_S$ – implikace, v jejímž závěru je disjunkce: při $x_F=1$ musí být pravá strana aspoň 1,
+      tj. $B\lor S$; při $x_F=0$ nerovnice neříká nic.
+
+
+  "Účel.".notion $\max\ 8x_T+5x_H+3x_P+4x_V+2x_K+4x_F+3x_B+x_S$. "Velikost:".notion 8 binárních proměnných,
+  5 omezení (rovnice (P1) a (P2) počítáme jako jedno omezení).
+
+
+  "b) Tabulka pro (P4).".notion Věta je nepravdivá jen tehdy, když beru foťák a nemám ani powerbanku, ani nabíječku:
+
+  .table:
+    columns: 'ccccc'
+
+    .row:
+      head: true
+
+      $x_F$
+
+      $x_B$
+
+      $x_S$
+
+      $x_F\le x_B+x_S$
+
+      věta (P4)
+
+    .row:
+
+      0
+
+      libovolně
+
+      libovolně
+
+      platí ($0\le\cdot$)
+
+      platí
+
+    .row:
+
+      1
+
+      0
+
+      0
+
+      neplatí ($1\le0$)
+
+      neplatí
+
+    .row:
+
+      1
+
+      0
+
+      1
+
+      platí
+
+      platí
+
+    .row:
+
+      1
+
+      1
+
+      0
+
+      platí
+
+      platí
+
+    .row:
+
+      1
+
+      1
+
+      1
+
+      platí
+
+      platí
+
+  První řádek shrnuje čtyři kombinace s $x_F=0$. Nerovnice tedy zakazuje přesně jedinou kombinaci ze všech osmi,
+  stejně jako věta.
+
+
+  "c) Kontrola výběrů.".notion
+
+  .itemize:
+
+    .item:
+
+      $\{T,V,K,F\}$: váha $3+1+1+1=6\le6$, (P1)–(P3) platí, ale (P4) ne: $x_F=1>x_B+x_S=0$. "Nepřípustný".notion.
+
+    .item:
+
+      $\{H,V,K,F,B\}$: váha 5, ale (P3) neplatí: $x_H=1>x_P=0$. "Nepřípustný".notion.
+
+    .item:
+
+      $\{T,F,B\}$: váha 5, (P1) ($0=0$), (P2) ($1+0=1$), (P3) ($0\le0$), (P4) ($1\le1+0$). "Přípustný".notion,
+      užitek $8+4+3=15$.
+
+
+  "d) Optimum.".notion Podle (P2) rozebereme dva případy.
+
+  .itemize:
+
+    .item:
+
+      "Stan ($x_T=1$, $x_H=0$):".notion 3 kg a užitek 8, zbývají 3 kg. Všechny zbylé věci váží 1 kg, vybíráme tedy
+      nejvýš tři z $P,V,K,F,B,S$. Vezmu-li vařič, musím i kartuši, a ke dvojici (užitek 6) se vejde jedna věc
+      s užitkem nejvýš 3 (foťák ne, potřeboval by i nabíjení): nejvýš 9. Bez vařiče nesmím vzít ani kartuši (P1);
+      nejlepší trojice z $P,F,B,S$ s užitky $3,4,3,1$ je $F,B,P$ s užitkem 10 a (P4) splňuje. Celkem nejvýš $8+10=18$.
+
+    .item:
+
+      "Hamaka ($x_H=1$, $x_T=0$):".notion (P3) vynutí plachtu; 2 kg a užitek $5+3=8$, zbývají 4 kg. Zbylé věci
+      $V,K,F,B,S$ váží dohromady 5 kg (užitek $4+2+4+3+1=14$), takže aspoň jednu musíme vynechat. Vynechání $S$ stojí 1
+      a (P4) platí dál díky $B$; vynechání kterékoli jiné stojí aspoň 2 (bez $K$ musí pryč i $V$). Nejlépe 13,
+      celkem $8+13=21$.
+
+
+  "Optimum je 21".notion: $\{H,P,V,K,F,B\}$ s váhou přesně 6 kg. (Ověřeno výčtem všech $2^8=256$ výběrů: model
+  připouští přesně výběry, které splňují slovní podmínky, a jediné optimum je toto.)
+
+
+.Exercise:
+  title: 'Úloha 15.2 (LP relaxace v rovině)'
+  label: un-15-2
+
+  Je dáno ILP
+
+  .equation:
+
+    \max\ 5x+4y\quad\text{při}\quad 6x+4y\le 24,\quad x+2y\le 6,\quad x,y\ge0\ \text{celá}.
+
+  .enumerate:
+    type: a
+
+    .item:
+
+      Nakreslete polyedr $P$ LP relaxace a najděte LP optimum.
+
+    .item:
+
+      Najděte celočíselné optimum.
+
+    .item:
+
+      Co dá zaokrouhlení LP optima na nejbližší celý bod a zaokrouhlení dolů?
+
+    .item:
+
+      O kolik se liší mez $\mathrm{OPT}_{LP}$ od optima? Spočítejte i gap $(B-z)/|z|$ z oddílu
+      .reference:ch-resice-ilp-branch-and-bound pro $B=\mathrm{OPT}_{LP}$ a $z=\mathrm{OPT}$.
+
+
+.Solution:
+
+  "a) Vrcholy $P$.".notion LP optimum leží ve vrcholu (oddíl .reference:ch-resice-ilp-lp-relaxace-a-dualita), stačí
+  tedy vrcholy projít. Průsečík obou přímek: z $x+2y=6$ je $x=6-2y$, dosazením $36-12y+4y=24$, tedy $y=\tfrac32$
+  a $x=3$. Na osách: $(4,0)$ (z $6x=24$; $4\le6$ platí) a $(0,3)$ (z $2y=6$; $12\le24$ platí). Body $(6,0)$ a $(0,6)$
+  vrcholy nejsou, porušují druhé, resp. první omezení.
+
+  .table:
+    columns: 'ccccc'
+
+    .row:
+      head: true
+
+      vrchol
+
+      $(0,0)$
+
+      $(4,0)$
+
+      $(3,\tfrac32)$
+
+      $(0,3)$
+
+    .row:
+
+      $5x+4y$
+
+      0
+
+      20
+
+      "21".notion
+
+      12
+
+  LP optimum je $(3,\tfrac32)$ s $\mathrm{OPT}_{LP}=21$.
+
+
+  "b) Celočíselné optimum.".notion Z $x+2y\le6$ je $y\le3$. Pro každé $y$ vezmeme největší přípustné $x$ (účel roste
+  v $x$): $y=0$: $6x\le24$, $x\le4$, bod $(4,0)$ s hodnotou 20; $y=1$: $6x\le20$, $x\le3$, $(3,1)$ s 19; $y=2$:
+  $x\le2$ (z obou omezení), $(2,2)$ s 18; $y=3$: $x\le0$, $(0,3)$ s 12. Tedy "$\mathrm{OPT}=20$ v bodě $(4,0)$".notion.
+  (Celočíselných přípustných bodů je 13, prošli jsme všechny skriptem.)
+
+
+  "c) Zaokrouhlení.".notion Nejbližší celý bod $(3,2)$ je "nepřípustný".emphasize: $6\cdot3+4\cdot2=26>24$.
+  Zaokrouhlení dolů $(3,1)$ přípustné je, ale má hodnotu jen 19 – optimum $(4,0)$ leží v "jiném".emphasize vrcholu $P$.
+
+
+  "d) Mez vs. optimum.".notion $21-20=1$, gap $(21-20)/20=5\,\%$. Mez 21 je celé číslo, takže ani zaokrouhlení
+  meze dolů (jako v příkladu .reference:ch-resice-ilp-ex-certifikat) nepomůže: z LP samotného víme jen
+  $\mathrm{OPT}\le21$. Že je 20 opravdu optimum, dokáže až branch & bound v "úloze 15.3"#un-15-3 (nebo výčet výše).
+
+
+  .centered:
+
+    !tikz:
+      filename: 15z-ulohy-navic-01
+      options: 'x=1.05cm,y=1.05cm'
+
+      \fill[defc!10] (0,0)--(4,0)--(3,1.5)--(0,3)--cycle;
+      \draw[defc,thick] (4,0)--(3,1.5)--(0,3);
+      \chQaxes{5.6}{4.8}
+      \foreach \x in {0,...,5} \foreach \y in {0,...,4} {
+        \pgfmathparse{(6*\x+4*\y<=24) && (\x+2*\y<=6) ? 1 : 0}
+        \ifnum\pgfmathresult=1 \node[ipt] at (\x,\y) {}; \else \node[ipto] at (\x,\y) {}; \fi}
+      \foreach \n in {1,...,5} \node[font=\scriptsize,below] at (\n,0) {\n};
+      \foreach \n in {1,...,4} \node[font=\scriptsize,left] at (0,\n) {\n};
+      \draw[warnc,dashed,thick] (0.6,4.5)--(4.2,0);
+      \node[warnc,font=\footnotesize,anchor=west] at (0.75,4.45) {$5x+4y=21$};
+      \node[lpopt] at (3,1.5) {};
+      \node[warnc,font=\footnotesize,anchor=west,fill=white,inner sep=1pt] at (3.2,1.5) {LP $(3;\,1{,}5)$: $21$};
+      \node[warnc,font=\small] at (3,2) {$\times$};
+      \node[warnc,font=\footnotesize,anchor=west,fill=white,inner sep=1pt] at (3.15,2) {zaokr. $(3,2)$};
+      \draw[exc,very thick] (3,1) circle (4pt);
+      \node[exc!80!black,font=\footnotesize,anchor=north east] at (2.9,0.92) {$(3,1)$: 19};
+      \node[ilpopt] at (4,0) {};
+      \node[defc,font=\footnotesize,anchor=south west] at (4.05,0.08) {ILP $(4,0)$: $20$};
+      \node[defc,font=\small] at (0.5,1.5) {$P$};
+
+  Polyedr $P$ (modře) a celočíselné body (tmavé). Čárkovaná přímka hodnoty 21 se $P$ dotýká jen v LP optimu.
+  "Všimni si:".emphasize zaokrouhlený bod $(3,2)$ leží mimo $P$, zaokrouhlení dolů $(3,1)$ optimum není
+  a celočíselné optimum $(4,0)$ je jiný vrchol.
+
+
+.Subsection Na úrovni testu
+  label: ch-resice-ilp-ulohy-navic-test
+
+
+.Exercise:
+  title: 'Úloha 15.3 (branch & bound krok za krokem)'
+  label: un-15-3
+
+  Vyřešte ILP z "úlohy 15.2"#un-15-2 algoritmem branch & bound (algoritmus
+  .reference:ch-resice-ilp-alg-branch-and-bound). Uzly procházejte do hloubky a u každého větvení zpracujte nejdřív
+  větev „$\le$“. U každého uzlu uveďte LP optimum, mez a co se s uzlem stane; nakreslete strom a po každém uzlu
+  napište incumbent $z$, globální mez $B$ a gap.
+
+
+.Solution:
+
+  "Výpočet LP v uzlech.".notion Ve dvou proměnných stačí projít vrcholy polyedru uzlu (polyedr $P$ z úlohy
+  "15.2"#un-15-2 plus omezení z cesty od kořene).
+
+  .enumerate:
+
+    .item:
+
+      "Kořen".notion ($z=-\infty$): LP optimum $(3,\tfrac32)$, mez 21 ("úloha 15.2"#un-15-2). $x$ je celé,
+      $y=1{,}5$ ne $\Rightarrow$ větvíme $y\le1$ / $y\ge2$.
+
+    .item:
+
+      "$y\le1$:".notion vrcholy $(0,0)$, $(4,0)$, $(0,1)$ a průsečík $6x+4y=24$ s $y=1$, tj. $(\tfrac{10}3,1)$
+      ($x+2y=\tfrac{16}3\le6$ platí). Hodnoty $0$, $20$, $4$, $\tfrac{50}3+4=\tfrac{62}3\approx20{,}67$. Mez
+      $20{,}67>z$, $x=\tfrac{10}3$ není celé $\Rightarrow$ větvíme $x\le3$ / $x\ge4$.
+
+    .item:
+
+      "$y\le1$, $x\le3$:".notion bod $(3,1)$ je přípustný ($22\le24$, $5\le6$) a má obě proměnné na horní mezi uzlu;
+      účel roste v $x$ i $y$, takže je to LP optimum s hodnotou 19. Je celočíselné a $19>-\infty$ $\Rightarrow$
+      "incumbent $z=19$".notion.
+
+    .item:
+
+      "$y\le1$, $x\ge4$:".notion z $6x+4y\le24$ a $x\ge4$ plyne $4y\le0$, tedy $y=0$ a $x=4$. Jediný bod $(4,0)$
+      s hodnotou $20>19$ $\Rightarrow$ "nový incumbent $z=20$".notion.
+
+    .item:
+
+      "$y\ge2$:".notion vrcholy $(0,2)$, $(0,3)$ a $(2,2)$ (z $x+2y=6$; $6\cdot2+4\cdot2=20\le24$). Průsečík
+      $6x+4y=24$ s $y=2$ je $(\tfrac83,2)$, ten porušuje $x+2y\le6$. Hodnoty $8$, $12$, $18$: mez $18\le z=20$
+      $\Rightarrow$ "prořez mezí".notion (že je LP řešení $(2,2)$ celočíselné, nehraje roli – lepší není).
+
+  Žádný otevřený uzel nezbyl $\Rightarrow$ "optimum je 20 v bodě $(4,0)$".notion.
+
+
+  "Průběh $z$, $B$ a gapu.".notion Neřešený uzel dědí mez rodiče; $B$ je největší mez přes otevřené uzly.
+
+  .table:
+    columns: 'clccc'
+
+    .row:
+      head: true
+
+      uzel
+
+      co se stalo
+
+      $z$
+
+      $B$
+
+      gap
+
+    .row:
+
+      1
+
+      kořen, větvení na $y$
+
+      $-\infty$
+
+      21
+
+      –
+
+    .row:
+
+      2
+
+      mez $20{,}67$, větvení na $x$
+
+      $-\infty$
+
+      21
+
+      –
+
+    .row:
+
+      3
+
+      incumbent 19
+
+      19
+
+      21
+
+      $10{,}5\,\%$
+
+    .row:
+
+      4
+
+      incumbent 20
+
+      20
+
+      21
+
+      $5\,\%$
+
+    .row:
+
+      5
+
+      prořez ($18\le20$)
+
+      20
+
+      20
+
+      $0$
+
+  Po uzlu 2 je $B$ pořád 21: otevřený uzel $y\ge2$ ještě nese mez kořene. Gap po uzlu 3 je $(21-19)/19\approx0{,}105$.
+
+
+  .centered:
+
+    !tikz:
+      filename: 15z-ulohy-navic-02
+      options: 'level distance=17mm, level 1/.style={sibling distance=56mm}, level 2/.style={sibling distance=36mm}, edge from parent/.style={draw=black!60,thick}'
+
+      \node[bbn] {\textcircled{\tiny 1} $(3;\ 1{,}5)$\\ $21$}
+        child {node[bbn] {\textcircled{\tiny 2} $y\le1$: $(\frac{10}{3};\ 1)$\\ $20{,}67$}
+          child {node[bbinc] {\textcircled{\tiny 3} $x\le3$: $(3,1)$\\ $19$}}
+          child {node[bbinc] {\textcircled{\tiny 4} $x\ge4$: $(4,0)$\\ $\mathbf{20}$}}}
+        child {node[bbcut] {\textcircled{\tiny 5} $y\ge2$: $(2,2)$\\ $18\le20$ – prořez}};
+
+  Strom branch & bound: číslo v kroužku je pořadí zpracování, v uzlu LP optimum a mez. Modře uzly, kde vznikl
+  incumbent, šedě prořezaný uzel. "Všimni si:".emphasize uzel 5 se zahodí jen díky mezi. Kdybychom u každého
+  větvení zpracovali nejdřív větev „$\ge$“, stal by se uzel $y\ge2$ incumbentem s hodnotou 18, pak uzel $x\ge4$
+  incumbentem s hodnotou 20 a na konci by se prořízl uzel $x\le3$ ($19\le20$); strom by měl stejně uzlů.
+  (Obě pořadí ověřena skriptem.)
+
+
+.Exercise:
+  title: 'Úloha 15.4 (duál a slabá dualita)'
+  label: un-15-4
+
+  Truhlárna vyrábí stoly, židle a police. Stůl spotřebuje 3 jednotky dřeva a 1 hodinu práce a vydělá 6 (tisíc Kč),
+  židle 1 jednotku dřeva, 1 hodinu a vydělá 4, police 1 jednotku dřeva, 3 hodiny a vydělá 6. K dispozici je
+  30 jednotek dřeva a 24 hodin práce. LP s počty $x_1,x_2,x_3$ stolů, židlí a polic:
+
+  .equation:
+
+    \max\ 6x_1+4x_2+6x_3\quad\text{při}\quad 3x_1+x_2+x_3\le30,\quad x_1+x_2+3x_3\le24,\quad x\ge0 .
+
+  .enumerate:
+    type: a
+
+    .item:
+
+      Napište duální program.
+
+    .item:
+
+      Mistr tvrdí: „Víc než 108 vydělat nejde.“ Dokažte to pomocí $y=(2,2)$. Proč $y=(2,1)$ žádnou mez nedává?
+
+    .item:
+
+      Vyřešte duál graficky. Jaká je nejlepší mez?
+
+    .item:
+
+      Najděte plán výroby, který mez dosáhne, a zdůvodněte, že je optimální i tehdy, když se vyrábí jen celé kusy.
+
+
+.Solution:
+
+  "a) Duál.".notion Primál je ve tvaru $\max c^Tx$, $Ax\le b$, $x\ge0$ (definice .reference:ch-resice-ilp-def-dual):
+  omezení primálu (dřevo, práce) $\leftrightarrow$ proměnné duálu $y_1,y_2$; proměnné primálu (stůl, židle, police)
+  $\leftrightarrow$ omezení duálu; $b=(30,24)$ a $c=(6,4,6)$ si vymění role, $A$ se transponuje:
+
+  .equation:
+
+    \min\ 30y_1+24y_2\quad\text{při}\quad 3y_1+y_2\ge6\ \text{(stůl)},\quad y_1+y_2\ge4\ \text{(židle)},\quad
+    y_1+3y_2\ge6\ \text{(police)},\quad y_1,y_2\ge0 .
+
+
+  "b) Mez 108.".notion $y=(2,2)$ je přípustné: $3\cdot2+2=8\ge6$, $2+2=4\ge4$, $2+3\cdot2=8\ge6$. Sečteme dvojnásobek
+  obou omezení primálu: $2(3x_1+x_2+x_3)+2(x_1+x_2+3x_3)=8x_1+4x_2+8x_3\le2\cdot30+2\cdot24=108$. Pro $x\ge0$ je
+  $6x_1+4x_2+6x_3\le8x_1+4x_2+8x_3$, takže každý přípustný plán vydělá nejvýš 108. To je přesně důkaz slabé duality
+  (věta .reference:ch-resice-ilp-thm-slaba-dualita) pro jedno konkrétní $y$.
+
+
+  $y=(2,1)$ přípustné není: u židle je $2+1=3<4$ a u police $2+3=5<6$. Součet omezení dá $7x_1+3x_2+5x_3\le84$,
+  ale $4x_2\le3x_2$ ani $6x_3\le5x_3$ pro kladné $x_2$, $x_3$ neplatí, takže z toho na zisk nic neplyne. Že 84 opravdu mez není, ukazuje plán $x=(0,24,0)$: dřevo
+  $24\le30$, práce $24\le24$, zisk $96>84$.
+
+
+  "c) Grafické řešení duálu.".notion Přípustná oblast je neomezená, ohraničená zdola třemi přímkami a osami. Vrcholy:
+
+  .itemize:
+
+    .item:
+
+      stůl $\cap$ osa $y_2$: $(0,6)$; židle $6\ge4$, police $18\ge6$ platí;
+
+    .item:
+
+      stůl $\cap$ židle: odečtením $3y_1+y_2=6$ a $y_1+y_2=4$ je $2y_1=2$, tedy $(1,3)$; police $1+9=10\ge6$;
+
+    .item:
+
+      židle $\cap$ police: odečtením $y_1+3y_2=6$ a $y_1+y_2=4$ je $2y_2=2$, tedy $(3,1)$; stůl $10\ge6$;
+
+    .item:
+
+      police $\cap$ osa $y_1$: $(6,0)$; stůl $18\ge6$, židle $6\ge4$.
+
+  Hodnoty $30y_1+24y_2$: $144$, "102".notion, $114$, $180$. Účel má kladné koeficienty, oblast leží v kladném
+  kvadrantu, takže minimum je ve vrcholu: "nejlepší mez je 102 pro $y=(1,3)$".notion.
+
+
+  .centered:
+
+    !tikz:
+      filename: 15z-ulohy-navic-03
+      options: 'x=0.8cm,y=0.8cm'
+
+      \fill[defc!10] (0,7.3)--(0,6)--(1,3)--(3,1)--(6,0)--(7.3,0)--(7.3,7.3)--cycle;
+      \draw[osa] (0,0)--(7.8,0) node[right,font=\footnotesize]{$y_1$};
+      \draw[osa] (0,0)--(0,7.8) node[above,font=\footnotesize]{$y_2$};
+      \foreach \v in {2,4,6} \node[font=\scriptsize,below] at (\v,0) {\v};
+      \draw[black!60,thick] (-0.25,6.75)--(2,0);
+      \draw[black!60,thick] (-0.45,4.45)--(4,0);
+      \draw[black!60,thick] (-0.9,2.3)--(6,0);
+      \node[font=\scriptsize,anchor=east] at (-0.25,6.75) {stůl};
+      \node[font=\scriptsize,anchor=east] at (-0.45,4.45) {židle};
+      \node[font=\scriptsize,anchor=east] at (-0.9,2.3) {police};
+      \draw[warnc,dashed,thick] (0,4.25)--(3.4,0);
+      \foreach \p in {(0,6),(3,1),(6,0)} \node[ipt] at \p {};
+      \node[font=\scriptsize,anchor=west] at (0.15,6.1) {$(0,6)$: $144$};
+      \node[font=\scriptsize,anchor=south west] at (3.1,1.05) {$(3,1)$: $114$};
+      \node[font=\scriptsize,anchor=south] at (6,0.15) {$(6,0)$: $180$};
+      \node[lpopt] at (1,3) {};
+      \node[warnc,font=\footnotesize,anchor=south west] at (1.1,3.1) {$(1,3)$: $102$};
+      \node[defc,font=\footnotesize] at (4.8,5) {přípustné $y$};
+
+  Duální oblast (modře) a její vrcholy s hodnotami $30y_1+24y_2$. Čárkovaně přímka hodnoty 102, která se oblasti
+  dotýká v $(1,3)$.
+
+
+  "d) Plán s hodnotou 102.".notion Hledáme $x$, pro které je řetězec z důkazu slabé duality
+  $c^Tx\le y^TAx\le y^Tb$ samými rovnostmi ("(nad rámec přednášky)".emphasize tzv. komplementarita). Pro $y=(1,3)$
+  je $A^Ty=(3+3,\ 1+3,\ 1+9)=(6,4,10)$. U police je $10>6$, první nerovnost je proto rovnost jen při $x_3=0$. Obě
+  $y_i$ jsou kladná, druhá nerovnost je rovnost jen tehdy, když obě omezení platí s rovností: $3x_1+x_2=30$,
+  $x_1+x_2=24$. Odtud $x_1=3$, $x_2=21$, $x_3=0$; kontrola: dřevo $9+21=30$, práce $3+21=24$, zisk
+  $18+84=102$.
+
+
+  Plán $(3,21,0)$ je přípustný a má hodnotu 102, což je mez platná pro "každý".emphasize přípustný plán; je tedy
+  optimální. Je celočíselný a celočíselné plány jsou podmnožinou všech, takže i "celočíselné optimum je 102".notion:
+  3 stoly, 21 židlí, žádné police. Police se nevyplatí, protože při „cenách“ $y=(1,3)$ jejich spotřeba stojí
+  $10>6$. (Ověřeno LP řešičem pro primál i duál a výčtem všech celočíselných plánů.)
+
+
+.Exercise:
+  title: 'Úloha 15.5 (nákup s množstevní slevou)'
+  label: un-15-5
+
+  Kavárna potřebuje na měsíc aspoň $D$ kg kávy (koupit smí i víc, káva se nezkazí). Kupuje se po celých kilogramech
+  od dvou dodavatelů:
+
+  .itemize:
+
+    .item:
+
+      "Dodavatel A:".notion 300 Kč/kg, za každou nenulovou objednávku navíc doprava 500 Kč; dodá nejvýš 40 kg.
+
+    .item:
+
+      "Dodavatel B:".notion bez dopravy; při objednávce do 29 kg stojí kilogram 320 Kč, při objednávce aspoň 30 kg
+      platí "celá".emphasize objednávka 280 Kč/kg; dodá nejvýš 60 kg.
+
+
+  .enumerate:
+    type: a
+
+    .item:
+
+      Formulujte úlohu najít nejlevnější nákup jako ILP: proměnné s oborem a významem, omezení po skupinách s tím,
+      co zajišťují, účelová funkce, velikost. Zdůvodněte, proč optimum ILP je nejlevnější nákup.
+
+    .item:
+
+      Spočítejte optimum pro $D=27$ a pro $D=70$.
+
+
+.Solution:
+
+  "Co volíme.".notion Kolik kg od koho – a u B navíc, ve kterém cenovém pásmu jsme. Cena od B jako funkce množství
+  $q$ "není lineární".emphasize: $320q$ pro $q\le29$ a $280q$ pro $30\le q\le60$; v bodě 30 cena skočí dolů
+  (z 9 280 Kč za 29 kg na 8 400 Kč za 30 kg). Přípustné dvojice (množství, cena) tvoří dva oddělené úseky – to je
+  „buď, anebo“ z oddílu .reference:ch-resice-ilp-modelovaci-triky. Rozdělíme proto nákup od B na dvě proměnné
+  a binární přepínač vybere pásmo.
+
+
+  "1. Proměnné.".notion
+
+  .itemize:
+
+    .item:
+
+      $x_A\in\mathbb Z_{\ge0}$ … kg kávy od A; $y_A\in\{0,1\}$ … u A objednáváme (platíme dopravu);
+
+    .item:
+
+      $u\in\mathbb Z_{\ge0}$ … kg od B za plnou cenu, $v\in\mathbb Z_{\ge0}$ … kg od B za zlevněnou cenu;
+
+    .item:
+
+      $z\in\{0,1\}$ … objednávka u B je v pásmu se slevou (aspoň 30 kg).
+
+
+  "2. Omezení.".notion
+
+  .itemize:
+
+    .item:
+
+      (O1) $x_A+u+v\ge D$ – kávy je dost.
+
+    .item:
+
+      (O2) $x_A\le 40\,y_A$ – od A jen s placenou dopravou a nejvýš 40 kg (vypínač $x\le My$ s $M=40$, které je
+      zároveň kapacitou).
+
+    .item:
+
+      (O3) $u\le 29\,(1-z)$ – plná cena jen bez slevy ($z=1$ dá $u=0$) a nejvýš 29 kg.
+
+    .item:
+
+      (O4) $30\,z\le v\le 60\,z$ (dvě nerovnice) – při $z=0$ je $v=0$, při $z=1$ je $30\le v\le60$: sleva jen pro
+      objednávku 30 až 60 kg.
+
+
+  "3. Účel.".notion $\min\ 500\,y_A+300\,x_A+320\,u+280\,v$.
+
+
+  "4. Velikost.".notion 5 proměnných (2 binární, 3 celočíselné) a 5 nerovnic (plus nezápornost).
+
+
+  "5. Proč optimum ILP = nejlevnější nákup.".notion
+
+  .itemize:
+
+    .item:
+
+      "Nákup $\to$ ILP:".notion nákup $q_A\le40$ od A a $q_B\le60$ od B s $q_A+q_B\ge D$ přepíšeme jako $x_A=q_A$,
+      $y_A=1$ právě když $q_A>0$; je-li $q_B\ge30$, pak $z=1$, $v=q_B$, $u=0$, jinak $z=0$, $u=q_B$, $v=0$. Všechna
+      omezení platí a účel je přesně cena nákupu.
+
+    .item:
+
+      "ILP $\to$ nákup:".notion z přípustného řešení vezmeme $q_A=x_A$, $q_B=u+v$. Při $z=1$ je $u=0$ a
+      $30\le q_B=v\le60$, cena od B je $280v$ – přesně člen v účelu; při $z=0$ je $v=0$ a $q_B=u\le29$ za $320u$.
+      Je-li $x_A>0$, je podle (O2) $y_A=1$ a doprava je započtená; při $x_A=0$ smí být $y_A=1$, to je ale jen dražší.
+      Skutečná cena nákupu je tedy nejvýš hodnota účelu.
+
+  Oba směry dohromady: optimum ILP je rovno ceně nejlevnějšího nákupu.
+
+
+  "Typická chyba.".notion Bez $z$, jen s $u\le29$, $v\le60$ a cenou $320u+280v$, by model dovolil koupit 27 kg za
+  zlevněnou cenu (7 560 Kč) – slevu bez dosažení 30 kg. Stejných 7 560 Kč dá i LP relaxace správného modelu
+  ($z=0{,}45$, $v=27$): binární přepínač se v relaxaci „rozpustí“ jako u big-M v oddílu
+  .reference:ch-resice-ilp-sila-formulace.
+
+
+  "Optimum pro $D=27$: 8 400 Kč.".notion
+
+  .itemize:
+
+    .item:
+
+      Objednáme-li u A ($y_A=1$): se slevou u B stojí nákup aspoň $500+8400>8400$; bez slevy stojí každý kg
+      aspoň 300 Kč, celkem aspoň $500+300\cdot27=8600$.
+
+    .item:
+
+      Jen od B: bez slevy aspoň $320\cdot27=8640$, se slevou aspoň $280\cdot30=8400$.
+
+  Nejlevnější je koupit "30 kg od B za 8 400 Kč".notion – o 3 kg víc, než je potřeba.
+
+
+  "Optimum pro $D=70$: 20 300 Kč.".notion B dodá nejvýš 60 kg, takže $x_A\ge10$ a $y_A=1$. Bez slevy by bylo
+  $u\le29$ a $x_A\ge41>40$, takže $z=1$. Cena je pak
+  $500+300x_A+280v=500+280(x_A+v)+20x_A\ge500+280\cdot70+20\cdot10=20\,300$
+  a rovnost nastane pro $x_A=10$, $v=60$. Nákup: "10 kg od A, 60 kg od B".notion.
+
+
+  (Ověřeno skriptem: pro všechna $D=0,\dots,100$ dává ILP řešič, výčet všech celočíselných řešení modelu i přímý výčet
+  všech nákupů $(q_A,q_B)$ stejné optimum.)
+
+
+  .centered:
+
+    !tikz:
+      filename: 15z-ulohy-navic-04
+      options: 'x=0.115cm,y=0.24cm'
+
+      \draw[osa] (0,0)--(66,0) node[right,font=\footnotesize]{kg};
+      \draw[osa] (0,0)--(0,19) node[above,font=\footnotesize]{tis. Kč};
+      \foreach \v in {10,20,30,40,50,60} {\draw (\v,-0.25)--(\v,0.25); \node[font=\scriptsize,below] at (\v,-0.25) {\v};}
+      \foreach \v in {5,10,15} {\draw (-0.6,\v)--(0.6,\v); \node[font=\scriptsize,left] at (-0.6,\v) {\v};}
+      \draw[gr,thick] (1,0.8)--(40,12.5);
+      \node[gr,font=\scriptsize,anchor=south east] at (40,12.7) {A: $500+300q$};
+      \draw[defc,very thick] (0,0)--(29,9.28);
+      \draw[defc,very thick] (30,8.4)--(60,16.8);
+      \node[circle,fill=defc,inner sep=0pt,minimum size=4pt] at (29,9.28) {};
+      \node[circle,fill=defc,inner sep=0pt,minimum size=4pt] at (30,8.4) {};
+      \draw[defc,dotted] (29,9.28)--(30,8.4);
+      \node[defc,font=\scriptsize,anchor=south east] at (28.5,9.5) {$29$ kg: $9\,280$};
+      \node[defc,font=\scriptsize,anchor=north west] at (30.5,8.2) {$30$ kg: $8\,400$};
+      \node[defc,font=\scriptsize,anchor=west] at (60.5,16.8) {B};
+      \draw[warnc,dashed] (27,0)--(27,8.64);
+      \node[warnc,font=\scriptsize,anchor=west] at (27.5,1.5) {$D=27$};
+
+  Cena nákupu od B (modře) a od A (šedě) podle množství. "Všimni si:".emphasize cena od B v bodě 30 skočí dolů,
+  takže při $D=27$ se vyplatí koupit víc. Graf ceny tvoří dva oddělené úseky; proto potřebujeme binární $z$.
+
+
+.Exercise:
+  title: 'Úloha 15.6 (krycí nerovnosti batohu)'
+  label: un-15-6
+
+  "(nad rámec přednášky)".emphasize Přednáška zmiňuje „knapsack cover“ jen jako jednu z rodin řezů v řešičích; tato
+  úloha ukazuje, o co jde. Je dán batoh
+
+  .equation:
+
+    \max\ 9x_1+7x_2+5x_3+3x_4\quad\text{při}\quad 6x_1+5x_2+4x_3+3x_4\le10,\quad x\in\{0,1\}^4 .
+
+  "Kryt".notion je množina předmětů $C$, které se do batohu dohromady nevejdou: $\sum_{i\in C}w_i>10$. Je
+  "minimální".notion, když se po odebrání libovolného předmětu už vejde.
+
+  .enumerate:
+    type: a
+
+    .item:
+
+      Vyřešte LP relaxaci a najděte celočíselné optimum.
+
+    .item:
+
+      Dokažte, že pro každý kryt $C$ platí "krycí nerovnost".notion $\sum_{i\in C}x_i\le|C|-1$ pro všechna celočíselná
+      řešení. Najděte všechny minimální kryty.
+
+    .item:
+
+      Které krycí nerovnosti jsou řezy pro LP optimum z a)? Přidejte takovou nerovnost a pomocí kombinace omezení
+      (dualita) dokažte, že nová LP mez je rovna celočíselnému optimu.
+
+    .item:
+
+      Proč nerovnost pro neminimální kryt $\{1,2,3\}$ nic nepřidá?
+
+
+.Solution:
+
+  "a) LP relaxace.".notion Hladově podle poměru cena/váha (příklad .reference:ch-resice-ilp-ex-batoh-lp): poměry
+  $\tfrac96=1{,}5$, $\tfrac75=1{,}4$, $\tfrac54=1{,}25$, $\tfrac33=1$. Předmět 1 celý (váha 6, cena 9), zbývá kapacita
+  4 a z předmětu 2 (váha 5) se vejdou $\tfrac45$: $x^*=(1,\tfrac45,0,0)$, $\mathrm{OPT}_{LP}=9+\tfrac45\cdot7=14{,}6$.
+
+
+  "Celočíselné optimum.".notion Tři předměty se nevejdou nikdy (nejlehčí trojice $\{2,3,4\}$ váží $12>10$), takže
+  bereme nejvýš dva. Dvojice podle ceny: $\{1,2\}$ (16) váží 11 – nevejde se; $\{1,3\}$ (14) váží přesně 10. Proto
+  "$\mathrm{OPT}=14$, předměty 1 a 3".notion.
+
+
+  "b) Platnost.".notion Kdyby celočíselné přípustné $x$ mělo $\sum_{i\in C}x_i=|C|$, bralo by všechny předměty z $C$
+  a jeho váha by byla aspoň $\sum_{i\in C}w_i>10$ – spor s kapacitou. Na celých číslech tedy
+  $\sum_{i\in C}x_i\le|C|-1$.
+
+
+  "Minimální kryty.".notion Dvojice: jen $\{1,2\}$ (11); ostatní dvojice váží nejvýš 10. Trojice: všechny jsou kryty
+  (nejméně 12), minimální jsou ty, které neobsahují $\{1,2\}$: $\{1,3,4\}$ (13; bez jednoho prvku 7, 9, 10) a
+  $\{2,3,4\}$ (12; bez jednoho prvku 7, 8, 9). Čtveřice minimální není. Krycí nerovnosti:
+
+  .equation:
+
+    x_1+x_2\le1,\qquad x_1+x_3+x_4\le2,\qquad x_2+x_3+x_4\le2 .
+
+
+  "c) Řez.".notion V bodě $x^*=(1,\tfrac45,0,0)$ je $x_1+x_2=1{,}8>1$ – nerovnost $x_1+x_2\le1$ ho odřízne, je to
+  řez podle definice .reference:ch-resice-ilp-def-rez. Zbylé dvě $x^*$ splňuje ($1\le2$, $0{,}8\le2$), pro tento bod
+  řezy nejsou.
+
+
+  Mez po přidání řezu: sečteme $\tfrac54\times$ (batoh) a $\tfrac32\times$ (řez):
+
+  .equation:
+
+    \tfrac54(6x_1+5x_2+4x_3+3x_4)+\tfrac32(x_1+x_2)=9x_1+7{,}75x_2+5x_3+3{,}75x_4\ \le\ \tfrac54\cdot10+\tfrac32=14 .
+
+  Pro $x\ge0$ je levá strana aspoň $9x_1+7x_2+5x_3+3x_4$, takže LP s řezem má hodnotu nejvýš 14. Bod $(1,0,1,0)$ ji
+  dosahuje. LP mez se tedy rovná celočíselnému optimu – "optimum je dokázané bez větvení".notion.
+  Násobky najdeme jako řešení duálu (meze $x_i\le1$ tu nepotřebujeme): hledáme $a,b\ge0$ s $6a+b\ge9$, $5a+b\ge7$, $4a\ge5$, $3a\ge3$ a co nejmenším
+  $10a+b$; z $4a\ge5$ je $a\ge\tfrac54$ a pak stačí $b=9-6\cdot\tfrac54=\tfrac32$.
+
+
+  "d) Neminimální kryt.".notion $x_1+x_2+x_3\le2$ je součtem řezu $x_1+x_2\le1$ a meze $x_3\le1$, takže ji splňuje
+  každý bod, který splňuje ty dvě. Nic nového neodřízne; nejsilnější jsou krycí nerovnosti minimálních krytů.
+
+
+  (Ověřeno skriptem: výčet všech 16 vektorů, platnost všech krycích nerovností, LP řešičem $14{,}6$ bez řezu a $14$
+  s řezem $x_1+x_2\le1$.)
+
+
+.Subsection Těžší úlohy
+  label: ch-resice-ilp-ulohy-navic-tezsi
+
+
+.Exercise:
+  title: 'Úloha 15.7 (nezávislá množina: hranová a kliková formulace)'
+  label: un-15-7
+
+  Pro graf $G=(V,E)$ hledáme největší nezávislou množinu ($\prob{Independent Set}$, definice .reference:prob-is,
+  zde v optimalizační verzi; velikost optima je $\alpha(G)$). Dvě formulace:
+
+  .itemize:
+
+    .item:
+
+      "(H) hranová:".notion $\max\sum_v x_v$ při $x_u+x_v\le1$ pro každou hranu $\{u,v\}\in E$, $x\in\{0,1\}^V$;
+
+    .item:
+
+      "(K) kliková:".notion $\max\sum_v x_v$ při $\sum_{v\in Q}x_v\le1$ pro každou maximální kliku $Q$ (aspoň se
+      dvěma vrcholy), $x\in\{0,1\}^V$.
+
+  .enumerate:
+    type: a
+
+    .item:
+
+      Dokažte, že (H) a (K) mají stejná celočíselná řešení.
+
+    .item:
+
+      Dokažte, že polyedr LP relaxace (K) leží v polyedru relaxace (H), takže mez (K) je vždy aspoň tak dobrá.
+
+    .item:
+
+      Spočítejte obě LP meze a $\alpha(G)$ pro trojboký hranol (obrázek níže).
+
+    .item:
+
+      Ukažte na $K_n$, že poměr $\mathrm{OPT}_{LP}/\mathrm{OPT}$ formulace (H) může být libovolně velký.
+
+    .item:
+
+      Na kružnici $C_5$ se obě formulace shodují. Spočítejte LP mez a odvoďte řez postupem z příkladu
+      .reference:ch-resice-ilp-ex-rez (sečti a zaokrouhli), který ji opraví.
+
+
+.Solution:
+
+  "a) Stejná celočíselná řešení.".notion Celočíselné $x$ je charakteristický vektor množiny $S\subseteq V$. Podmínky
+  (H) říkají přesně, že žádná hrana nemá oba konce v $S$, tj. $S$ je nezávislá.
+
+  .itemize:
+
+    .item:
+
+      "$S$ nezávislá $\Rightarrow$ (K):".notion každé dva vrcholy kliky jsou sousední, takže klika obsahuje nejvýš
+      jeden vrchol $S$ a $\sum_{v\in Q}x_v\le1$.
+
+    .item:
+
+      "(K) $\Rightarrow$ $S$ nezávislá:".notion kdyby $u,v\in S$ byly sousední, hrana $\{u,v\}$ je klika a leží
+      v nějaké maximální klice $Q$; pak $\sum_{w\in Q}x_w\ge x_u+x_v=2>1$, spor.
+
+
+  "b) Relaxace (K) je uvnitř relaxace (H).".notion Nechť $x\in[0,1]^V$ splňuje (K) a $\{u,v\}\in E$. Vezmeme
+  maximální kliku $Q\supseteq\{u,v\}$. Protože $x\ge0$, je $x_u+x_v\le\sum_{w\in Q}x_w\le1$, takže $x$ splňuje i (H).
+  Maximum přes menší množinu je nejvýš maximum přes větší: $\alpha(G)\le\mathrm{OPT}_{LP}(K)\le\mathrm{OPT}_{LP}(H)$
+  (první nerovnost platí, protože obě jsou relaxace téhož ILP). Je to stejná myšlenka jako trojúhelníkové nerovnice
+  u Vertex Cover v příkladu .reference:ch-resice-ilp-ex-vc-k3.
+
+
+  "c) Trojboký hranol.".notion Vrcholy $1,2,3$ (trojúhelník), $4,5,6$ (trojúhelník) a hrany $\{1,4\},\{2,5\},\{3,6\}$;
+  $|E|=9$. Maximální kliky jsou oba trojúhelníky a tři „svislé“ hrany, takže (H) má 9 nerovnic a (K) jen 5.
+
+  .itemize:
+
+    .item:
+
+      "(H):".notion $x\equiv\tfrac12$ splňuje všech 9 nerovnic, hodnota 3. Víc nejde: každý vrchol leží ve třech
+      hranách, součet všech hranových nerovnic dá $3\sum_vx_v\le9$. Tedy $\mathrm{OPT}_{LP}(H)=3$.
+
+    .item:
+
+      "(K):".notion součet obou trojúhelníkových nerovnic dá $\sum_vx_v\le2$. Množina $\{3,5\}$ je nezávislá
+      (sousedé 3 jsou $1,2,6$), takže $2\le\alpha(G)\le\mathrm{OPT}_{LP}(K)\le2$.
+
+  "Výsledek:".notion $\alpha(G)=\mathrm{OPT}_{LP}(K)=2<3=\mathrm{OPT}_{LP}(H)$. Kliková formulace má méně nerovnic
+  a přesto přesnou mez.
+
+
+  .centered:
+
+    !tikz:
+      filename: 15z-ulohy-navic-05
+      options: 'x=1cm,y=1cm'
+
+      \foreach \X/\tit in {0/{(H): $x\equiv\frac12$, mez $3$}, 5.6/{(K): $x=\chi_{\{3,5\}}$, mez $2=\alpha$}} {
+        \begin{scope}[xshift=\X cm]
+          \foreach \i/\a in {1/90,2/210,3/330} {\coordinate (o\i) at (\a:1.75); \coordinate (n\i) at (\a:0.75);}
+          \draw[e] (o1)--(o2)--(o3)--(o1) (n1)--(n2)--(n3)--(n1) (o1)--(n1) (o2)--(n2) (o3)--(n3);
+          \node[font=\footnotesize] at (0,-1.6) {\tit};
+        \end{scope}}
+      \foreach \i/\a in {1/90,2/210,3/330} {
+        \node[v,fill=black!6,font=\scriptsize] at (\a:1.75) {$\frac12$};
+        \node[v,fill=black!6,font=\scriptsize] at (\a:0.75) {$\frac12$};}
+      \begin{scope}[xshift=5.6cm]
+        \node[v] at (90:1.75) {1}; \node[v] at (210:1.75) {2}; \node[vsel] at (330:1.75) {3};
+        \node[v] at (90:0.75) {4}; \node[vsel] at (210:0.75) {5}; \node[v] at (330:0.75) {6};
+      \end{scope}
+
+  Trojboký hranol. Vlevo optimum LP relaxace hranové formulace (všude $\tfrac12$), vpravo optimum relaxace klikové
+  formulace – je rovnou celočíselné, nezávislá množina $\{3,5\}$.
+
+
+  "d) $K_n$.".notion (H) má $\binom n2$ nerovnic a $x\equiv\tfrac12$ je přípustné, takže $\mathrm{OPT}_{LP}(H)\ge\tfrac n2$
+  (součtem všech hranových nerovnic, kde je každý vrchol $(n-1)$-krát, dokonce $=\tfrac n2$). Ale $\alpha(K_n)=1$
+  a (K) má jedinou nerovnici $\sum_vx_v\le1$ s LP mezí 1. Poměr $\mathrm{OPT}_{LP}(H)/\mathrm{OPT}=\tfrac n2$ roste nade
+  všechny meze.
+
+
+  "e) $C_5$.".notion Maximální kliky jsou jen hrany, takže (K) = (H). $x\equiv\tfrac12$ dá hodnotu $\tfrac52$
+  a součet pěti hranových nerovnic $2\sum_vx_v\le5$ ukazuje, že víc nejde: $\mathrm{OPT}_{LP}=\tfrac52$, kdežto
+  $\alpha(C_5)=2$. "Řez:".notion vydělíme součet dvěma, $\sum_vx_v\le\tfrac52$; vlevo je pro celá $x$ celé číslo,
+  takže $\sum_{v\in C_5}x_v\le2$. Platí pro všechna celočíselná řešení (odvodili jsme ji z platných nerovnic
+  a celočíselnosti) a $x\equiv\tfrac12$ porušuje ($\tfrac52>2$). S ním je LP mez 2 $=\alpha(C_5)$, např. $\{1,3\}$.
+
+
+  "Poznámka.".notion "(nad rámec přednášky)".emphasize Maximálních klik může být exponenciálně mnoho, proto se klikové
+  nerovnice (stejně jako u barvení v "úloze 8.3"#cv-8-3) přidávají jako řezy až na vyžádání.
+
+
+  (Ověřeno skriptem: na hranolu, $C_5$, $K_4$ až $K_6$ a na 300 náhodných grafech do 7 vrcholů mají (H) a (K)
+  stejná celočíselná řešení a platí $\alpha\le\mathrm{OPT}_{LP}(K)\le\mathrm{OPT}_{LP}(H)$; LP hodnoty spočítány
+  řešičem.)
+
+
+.Exercise:
+  title: 'Úloha 15.8 (zákaz podcyklů vs. MTZ)'
+  label: un-15-8
+
+  "(nad rámec přednášky)".emphasize Formulace MTZ (Miller, Tucker, Zemlin) v přednášce není. Uvažujme orientovanou
+  verzi obchodního cestujícího: města $1,\dots,n$, cena $c_{ij}$ za cestu z $i$ do $j$, proměnné $x_{ij}\in\{0,1\}$
+  pro $i\ne j$ („jede z $i$ přímo do $j$“) a stupně
+
+  .equation:
+
+    \textstyle\sum_{j\ne i}x_{ij}=1\ \ \forall i\quad\text{(odjede jednou)},\qquad \sum_{i\ne j}x_{ij}=1\ \ \forall j\quad\text{(přijede jednou)} .
+
+  Ke stupňům přidáme buď "zákaz podcyklů".notion (orientovaná obdoba oddílu .reference:ch-resice-ilp-zakaz-podcyklu)
+  $\sum_{i\in S,\,j\notin S}x_{ij}\ge1$ pro každou $\emptyset\ne S\subsetneq V$, nebo "MTZ".notion: reálné proměnné
+  $u_i$ pro $i=2,\dots,n$ s $2\le u_i\le n$ a nerovnice
+
+  .equation:
+
+    u_i-u_j+n\,x_{ij}\ \le\ n-1\qquad\text{pro všechna } i\ne j,\ i,j\in\{2,\dots,n\} .
+
+  .enumerate:
+    type: a
+
+    .item:
+
+      Spočítejte proměnné a omezení obou modelů pro $n=5$, $10$, $50$.
+
+    .item:
+
+      Dokažte, že každou trasu lze doplnit o $u$ tak, aby platilo MTZ.
+
+    .item:
+
+      Dokažte, že každé celočíselné řešení stupňů a MTZ je trasa. Ukažte na $n=5$ a podcyklech $2\to3\to4\to2$,
+      $1\to5\to1$, kde MTZ selže.
+
+    .item:
+
+      Proč se MTZ nepíše i pro město 1?
+
+
+.Solution:
+
+  "a) Velikost.".notion Oba modely mají $n(n-1)$ proměnných $x_{ij}$ a $2n$ rovnic stupňů. Zákaz podcyklů přidá
+  $2^n-2$ nerovnic (všechny neprázdné vlastní $S$). MTZ přidá $n-1$ proměnných $u_i$, $(n-1)(n-2)$ nerovnic
+  (uspořádané dvojice různých měst z $\{2,\dots,n\}$) a $2(n-1)$ mezí.
+
+  .table:
+    columns: 'crrrr'
+
+    .row:
+      head: true
+
+      $n$
+
+      podcykly: proměnné
+
+      podcykly: omezení
+
+      MTZ: proměnné
+
+      MTZ: omezení
+
+    .row:
+
+      5
+
+      20
+
+      $10+30=40$
+
+      24
+
+      $10+12+8=30$
+
+    .row:
+
+      10
+
+      90
+
+      $20+1022=1042$
+
+      99
+
+      $20+72+18=110$
+
+    .row:
+
+      50
+
+      2450
+
+      $100+2^{50}-2\approx1{,}13\cdot10^{15}$
+
+      2499
+
+      $100+2352+98=2550$
+
+  MTZ má polynomiálně mnoho omezení ($\Theta(n^2)$), zákaz podcyklů exponenciálně.
+
+
+  "b) Trasa splňuje MTZ.".notion Trasa $1=v_1\to v_2\to\dots\to v_n\to1$; položíme $u_{v_k}=k$ pro $k=2,\dots,n$
+  (pořadí města na trase), takže $2\le u_i\le n$. Pro $i,j\ne1$ s $x_{ij}=1$ jde $j$ hned po $i$, tedy $u_j=u_i+1$
+  a $u_i-u_j+n=n-1\le n-1$. Pro $x_{ij}=0$ je $u_i-u_j\le n-2\le n-1$, protože obě hodnoty leží v $[2,n]$.
+
+
+  "c) Řešení MTZ je trasa.".notion Celočíselné $x$ splňující stupně dává každému městu právě jednoho následníka
+  a právě jednoho předchůdce (a $x_{ii}$ neexistuje), takže vybrané šipky tvoří disjunktní orientované cykly
+  přes všechna města. Je-li cyklů víc, aspoň jeden, $i_1\to i_2\to\dots\to i_k\to i_1$ s $k\ge2$, neobsahuje město 1.
+  Všechny jeho šipky mají $x=1$ a oba konce v $\{2,\dots,n\}$, takže pro ně platí MTZ. Sečteme těchto $k$ nerovnic:
+
+  .equation:
+
+    \underbrace{\textstyle\sum_{t=1}^{k}(u_{i_t}-u_{i_{t+1}})}_{=0\ (i_{k+1}=i_1)}+\,nk\ \le\ (n-1)k ,
+
+  tj. $nk\le(n-1)k$, spor s $k\ge1$. Zbývá jediný cyklus přes všechna města – trasa.
+
+
+  "Příklad $n=5$.".notion Pro šipky $2\to3$, $3\to4$, $4\to2$ dává MTZ $u_2-u_3+5\le4$, $u_3-u_4+5\le4$,
+  $u_4-u_2+5\le4$, tj. $u_3\ge u_2+1$, $u_4\ge u_3+1$, $u_2\ge u_4+1$, tedy $u_2\ge u_2+3$ – spor (součet: $15\le12$).
+  Cyklus $1\to5\to1$ obsahuje město 1 a MTZ ho samo neomezuje; vadí ten druhý.
+
+
+  .centered:
+
+    !tikz:
+      filename: 15z-ulohy-navic-06
+      options: 'x=1cm,y=1cm,>=Stealth'
+
+      \foreach \i/\a in {1/90,3/162,2/234,5/306,4/18} \node[v] (t\i) at (\a:1.3) {\i};
+      \draw[->,thick,defc] (t1)--(t3); \draw[->,thick,defc] (t3)--(t2); \draw[->,thick,defc] (t2)--(t5);
+      \draw[->,thick,defc] (t5)--(t4); \draw[->,thick,defc] (t4)--(t1);
+      \node[font=\scriptsize,defc,anchor=east] at ([xshift=-1mm]t3.west) {$u_3=2$};
+      \node[font=\scriptsize,defc,anchor=north] at ([yshift=-1mm]t2.south) {$u_2=3$};
+      \node[font=\scriptsize,defc,anchor=north] at ([yshift=-1mm]t5.south) {$u_5=4$};
+      \node[font=\scriptsize,defc,anchor=west] at ([xshift=1mm]t4.east) {$u_4=5$};
+      \node[font=\footnotesize] at (0,-2.2) {trasa: $u$ = pořadí na trase};
+      \begin{scope}[xshift=5.6cm]
+        \node[v] (a2) at (0,1.2) {2}; \node[v] (a3) at (-1.3,-0.7) {3}; \node[v] (a4) at (1.3,-0.7) {4};
+        \draw[->,thick,rej] (a2)--(a3) node[midway,left,font=\scriptsize]{$u_3\ge u_2+1$};
+        \draw[->,thick,rej] (a3)--(a4) node[midway,below=3pt,font=\scriptsize]{$u_4\ge u_3+1$};
+        \draw[->,thick,rej] (a4)--(a2) node[midway,right,font=\scriptsize]{$u_2\ge u_4+1$};
+        \node[v] (b1) at (3.6,0.6) {1}; \node[v] (b5) at (3.6,-0.8) {5};
+        \draw[->,thick,black!60] (b1) to[bend left=30] (b5); \draw[->,thick,black!60] (b5) to[bend left=30] (b1);
+        \node[font=\footnotesize] at (1,-2.2) {podcykly: $u_2\ge u_2+3$ -- spor};
+      \end{scope}
+
+  Vlevo trasa $1\to3\to2\to5\to4\to1$ s hodnotami $u$ podle pořadí; všechny nerovnice MTZ platí. Vpravo dva
+  podcykly: kolem cyklu bez města 1 by $u$ muselo pořád růst, což nejde.
+
+
+  "d) Proč ne pro město 1.".notion Trasa je sama cyklem přes všechna města. Kdyby MTZ platilo i pro město 1 (s $u_1$),
+  stejný součet přes celou trasu by dal $n\cdot n\le(n-1)n$ – žádná trasa by nebyla přípustná. Město 1 je „start“,
+  kde číslování $u$ smí skočit z $n$ zpátky.
+
+
+  "Který model řešiči?".notion MTZ jde celý vypsat, ale jeho LP relaxace je slabší: TSP je minimalizace, LP mez je
+  dolní a na náhodných instancích s $n=4$ až 6 nebyla LP mez MTZ nikdy vyšší než mez se zákazem podcyklů
+  a často byla ostře nižší (obě ILP přitom daly optimum rovné hrubé síle). Proto se v praxi používá zákaz podcyklů přidávaný separací (oddíl
+  .reference:ch-resice-ilp-rezy-a-separace): MTZ je malý, ale slabý, zákaz podcyklů silný, ale exponenciální –
+  a separace dovolí použít silný model, aniž bychom ho celý vypsali. Části b) a c) jsou ověřeny i výčtem: pro $n\le6$ připustí MTZ přesně ta řešení stupňů, která
+  jsou trasou (pro $n=6$ je 120 tras z 265 řešení stupňů).

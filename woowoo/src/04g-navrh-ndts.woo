@@ -1,0 +1,295 @@
+.Section Jak navrhovat nedeterministické stroje
+  label: ch-np-jak-navrhovat-nedeterministicke-stroje
+
+
+.Concept:
+  title: 'Univerzální recept Guess & Verify'
+
+  .enumerate:
+
+    .item:
+
+      "Co uhodneme?".notion Kandidáta na řešení (podmnožinu, číslo, cestu, …).
+
+    .item:
+
+      "Jak dlouhé smí být hádání?".notion Polynomiálně vůči délce vstupu!
+
+    .item:
+
+      "Jak deterministicky ověříme".notion, že uhodnutý kandidát opravdu řeší problém?
+
+
+.Subsection Složená čísla
+  label: ch-np-slozena-cisla
+
+
+.Definition:
+  title: 'Problém $\prob{Composites}$'
+  label: prob-composites
+
+  "Vstup:".notion přirozené číslo $n$ zapsané binárně.
+
+
+  "Otázka:".notion je $n$ složené?
+
+
+.Warning:
+  title: 'Délka vstupu'
+
+  Délka vstupu je $N\approx\log_2 n$ bitů. Vyzkoušet všechny dělitele $2,3,\dots,\sqrt n$ trvá
+  $\approx\sqrt n = 2^{N/2}$ kroků – to je "exponenciální".emphasize vůči $N$!
+
+
+"Fáze Guess.".notion Uhodneme kandidáta na dělitele $d$, $1<d<n$. Na pracovní pásku stroj
+postupně píše bity $b_1,b_2,\dots,b_N$ a u každého se nedeterministicky rozhodne „zapiš 0, nebo 1“.
+Po $N$ krocích je na pásce nějaké číslo $d$. Každá větev stromu odpovídá jednomu
+$d\in\{0,1,\dots,2^N-1\}$ – strom má $2^N$ větví, ale každá má délku jen $N$.
+
+
+"Fáze Verify.".notion
+
+.enumerate:
+
+  .item:
+
+    Zkontroluj $1<d<n$ (porovnání binárních čísel – polynomiální).
+
+  .item:
+
+    Vyděl $n$ číslem $d$ se zbytkem (školní dělení – polynomiální vůči $N$).
+
+  .item:
+
+    Zbytek $=0$ $\to$ $\qA$, jinak $\qR$.
+
+
+.Figure:
+  label: fig-np-composites-strom
+
+  !tikz:
+    filename: 04g-navrh-ndts-01
+
+    \node[chNPc,font=\tiny] (r) at (0,0) {$b_1$};
+    \node[chNPc,font=\tiny] (a) at (-2.6,-1.2) {$b_2$};
+    \node[chNPc,font=\tiny] (b) at (2.6,-1.2) {$b_2$};
+    \draw[chNPe] (r) -- node[lab,above left]{0} (a);
+    \draw[chNPg] (r) -- node[lab,above right]{1} (b);
+    \node[chNPrej,align=center] (l0) at (-3.8,-2.6) {$d=0$\\ \qR};
+    \node[chNPrej,align=center] (l1) at (-1.4,-2.6) {$d=1$\\ \qR};
+    \node[chNPrej,align=center] (l2) at (1.4,-2.6) {$d=2$\\ \qR};
+    \node[chNPacc,align=center] (l3) at (3.8,-2.6) {$d=3$\\ \qA};
+    \draw[chNPe] (a) -- node[lab,left]{0} (l0);
+    \draw[chNPe] (a) -- node[lab,right]{1} (l1);
+    \draw[chNPe] (b) -- node[lab,left]{0} (l2);
+    \draw[chNPg] (b) -- node[lab,right]{1} (l3);
+    \node[note,below=2mm of l0] {$d\le1$: netriviální\\ dělitel to není};
+    \node[note,below=2mm of l2] {$9\bmod 2=1$};
+    \node[note,below=2mm of l3,acc!70!black] {$9\bmod 3=0$ \checkmark};
+
+  .caption:
+
+    Strom výpočtu pro $n=9$ ($1001_2$). Pro přehlednost kreslíme jen 2 bity hádání
+    (ve skutečnosti $N=4$). Stačí jedna přijímající větev – stroj slovo $1001$ přijme.
+
+
+"Proč stroj rozhoduje $\prob{Composites}$?".notion
+$n$ složené $\Rightarrow$ existuje dělitel $d$ $\Rightarrow$ jedna větev ho uhodne a ověří
+$\Rightarrow$ přijme. $n$ prvočíslo $\Rightarrow$ žádná větev dělitele nenajde $\Rightarrow$
+všechny zamítnou $\Rightarrow$ stroj zamítne. Tedy $\prob{Composites}\in\NTIME(N^k)$ pro
+vhodné $k$, a proto $\prob{Composites}\in\NP$.
+
+
+.centered:
+
+  !tikz:
+    filename: 04g-navrh-ndts-02
+
+    \node[draw=acc,fill=acc!7,thick,rounded corners=4pt,text width=62mm,align=left,font=\small] (y) at (0,0)
+      {\textbf{\textcolor{acc!70!black}{Odpověď ANO}} ($n$ složené)\\ Stačí \emph{jedna} větev, která uhodne
+       dělitele a ověří ho.\\ \emph{Jako svědek u soudu: jediná věrohodná výpověď stačí k odsouzení.}};
+    \node[draw=rej,fill=rej!6,thick,rounded corners=4pt,text width=62mm,align=left,font=\small] (n) at (7.4,0)
+      {\textbf{\textcolor{rej}{Odpověď NE}} ($n$ prvočíslo)\\ Musí zamítnout \emph{všechny} větve --
+       žádná nesmí najít dělitele.\\ \emph{Jako osvobození: musí selhat doslova všechny obžaloby.}};
+
+
+.Concept:
+  title: 'Důsledek pro návrh strojů'
+
+  Když navrhujete NDTS, o zamítající větve se nestaráte (jen musí být polynomiálně dlouhé).
+  Jediné, co musíte zajistit: "pokud je odpověď ANO, existuje alespoň jedna větev, která ji najde".emphasize
+  – a naopak žádná větev nesmí přijmout NE-instanci.
+
+
+.Subsection Klika na konkrétním grafu
+  label: ch-np-klika-na-konkretnim-grafu
+
+
+.Definition:
+  title: 'Problém $\prob{Clique}$'
+  label: prob-clique
+
+  "Vstup:".notion graf $G$ a číslo $k$.
+
+
+  "Otázka:".notion obsahuje $G$ kliku velikosti alespoň $k$?
+
+
+.Figure:
+  label: fig-np-klika-graf
+
+  !tikz:
+    filename: 04g-navrh-ndts-03
+    options: 'scale=1.4'
+
+    \chNPgraph{v}{v}{v}{v}{v}
+    \foreach \u/\w in {A/B,A/C,A/D,B/C,B/E,C/D,C/E} {\draw[e] (\u) -- (\w);}
+
+  .caption:
+
+    Ukázkový graf. Obsahuje kliku velikosti $k=3$?
+
+
+"Guess.".notion Pro každý z $n$ vrcholů se rozhodneme „beru / neberu“. Strom má $2^n$ větví,
+jednu pro každou podmnožinu. Každá větev má jen $n$ kroků hádání (zápis vybraných vrcholů
+může trvat $O(n\log n)$ kroků).
+
+
+"Verify.".notion Na pásce je vybraná podmnožina $S$.
+
+.enumerate:
+
+  .item:
+
+    Zkontroluj $|S|\ge k$ (spočítání vrcholů – $O(n\log n)$).
+
+  .item:
+
+    Zkontroluj, že mezi každou dvojicí vrcholů z $S$ vede hrana: $\binom{|S|}{2}=O(n^2)$
+    dotazů do matice sousednosti, každý v $O(n^2)$ krocích (na TS musíme k políčku matice dojet).
+
+Celkový čas jedné větve: $O(n\log n)+O(n^4)$ – polynomiální, tedy $\prob{Clique}\in\NP$.
+
+
+.Figure:
+  label: fig-np-klika-tri-vetve
+
+  !tikz:
+    filename: 04g-navrh-ndts-04
+    options: 'scale=0.95'
+
+    \begin{scope}
+      \node[font=\small\bfseries] at (1.15,2.0) {větev 1: $S=\emptyset$};
+      \chNPgraph{v}{v}{v}{v}{v}
+      \begin{scope}[on background layer]
+      \foreach \u/\w in {A/B,A/C,A/D,B/C,B/E,C/D,C/E} {\draw[efaint] (\u) -- (\w);}
+      \end{scope}
+      \node[chNPrej] at (1.15,-0.9) {\qR: $|S|<3$};
+    \end{scope}
+    \begin{scope}[xshift=4.6cm]
+      \node[font=\small\bfseries] at (1.15,2.0) {větev 2: $S=\{B,D,E\}$};
+      \chNPgraph{v}{vbad}{v}{vbad}{vbad}
+      \begin{scope}[on background layer]
+      \foreach \u/\w in {A/B,A/C,A/D,B/C,C/D,C/E} {\draw[efaint] (\u) -- (\w);}
+      \draw[esel] (B) -- (E);
+      \draw[ebad] (B) -- (D); \draw[ebad] (D) -- (E);
+      \end{scope}
+      \node[chNPrej] at (1.15,-0.9) {\qR: chybí hrany!};
+    \end{scope}
+    \begin{scope}[xshift=9.2cm]
+      \node[font=\small\bfseries] at (1.15,2.0) {větev 3: $S=\{A,B,C\}$};
+      \chNPgraph{vsel}{vsel}{vsel}{v}{v}
+      \begin{scope}[on background layer]
+      \foreach \u/\w in {A/D,B/E,C/D,C/E} {\draw[efaint] (\u) -- (\w);}
+      \draw[esel] (A) -- (B); \draw[esel] (B) -- (C); \draw[esel] (A) -- (C);
+      \end{scope}
+      \node[chNPacc] at (1.15,-0.9) {\qA: všechny hrany!};
+    \end{scope}
+
+  .caption:
+
+    Tři z $2^5=32$ větví pro $k=3$. Stačí jedna zelená větev $\Rightarrow$ stroj přijme.
+    (Klikou velikosti 3 jsou i $\{A,C,D\}$ a $\{B,C,E\}$.)
+
+
+"Co když klika neexistuje ($k=4$)?".notion
+
+
+.Figure:
+  label: fig-np-klika-neexistuje
+
+  !tikz:
+    filename: 04g-navrh-ndts-05
+
+    \begin{scope}
+      \node[font=\small\bfseries] at (1.15,2.0) {$S=\{A,B,C,D\}$};
+      \chNPgraph{vsel}{vsel}{vsel}{vsel}{v}
+      \begin{scope}[on background layer]
+      \foreach \u/\w in {B/E,C/E} {\draw[efaint] (\u) -- (\w);}
+      \foreach \u/\w in {A/B,A/C,A/D,B/C,C/D} {\draw[esel] (\u) -- (\w);}
+      \draw[ebad] (B) -- (D);
+      \end{scope}
+      \node[font=\small,rej] at (1.15,-0.8) {chybí B--D!};
+    \end{scope}
+    \begin{scope}[xshift=5.5cm]
+      \node[font=\small\bfseries] at (1.15,2.0) {$S=\{A,B,C,E\}$};
+      \chNPgraph{vsel}{vsel}{vsel}{v}{vsel}
+      \begin{scope}[on background layer]
+      \foreach \u/\w in {A/D,C/D} {\draw[efaint] (\u) -- (\w);}
+      \foreach \u/\w in {A/B,A/C,B/C,B/E,C/E} {\draw[esel] (\u) -- (\w);}
+      \draw[ebad] (A) -- (E);
+      \end{scope}
+      \node[font=\small,rej] at (1.15,-0.8) {chybí A--E!};
+    \end{scope}
+
+  .caption:
+
+    Všech $\binom54=5$ čtyřprvkových podmnožin selže (menší podmnožiny zamítnou hned) –
+    všechny větve zamítnou, stroj zamítne.
+
+
+.Warning:
+  title: 'Pozor'
+
+  Stroj „neví“, že klika neexistuje. V každé větvi prostě vyzkoušel jednu možnost a ta
+  nefungovala. To, že zamítnou "všechny".emphasize větve, víme my, protože vidíme celý graf.
+
+
+.Remark:
+  title: 'Co si odnést'
+
+  .itemize:
+
+    .item:
+
+      "NDTS".notion má přechodovou "relaci".emphasize; výpočet tvoří strom. Slovo je přijato, když
+      "existuje".emphasize větev do $\qA$; k zamítnutí se musí shodnout "všechny".emphasize větve.
+
+    .item:
+
+      Nedeterminismus není paralelismus ani magie, ale zkoumání stromu výpočtů
+      (paradigma "Guess & Verify".notion).
+
+    .item:
+
+      $\NP=\bigcup_d\NTIME(n^d)$; čas NDTS = hloubka stromu.
+
+    .item:
+
+      $\NP\subseteq\EXP$: deterministické prohledání stromu do hloubky v čase
+      $O(n^k d^{cn^k})$.
+
+    .item:
+
+      Certifikátová definice $\NPhat$ přes polynomiální verifikátory a ekvivalence
+      $\NP=\NPhat$ (certifikát = log voleb v přijímající větvi).
+
+    .item:
+
+      $\PP\overset{?}{=}\NP$: co by znamenala rovnost (kryptografie, optimalizace, AI,
+      automatizace matematiky) a proč je důkaz tak těžký (tři bariéry).
+
+    .item:
+
+      Návrh NDTS: identifikuj „řešení“ (dělitel, podmnožina, ohodnocení…), uhodni ho
+      polynomiálně dlouhým hádáním, ověř deterministicky v polynomiálním čase.

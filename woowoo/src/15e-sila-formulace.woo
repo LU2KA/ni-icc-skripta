@@ -1,0 +1,368 @@
+.Section Síla formulace
+  label: ch-resice-ilp-sila-formulace
+
+
+Tutéž úlohu lze zapsat různými ILP, která mají "stejná celočíselná řešení".emphasize, a přesto se řeší různě
+rychle. Rozdíl je v LP relaxaci: čím blíž je relaxace celočíselným řešením, tím lepší mez dává a tím méně práce
+má řešič (oddíl .reference:ch-resice-ilp-branch-and-bound). Tento oddíl tu vzdálenost měří.
+
+
+.Figure:
+  label: ch-resice-ilp-fig-formulace
+
+  !tikz:
+    filename: 15e-sila-formulace-04
+    options: 'x=1cm,y=1cm'
+
+    \foreach \X/\reg/\nm/\mez in {0/{(0,0)--(2.5,0)--(5/3,5/3)--(0,2.5)}/{$P$: $2x+y\le5$, $x+2y\le5$}/{mez $\frac{25}{3}\approx8{,}33$},
+                                  4.6/{(0,0)--(2.5,0)--(2,1)--(1,2)--(0,2.5)}/{$P$ a navíc $x+y\le3$}/{mez $8$},
+                                  9.2/{(0,0)--(2,0)--(2,1)--(1,2)--(0,2)}/{$\mathrm{conv}(P\cap\mathbb Z^2)$}/{mez $8$}} {
+      \begin{scope}[xshift=\X cm]
+        \fill[defc!12] \reg--cycle; \draw[defc,thick] \reg--cycle;
+        \chQaxes{3.1}{3.1}
+        \foreach \x in {0,...,3} \foreach \y in {0,...,3} {
+          \pgfmathparse{(2*\x+\y<=5) && (\x+2*\y<=5) ? 1 : 0}
+          \ifnum\pgfmathresult=1 \node[ipt] at (\x,\y) {}; \else \node[ipto] at (\x,\y) {}; \fi}
+        \node[font=\footnotesize,align=center] at (1.5,-0.55) {\nm};
+        \node[font=\footnotesize,align=center] at (1.5,-1.05) {\mez};
+      \end{scope}}
+    \node[lpopt] at (5/3,5/3) {};
+    \node[ilpopt] at (4.6+2,1) {};
+    \node[ilpopt] at (9.2+2,1) {};
+    \node[font=\footnotesize,text=black!70] at (1.5,3.55) {slabší};
+    \node[font=\footnotesize,text=black!70] at (6.1,3.55) {silnější};
+    \node[font=\footnotesize,text=black!70] at (10.7,3.55) {ideální};
+
+  .caption:
+
+    Tři formulace s "týmiž celočíselnými body".emphasize (tmavé): polyedr $P$ z oddílu
+    .reference:ch-resice-ilp-lp-relaxace-a-dualita, totéž s řezem $x+y\le3$ z oddílu
+    .reference:ch-resice-ilp-rezy-a-separace a celočíselný obal (vrcholy $(0,0),(2,0),(2,1),(1,2),(0,2)$). Pod každou
+    je LP mez pro $\max 3x+2y$; puntík je LP optimum (modrý, když je celočíselné). "Všimni si:".emphasize menší polyedr dává těsnější mez a obal má
+    všechny vrcholy celočíselné. Pro účel $\max x$ by se lišily i druhá a třetí formulace (mez $2{,}5$ vs. $2$).
+    Celočíselný obal a srovnání mezí jsou "(nad rámec přednášky)".emphasize.
+
+
+
+.Subsection Kdy relaxace přesná není: integrality gap
+  label: ch-resice-ilp-integrality-gap
+
+
+.Definition:
+  title: 'Integrality gap'
+  label: ch-resice-ilp-def-integrality-gap
+
+  "Integrality gap".notion formulace minimalizační úlohy je
+
+  .equation:
+
+    \mathrm{IG}=\sup_I\ \frac{\mathrm{OPT}(I)}{\mathrm{OPT}_{LP}(I)}\ \ge\ 1 ,
+
+  kde supremum je přes všechny instance $I$. Je to vlastnost "formulace".emphasize, ne problému.
+
+
+"Vertex Cover jako ILP".notion (kapitola .reference:ch-cisla, rámeček .reference:red-ilpvc; zde v optimalizačním tvaru):
+
+.equation:
+
+  \min\sum_v x_v\quad\text{při}\quad x_u+x_v\ge1\ \ \forall uv\in E,\qquad x_v\in\{0,1\}.
+
+
+.Example:
+  title: 'Vertex Cover na trojúhelníku'
+  label: ch-resice-ilp-ex-vc-k3
+
+  Graf $K_3$ s vrcholy $u,v,w$.
+
+  .enumerate:
+
+    .item:
+
+      "ILP:".notion jeden vrchol nepokryje hranu mezi zbylými dvěma, dva vrcholy stačí. $\mathrm{OPT}=2$.
+
+    .item:
+
+      "LP relaxace:".notion $x_u=x_v=x_w=\tfrac12$ splňuje každou hranovou nerovnici ($\tfrac12+\tfrac12=1$), hodnota
+      $\tfrac32$. Méně nejde: sečtením tří hranových nerovnic dostaneme $2(x_u+x_v+x_w)\ge3$. Tedy
+      $\mathrm{OPT}_{LP}=\tfrac32$ a poměr $\mathrm{OPT}/\mathrm{OPT}_{LP}=\tfrac43$.
+
+    .item:
+
+      "Silnější formulace:".notion přidáme pro každý trojúhelník $\{u,v,w\}$ nerovnici $x_u+x_v+x_w\ge2$. Celočíselná
+      řešení se nezmění (každé vrcholové pokrytí trojúhelníku má aspoň dva jeho vrcholy), ale bod
+      $(\tfrac12,\tfrac12,\tfrac12)$ ji porušuje ($\tfrac32<2$). Na $K_3$ je teď $\mathrm{OPT}_{LP}=2=\mathrm{OPT}$.
+
+
+.Figure:
+  label: ch-resice-ilp-fig-vc-k3
+
+  !tikz:
+    filename: 15e-sila-formulace-01
+    options: 'x=1.3cm,y=1.3cm'
+
+    \node[v,fill=defc!10,font=\footnotesize] (a) at (90:0.9) {$\frac12$};
+    \node[v,fill=defc!10,font=\footnotesize] (b) at (210:0.9) {$\frac12$};
+    \node[v,fill=defc!10,font=\footnotesize] (c) at (330:0.9) {$\frac12$};
+    \draw[e] (a)--(b)--(c)--(a);
+    \node[font=\footnotesize] at (0,-1.3) {$\mathrm{OPT}_{LP}=\frac32$};
+    \begin{scope}[xshift=3.6cm]
+      \node[vsel] (a) at (90:0.9) {};
+      \node[vsel] (b) at (210:0.9) {};
+      \node[v] (c) at (330:0.9) {};
+      \draw[e] (a)--(b)--(c)--(a);
+      \node[font=\footnotesize] at (0,-1.3) {$\mathrm{OPT}=2$};
+    \end{scope}
+
+  .caption:
+
+    Vertex Cover na $K_3$: zlomkové pokrytí s hodnotou $\tfrac32$ (vlevo) a nejmenší skutečné pokrytí se dvěma
+    vrcholy (vpravo).
+
+
+"Jak IG číst.".notion
+
+.itemize:
+
+  .item:
+
+    $\mathrm{IG}=1$: relaxace je přesná, LP dá rovnou hodnotu optima (např. bipartitní párování, viz níže).
+
+  .item:
+
+    Velký IG: relaxace „podvádí“ a dává slabou mez. Pro uvedenou formulaci VC je IG aspoň $\tfrac43$ (už z $K_3$);
+    "(nad rámec přednášky)".emphasize na úplných grafech $K_n$ je $\mathrm{OPT}=n-1$ a $\mathrm{OPT}_{LP}=\tfrac n2$,
+    takže IG této formulace je aspoň $\sup_n(2-\tfrac2n)=2$; víc to není, protože zaokrouhlení všech $x_v\ge\tfrac12$
+    nahoru dá pokrytí s nejvýš dvojnásobnou cenou.
+
+  .item:
+
+    "Polynomiálně velká formulace NP-těžkého problému nemůže mít $\mathrm{IG}=1$, ledaže $\PP=\NP$".notion: LP je
+    v $\PP$, takže bychom hodnotu optima spočítali v polynomiálním čase.
+
+
+.Subsection Big-M očima LP relaxace
+  label: ch-resice-ilp-big-m-ocima-lp-relaxace
+
+
+Relaxace dovolí i zlomkové $y$ – a tím big-M oslabí:
+
+.itemize:
+
+  .item:
+
+    $f(x)\le b+M(1-y)$ při $y=\tfrac12$ dává $f(x)\le b+\tfrac M2$. Podmínka „skoro neplatí“, stačí mít $y$ „trochu“.
+
+  .item:
+
+    U vypínače $x\le My$ stačí $y=x/M$, takže fixní náklady $f\cdot y$ se „rozpustí“: místo celého $f$ se zaplatí
+    jen $f\cdot x/M$.
+
+
+.Figure:
+  label: ch-resice-ilp-fig-big-m-lp
+
+  !tikz:
+    filename: 15e-sila-formulace-02
+    options: 'x=1.35cm,y=1.8cm'
+
+    \fill[warnc!18] (0,0)--(4.6,0)--(1.6,1)--(0,1)--cycle;
+    \draw[warnc,thick] (1.6,1)--(4.6,0);
+    \node[warnc,font=\footnotesize] at (1.4,0.45) {LP};
+    \draw[osa] (0,0)--(5.4,0) node[right,font=\footnotesize]{$f(x)$};
+    \draw[osa] (0,0)--(0,1.5) node[above,font=\footnotesize]{$y$};
+    \node[font=\footnotesize,left] at (0,0) {0};
+    \node[font=\footnotesize,left] at (0,1) {1};
+    \node[font=\footnotesize,left] at (0,0.5) {$\frac12$};
+    \draw[gr,dashed] (0,0.5)--(3.1,0.5);
+    \node[font=\footnotesize,below] at (1.6,0) {$b$};
+    \node[font=\footnotesize,below] at (3.1,0) {$b+\frac M2$};
+    \node[font=\footnotesize,below] at (4.6,0) {$b+M$};
+    \draw[defc,line width=2pt] (0,1)--(1.6,1);
+    \draw[defc,line width=2pt] (0,0)--(4.6,0);
+
+  .caption:
+
+    Modře přípustné dvojice $(f(x),y)$ celočíselného modelu, červeně LP relaxace: lichoběžník. Při $y=\tfrac12$
+    smí $f(x)$ až do $b+\tfrac M2$.
+
+
+.Remark:
+  title: 'Big-M volit co nejtěsnější'
+
+  Větší $M$ = větší lichoběžník = slabší mez. Proto bereme nejmenší $M$, které je ještě horním odhadem $f(x)-b$:
+  u výroby s kapacitou 100 kusů je to $M=100$, ne „pro jistotu“ $10^6$.
+
+
+.Subsection Umístění skladů: silná vs. slabá formulace
+  label: ch-resice-ilp-sklady-silna-vs-slaba
+
+
+Model skladů z oddílu .reference:ch-resice-ilp-tsp-a-sklady měl $x_{ij}\le y_j$ pro každou dvojici (9 nerovnic).
+"Slabá formulace".notion místo nich píše jednu nerovnici na sklad:
+
+.equation:
+
+  \sum_i d_i\,x_{ij}\ \le\ 120\,y_j\qquad(120=\textstyle\sum_i d_i).
+
+I ta je "správná".notion: má přesně stejná celočíselná řešení. Při $y_j=0$ vynutí $x_{ij}=0$ pro všechna $i$; při
+$y_j=1$ platí vždy, protože $\sum_i d_ix_{ij}\le\sum_i d_i=120$.
+
+
+.table:
+  columns: 'lcc'
+
+  .row:
+    head: true
+
+    ~
+
+    slabá
+
+    silná ($x_{ij}\le y_j$)
+
+  .row:
+
+    LP relaxace: $y$
+
+    $(\tfrac14,\tfrac13,\tfrac5{12})$
+
+    $(1,0,1)$
+
+  .row:
+
+    LP relaxace: hodnota (dolní mez)
+
+    "260".notion
+
+    "520".notion
+
+  .row:
+
+    celočíselné optimum
+
+    520
+
+    520
+
+
+"Proč.".notion Ve slabé relaxaci stačí otevřít sklad jen „na tolik, kolik dodává“: každý zákazník je obsloužen
+ze svého skladu za dopravu 1 a $y_A=\tfrac{30}{120}$, $y_B=\tfrac{40}{120}$, $y_C=\tfrac{50}{120}$. Fixní náklady se
+„rozpustí“: $120\cdot\tfrac14+180\cdot\tfrac13+120\cdot\tfrac5{12}=30+60+50=140$ místo 240, doprava
+$30+40+50=120$, celkem 260. Ve silné formulaci zákazník 1 se $x_{1A}=1$ vynutí $y_A\ge1$ celé.
+
+
+.Figure:
+  label: ch-resice-ilp-fig-sklady-lp
+
+  !tikz:
+    filename: 15e-sila-formulace-05
+    options: 'x=1.5cm,y=1.6cm'
+
+    \foreach \X/\ya/\yb/\yc/\tit/\cena in {0/0.25/0.3333/0.4167/{slabá: LP relaxace}/{fixní $140$ + doprava $120=260$},
+                                          4.9/1/0/1/{silná: LP relaxace}/{fixní $240$ + doprava $280=520$}} {
+      \begin{scope}[xshift=\X cm]
+        \node[font=\footnotesize\bfseries] at (1,1.75) {\tit};
+        \foreach \j/\n/\y in {0/A/\ya,1/B/\yb,2/C/\yc} {
+          \fill[defc!45] (\j-0.22,1-0.22) rectangle (\j+0.22,{1-0.22+0.44*\y});
+          \draw[defc,thick] (\j-0.22,1-0.22) rectangle (\j+0.22,1+0.22);
+          \node[font=\small] (s\n) at (\j,1) {$\n$};}
+        \foreach \i in {1,2,3} \node[v,fill=intc!15] (z\i) at (\i-1,0) {\i};
+        \node[font=\footnotesize] at (1,-0.5) {\cena};
+      \end{scope}}
+    \node[font=\scriptsize,above] at (0,1.25) {$y_A=\frac14$};
+    \node[font=\scriptsize,above] at (1,1.25) {$y_B=\frac13$};
+    \node[font=\scriptsize,above] at (2,1.25) {$y_C=\frac5{12}$};
+    \draw[e] (0,0.72)--(0,0.24) (1,0.72)--(1,0.24) (2,0.72)--(2,0.24);
+    \begin{scope}[xshift=4.9cm]
+      \node[font=\scriptsize,above] at (0,1.25) {$y_A=1$};
+      \node[font=\scriptsize,above] at (1,1.25) {$y_B=0$};
+      \node[font=\scriptsize,above] at (2,1.25) {$y_C=1$};
+      \draw[e] (0,0.72)--(0,0.24) (2,0.72)--(2,0.24) (1.82,0.78)--(1.12,0.17);
+    \end{scope}
+
+  .caption:
+
+    Optimum LP relaxace obou formulací skladů; výplň čtverce je hodnota $y_j$, čára vede od skladu k zákazníkovi,
+    kterého obsluhuje. "Všimni si:".emphasize ve slabé relaxaci je každý sklad „otevřený“ jen na podíl
+    $d_i/120$ poptávky, kterou obsluhuje, a fixní náklady se rozpustí. Silná relaxace je rovnou celočíselná
+    (zákazník 2 může místo $C$ stejně draze jít do $A$).
+
+
+.Remark:
+  title: 'Co z toho plyne'
+
+  Slabá: dolní mez je "polovina".notion optima. Silná: LP relaxace je rovnou celočíselná –
+  "optimum máme bez další práce".notion. Obě formulace jsou správné; silná má víc nerovnic, a přesto je pro řešič lepší. (Obě hodnoty
+  jsme ověřili LP řešičem.)
+
+
+.Subsection Kdy je relaxace přesná: celočíselné polyedry
+  label: ch-resice-ilp-celociselne-polyedry
+
+
+.Definition:
+  title: 'Totální unimodularita (TU)'
+  label: ch-resice-ilp-def-tu
+
+  Matice $A$ je "totálně unimodulární".notion, jestliže každá její čtvercová podmatice má determinant v $\{0,\pm1\}$.
+
+
+.Theorem:
+  title: 'Hoffman–Kruskal 1956 (bez důkazu)'
+  label: ch-resice-ilp-thm-hoffman-kruskal
+
+  Je-li $A$ TU a $b$ celočíselné, pak všechny vrcholy polyedru $\{x: Ax\le b,\ x\ge0\}$ jsou celočíselné.
+
+
+Protože LP optimum leží ve vrcholu, dá pak LP relaxace rovnou celočíselné optimum. "Příklady TU matic".notion:
+incidenční matice bipartitních grafů a incidenční matice orientovaných grafů (toky). Odtud:
+"bipartitní párování a toky v sítích".notion – LP relaxace dá rovnou celočíselné optimum.
+
+
+.Figure:
+  label: ch-resice-ilp-fig-tu
+
+  !tikz:
+    filename: 15e-sila-formulace-03
+    options: 'x=1.7cm,y=1.3cm'
+
+    \node[v,fill=defc!10,font=\footnotesize] (u1) at (0,1) {$u_1$};
+    \node[v,fill=defc!10,font=\footnotesize] (u2) at (0,0) {$u_2$};
+    \node[v,fill=intc!15,font=\footnotesize] (v1) at (1.6,1) {$v_1$};
+    \node[v,fill=intc!15,font=\footnotesize] (v2) at (1.6,0) {$v_2$};
+    \draw[e] (u1)--(v1) node[midway,above,font=\footnotesize]{$e_1$};
+    \draw[e] (u1)--(v2) node[pos=0.3,below,font=\footnotesize]{$e_2$};
+    \draw[e] (u2)--(v2) node[midway,below,font=\footnotesize]{$e_3$};
+    \matrix[matrix of math nodes,left delimiter=(,right delimiter=),nodes={font=\footnotesize,minimum width=4mm,inner sep=1.5pt},row sep=0pt,column sep=1pt] (M) at (3.7,0.5) {1&1&0\\0&0&1\\1&0&0\\0&1&1\\};
+    \foreach \r/\n in {1/u_1,2/u_2,3/v_1,4/v_2} \node[font=\scriptsize,anchor=east] at ([xshift=-3.5mm]M-\r-1.west) {$\n$};
+    \foreach \c/\n in {1/e_1,2/e_2,3/e_3} \node[font=\scriptsize,anchor=south] at ([yshift=1.5mm]M-1-\c.north) {$\n$};
+
+  .caption:
+
+    Bipartitní graf a jeho incidenční matice (řádky $u_1,u_2,v_1,v_2$, sloupce $e_1,e_2,e_3$). Každá čtvercová
+    podmatice má determinant $0$ nebo $\pm1$ (ověřeno výčtem).
+
+
+.Warning:
+  title: 'Typické chyby'
+
+  .itemize:
+
+    .item:
+
+      "„Správná formulace = dobrá formulace.“".notion Slabá formulace skladů je správná, a přesto dává poloviční mez.
+      Správnost říká jen, že celočíselná řešení sedí; síla říká, jak blízko je k nim relaxace.
+
+    .item:
+
+      "Míň nerovnic = lepší.".notion Silná formulace skladů má 9 vazebných nerovnic místo 3 a je lepší. Pro řešič
+      rozhoduje mez, ne počet řádků.
+
+    .item:
+
+      "IG jako vlastnost problému.".notion IG patří ke "konkrétní formulaci".emphasize; přidání trojúhelníkových
+      nerovnic změnilo LP hodnotu na $K_3$, ačkoli problém (VC) zůstal stejný.
+
+    .item:
+
+      "TU bez celočíselné pravé strany.".notion Hoffman–Kruskal potřebuje i celočíselné $b$.

@@ -1,0 +1,38 @@
+.Chapter SAT: algoritmy, kódování a řešiče
+  label: ch-resice-sat
+
+
+Zdroje: přednáška 7, proseminář 7, cvičení 7.
+
+
+.Concept:
+  title: 'Proč to děláme'
+
+  V kapitolách o NP-úplnosti jsme se ptali, "zda".emphasize je problém těžký, a odpovídali redukcí "z".emphasize
+  $\prob{SAT}$u (kapitola .reference:ch-sat). Teď se otázka mění: problém je těžký – jak ho přesto vyřešit?
+  Ukážeme varianty $\prob{SAT}$u, které jsou v $\PP$ díky své struktuře, vysvětlíme princip moderních řešičů
+  (DPLL a CDCL) a naučíme se kódovat problémy "do".emphasize $\prob{SAT}$u, abychom je mohli předat hotovému
+  řešiči. Na prosemináři si řešič vyzkoušíme sami na Schurových číslech a na cvičení kódujeme Vertex Cover,
+  Dominating Set, Hamiltonovu cestu, paritu a podmínky „nejvýše $k$“.
+
+
+Druhá polovina semestru tedy nestaví další redukce "z".emphasize těžkých problémů (redukce, NP-úplnost, prostor,
+$\PSPACE$), ale řešiče, garance a chytré algoritmy. Přednáška 7 začíná u $\prob{SAT}$u a má tři cíle:
+
+.itemize:
+
+  .item:
+
+    ukázat další polynomiálně řešitelné varianty $\prob{SAT}$u (vedle $\prob{2-SAT}$u z oddílu .reference:ch-prostor-2-sat-je-v-p);
+
+  .item:
+
+    vysvětlit základní princip fungování efektivních SAT řešičů;
+
+  .item:
+
+    ukázat několik triků, jak kódovat problémy jako $\prob{SAT}$, abychom je mohli vyřešit řešičem.
+
+
+Proseminář 7 navazuje praktickou ukázkou: od zadání (Schurův problém) přes generátor formule ve formátu
+DIMACS a řešič Kissat až po přečtení odpovědi a ověření důkazu nesplnitelnosti.

@@ -1,0 +1,152 @@
+.Section Nezávislá množina
+  label: ch-is-nezavisla-mnozina
+
+
+.Definition:
+  title: 'Problém $\prob{Independent Set}$ (IS, nezávislá množina)'
+  label: prob-is
+
+  "Vstup:".notion neorientovaný graf $G=(V,E)$ a číslo $k$.
+
+
+  "Otázka:".notion existuje $S\subseteq V$, $|S|\ge k$, taková, že žádné dva vrcholy z $S$ nejsou spojeny hranou?
+
+
+Intuice: hledáme $k$ prvků, které spolu „nemají konflikt“.
+
+
+.Theorem:
+  label: thm-isnpc
+
+  $\prob{IS}$ je NP-úplný.
+
+
+"IS $\in$ $\NP$:".notion certifikátem je $k$ vrcholů, absenci hran mezi nimi ověříme v polynomiálním čase.
+"NP-těžkost:".notion redukce $\prob{3-SAT}\redp\prob{IS}$.
+
+
+.Subsection Konstrukce $\prob{3-SAT}\redp\prob{IS}$
+  label: ch-is-konstrukce-3-sat-is
+
+
+.Remark:
+  title: 'Redukce: $\prob{3-SAT} \redp \prob{IS}$'
+  label: red-is
+
+  formule $\Phi$ $\;\longmapsto\;$ $(G,\ k=n+m)$
+
+
+Nechť formule $\Phi$ má $n$ proměnných a $m$ klauzulí. Sestrojíme graf $G$ a budeme hledat IS
+velikosti $k=n+m$.
+
+.enumerate:
+
+  .item:
+
+    "Gadgety proměnných (výběr ohodnocení):".notion pro každou $x_i$ dva vrcholy $x_i$ a $\lnot x_i$
+    spojené hranou. IS z hrany vybere nejvýše jeden vrchol $\Rightarrow$ jednoznačná hodnota.
+
+  .item:
+
+    "Gadgety klauzulí (splnění):".notion pro každou klauzuli trojúhelník na jejích třech literálech.
+    IS z něj vybere nejvýše jeden vrchol – literál, který klauzuli splní.
+
+  .item:
+
+    "Propojovací (konfliktní) hrany:".notion každý vrchol $\ell$ v klauzuli spojíme s vrcholem $\lnot\ell$
+    v gadgetu proměnných. Vybereme-li v klauzuli literál $\ell$, nesmíme mít vybranou jeho negaci.
+
+
+.Example:
+  title: 'Konstrukce grafu'
+  label: ex-isexample
+
+  $\Phi=(x_1\lor\lnot x_2\lor x_3)\land(\lnot x_1\lor x_2\lor\lnot x_3)$, tedy $n=3$, $m=2$ a hledáme IS velikosti $k=5$.
+
+  .centered:
+
+    !tikz:
+      filename: 08a-nezavisla-mnozina-01
+
+      \chRisgraph
+
+  Červené čárkované hrany zakazují vybrat literál v klauzuli a současně nastavit proměnnou na opačnou hodnotu.
+  Graf má $2n+3m$ vrcholů – konstrukce je zjevně polynomiální.
+
+
+"Korektnost ($\Rightarrow$): ze splňujícího ohodnocení na IS.".notion
+Máme ohodnocení splňující $\Phi$. Do $S$ dáme
+
+.enumerate:
+
+  .item:
+
+    z každého gadgetu proměnné vrchol odpovídající "pravdivému".emphasize literálu ($n$ vrcholů),
+
+  .item:
+
+    z každé klauzule "jeden".emphasize pravdivý literál – existuje, protože je $\Phi$ splněna ($m$ vrcholů).
+
+"Proč v $S$ není hrana?".emphasize Uvnitř gadgetů jsme brali nejvýše jeden vrchol. Konfliktní hrana spojuje
+$\ell$ v klauzuli s $\lnot\ell$ v proměnných; vybrali-li jsme $\ell$ v klauzuli, je pravdivý, $\lnot\ell$ je
+nepravdivý, a ten jsme v proměnných nevybrali.
+
+
+.Figure:
+  label: fig-is-ohodnoceni-na-is
+
+  !tikz:
+    filename: 08a-nezavisla-mnozina-02
+    options: 'chRsx1/.style={chRlitsel},chRsx2/.style={chRlitsel},chRsnx3/.style={chRlitsel},chRsa1/.style={chRlitsel},chRsb2/.style={chRlitsel}'
+
+    \chRisgraph
+
+  .caption:
+
+    Ohodnocení $x_1=1,x_2=1,x_3=0$: zelená IS velikosti $5$. V $C_2$ jsou pravdivé $x_2$ i $\lnot x_3$ – vybereme
+    "jen jeden".emphasize, abychom neporušili nezávislost v trojúhelníku.
+
+
+"Korektnost ($\Leftarrow$): z IS na splňující ohodnocení.".notion
+Máme IS $S$ velikosti $n+m$.
+
+
+.Concept:
+  title: 'Klíčové pozorování: kapacita gadgetů'
+
+  Graf se skládá z $n$ hran proměnných a $m$ trojúhelníků. Z každého smí IS vzít nejvýše jeden vrchol,
+  celkem tedy nejvýše $n+m$. Aby $|S|=n+m$, musí $S$ obsahovat "přesně jeden".emphasize vrchol z každého gadgetu.
+
+
+.enumerate:
+
+  .item:
+
+    Vrcholy vybrané v gadgetech proměnných jednoznačně určují ohodnocení $x_1,\dots,x_n$.
+
+  .item:
+
+    V každém trojúhelníku je vybrán právě jeden literál $\ell$.
+
+  .item:
+
+    Kvůli konfliktní hraně není vybrán $\lnot\ell$ v proměnných, takže tam musí být vybrán $\ell$ $\Rightarrow$ $\ell$ je pravdivý.
+
+Každá klauzule tedy obsahuje pravdivý literál a $\Phi$ je splněna.
+
+
+.Figure:
+  label: fig-is-zpetne-cteni
+
+  !tikz:
+    filename: 08a-nezavisla-mnozina-03
+    options: 'chRsnx1/.style={chRlitsel},chRsnx2/.style={chRlitsel},chRsx3/.style={chRlitsel},chRsa3/.style={chRlitsel},chRsb1/.style={chRlitsel}'
+
+    \chRisgraph
+    \draw[->,very thick,intc] (a3) to[bend left=10] (x3);
+    \node[font=\scriptsize,text=intc,align=right,anchor=east] at (-2.6,2.7) {vybrán $x_3$ v $C_1$\\ $\Rightarrow$ $\lnot x_3$ nesmí být vybrán\\ $\Rightarrow$ vybrán $x_3$, tedy $x_3=1$};
+
+  .caption:
+
+    Zpětné čtení: z jiné IS velikosti $5$ přečteme ohodnocení $x_1=0$, $x_2=0$, $x_3=1$.
+    Klauzuli $C_1$ splní $x_3$, klauzuli $C_2$ splní $\lnot x_1$.

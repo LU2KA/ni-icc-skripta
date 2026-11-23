@@ -1,0 +1,639 @@
+.Section Tseitinova transformace
+  label: ch-resice-sat-tseitinova-transformace
+
+
+.Subsection Když omezení není v CNF
+  label: ch-resice-sat-kdyz-omezeni-neni-v-cnf
+
+
+Řešiče chtějí CNF, omezení z praxe jsou ale obecné formule nebo obvody. "Příklad:".notion „aspoň jeden z $n$ plánů
+je proveditelný“, plán $i$ potřebuje $a_i$ i $b_i$:
+
+.equation:
+
+  \varphi_n=(a_1\land b_1)\lor(a_2\land b_2)\lor\dots\lor(a_n\land b_n).
+
+"Roznásobení".notion (distributivita), $n=2$:
+
+.equation:
+
+  \varphi_2\equiv(a_1\lor a_2)\land(a_1\lor b_2)\land(b_1\lor a_2)\land(b_1\lor b_2).
+
+Každá klauzule vybere z každé závorky $a_i$ nebo $b_i$ $\Rightarrow$ $2^n$ klauzulí.
+
+
+.Remark:
+  title: 'Nejde to lépe'
+
+  "Každá".emphasize CNF "ekvivalentní".emphasize s $\varphi_n$ má aspoň $2^n$ klauzulí (přednáška uvádí bez důkazu;
+  obdobné tvrzení pro paritu dokážeme v cvičení .reference:cv-7-3). Pomůže jen to, že povolíme "nové proměnné".emphasize.
+
+
+.Figure:
+  label: ch-resice-sat-fig-rust
+
+  !tikz:
+    filename: 14d-tseitin-01
+
+    \begin{axis}[width=8.5cm,height=5.2cm,ymode=log,xmin=1,xmax=30,ymin=1,ymax=2e9,
+        xlabel={$n$},ylabel={počet klauzulí},legend pos=north west,legend style={font=\scriptsize},
+        tick label style={font=\scriptsize},label style={font=\small},grid=major,grid style={black!10}]
+      \addplot[very thick,rej,domain=1:30,samples=30] {2^x};
+      \addlegendentry{roznásobení $2^n$}
+      \addplot[very thick,tT!80!black,domain=1:30,samples=30] {4*x+2};
+      \addlegendentry{Tseitin $4n+2$}
+    \end{axis}
+    \node[anchor=west,font=\scriptsize] at (7.3,2.2) {\begin{tabular}{rrr}$n$ & roznásobení & Tseitin\\\hline 10 & 1\,024 & 42\\ 30 & $\approx10^9$ & 122\end{tabular}};
+
+  .caption:
+
+    Počet klauzulí pro $\varphi_n$ (logaritmická osa $y$): roznásobení roste exponenciálně, Tseitin lineárně.
+
+
+.Subsection Tseitinova transformace
+  label: ch-resice-sat-tseitin
+
+
+"Trik:".notion každé hradlo dostane "novou proměnnou".emphasize a lokálními klauzulemi vynutíme, že nabývá hodnotu
+hradla. Pro $\varphi_2=(a_1\land b_1)\lor(a_2\land b_2)$:
+
+.table:
+  columns: 'll'
+
+  .row:
+    head: true
+
+    hradlo
+
+    klauzule
+
+  .row:
+
+    $g_1\leftrightarrow(a_1\land b_1)$
+
+    $(\lnot g_1\lor a_1)$, $(\lnot g_1\lor b_1)$, $(g_1\lor\lnot a_1\lor\lnot b_1)$
+
+  .row:
+
+    $g_2\leftrightarrow(a_2\land b_2)$
+
+    $(\lnot g_2\lor a_2)$, $(\lnot g_2\lor b_2)$, $(g_2\lor\lnot a_2\lor\lnot b_2)$
+
+  .row:
+
+    $g\leftrightarrow(g_1\lor g_2)$
+
+    $(g\lor\lnot g_1)$, $(g\lor\lnot g_2)$, $(\lnot g\lor g_1\lor g_2)$
+
+  .row:
+
+    výstup
+
+    $(g)$
+
+
+.Figure:
+  label: ch-resice-sat-fig-obvod
+
+  !tikz:
+    filename: 14d-tseitin-02
+    options: 'x=1cm,y=1cm'
+
+    \chSATcirc{}{}{}{}{}{}{}
+    \node[font=\small] at (2.2,-0.6) {$\varphi_2=(a_1\land b_1)\lor(a_2\land b_2)$};
+
+  .caption:
+
+    Formule $\varphi_2$ jako obvod: hradla $g_1,g_2$ (AND) a $g$ (OR); výstup chceme mít roven 1.
+
+
+"Negace".notion nepotřebuje proměnnou – stačí literál $\lnot u$. "Každé hradlo".notion dá $O(1)$ klauzulí s nejvýše
+3 literály (pro dvouvstupová hradla).
+
+
+"Proč klauzule fungují.".notion Klauzule hradla jsou zápisem obou implikací:
+$g_1\Rightarrow a_1$, $g_1\Rightarrow b_1$ (směr „$g_1\Rightarrow a_1\land b_1$“) a $a_1\land b_1\Rightarrow g_1$
+(opačný směr). Pro OR obráceně: $g_i\Rightarrow g$ a $g\Rightarrow g_1\lor g_2$.
+
+
+.Example:
+  title: 'Tseitin v tabulce: jedno hradlo'
+  label: ch-resice-sat-ex-tseitin-hradlo
+
+  $g_1\leftrightarrow(a_1\land b_1)$: $C_1=(\lnot g_1\lor a_1)$, $C_2=(\lnot g_1\lor b_1)$, $C_3=(g_1\lor\lnot a_1\lor\lnot b_1)$.
+  Všech 8 ohodnocení $(a_1,b_1,g_1)$:
+
+  .table:
+    columns: 'ccccc'
+
+    .row:
+      head: true
+
+      $a_1$
+
+      $b_1$
+
+      $g_1$
+
+      $a_1\land b_1$
+
+      zakáže
+
+    .row:
+
+      0
+
+      0
+
+      0
+
+      0
+
+      ✓
+
+    .row:
+
+      0
+
+      0
+
+      1
+
+      0
+
+      $C_1$, $C_2$
+
+    .row:
+
+      0
+
+      1
+
+      0
+
+      0
+
+      ✓
+
+    .row:
+
+      0
+
+      1
+
+      1
+
+      0
+
+      $C_1$
+
+    .row:
+
+      1
+
+      0
+
+      0
+
+      0
+
+      ✓
+
+    .row:
+
+      1
+
+      0
+
+      1
+
+      0
+
+      $C_2$
+
+    .row:
+
+      1
+
+      1
+
+      0
+
+      1
+
+      $C_3$
+
+    .row:
+
+      1
+
+      1
+
+      1
+
+      1
+
+      ✓
+
+
+  Přežijí přesně 4 řádky – ty s $g_1=a_1\land b_1$. Každý špatný řádek zakáže aspoň jedna klauzule, dobrý
+  žádná. Klauzule hradla "jsou".emphasize jeho pravdivostní tabulka. (Tabulka ověřena skriptem.)
+
+
+.Example:
+  title: 'Tseitin v tabulce: celý obvod'
+  label: ch-resice-sat-ex-tseitin-obvod
+
+  Pro $\varphi_2$ projdeme všech 16 vstupů $(a_1,b_1,a_2,b_2)$ a vypíšeme jediné hodnoty hradel, které klauzule
+  hradel dovolí:
+
+  .table:
+    columns: 'cccccccc'
+
+    .row:
+      head: true
+
+      $a_1$
+
+      $b_1$
+
+      $a_2$
+
+      $b_2$
+
+      $g_1$
+
+      $g_2$
+
+      $g$
+
+      projde $(g)$?
+
+    .row:
+
+      0
+
+      0
+
+      0
+
+      0
+
+      0
+
+      0
+
+      0
+
+      –
+
+    .row:
+
+      0
+
+      0
+
+      0
+
+      1
+
+      0
+
+      0
+
+      0
+
+      –
+
+    .row:
+
+      0
+
+      0
+
+      1
+
+      0
+
+      0
+
+      0
+
+      0
+
+      –
+
+    .row:
+
+      0
+
+      0
+
+      1
+
+      1
+
+      0
+
+      1
+
+      1
+
+      ✓
+
+    .row:
+
+      0
+
+      1
+
+      0
+
+      0
+
+      0
+
+      0
+
+      0
+
+      –
+
+    .row:
+
+      0
+
+      1
+
+      0
+
+      1
+
+      0
+
+      0
+
+      0
+
+      –
+
+    .row:
+
+      0
+
+      1
+
+      1
+
+      0
+
+      0
+
+      0
+
+      0
+
+      –
+
+    .row:
+
+      0
+
+      1
+
+      1
+
+      1
+
+      0
+
+      1
+
+      1
+
+      ✓
+
+    .row:
+
+      1
+
+      0
+
+      0
+
+      0
+
+      0
+
+      0
+
+      0
+
+      –
+
+    .row:
+
+      1
+
+      0
+
+      0
+
+      1
+
+      0
+
+      0
+
+      0
+
+      –
+
+    .row:
+
+      1
+
+      0
+
+      1
+
+      0
+
+      0
+
+      0
+
+      0
+
+      –
+
+    .row:
+
+      1
+
+      0
+
+      1
+
+      1
+
+      0
+
+      1
+
+      1
+
+      ✓
+
+    .row:
+
+      1
+
+      1
+
+      0
+
+      0
+
+      1
+
+      0
+
+      1
+
+      ✓
+
+    .row:
+
+      1
+
+      1
+
+      0
+
+      1
+
+      1
+
+      0
+
+      1
+
+      ✓
+
+    .row:
+
+      1
+
+      1
+
+      1
+
+      0
+
+      1
+
+      0
+
+      1
+
+      ✓
+
+    .row:
+
+      1
+
+      1
+
+      1
+
+      1
+
+      1
+
+      1
+
+      1
+
+      ✓
+
+  Klauzule hradel mají přesně 16 modelů – jeden pro každý vstup. Přidáme-li $(g)$, zbude 7 řádků = přesně 7 modelů
+  $\varphi_2$. (Ověřeno skriptem: ke každému vstupu existuje právě jedno rozšíření.)
+
+
+.Subsection Tseitin: proč to funguje
+  label: ch-resice-sat-tseitin-proc
+
+
+.Figure:
+  label: ch-resice-sat-fig-obvod-hodnoty
+
+  !tikz:
+    filename: 14d-tseitin-03
+    options: 'x=1cm,y=1cm'
+
+    \chSATcirc{$1$}{$0$}{$1$}{$1$}{$g_1=0$}{$g_2=1$}{$g=1$}
+
+  .caption:
+
+    Hodnoty hradel jsou určené vstupy – spočteme je zdola nahoru (zde $a_1=1$, $b_1=0$, $a_2=1$, $b_2=1$).
+
+
+.Theorem:
+  title: 'Tseitin, 1968'
+  label: ch-resice-sat-thm-tseitin
+
+  Pro obvod $\varphi$ s $m$ hradly sestrojíme v polynomiálním čase 3-CNF $\psi$ s $O(m)$ klauzulemi, která je
+  s $\varphi$ "ekvisplnitelná".notion ($\varphi$ splnitelná $\iff$ $\psi$ splnitelná).
+
+
+.Proof:
+  title: 'Náznak důkazu'
+
+  ($\Rightarrow$) Z modelu $\varphi$ dopočteme $g$-proměnné hradlo po hradle (zdola nahoru) – dostaneme model $\psi$,
+  a to jediný možný. Výstupní hradlo má hodnotu 1, takže $(g)$ platí.
+
+
+  ($\Leftarrow$) V modelu $\psi$ je každá $g$-proměnná rovna hodnotě svého hradla (klauzule hradla = jeho
+  pravdivostní tabulka), takže $g$ = hodnota obvodu, a $(g)$ ji vynutí na 1. $g$-proměnné zapomeneme – zbude
+  model $\varphi$.
+
+
+.Remark:
+  title: 'Ekvisplnitelná $\neq$ ekvivalentní'
+
+  $\psi$ má navíc proměnné $g_i$, takže $\psi$ a $\varphi$ nejsou ekvivalentní (nemají ani stejné proměnné) –
+  řešiči to nevadí: model $\psi$ zúžený na původní proměnné je model $\varphi$.
+
+
+"Počet klauzulí pro $\varphi_n$.".notion $n$ hradel AND po 3 klauzulích, jedno $n$-vstupové hradlo OR
+($n$ klauzulí $(g\lor\lnot g_i)$ a jedna $(\lnot g\lor g_1\lor\dots\lor g_n)$) a výstup $(g)$:
+$3n+(n+1)+1=4n+2$ – to je číslo z grafu. "(nad rámec přednášky)".emphasize Dlouhá klauzule OR hradla má
+$n+1$ literálů; chceme-li striktně 3-CNF, rozložíme OR na $n-1$ dvouvstupových hradel a dostaneme
+$3n+3(n-1)+1=6n-2$ klauzulí – pořád lineárně.
+
+
+.Warning:
+  title: 'Typické chyby'
+
+  .itemize:
+
+    .item:
+
+      Zapomenout výstupní klauzuli $(g)$. Bez ní jsou klauzule hradel splnitelné vždy (každý vstup má své
+      rozšíření, viz tabulka), takže výsledek by byl vždy SAT.
+
+    .item:
+
+      Zapsat jen jeden směr $g\Rightarrow(a\land b)$. Pak hodnota $g$ není určena vstupy a argument „zdola nahoru“
+      neplatí. "(nad rámec přednášky)".emphasize S negacemi to vede k chybě: pro nesplnitelnou
+      $\lnot(a\land b)\land a\land b$ s $g_1$ za $(a\land b)$ projde $a=b=1$, $g_1=0$ (ověřeno skriptem).
+
+    .item:
+
+      Zavádět proměnnou pro negaci nebo roznásobovat „pro jistotu“ – negace je jen literál, roznásobení
+      je exponenciální.
+
+    .item:
+
+      Tvrdit, že $\psi\equiv\varphi$. Platí jen ekvisplnitelnost (a tady navíc 1:1 korespondence modelů).

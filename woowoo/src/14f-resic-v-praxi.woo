@@ -1,0 +1,854 @@
+.Section SAT řešič v praxi: Schurova čísla
+  label: ch-resice-sat-sat-resic-v-praxi
+
+
+Na přednášce jsme slyšeli, že SAT řešiče zvládají obrovské instance. Proseminář 7 to zkouší prakticky, od instalace
+po přečtení výsledku: (1) instalace volně dostupného řešiče Kissat, (2) vstupní formát "DIMACS".notion – jak problém
+zapsat jako CNF, (3) výstup – jak přečíst odpověď a proč věřit i odpovědi „nesplnitelné“.
+
+
+.Figure:
+  label: ch-resice-sat-fig-pipeline
+
+  !tikz:
+    filename: 14f-resic-v-praxi-01
+    options: 'x=1cm,y=1cm,node distance=6mm'
+
+    \node[blok,fill=hl!60] (p) {Schurův\\ problém};
+    \node[blokd,right=of p] (g) {generátor\\ \texttt{schur.py}};
+    \node[blok,right=of g] (f) {soubor\\ \texttt{.cnf}};
+    \node[blokr,right=of f] (s) {řešič\\ \texttt{kissat}};
+    \node[blokd,right=of s] (d) {dekodér\\ \texttt{decode.py}};
+    \node[bloka,right=of d] (r) {řešení:\\ obarvení};
+    \foreach \a/\b in {p/g,g/f,f/s,s/d,d/r} {\draw[flow] (\a)--(\b);}
+    \node[font=\scriptsize,below=1mm of f] {DIMACS};
+    \node[font=\scriptsize,anchor=north] at ($(s.south)!0.5!(d.south)+(0,-0.1)$) {řádky \texttt{s}/\texttt{v}};
+
+  .caption:
+
+    Cesta od problému k odpovědi: generátor napíše formuli ve formátu DIMACS, řešič vypíše model, dekodér
+    z něj přečte obarvení.
+
+
+.Subsection Schurův problém
+  label: ch-resice-sat-schuruv-problem
+
+
+.Definition:
+  title: 'Problém $\prob{Schur}$ a Schurovo číslo'
+  label: ch-resice-sat-def-schur
+
+  "Vstup:".notion čísla $n,k$.
+
+
+  "Otázka:".notion lze čísla $\{1,2,\dots,n\}$ obarvit $k$ barvami tak, aby žádná trojice $x+y=z$ nebyla jednobarevná?
+  ($x=y$ je povoleno: $1+1=2$.)
+
+
+  "Schurovo číslo".notion $S(k)$ = největší $n$, pro které to jde.
+
+
+"Příklad $n=4$, $k=2$:".notion červená $\{1,4\}$ ($1+1=2$, $1+4=5$, … – nic), modrá $\{2,3\}$ ($2+2=4$ je
+červená – v pořádku).
+
+
+.Example:
+  title: 'Pět čísel dvěma barvami nejde'
+  label: ch-resice-sat-ex-schur5
+
+  Bez újmy na obecnosti je 1 červená (barvy můžeme prohodit). Pak je vše vynucené:
+
+  .enumerate:
+
+    .item:
+
+      $1+1=2$ $\Rightarrow$ 2 modrá;
+
+    .item:
+
+      $2+2=4$ $\Rightarrow$ 4 červená;
+
+    .item:
+
+      $1+3=4$ $\Rightarrow$ 3 modrá;
+
+    .item:
+
+      5: $1+4=5$ zakazuje červenou, $2+3=5$ zakazuje modrou. "Spor.".notion
+
+
+  Tedy $S(2)=4$ (ověřeno hrubou silou).
+
+
+.Figure:
+  label: ch-resice-sat-fig-schur5
+
+  !tikz:
+    filename: 14f-resic-v-praxi-02
+    options: 'x=1cm,y=1cm'
+
+    \chSATdot{0}{0}{tF!45}{1}
+    \chSATdot{1.1}{0}{tB!45}{2}
+    \chSATdot{2.2}{0}{tB!45}{3}
+    \chSATdot{3.3}{0}{tF!45}{4}
+    \node[circle,draw=rej,very thick,fill=white,minimum size=6.5mm,inner sep=0pt,font=\small] at (4.4,0) {5};
+    \draw[thick,tF] (0,0.33) to[out=60,in=120] node[above,font=\scriptsize,black]{$1+4$} (4.4,0.33);
+    \draw[thick,tB] (1.1,-0.33) to[out=-55,in=-125] node[below,font=\scriptsize,black]{$2+3$} (4.4,-0.33);
+
+  .caption:
+
+    Vynucené obarvení $1,\dots,4$; číslo 5 nemůže být červené ($1+4$) ani modré ($2+3$).
+
+
+.table:
+  columns: 'cccccc'
+
+  .row:
+    head: true
+
+    $k$
+
+    1
+
+    2
+
+    3
+
+    4
+
+    5
+
+  .row:
+
+    $S(k)$
+
+    1
+
+    4
+
+    13
+
+    44
+
+    160
+
+  .row:
+
+    důkaz
+
+    2 B
+
+    48 B
+
+    6 kB
+
+    350 MB
+
+    $\approx$ 2 PB
+
+  .row:
+
+    ~
+
+    ~
+
+    ~
+
+    ~
+
+    1965
+
+    2017, SAT
+
+
+„Důkaz“ = velikost DRAT důkazu, že $\{1,\dots,S(k)+1\}$ obarvit nejde (viz níže). $S(4)=44$ je známo od roku 1965,
+$S(5)=160$ bylo spočteno v roce 2017 pomocí SAT řešiče.
+
+
+.Subsection Instalace řešiče Kissat
+  label: ch-resice-sat-instalace
+
+
+Kissat (Armin Biere) je opakovaný vítěz SAT Competition, volně šiřitelný (MIT licence). Potřebujeme Linux nebo
+macOS, "gcc".code, "make".code, "git".code; ve Windows použijte WSL.
+
+!codeblock:
+  language: text
+
+  $ git clone https://github.com/arminbiere/kissat.git
+  $ cd kissat
+  $ ./configure && make          # cca 1 minuta
+  $ build/kissat --version
+  4.0.4
+
+Alternativy bez kompilace: "apt install cadical".code (Ubuntu), "pip install python-sat".code (knihovna PySAT
+s několika řešiči pro Python; na prosemináři se dál nepoužívá).
+
+
+.Subsection Proměnné a klauzule
+  label: ch-resice-sat-schur-promenne
+
+
+.Remark:
+  title: 'Redukce: $\prob{Schur} \redp \prob{SAT}$'
+  label: ch-resice-sat-red-schur
+
+  $(n,k)$ $\;\longmapsto\;$ formule v $nk$ proměnných $x_{i,c}$ s $n+k\lfloor n^2/4\rfloor$ klauzulemi
+
+
+.description:
+
+  .ditem:
+    bullet: 'Proměnné:'
+
+    $x_{i,c}$ = „číslo $i$ má barvu $c$“. DIMACS chce čísla $1,2,3,\dots$: $x_{i,c}\mapsto(i-1)\,k+c$.
+
+  .ditem:
+    bullet: 'Aspoň jedna barva:'
+
+    $x_{i,1}\lor x_{i,2}\lor\dots\lor x_{i,k}$ pro každé $i$.
+
+  .ditem:
+    bullet: 'Žádná jednobarevná trojice:'
+
+    $\lnot x_{x,c}\lor\lnot x_{y,c}\lor\lnot x_{x+y,c}$ pro $x\le y$, $x+y\le n$ a každé $c$.
+
+
+Pro $k=3$ vypadá číslování takto (řádek = číslo $i$, sloupec = barva $c$, v políčku číslo proměnné):
+
+.table:
+  columns: 'cccc'
+
+  .row:
+    head: true
+
+    ~
+
+    $c=1$
+
+    $c=2$
+
+    $c=3$
+
+  .row:
+
+    $i=1$
+
+    1
+
+    2
+
+    3
+
+  .row:
+
+    $i=2$
+
+    4
+
+    5
+
+    6
+
+  .row:
+
+    $i=3$
+
+    7
+
+    8
+
+    9
+
+  .row:
+
+    $i=4$
+
+    10
+
+    11
+
+    12
+
+  .row:
+
+    …
+
+    …
+
+    …
+
+    …
+
+
+"Počet klauzulí".notion "(nad rámec přednášky – dopočteno)".emphasize: dvojic $x\le y$ s $x+y\le n$ je
+$\lfloor n^2/4\rfloor$, celkem tedy $n+k\lfloor n^2/4\rfloor$; pro $n=13$, $k=3$: $13+3\cdot42=139$, pro $n=14$:
+$14+3\cdot49=161$ – sedí s hlavičkami souborů níže (ověřeno skriptem i pro $n=44,45$, $k=4$).
+
+
+.Concept:
+  title: 'Chybí něco? (Zastavte video)'
+
+  U obarvení grafu jsme přidávali i klauzule „nejvýše jedna barva“ $\lnot x_{i,c}\lor\lnot x_{i,c'}$. Potřebujeme
+  je i tady? Co když řešič dá číslu dvě barvy?
+
+
+  "Nepotřebujeme.".notion Má-li číslo v řešení víc barev, vybereme libovolnou z nich: ubráním barvy žádná trojice
+  nevznikne – zakázané jsou jen jednobarevné trojice a ty mohou ubráním jen zmizet. Formule s klauzulemi
+  „nejvýše jedna“ i bez nich jsou tedy ekvisplnitelné (skriptem ověřeno pro $n\le9$, $k\in\{2,3\}$). Méně klauzulí
+  = menší soubor. Dekodér ale musí s více barvami počítat.
+
+
+.Subsection Generátor schur.py
+  label: ch-resice-sat-schur-py
+
+
+Soubor "schur.py".code z materiálů předmětu (verze na slajdu je zkrácená a má v hlavičce cyklu "n / 2".code, což
+v Pythonu 3 dá desetinné číslo a "range".code selže; soubor správně používá "n // 2".code):
+
+!codeblock:
+  language: python
+
+  #!/usr/bin/env python3
+  """Schurův problém do DIMACS CNF: obarvi {1..n} k barvami tak,
+  aby žádná trojice x + y = z nebyla jednobarevná.
+
+  Použití:  python3 schur.py n k [sym] > schur.cnf
+            (sym = přidej rozbití symetrie barev)"""
+  import sys
+
+  n, k = int(sys.argv[1]), int(sys.argv[2])
+  sym = len(sys.argv) > 3 and sys.argv[3] == "sym"
+
+  def var(i, c):                # x_{i,c}: i má barvu c
+      return (i - 1) * k + c
+
+  clauses = []
+  for i in range(1, n + 1):     # aspoň jedna barva
+      clauses.append([var(i, c) for c in range(1, k + 1)])
+  for x in range(1, n // 2 + 1):    # x+y není jednobarevná
+      for y in range(x, n - x + 1):
+          for c in range(1, k + 1):
+              clauses.append({-var(x, c), -var(y, c), -var(x + y, c)})
+  if sym:                       # barvy jsou zaměnitelné:
+      clauses.append([var(1, 1)])   # 1 má barvu 1,
+      clauses.append([var(2, 2)])   # 2 má barvu 2 (1 + 1 = 2)
+
+  print(f"c Schur: n={n}, k={k}" + (", sym" if sym else ""))
+  print(f"p cnf {n * k} {len(clauses)}")
+  for cl in clauses:
+      print(*cl, 0)
+
+
+Co která část kóduje:
+
+.itemize:
+
+  .item:
+
+    "var(i, c)".code je očíslování proměnné $x_{i,c}$ pro DIMACS.
+
+  .item:
+
+    První cyklus: klauzule „aspoň jedna barva“ pro každé číslo $i$.
+
+  .item:
+
+    Druhý cyklus: pro každou dvojici $x\le y$ s $x+y\le n$ a každou barvu $c$ klauzule
+    $\lnot x_{x,c}\lor\lnot x_{y,c}\lor\lnot x_{x+y,c}$. Je zapsaná jako "množina".emphasize: pro $x=y$ splynou dva
+    literály v jeden ($1+1=2$ dá $\lnot x_{1,c}\lor\lnot x_{2,c}$). Pořadí literálů v klauzuli je pak libovolné.
+
+  .item:
+
+    Volba "sym".code přidá dvě jednotkové klauzule pro rozbití symetrie (viz níže).
+
+  .item:
+
+    Konec vypíše komentář, hlavičku "p cnf".code a klauzule, každou zakončenou nulou.
+
+
+Spuštění: "python3 schur.py 13 3 > schur13.cnf".code.
+
+
+.Subsection Formát DIMACS CNF
+  label: ch-resice-sat-dimacs
+
+
+Začátek souboru "schur13.cnf".code (skutečný výstup generátoru):
+
+!codeblock:
+  language: text
+
+  c Schur: n=13, k=3
+  p cnf 39 139
+  1 2 3 0
+  4 5 6 0
+  7 8 9 0
+  ...
+  37 38 39 0
+  -4 -1 0
+  -5 -2 0
+  -6 -3 0
+  -7 -4 -1 0
+  ...
+
+
+.description:
+
+  .ditem:
+    bullet: 'c …'
+
+    komentář;
+
+  .ditem:
+    bullet: 'p cnf 39 139'
+
+    hlavička: $39=13\cdot3$ proměnných, $139$ klauzulí;
+
+  .ditem:
+    bullet: 'další řádky'
+
+    každý řádek = jedna klauzule ukončená "0".code; "5".code $=x_5$, "-5".code $=\lnot x_5$.
+
+
+"Čtení:".notion "1 2 3 0".code $=x_{1,1}\lor x_{1,2}\lor x_{1,3}$; "-4 -1 0".code $=\lnot x_{1,1}\lor\lnot x_{2,1}$
+($1+1=2$ není celá v barvě 1); "-7 -4 -1 0".code $=\lnot x_{1,1}\lor\lnot x_{2,1}\lor\lnot x_{3,1}$ ($1+2=3$).
+
+
+.Subsection Spuštění řešiče a čtení výstupu
+  label: ch-resice-sat-vystup-resice
+
+
+!codeblock:
+  language: text
+
+  $ kissat schur13.cnf
+  c ---- [ banner ] ----------------------
+  c Kissat SAT Solver
+  c ...
+  (statistiky běhu)
+  s SATISFIABLE
+  v -1 -2 3 -4 5 -6 -7 8 -9 -10 -11 12 13 -14 -15 16 -17 -18 -19
+  v -20 21 22 -23 -24 25 -26 -27 -28 -29 30 -31 32 -33 -34 35 -36
+  v -37 -38 39 0
+  $ echo $?
+  10
+
+
+.description:
+
+  .ditem:
+    bullet: 'c'
+
+    komentáře (průběh, statistiky); přepínač "-q".code je vypne;
+
+  .ditem:
+    bullet: 's'
+
+    odpověď: "SATISFIABLE".code / "UNSATISFIABLE".code;
+
+  .ditem:
+    bullet: 'v'
+
+    model: "5".code $=x_5$ je pravdivá, "-6".code $=x_6$ je nepravdivá; konec "0".code;
+
+  .ditem:
+    bullet: 'návratový kód'
+
+    10 = SAT, 20 = UNSAT (hodí se ve skriptech).
+
+
+.Example:
+  title: 'Čtení modelu ručně'
+  label: ch-resice-sat-ex-model
+
+  Proměnná $v$ odpovídá $i=\lceil v/k\rceil$, $c=v-(i-1)k$. S $k=3$:
+
+  .table:
+    columns: 'cccl'
+
+    .row:
+      head: true
+
+      $v$
+
+      $i=\lceil v/3\rceil$
+
+      $c=v-3(i-1)$
+
+      význam
+
+    .row:
+
+      3
+
+      1
+
+      3
+
+      $x_{1,3}$: 1 má barvu 3
+
+    .row:
+
+      5
+
+      2
+
+      2
+
+      $x_{2,2}$: 2 má barvu 2
+
+    .row:
+
+      8
+
+      3
+
+      2
+
+      $x_{3,2}$: 3 má barvu 2
+
+
+Strojově to udělá "decode.py".code:
+
+!codeblock:
+  language: python
+
+  #!/usr/bin/env python3
+  """Přečte výstup SAT řešiče a vypíše obarvení.
+
+  Použití:  kissat schur.cnf | python3 decode.py n k"""
+  import sys
+
+  n, k = int(sys.argv[1]), int(sys.argv[2])
+  true = set()                          # proměnné s hodnotou 1
+  for line in sys.stdin:
+      if line.startswith("s "):         # stav: SATISFIABLE / UNSATISFIABLE
+          print(line.strip())
+      elif line.startswith("v "):       # model: kladné číslo = pravdivá
+          true |= {int(t) for t in line.split()[1:] if int(t) > 0}
+
+  for c in range(1, k + 1):
+      cls = [i for i in range(1, n + 1) if (i - 1) * k + c in true]
+      if cls:
+          print(f"barva {c}: {cls}")
+
+
+Dekodér posbírá kladná čísla z řádků "v".code a pro každou barvu $c$ vypíše čísla $i$, pro která je
+$(i-1)k+c$ pravdivá. Číslo s více barvami (bez klauzulí „nejvýše jedna“ to jde) by se vypsalo ve více třídách.
+
+!codeblock:
+  language: text
+
+  $ kissat schur13.cnf | python3 decode.py 13 3
+  s SATISFIABLE
+  barva 1: [5, 6, 8, 9]
+  barva 2: [2, 3, 11, 12]
+  barva 3: [1, 4, 7, 10, 13]
+
+
+.Figure:
+  label: ch-resice-sat-fig-schur13
+
+  !tikz:
+    filename: 14f-resic-v-praxi-03
+    options: 'x=1cm,y=1cm'
+
+    \foreach \i/\c in {1/tT,2/tB,3/tB,4/tT,5/tF,6/tF,7/tT,8/tF,9/tF,10/tT,11/tB,12/tB,13/tT} {
+      \chSATdot{\i*0.85}{0}{\c!45}{\i}
+    }
+    \node[font=\scriptsize,anchor=west] at (0.4,-0.65) {\textcolor{tF}{$\bullet$} barva 1: $\{5,6,8,9\}$\quad \textcolor{tB}{$\bullet$} barva 2: $\{2,3,11,12\}$\quad \textcolor{tT}{$\bullet$} barva 3: $\{1,4,7,10,13\}$};
+
+  .caption:
+
+    Obarvení $\{1,\dots,13\}$ třemi barvami bez jednobarevné trojice $x+y=z$ – model ze slajdu (skriptem ověřeno,
+    že splňuje všech 139 klauzulí a že ho "decode.py".code přečte přesně takto).
+
+
+.Subsection Věřit, nebo ověřit?
+  label: ch-resice-sat-verit-nebo-overit
+
+
+"Zastavte video:".notion ověřte, že žádná barevná třída neobsahuje $x,y,x+y$. Kolik práce to je oproti hledání
+obarvení?
+
+.itemize:
+
+  .item:
+
+    $\{5,6,8,9\}$: součty $10,11,12,\dots$ – všechny $\ge10$, tedy mimo třídu.
+
+  .item:
+
+    $\{2,3,11,12\}$: $2+2=4$, $2+3=5$, $3+3=6$, ostatní součty $>13$.
+
+  .item:
+
+    $\{1,4,7,10,13\}$: čísla $\equiv1\pmod 3$, součet dvou je $\equiv2\pmod3$.
+
+
+Ověření je snadné – přesně to znamená, že problém je v $\NP$: obarvení je "certifikát".emphasize
+(definice .reference:def-verifikator).
+
+
+.Subsection n = 14: nesplnitelné – a jak to ověřit
+  label: ch-resice-sat-drat
+
+
+!codeblock:
+  language: text
+
+  $ python3 schur.py 14 3 > schur14.cnf
+  $ kissat -q --no-binary schur14.cnf proof.drat
+  s UNSATISFIABLE
+
+
+Proč věřit? Řešič umí zapsat "důkaz".notion – seznam klauzulí, které se naučil (formát DRAT):
+
+!codeblock:
+  language: text
+
+  -36 -1 -38 -19 -42 0
+  -24 9 11 -1 16 -42 0
+  ...
+  33 0
+  0
+
+.itemize:
+
+  .item:
+
+    každý řádek = naučená klauzule, která plyne z předchozích (celkem 386 řádků);
+
+  .item:
+
+    poslední "0".code = prázdná klauzule = spor.
+
+
+Nezávislý kontrolor "drat-trim".code důkaz ověří:
+
+!codeblock:
+  language: text
+
+  $ drat-trim schur14.cnf proof.drat
+  s VERIFIED
+
+
+.Remark:
+  title: 'SAT vs. UNSAT'
+
+  Odpověď SAT ověříme sami – certifikát je model. Odpověď UNSAT ověříme důkazem DRAT a kontrolorem. To je
+  asymetrie $\NP$ vs. $\coNP$: krátký certifikát nesplnitelnosti obecně nečekáme, DRAT důkaz může být obrovský
+  ($S(5)$: asi 2 PB).
+
+
+.Subsection Čtyři barvy: S(4) = 44
+  label: ch-resice-sat-ctyri-barvy
+
+
+.table:
+  columns: 'ccccc'
+
+  .row:
+    head: true
+
+    instance
+
+    proměnné
+
+    klauzule
+
+    odpověď
+
+    čas
+
+  .row:
+
+    $n=13$, $k=3$
+
+    39
+
+    139
+
+    SAT
+
+    $<0{,}01$ s
+
+  .row:
+
+    $n=14$, $k=3$
+
+    42
+
+    161
+
+    UNSAT
+
+    $<0{,}01$ s
+
+  .row:
+
+    $n=44$, $k=4$
+
+    176
+
+    1 980
+
+    SAT
+
+    0,02 s
+
+  .row:
+
+    $n=45$, $k=4$
+
+    180
+
+    2 069
+
+    UNSAT
+
+    $\approx70$ s
+
+
+Najít obarvení je snadné, dokázat neexistenci je o řády těžší. (Počty proměnných a klauzulí ověřeny spuštěním
+"schur.py".code; časy jsou ze slajdu.)
+
+
+.Concept:
+  title: 'Zastavte video'
+
+  Řešič při důkazu nesplnitelnosti zbytečně prochází spoustu „stejných“ situací. Které? "Nápověda:".notion co se
+  stane s řešením, když v něm prohodíte červenou a modrou?
+
+
+.Subsection Rozbití symetrie
+  label: ch-resice-sat-rozbiti-symetrie
+
+
+"Barvy jsou zaměnitelné:".notion permutací barev dostaneme z každého obarvení celkem $k!=24$ obarvení (slajd píše
+„24 dalších“; přesně je to původní a 23 dalších). Řešič je musí vyloučit všechna – přesně slepá skvrna CDCL
+z oddílu .reference:ch-resice-sat-symetrie.
+
+
+"Rozbití symetrie".notion = přidáme klauzule, které nechají jen jednoho zástupce. Pro $k=4$:
+
+.itemize:
+
+  .item:
+
+    číslo 1 má barvu 1: "1 0".code ($x_{1,1}=1$);
+
+  .item:
+
+    číslo 2 má barvu 2: "6 0".code ($x_{2,2}=(2-1)\cdot4+2=6$); jinou barvu než 1 mít 2 musí, protože $1+1=2$.
+
+
+Formule zůstane "ekvisplnitelná".emphasize: každé obarvení lze přejmenováním barev převést na takové, kde 1 má
+barvu 1 a 2 barvu 2. Spuštění "python3 schur.py 45 4 sym".code – přidány dvě klauzule, výpočet více než
+$15\times$ rychlejší.
+
+
+.Figure:
+  label: ch-resice-sat-fig-symetrie-cas
+
+  !tikz:
+    filename: 14f-resic-v-praxi-04
+    options: 'x=1cm,y=1cm'
+
+    \draw[->,thick,black!70] (0,0)--(0,3.6) node[above,font=\scriptsize] {čas [s]};
+    \draw[thick,black!70] (0,0)--(3.2,0);
+    \fill[rej!55] (0.5,0)rectangle(1.3,3.0); \node[font=\scriptsize,above] at (0.9,3.0) {$\approx70$};
+    \fill[acc!70] (1.9,0)rectangle(2.7,0.17); \node[font=\scriptsize,above] at (2.3,0.17) {$\approx4$};
+    \node[font=\scriptsize,below,align=center] at (0.9,0) {bez\\ symetrie};
+    \node[font=\scriptsize,below] at (2.3,0) {sym};
+    \node[font=\scriptsize,anchor=west] at (3.4,1.5) {$n=45$, $k=4$: UNSAT};
+
+  .caption:
+
+    Dvě přidané jednotkové klauzule zrychlí důkaz nesplnitelnosti z asi 70 s na asi 4 s.
+
+
+.Warning:
+  title: 'Typické chyby'
+
+  .itemize:
+
+    .item:
+
+      Číslovat proměnné od 0 – v DIMACS je 0 konec klauzule, proměnné jsou $1,\dots,N$.
+
+    .item:
+
+      Nesouhlasí hlavička "p cnf".code se skutečným počtem proměnných či klauzulí (řešiče to často odmítnou).
+
+    .item:
+
+      Při čtení modelu zapomenout, že "-6".code znamená „$x_6$ je nepravdivá“, nebo ignorovat víc barev u jednoho čísla.
+
+    .item:
+
+      Rozbít symetrii příliš: přidaná klauzule musí nechat aspoň jednoho zástupce z "každé".emphasize třídy
+      symetrických řešení, jinak se splnitelnost změní.
+
+
+.Exercise:
+  title: 'Domácí úkol z prosemináře: van der Waerdenova čísla'
+  label: ch-resice-sat-ukol-vdw
+
+  Lze $\{1,\dots,n\}$ obarvit dvěma barvami tak, aby žádná aritmetická posloupnost délky $L$
+  ($a,a+d,\dots,a+(L-1)d$, $d\ge1$) nebyla jednobarevná?
+
+  .enumerate:
+
+    .item:
+
+      Napište generátor "vdw.py n L".code. Stačí jedna proměnná na číslo – proč?
+
+    .item:
+
+      Najděte největší $n$, pro které obarvení existuje, pro $L=3$ a $L=4$.
+
+    .item:
+
+      Ověřte důkaz nesplnitelnosti pomocí "drat-trim".code.
+
+
+  Kontrola: pro $L=3$ vyjde $n=8$ (pro $n=9$ UNSAT), pro $L=4$ vyjde $n=34$. Řešič obojí zvládne okamžitě; ručně
+  by vás to bavilo jen pro $L=3$.
+
+
+.Solution:
+
+  "(Řešení nad rámec prosemináře.)".emphasize
+
+
+  "Proč stačí jedna proměnná:".notion barvy jsou jen dvě, takže $x_i$ = „$i$ je červené“ a $\lnot x_i$ = „$i$ je
+  modré“. Každé číslo má automaticky právě jednu barvu – klauzule „aspoň jedna“ a „nejvýše jedna“ odpadnou.
+
+
+  "Klauzule:".notion pro každou posloupnost $a,a+d,\dots,a+(L-1)d\le n$ dvě: „ne všechna červená“
+  $(\lnot x_a\lor\dots\lor\lnot x_{a+(L-1)d})$ a „ne všechna modrá“ $(x_a\lor\dots\lor x_{a+(L-1)d})$.
+
+  !codeblock:
+    language: python
+
+    import sys
+
+    n, L = int(sys.argv[1]), int(sys.argv[2])
+    clauses = []
+    for a in range(1, n + 1):              # začátek posloupnosti
+        for d in range(1, n):              # diference
+            ap = [a + t * d for t in range(L)]
+            if ap[-1] > n:
+                break
+            clauses.append([-i for i in ap])   # ne všechna červená
+            clauses.append(ap)                 # ne všechna modrá
+    print(f"p cnf {n} {len(clauses)}")
+    for cl in clauses:
+        print(*cl, 0)
+
+
+  "Výsledky".notion (ověřeno vlastním jednoduchým DPLL ve skriptu): $L=3$: $n=8$ SAT, $n=9$ UNSAT (24 a 32
+  klauzulí); $L=4$: $n=34$ SAT, $n=35$ UNSAT. Bod 3 (drat-trim) vyžaduje skutečný řešič a kontrolor – postup je
+  stejný jako u "schur14.cnf".code.

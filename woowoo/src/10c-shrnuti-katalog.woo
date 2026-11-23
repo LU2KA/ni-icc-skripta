@@ -1,0 +1,59 @@
+.Section Shrnutí: katalog NP-úplných problémů
+  label: ch-x3c-shrnuti
+
+
+.Remark:
+  title: 'Co si odnést'
+
+  "Redukční řetězce:".notion
+
+  .itemize:
+
+    .item:
+
+      $\prob{3-SAT}\redp\prob{3-Coloring}\redp\prob{Rozvrh zkoušek}$ (paleta, prasátko);
+      $\prob{3-Coloring}\redp\prob{Planar 3-Coloring}$ (gadget pro křížení).
+
+    .item:
+
+      $\prob{3-SAT}\redp\prob{NAE-3-SAT}\redp\prob{MaxCut}$ (pólová proměnná, symetrie, váhy);
+      NAE-3-SAT zůstává těžký i pozitivní.
+
+    .item:
+
+      $\prob{3-Coloring}\redp\prob{(pozitivní) 1-in-3 SAT}\redp\prob{X3C}$, ale také
+      $\prob{3-SAT}\redp\prob{X3C}$ (s úklidem).
+
+    .item:
+
+      $\prob{3-SAT}\redp\prob{MAPF}$ s makespanem 3.
+
+  Všechny tyto redukce jsou zakreslené v mapě na obr. .reference:fig-zoo.
+
+  "Opakující se techniky:".notion
+
+  .itemize:
+
+    .item:
+
+      "Gadgety:".emphasize malé stavební bloky vynucují lokální strukturu (prasátko, šestiúhelníky, ozubené kolo).
+
+    .item:
+
+      "Binární volba".emphasize vynucená strukturou: hrany do $B$ (barvení), těžká hrana (MaxCut), čas (MAPF), cyklus (X3C).
+
+    .item:
+
+      "Symetrie:".emphasize NAE-SAT je symetrický vůči překlopení bitů.
+
+    .item:
+
+      "Váhy a multiplicity:".emphasize těžké hrany vynutí konzistenci; váhy pak odstraníme cestami liché délky.
+
+    .item:
+
+      "Struktura vstupu:".emphasize barvení intervalových grafů je snadné, obecných těžké.
+
+    .item:
+
+      "Volba výchozího problému".emphasize rozhoduje o složitosti redukce.

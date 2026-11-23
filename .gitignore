@@ -1,0 +1,8 @@
+# materiály předmětu se nepublikují
+ni-icc/
+files/
+latex-skripta/
+
+.DS_Store
+__pycache__/
+*.pyc

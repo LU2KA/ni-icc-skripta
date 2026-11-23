@@ -1,0 +1,466 @@
+.Section Cvičení 5: Pseudopolynomiální algoritmy
+  label: sec-cv5
+
+
+Cvičení 5 navazuje na dynamické programování pro $\prob{Subset Sum}$ (věta .reference:thm-ssdp) a na pojem pseudopolynomiálního
+algoritmu (definice .reference:def-pseudopoly). Totéž DP upravíme pro $\prob{Knapsack}$ (problém .reference:prob-knapsack),
+vypíšeme z něj i vybrané předměty a ukážeme, že existuje druhé DP, které místo nosnosti $W$ indexuje cílovou cenou $C$.
+Všechny tři algoritmy jsou jen pseudopolynomiální; proč, říká poslední odstavec řešení 5.1.
+
+
+.Exercise:
+  title: 'Cvičení 5.1'
+  label: cv-5-1
+
+  Problém $\prob{Knapsack}$: Je dáno $n$ předmětů s kladnými celočíselnými váhami $w_1,\dots,w_n$ a cenami $c_1,\dots,c_n$,
+  nosnost batohu $W$ a cílová cena $C$. Existuje podmnožina předmětů s celkovou váhou nejvýše $W$ a celkovou cenou
+  alespoň $C$?
+
+
+  Na přednášce jste viděli dynamické programování pro problém $\prob{Subset Sum}$ v čase $O(n\cdot T)$.
+
+
+  Navrhněte algoritmus dynamického programování, který rozhodne $\prob{Knapsack}$ v čase $O(n\cdot W)$.
+
+
+.Solution:
+
+  "Význam políčka.".notion Pro $i\in\{0,\dots,n\}$ a $x\in\{0,\dots,W\}$ je $\mathrm{DP}_W[i,x]$ největší celková cena,
+  kterou lze získat výběrem některých z prvních $i$ předmětů s celkovou váhou nejvýše $x$. (Oproti $\prob{Subset Sum}$,
+  kde políčko nese pravdivostní hodnotu „lze poskládat přesně $w$“, tu nese číslo – maximum ceny.)
+
+
+  "Rekurence.".notion Předmět $i$ buď do batohu nedáme, nebo ho dáme (to jde jen pro $x\ge w_i$):
+
+  .equation:
+
+    \mathrm{DP}_W[i,x]=\max\bigl(\mathrm{DP}_W[i-1,x],\ \mathrm{DP}_W[i-1,x-w_i]+c_i\bigr)\qquad(\text{druhá možnost jen pro } x\ge w_i).
+
+  Pro $x<w_i$ je $\mathrm{DP}_W[i,x]=\mathrm{DP}_W[i-1,x]$.
+
+
+  "Základ.".notion $\mathrm{DP}_W[0,x]=0$ pro všechna $x$: bez předmětů je cena 0.
+
+
+  "Pořadí plnění.".notion Řádek $i$ závisí jen na řádku $i-1$, proto tabulku plníme po řádcích pro $i=1,2,\dots,n$
+  (v rámci řádku v libovolném pořadí $x$).
+
+
+  "Kde je odpověď.".notion Odpověď je $\ANO$ právě tehdy, když $\mathrm{DP}_W[n,W]\ge C$.
+
+
+  "Správnost.".notion Optimální výběr z prvních $i$ předmětů s váhou $\le x$ buď předmět $i$ neobsahuje (pak je to
+  optimální výběr z prvních $i-1$ předmětů s toutéž mezí $x$), nebo ho obsahuje (pak zbytek je optimální výběr z prvních $i-1$
+  předmětů s mezí $x-w_i$ a k jeho ceně přičteme $c_i$). Rekurence bere maximum z obou možností.
+
+
+  "Čas a paměť.".notion Tabulka má $(n+1)\times(W+1)$ políček a každé spočítáme v $O(1)$, celkem $O(n\cdot W)$ času
+  i paměti. "(nad rámec přednášky)".emphasize Chceme-li jen rozhodnout, stačí držet dva sousední řádky, tedy paměť $O(W)$;
+  pro následující úlohu ale potřebujeme celou tabulku.
+
+
+  "Proč je to jen pseudopolynomiální.".notion Čas $O(n\cdot W)$ je polynomiální vůči hodnotě $W$, ne vůči délce vstupu.
+  Číslo $W$ zapíšeme binárně na $\log_2 W$ bitů, takže celý vstup má délku jen zhruba $n\log_2(\max_i w_i)+n\log_2(\max_i c_i)+\log_2 W+\log_2 C$ bitů.
+  Pro $W=2^{k}$ je zápis dlouhý $k+1$ bitů, ale tabulka má $2^{k}+1$ sloupců: čas $O(n\cdot 2^k)$ je vůči délce vstupu exponenciální.
+  Algoritmus je polynomiální teprve tehdy, kdyby byla čísla zapsaná unárně, tedy $W$ je omezeno polynomem ve velikosti vstupu.
+  Rozpor s NP-úplností $\prob{Knapsack}$u (redukce .reference:red-knapsack) tu proto není; $\PP=\NP$ nevyplývá.
+
+
+.Exercise:
+  title: 'Cvičení 5.2'
+  label: cv-5-2
+
+  Upravte algoritmus tak, aby vrátil i samotnou množinu vybraných předmětů.
+
+
+.Solution:
+
+  "Co potřebujeme.".notion Hodnota $\mathrm{DP}_W[n,W]$ říká jen, jaká cena je dosažitelná. Množinu najdeme zpětným průchodem
+  vyplněnou tabulkou, proto musíme držet celou tabulku ($O(n\cdot W)$ paměti), nejen dva řádky.
+
+
+  "Zpětný průchod.".notion Začneme v políčku $(n,W)$ s prázdnou množinou $S=\emptyset$ a pro $i=n,n-1,\dots,1$ rozhodneme:
+
+  .itemize:
+
+    .item:
+
+      Je-li $\mathrm{DP}_W[i,x]=\mathrm{DP}_W[i-1,x]$, předmět $i$ nepotřebujeme. Přejdeme na $(i-1,x)$.
+
+    .item:
+
+      Jinak (hodnota je větší, vzniklo z druhé možnosti) předmět $i$ vezmeme: $S:=S\cup\{i\}$ a přejdeme na $(i-1,x-w_i)$.
+
+
+  Na konci je $S$ množina s celkovou váhou $\le W$ a cenou $\mathrm{DP}_W[n,W]$.
+
+
+  !pseudocode:
+
+    \STATE $S\gets\emptyset$, $x\gets W$
+    \FOR{$i=n$ \textbf{downto} $1$}
+      \IF{$\mathrm{DP}_W[i,x]\neq\mathrm{DP}_W[i-1,x]$}
+        \STATE $S\gets S\cup\{i\}$
+        \STATE $x\gets x-w_i$
+      \ENDIF
+    \ENDFOR
+    \RETURN $S$
+
+
+  "Proč to funguje.".notion Rovnost $\mathrm{DP}_W[i,x]=\mathrm{DP}_W[i-1,x]$ znamená, že optimální cenu dostaneme i bez předmětu $i$.
+  Jinak maximum v rekurenci nabyla druhá možnost, tedy $\mathrm{DP}_W[i,x]=\mathrm{DP}_W[i-1,x-w_i]+c_i$ a $x\ge w_i$.
+  Průchod tak v každém kroku zůstává na políčku, jehož hodnota odpovídá cenám dosud vybraných předmětů. Trvá $O(n)$, celková
+  složitost zůstává $O(n\cdot W)$. "(nad rámec přednášky)".emphasize Místo porovnávání lze při plnění tabulky ke každému políčku
+  uložit bit „předmět $i$ vzat“, průchod je pak ještě jednodušší.
+
+
+  "Řešený příklad.".notion Čtyři předměty, $W=6$, $C=9$:
+
+  .table:
+    columns: 'lccccccc'
+
+    .row:
+      head: true
+
+      $i$ (předmět $(w_i,c_i)$)
+
+      $x=0$
+
+      $x=1$
+
+      $x=2$
+
+      $x=3$
+
+      $x=4$
+
+      $x=5$
+
+      $x=6$
+
+    .row:
+
+      0 (bez předmětů)
+
+      0
+
+      0
+
+      0
+
+      0
+
+      0
+
+      0
+
+      0
+
+    .row:
+
+      1: $(2,3)$
+
+      0
+
+      0
+
+      "3".notion
+
+      3
+
+      3
+
+      3
+
+      3
+
+    .row:
+
+      2: $(3,4)$
+
+      0
+
+      0
+
+      3
+
+      4
+
+      4
+
+      "7".notion
+
+      7
+
+    .row:
+
+      3: $(4,5)$
+
+      0
+
+      0
+
+      3
+
+      4
+
+      5
+
+      7
+
+      8
+
+    .row:
+
+      4: $(1,2)$
+
+      0
+
+      2
+
+      3
+
+      5
+
+      6
+
+      7
+
+      "9".notion
+
+  Ukázka dvou políček: $\mathrm{DP}_W[3,6]=\max(\mathrm{DP}_W[2,6],\ \mathrm{DP}_W[2,2]+5)=\max(7,\,3+5)=8$ a
+  $\mathrm{DP}_W[4,6]=\max(\mathrm{DP}_W[3,6],\ \mathrm{DP}_W[3,5]+2)=\max(8,\,7+2)=9$.
+  Odpověď: $\mathrm{DP}_W[4,6]=9\ge C=9$, tedy $\ANO$.
+
+
+  Zpětný průchod: $(4,6)$: $9\neq8=\mathrm{DP}_W[3,6]$, bereme předmět 4, $x=6-1=5$. $(3,5)$: $7=\mathrm{DP}_W[2,5]$, předmět 3
+  nebereme. $(2,5)$: $7\neq3=\mathrm{DP}_W[1,5]$, bereme předmět 2, $x=5-3=2$. $(1,2)$: $3\neq0=\mathrm{DP}_W[0,2]$,
+  bereme předmět 1, $x=2-2=0$. Výsledek $S=\{1,2,4\}$ s váhou $2+3+1=6\le6$ a cenou $3+4+2=9\ge9$.
+  (Tučně jsou políčka, ve kterých průchod předmět vzal.)
+
+
+  .centered:
+
+    !tikz:
+      filename: 11f-cviceni-5-01
+      options: 'x=1cm,y=1cm, dpcell/.append style={minimum width=8mm}'
+
+      \node[font=\scriptsize] at (0.40,0.35) {0};
+      \node[font=\scriptsize] at (1.20,0.35) {1};
+      \node[font=\scriptsize] at (2.00,0.35) {2};
+      \node[font=\scriptsize] at (2.80,0.35) {3};
+      \node[font=\scriptsize] at (3.60,0.35) {4};
+      \node[font=\scriptsize] at (4.40,0.35) {5};
+      \node[font=\scriptsize] at (5.20,0.35) {6};
+      \node[font=\scriptsize] at (5.95,0.35) {$x$};
+      \node[font=\scriptsize,anchor=east] at (-0.1,0.35) {$i$: $(w_i,c_i)$};
+      \node[font=\scriptsize,anchor=east] at (-0.1,-0.30) {$i=0$};
+      \node[dpend] at (0.40,-0.30) {0};
+      \node[dpcell] at (1.20,-0.30) {0};
+      \node[dpcell] at (2.00,-0.30) {0};
+      \node[dpcell] at (2.80,-0.30) {0};
+      \node[dpcell] at (3.60,-0.30) {0};
+      \node[dpcell] at (4.40,-0.30) {0};
+      \node[dpcell] at (5.20,-0.30) {0};
+      \node[font=\scriptsize,anchor=east] at (-0.1,-1.30) {$1$: $(2,3)$};
+      \node[dpcell] at (0.40,-1.30) {0};
+      \node[dpcell] at (1.20,-1.30) {0};
+      \node[dptake] at (2.00,-1.30) {3};
+      \node[dpcell] at (2.80,-1.30) {3};
+      \node[dpcell] at (3.60,-1.30) {3};
+      \node[dpcell] at (4.40,-1.30) {3};
+      \node[dpcell] at (5.20,-1.30) {3};
+      \node[font=\scriptsize,anchor=east] at (-0.1,-2.30) {$2$: $(3,4)$};
+      \node[dpcell] at (0.40,-2.30) {0};
+      \node[dpcell] at (1.20,-2.30) {0};
+      \node[dpcell] at (2.00,-2.30) {3};
+      \node[dpcell] at (2.80,-2.30) {4};
+      \node[dpcell] at (3.60,-2.30) {4};
+      \node[dptake] at (4.40,-2.30) {7};
+      \node[dpcell] at (5.20,-2.30) {7};
+      \node[font=\scriptsize,anchor=east] at (-0.1,-3.30) {$3$: $(4,5)$};
+      \node[dpcell] at (0.40,-3.30) {0};
+      \node[dpcell] at (1.20,-3.30) {0};
+      \node[dpcell] at (2.00,-3.30) {3};
+      \node[dpcell] at (2.80,-3.30) {4};
+      \node[dpcell] at (3.60,-3.30) {5};
+      \node[dpskip] at (4.40,-3.30) {7};
+      \node[dpcell] at (5.20,-3.30) {8};
+      \node[font=\scriptsize,anchor=east] at (-0.1,-4.30) {$4$: $(1,2)$};
+      \node[dpcell] at (0.40,-4.30) {0};
+      \node[dpcell] at (1.20,-4.30) {2};
+      \node[dpcell] at (2.00,-4.30) {3};
+      \node[dpcell] at (2.80,-4.30) {5};
+      \node[dpcell] at (3.60,-4.30) {6};
+      \node[dpcell] at (4.40,-4.30) {7};
+      \node[dptake] at (5.20,-4.30) {9};
+      \draw[dparrT] (5.20,-4.00)--(4.40,-3.60);
+      \node[font=\scriptsize,anchor=west] at (5.90,-4.30) {$9\neq8$: vezmi 4, $x=6-1=5$};
+      \draw[dparrN] (4.40,-3.00)--(4.40,-2.60);
+      \node[font=\scriptsize,anchor=west] at (5.90,-3.30) {$7=7$: předmět 3 nebereme};
+      \draw[dparrT] (4.40,-2.00)--(2.00,-1.60);
+      \node[font=\scriptsize,anchor=west] at (5.90,-2.30) {$7\neq3$: vezmi 2, $x=5-3=2$};
+      \draw[dparrT] (2.00,-1.00)--(0.40,-0.60);
+      \node[font=\scriptsize,anchor=west] at (5.90,-1.30) {$3\neq0$: vezmi 1, $x=2-2=0$};
+      \draw[thmc,very thick] (4.80,-4.00) rectangle (5.60,-4.60);
+      \node[font=\scriptsize,thmc,anchor=north] at (5.20,-4.65) {$9\ge C$};
+
+
+  Zpětný průchod tabulkou $\mathrm{DP}_W$ (čtený zdola nahoru). Zeleně políčka, kde se předmět vzal (šikmá šipka o $w_i$
+  sloupců doleva), žlutě políčko, kde se nevzal (svislá šipka), šedě konec průchodu. "Všimni si:".emphasize šipky vedou vždy do předchozího
+  řádku a průchod končí v $\mathrm{DP}_W[0,0]$ – vybrané předměty spotřebovaly celou nosnost $6$.
+
+
+.Exercise:
+  title: 'Cvičení 5.3'
+  label: cv-5-3
+
+  Navrhněte jiný algoritmus dynamického programování, který rozhodne $\prob{Knapsack}$ v čase $O(n\cdot C)$.
+  Kdy je výhodnější který z obou algoritmů?
+
+
+.Solution:
+
+  "Nápad.".notion Role váhy a ceny se prohodí: místo „největší cena při váhové mezi“ počítáme „nejmenší váhu pro cenový cíl“.
+
+
+  "Význam políčka.".notion Pro $i\in\{0,\dots,n\}$ a $p\in\{0,\dots,C\}$ je $\mathrm{DP}_C[i,p]$ nejmenší celková váha podmnožiny
+  prvních $i$ předmětů, jejíž celková cena je alespoň $p$; neexistuje-li taková podmnožina, je to $\infty$.
+
+
+  "Základ.".notion $\mathrm{DP}_C[0,0]=0$ a $\mathrm{DP}_C[0,p]=\infty$ pro $p>0$ (prázdná množina má cenu 0).
+
+
+  "Rekurence.".notion Předmět $i$ buď nevezmeme, nebo vezmeme (a zbývá dosáhnout ceny $p-c_i$, nejméně však 0):
+
+  .equation:
+
+    \mathrm{DP}_C[i,p]=\min\bigl(\mathrm{DP}_C[i-1,p],\ \mathrm{DP}_C[i-1,\max(0,\,p-c_i)]+w_i\bigr).
+
+
+  "Pořadí plnění a odpověď.".notion Po řádcích pro $i=1,\dots,n$. Odpověď je $\ANO$ právě tehdy, když $\mathrm{DP}_C[n,C]\le W$:
+  nejlehčí množina s cenou alespoň $C$ se vejde do batohu.
+
+
+  "Čas a paměť.".notion Tabulka má $(n+1)\times(C+1)$ políček, každé v $O(1)$, celkem $O(n\cdot C)$. Stejně jako v 5.1 je
+  algoritmus jen pseudopolynomiální: $C$ je zapsáno $\log_2 C$ bity, tabulka má $C+1$ sloupců. Množinu předmětů lze opět
+  vybrat zpětným průchodem (porovnáváme $\mathrm{DP}_C[i,p]$ s $\mathrm{DP}_C[i-1,p]$).
+
+
+  "Příklad.".notion Pro stejné čtyři předměty a $C=9$ vyjde $\mathrm{DP}_C[4,9]=\min(\mathrm{DP}_C[3,9],\ \mathrm{DP}_C[3,7]+1)=\min(7,\,5+1)=6\le W=6$,
+  tedy $\ANO$ – stejná odpověď jako v 5.1.
+
+
+  .centered:
+
+    !tikz:
+      filename: 11f-cviceni-5-02
+      options: 'x=1cm,y=1cm, dpcell/.append style={minimum width=7mm}'
+
+      \node[font=\scriptsize] at (0.35,0.35) {0};
+      \node[font=\scriptsize] at (1.05,0.35) {1};
+      \node[font=\scriptsize] at (1.75,0.35) {2};
+      \node[font=\scriptsize] at (2.45,0.35) {3};
+      \node[font=\scriptsize] at (3.15,0.35) {4};
+      \node[font=\scriptsize] at (3.85,0.35) {5};
+      \node[font=\scriptsize] at (4.55,0.35) {6};
+      \node[font=\scriptsize] at (5.25,0.35) {7};
+      \node[font=\scriptsize] at (5.95,0.35) {8};
+      \node[font=\scriptsize] at (6.65,0.35) {9};
+      \node[font=\scriptsize] at (7.35,0.35) {$p$};
+      \node[font=\scriptsize,anchor=east] at (-0.1,0.35) {$i$: $(w_i,c_i)$};
+      \node[font=\scriptsize,anchor=east] at (-0.1,-0.30) {$i=0$};
+      \node[dpend] at (0.35,-0.30) {0};
+      \node[dpcell] at (1.05,-0.30) {$\infty$};
+      \node[dpcell] at (1.75,-0.30) {$\infty$};
+      \node[dpcell] at (2.45,-0.30) {$\infty$};
+      \node[dpcell] at (3.15,-0.30) {$\infty$};
+      \node[dpcell] at (3.85,-0.30) {$\infty$};
+      \node[dpcell] at (4.55,-0.30) {$\infty$};
+      \node[dpcell] at (5.25,-0.30) {$\infty$};
+      \node[dpcell] at (5.95,-0.30) {$\infty$};
+      \node[dpcell] at (6.65,-0.30) {$\infty$};
+      \node[font=\scriptsize,anchor=east] at (-0.1,-1.30) {$1$: $(2,3)$};
+      \node[dpcell] at (0.35,-1.30) {0};
+      \node[dpcell] at (1.05,-1.30) {2};
+      \node[dpcell] at (1.75,-1.30) {2};
+      \node[dptake] at (2.45,-1.30) {2};
+      \node[dpcell] at (3.15,-1.30) {$\infty$};
+      \node[dpcell] at (3.85,-1.30) {$\infty$};
+      \node[dpcell] at (4.55,-1.30) {$\infty$};
+      \node[dpcell] at (5.25,-1.30) {$\infty$};
+      \node[dpcell] at (5.95,-1.30) {$\infty$};
+      \node[dpcell] at (6.65,-1.30) {$\infty$};
+      \node[font=\scriptsize,anchor=east] at (-0.1,-2.30) {$2$: $(3,4)$};
+      \node[dpcell] at (0.35,-2.30) {0};
+      \node[dpcell] at (1.05,-2.30) {2};
+      \node[dpcell] at (1.75,-2.30) {2};
+      \node[dpcell] at (2.45,-2.30) {2};
+      \node[dpcell] at (3.15,-2.30) {3};
+      \node[dpcell] at (3.85,-2.30) {5};
+      \node[dpcell] at (4.55,-2.30) {5};
+      \node[dptake] at (5.25,-2.30) {5};
+      \node[dpcell] at (5.95,-2.30) {$\infty$};
+      \node[dpcell] at (6.65,-2.30) {$\infty$};
+      \node[font=\scriptsize,anchor=east] at (-0.1,-3.30) {$3$: $(4,5)$};
+      \node[dpcell] at (0.35,-3.30) {0};
+      \node[dpcell] at (1.05,-3.30) {2};
+      \node[dpcell] at (1.75,-3.30) {2};
+      \node[dpcell] at (2.45,-3.30) {2};
+      \node[dpcell] at (3.15,-3.30) {3};
+      \node[dpcell] at (3.85,-3.30) {4};
+      \node[dpcell] at (4.55,-3.30) {5};
+      \node[dpskip] at (5.25,-3.30) {5};
+      \node[dpcell] at (5.95,-3.30) {6};
+      \node[dpcell] at (6.65,-3.30) {7};
+      \node[font=\scriptsize,anchor=east] at (-0.1,-4.30) {$4$: $(1,2)$};
+      \node[dpcell] at (0.35,-4.30) {0};
+      \node[dpcell] at (1.05,-4.30) {1};
+      \node[dpcell] at (1.75,-4.30) {1};
+      \node[dpcell] at (2.45,-4.30) {2};
+      \node[dpcell] at (3.15,-4.30) {3};
+      \node[dpcell] at (3.85,-4.30) {3};
+      \node[dpcell] at (4.55,-4.30) {4};
+      \node[dpcell] at (5.25,-4.30) {5};
+      \node[dpcell] at (5.95,-4.30) {6};
+      \node[dptake] at (6.65,-4.30) {6};
+      \draw[dparrT] (6.65,-4.00)--(5.25,-3.60);
+      \node[font=\scriptsize,anchor=west] at (7.30,-4.30) {$6\neq7$: vezmi 4, $p=9-2=7$};
+      \draw[dparrN] (5.25,-3.00)--(5.25,-2.60);
+      \node[font=\scriptsize,anchor=west] at (7.30,-3.30) {$5=5$: předmět 3 nebereme};
+      \draw[dparrT] (5.25,-2.00)--(2.45,-1.60);
+      \node[font=\scriptsize,anchor=west] at (7.30,-2.30) {$5\neq\infty$: vezmi 2, $p=7-4=3$};
+      \draw[dparrT] (2.45,-1.00)--(0.35,-0.60);
+      \node[font=\scriptsize,anchor=west] at (7.30,-1.30) {$2\neq\infty$: vezmi 1, $p=3-3=0$};
+      \draw[thmc,very thick] (6.30,-4.00) rectangle (7.00,-4.60);
+      \node[font=\scriptsize,thmc,anchor=north] at (6.65,-4.65) {$6\le W$};
+
+
+  Celá tabulka $\mathrm{DP}_C$ pro tytéž předměty a zpětný průchod z $\mathrm{DP}_C[4,9]$ "(nad rámec přednášky)".emphasize.
+  "Všimni si:".emphasize $\infty$ znamená, že cenu alespoň $p$ z prvních $i$ předmětů získat nejde; průchod najde stejnou
+  množinu $S=\{1,2,4\}$ jako v 5.2.
+
+
+  "Kdy je výhodnější který algoritmus.".notion
+
+  .itemize:
+
+    .item:
+
+      První algoritmus ($O(n\cdot W)$) je lepší, když je nosnost $W$ malá (nebo menší než $C$), druhý ($O(n\cdot C)$), když je
+      malá cílová cena $C$. Počet předmětů $n$ je v obou stejný, rozhoduje poměr $W$ a $C$.
+
+    .item:
+
+      Typicky: velké váhy (třeba $W\approx10^9$), ale malé ceny (třeba $C\approx10^3$) – vyplatí se druhý. Malé váhy a obří ceny – první.
+
+    .item:
+
+      Zkoumá-li se jen rozhodovací problém, lze zvolit ten s menším z $W$ a $C$, čas je tedy $O(n\cdot\min(W,C))$.
+      "(nad rámec přednášky)".emphasize Meze lze ještě zmenšit: je-li $C>\sum_i c_i$, je odpověď $\NE$; a $W$ stačí nahradit
+      číslem $\min(W,\sum_i w_i)$.
+
+    .item:
+
+      Je-li velké $W$ i $C$ (obě čísla mají třeba 60 bitů), nepomůže ani jedno: oba algoritmy jsou exponenciální vůči délce zápisu.
+      Právě to je podstata slabé NP-úplnosti $\prob{Knapsack}$u (definice .reference:def-silne).

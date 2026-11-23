@@ -1,0 +1,787 @@
+.Section Cvičení 8: Modelování v ILP
+  label: ch-resice-ilp-cviceni-8
+
+
+Všechna řešení mají stejnou kostru, jakou chce úloha 3 zápočtového testu („Formulace jako ILP“, 6 bodů): proměnné
+s významem, omezení po skupinách s tím, co zajišťují, účelová funkce, velikost programu a zdůvodnění, proč optimum
+ILP je optimum úlohy. Kostru shrnuje následující rámeček; vzorové řešení úlohy z ukázkového testu (rozvrh zkoušek) je
+v příloze .reference:ch-ukazkovy.
+
+
+.Procedure:
+  title: 'Postup na papíře: formulace jako ILP'
+  label: ch-resice-ilp-proc-formulace
+
+  .enumerate:
+
+    .item:
+
+      "Proměnné.".notion Ke každé proměnné napiš "obor".emphasize ($\{0,1\}$, $\mathbb Z_{\ge0}$, reálná) a
+      "význam větou".emphasize („$x_{v,c}=1$ právě když vrchol $v$ dostane barvu $c$“), včetně rozsahu indexů. Začni
+      otázkou „co vlastně volíme?“; pomocné proměnné (použitá barva, otevřený sklad, maximum $t$) přidej, až když je
+      potřebuje omezení nebo účel.
+
+    .item:
+
+      "Omezení po skupinách.".notion Očísluj skupiny (O1), (O2), …; u každé napiš kvantifikátor („pro každou hranu
+      $\{u,v\}\in E$ a každou barvu $c$“) a "jednu větu, co skupina zajišťuje".emphasize. Projdi zadání větu po větě
+      a ke každé podmínce najdi skupinu, která ji vyjadřuje.
+
+    .item:
+
+      "Účelová funkce.".notion Směr (min / max) a lineární výraz. Je-li cílem „nejmenší počet“ něčeho, co zatím
+      proměnnou není (použité barvy, termíny), potřebuješ pomocnou proměnnou a vazbu (trik $x\le y$).
+
+    .item:
+
+      "Velikost.".notion Počet proměnných a omezení jako funkce parametrů vstupu ($|V|$, $|E|$, $m$, …), ne jen
+      $\mathcal O(\cdot)$. U konkrétních dat i čísla.
+
+    .item:
+
+      "Proč optimum ILP = optimum úlohy.".notion Dva směry: (a) každé řešení úlohy dá přípustné řešení ILP se stejnou
+      hodnotou; (b) každé přípustné řešení ILP dá řešení úlohy s hodnotou aspoň tak dobrou. U konkrétních dat
+      uveď optimum a zdůvodni ho (řešení + mez).
+
+
+  "Kontrola na závěr:".notion všechny výrazy lineární (žádné $x\cdot y$, $|\cdot|$, $\max$, $\ne$), obory u všech
+  proměnných, kvantifikátory u všech skupin, na malé instanci jedno správné řešení projde a jedno nesmyslné ne.
+
+
+.Exercise:
+  title: 'Cvičení 8.1 (pošta)'
+  label: cv-8-1
+
+  Pošta potřebuje v $i$-tém dni týdne aspoň $d_i$ zaměstnanců, kde $i=1,\dots,7$. Každý zaměstnanec pracuje pět
+  po sobě jdoucích dní a pak má dva dny volna; rozvrh se každý týden opakuje (např. kdo začíná v sobotu, pracuje od
+  soboty do středy). Zapište jako ILP úlohu najít nejmenší počet zaměstnanců, se kterým lze požadavky splnit.
+
+
+  Příklad:
+
+  .table:
+    columns: 'cccccccc'
+
+    .row:
+      head: true
+
+      den
+
+      Po
+
+      Út
+
+      St
+
+      Čt
+
+      Pá
+
+      So
+
+      Ne
+
+    .row:
+
+      $d_i$
+
+      17
+
+      13
+
+      15
+
+      19
+
+      14
+
+      16
+
+      11
+
+
+.Solution:
+
+  "Co volíme.".notion Zaměstnanec je určen jen tím, "kterým dnem začíná".emphasize svých pět dní – zbytek rozvrhu je
+  pak pevný. Proměnná „kolik lidí pracuje v den $i$“ by nestačila: nevynutí, že každý pracuje pět dní za sebou.
+
+
+  "1. Proměnné.".notion $x_j\in\mathbb Z_{\ge0}$ pro $j=1,\dots,7$ (Po, …, Ne) … počet zaměstnanců, kteří začínají
+  pracovat v den $j$ (a pracují dny $j,j+1,\dots,j+4$ cyklicky).
+
+
+  "2. Omezení.".notion
+
+  .itemize:
+
+    .item:
+
+      (O1) Pro každý den $i=1,\dots,7$:
+      $\displaystyle x_i+x_{i-1}+x_{i-2}+x_{i-3}+x_{i-4}\ \ge\ d_i$ (indexy modulo 7, tj. $x_0=x_7$, $x_{-1}=x_6$, …).
+      Zajišťuje, že v den $i$ je v práci aspoň $d_i$ lidí: v den $i$ pracují přesně ti, kdo začali v den $i$ nebo
+      v některém ze čtyř dnů předtím.
+
+  Rozepsáno pro data (řádek = den, sčítají se začátky, které ho pokrývají):
+
+  .align:
+
+    \text{Po:}\ & x_{\text{Po}}+x_{\text{Ne}}+x_{\text{So}}+x_{\text{Pá}}+x_{\text{Čt}}\ge17 &
+    \text{Pá:}\ & x_{\text{Pá}}+x_{\text{Čt}}+x_{\text{St}}+x_{\text{Út}}+x_{\text{Po}}\ge14\\
+    \text{Út:}\ & x_{\text{Út}}+x_{\text{Po}}+x_{\text{Ne}}+x_{\text{So}}+x_{\text{Pá}}\ge13 &
+    \text{So:}\ & x_{\text{So}}+x_{\text{Pá}}+x_{\text{Čt}}+x_{\text{St}}+x_{\text{Út}}\ge16\\
+    \text{St:}\ & x_{\text{St}}+x_{\text{Út}}+x_{\text{Po}}+x_{\text{Ne}}+x_{\text{So}}\ge15 &
+    \text{Ne:}\ & x_{\text{Ne}}+x_{\text{So}}+x_{\text{Pá}}+x_{\text{Čt}}+x_{\text{St}}\ge11\\
+    \text{Čt:}\ & x_{\text{Čt}}+x_{\text{St}}+x_{\text{Út}}+x_{\text{Po}}+x_{\text{Ne}}\ge19 . &&
+
+
+  "3. Účel.".notion $\displaystyle\min\sum_{j=1}^{7}x_j$ – celkový počet zaměstnanců (každý má právě jeden den začátku).
+
+
+  "4. Velikost.".notion 7 celočíselných proměnných, 7 omezení (O1) a 7 podmínek nezápornosti. Obecně pro cyklus $n$
+  dní: $n$ proměnných a $n$ omezení.
+
+
+  "5. Proč optimum ILP = optimum úlohy.".notion Rozvrh se $N$ zaměstnanci dá vektor $x$ (kolik jich začíná kdy)
+  se součtem $N$, a protože rozvrh pokrývá požadavky, splňuje (O1). Naopak z přípustného $x$ postavíme rozvrh: $x_j$
+  lidí začne v den $j$; podle (O1) je každý den dost lidí a lidí je $\sum_j x_j$. Hodnoty si odpovídají, optima
+  jsou stejná.
+
+
+  "Optimum pro data: 23 zaměstnanců.".notion
+
+  .itemize:
+
+    .item:
+
+      "Řešení s 23:".notion $x=(x_{\text{Po}},\dots,x_{\text{Ne}})=(7,5,1,8,0,2,0)$. V práci je po dnech $(17,14,15,21,21,16,11)$
+      lidí, což pokrývá $d=(17,13,15,19,14,16,11)$.
+
+    .item:
+
+      "Míň nejde (mez přes dualitu):".notion sečtěme omezení pro Po, St, Čt a So. Vpravo je $17+15+19+16=67$. Vlevo
+      má každé $x_j$ koeficient nejvýš 3 (začátek v Po pokrývá Po, St, Čt; začátek v Pá jen So a Po; ostatní
+      po třech), takže $3\sum_jx_j\ge67$, tj. $\sum_jx_j\ge22\tfrac13$, a protože jde o celé číslo, $\sum_jx_j\ge23$.
+      Je to přesně postup z oddílu .reference:ch-resice-ilp-lp-relaxace-a-dualita: duální řešení
+      $y=(\tfrac13,0,\tfrac13,\tfrac13,0,\tfrac13,0)$ dává mez $22\tfrac13$ = optimum LP relaxace.
+
+  (Ověřeno skriptem: řešič dává 23; výčtem všech rozdělení 22 lidí do 7 dnů začátku žádné nevyhoví, 23 lidí lze
+  rozdělit 383 způsoby.)
+
+
+  .centered:
+
+    !tikz:
+      filename: 15i-cviceni-8-01
+      options: 'x=0.95cm,y=0.7cm'
+
+      \foreach \d [count=\i from 0] in {Po,Út,St,Čt,Pá,So,Ne} {
+        \node[font=\footnotesize] at (\i+0.5,7.6) {\d};
+        \node[font=\footnotesize,anchor=east] at (-0.1,6.5-\i) {start \d};}
+      \foreach \x [count=\j from 0] in {7,5,1,8,0,2,0} {
+        \foreach \k in {0,...,4} {
+          \pgfmathtruncatemacro{\c}{mod(\j+\k,7)}
+          \fill[defc!25] (\c,6-\j) rectangle ++(1,1);}
+        \node[font=\footnotesize,anchor=west] at (7.15,6.5-\j) {$x=\x$};}
+      \foreach \k in {0,...,7} {\draw[black!40] (\k,0)--(\k,7); \draw[black!40] (0,\k)--(7,\k);}
+      \foreach \v [count=\i from 0] in {17,14,15,21,21,16,11} \node[font=\footnotesize] at (\i+0.5,-0.55) {\v};
+      \foreach \v [count=\i from 0] in {17,13,15,19,14,16,11} \node[font=\footnotesize,gr] at (\i+0.5,-1.25) {\v};
+      \node[font=\footnotesize,anchor=east] at (-0.1,-0.55) {v práci};
+      \node[font=\footnotesize,anchor=east,gr] at (-0.1,-1.25) {$d_i$};
+
+  Řádek = den začátku, modře dny, kdy taková směna pracuje (cyklicky). Vpravo počty $x_j$ optimálního řešení,
+  dole kolik lidí je v práci a kolik je potřeba.
+
+
+.Warning:
+  title: 'Typické chyby (8.1)'
+
+  .itemize:
+
+    .item:
+
+      Proměnné „počet lidí v den $i$“ – model pak nezná pětidenní bloky.
+
+    .item:
+
+      Zapomenutý přechod přes konec týdne: zaměstnanec, který začne v pátek, pracuje i v pondělí a úterý.
+
+    .item:
+
+      $x_j\in\{0,1\}$ místo $x_j\in\mathbb Z_{\ge0}$ – v jeden den může začínat víc lidí.
+
+
+.Exercise:
+  title: 'Cvičení 8.2 (řezání tyčí)'
+  label: cv-8-2
+
+  Pila dostává tyče délky 10 m a má z nich nařezat aspoň $d_3$ kusů délky 3 m, $d_4$ kusů délky 4 m a $d_5$ kusů
+  délky 5 m. Zapište jako ILP úlohu, jak požadavky splnit za použití co nejmenšího počtu tyčí.
+
+
+.Solution:
+
+  "Co volíme.".notion U každé tyče rozhodujeme, "jak ji rozřežeme".emphasize. Možností je málo, takže je vypíšeme:
+  "vzor".notion (pattern) je trojice $(a_3,a_4,a_5)$ počtů kusů s $3a_3+4a_4+5a_5\le10$. Stačí "maximální".emphasize
+  vzory, do kterých se už žádný kus nevejde (zbytek je odpad):
+
+
+  .table:
+    columns: 'ccccccc'
+
+    .row:
+      head: true
+
+      vzor $p$
+
+      1
+
+      2
+
+      3
+
+      4
+
+      5
+
+      6
+
+    .row:
+
+      $(a_{3p},a_{4p},a_{5p})$
+
+      $(3,0,0)$
+
+      $(2,1,0)$
+
+      $(1,0,1)$
+
+      $(0,2,0)$
+
+      $(0,1,1)$
+
+      $(0,0,2)$
+
+    .row:
+
+      využito [m]
+
+      9
+
+      10
+
+      8
+
+      8
+
+      9
+
+      10
+
+
+  "1. Proměnné.".notion $z_p\in\mathbb Z_{\ge0}$ pro $p=1,\dots,6$ … kolik tyčí rozřežeme podle vzoru $p$.
+
+
+  "2. Omezení.".notion
+
+  .itemize:
+
+    .item:
+
+      (O1) Pro každou délku $\ell\in\{3,4,5\}$: $\displaystyle\sum_{p=1}^{6}a_{\ell p}\,z_p\ge d_\ell$. Zajišťuje, že
+      kusů délky $\ell$ je nařezáno aspoň $d_\ell$. Konkrétně
+      $3z_1+2z_2+z_3\ge d_3$, $z_2+2z_4+z_5\ge d_4$, $z_3+z_5+2z_6\ge d_5$.
+
+  Že se vzor do tyče vejde, je zajištěno už výběrem vzorů, žádné další omezení není potřeba.
+
+
+  "3. Účel.".notion $\displaystyle\min\sum_{p=1}^{6}z_p$ – počet použitých tyčí.
+
+
+  "4. Velikost.".notion 6 proměnných a 3 omezení – nezávisle na $d_3,d_4,d_5$, ta jsou jen na pravých stranách.
+
+
+  "5. Proč optimum ILP = optimum úlohy.".notion Každé rozřezání $N$ tyčí určuje u každé tyče vzor; nemaximální vzor
+  nahradíme maximálním, který ho obsahuje (kusů neubude, omezení „aspoň“ zůstanou splněna) – dostaneme přípustné
+  $z$ se součtem $N$. Naopak přípustné $z$ říká, jak rozřezat $\sum_pz_p$ tyčí, a (O1) zaručuje dost kusů.
+  Přebytečné kusy zadání dovoluje („aspoň“).
+
+
+  "Druhá možnost: přiřazovací model.".notion Očíslujeme tyče $j=1,\dots,U$, kde $U=d_3+d_4+d_5$ (každý kus na vlastní
+  tyči stačí vždy). Proměnné $y_j\in\{0,1\}$ … tyč $j$ je použitá, $u_{\ell j}\in\mathbb Z_{\ge0}$ … kolik kusů délky
+  $\ell$ uřízneme z tyče $j$. Omezení $3u_{3j}+4u_{4j}+5u_{5j}\le10\,y_j$ pro každé $j$ (do tyče se kusy vejdou a řeže se
+  jen z použité tyče – kapacita s aktivací z oddílu .reference:ch-resice-ilp-modelovaci-triky) a $\sum_ju_{\ell j}\ge d_\ell$
+  pro každé $\ell$; účel $\min\sum_jy_j$. Velikost: $4U$ proměnných a $U+3$ omezení – roste s počty kusů. Je správný,
+  ale "pro řešič horší".emphasize: LP relaxace „použije“ tyč jen zčásti ($y_j$ = zaplněná délka / 10) a tyče jsou
+  zaměnitelné, takže stejné řešení má mnoho přečíslovaných kopií.
+
+
+  "Příklad s vlastními čísly.".notion Zadání čísla nedává; zvolme $d_3=5$, $d_4=3$, $d_5=4$. Optimum je "5 tyčí".notion:
+  třikrát vzor $(2,1,0)$ (dá 6 kusů po 3 m a 3 kusy po 4 m) a dvakrát vzor $(0,0,2)$ (4 kusy po 5 m). Míň nejde,
+  protože kusy mají dohromady $5\cdot3+3\cdot4+4\cdot5=47$ m a čtyři tyče jen 40 m. (Ověřeno skriptem: vzorový model,
+  přiřazovací model i přímé dynamické programování přes zbývající počty dávají 5; vzorový a dynamický výpočet se
+  shodují i na 150 náhodných zadáních.)
+
+
+  .centered:
+
+    !tikz:
+      filename: 15i-cviceni-8-02
+      options: 'x=0.85cm,y=0.65cm'
+
+      \foreach \row/\cuts/\used in {0/{0/3,3/3,6/3}/9, 1/{0/3,3/3,6/4}/10, 2/{0/3,3/5}/8, 3/{0/4,4/4}/8, 4/{0/4,4/5}/9, 5/{0/5,5/5}/10} {
+        \foreach \st/\len in \cuts {
+          \ifnum\len=3 \def\cc{defc!25}\fi \ifnum\len=4 \def\cc{exc!25}\fi \ifnum\len=5 \def\cc{intc!30}\fi
+          \fill[\cc,draw=black!70] (\st,-\row*1.3) rectangle ++(\len,-0.9);
+          \node[font=\footnotesize] at (\st+\len/2,-\row*1.3-0.45) {\len};}
+        \ifnum\used<10 \fill[pattern=north east lines,pattern color=black!40] (\used,-\row*1.3) rectangle (10,-\row*1.3-0.9); \fi
+        \draw[thick] (0,-\row*1.3) rectangle (10,-\row*1.3-0.9);
+        \pgfmathtruncatemacro{\rr}{\row+1}
+        \node[font=\footnotesize,anchor=east] at (-0.2,-\row*1.3-0.45) {vzor \rr};}
+
+  Šest maximálních vzorů řezání tyče délky 10 m; šrafovaně odpad.
+
+
+.Exercise:
+  title: 'Cvičení 8.3 (chromatické číslo)'
+  label: cv-8-3
+
+  Zapište jako ILP úlohu najít chromatické číslo $\chi(G)$ grafu $G=(V,E)$, tedy nejmenší počet barev, kterými lze
+  obarvit vrcholy tak, aby žádná hrana nespojovala dva vrcholy stejné barvy. Proč je takový model pro řešič
+  nepraktický? Jak ho vylepšit?
+
+
+.Solution:
+
+  Rozšíříme redukci $\prob{3-Coloring}\redp\prob{ILP}$ z kapitoly .reference:ch-cisla (rámeček .reference:red-ilpcol):
+  počet barev už není pevný, ale minimalizujeme ho. Označme $n=|V|$; $n$ barev stačí vždy, barvy jsou $c=1,\dots,n$.
+
+
+  "1. Proměnné.".notion
+
+  .itemize:
+
+    .item:
+
+      $x_{v,c}\in\{0,1\}$ pro $v\in V$, $c=1,\dots,n$ … vrchol $v$ má barvu $c$;
+
+    .item:
+
+      $w_c\in\{0,1\}$ pro $c=1,\dots,n$ … barva $c$ je použitá.
+
+
+  "2. Omezení.".notion
+
+  .itemize:
+
+    .item:
+
+      (O1) $\sum_{c=1}^{n}x_{v,c}=1$ pro každý $v\in V$ – každý vrchol má právě jednu barvu.
+
+    .item:
+
+      (O2) $x_{u,c}+x_{v,c}\le1$ pro každou hranu $\{u,v\}\in E$ a každou barvu $c$ – konce hrany nemají stejnou barvu.
+
+    .item:
+
+      (O3) $x_{v,c}\le w_c$ pro každý $v\in V$ a každou barvu $c$ – barvu, kterou má nějaký vrchol, musíme započítat
+      (implikace $x_{v,c}\Rightarrow w_c$).
+
+
+  "3. Účel.".notion $\displaystyle\min\sum_{c=1}^{n}w_c$ – počet použitých barev.
+
+
+  "4. Velikost.".notion $n^2+n$ binárních proměnných; $n+n|E|+n^2$ omezení.
+
+
+  "5. Proč optimum ILP = $\chi(G)$.".notion Obarvení $k$ barvami (očíslujme je $1,\dots,k$) dá přípustné řešení
+  s $w_1=\dots=w_k=1$, ostatní 0, hodnota $k$. Naopak z přípustného řešení vezmeme za barvu $v$ to $c$, pro které
+  $x_{v,c}=1$ (O1); podle (O2) je obarvení vlastní a podle (O3) použije jen barvy s $w_c=1$, tedy nejvýš
+  $\sum_cw_c$ barev. Minimum ILP je proto přesně $\chi(G)$.
+
+
+  "Varianta s min-max".notion (oddíl .reference:ch-resice-ilp-modelovaci-triky): místo $w_c$ jedna proměnná
+  $t$, omezení $t\ge\sum_c c\cdot x_{v,c}$ pro každé $v$ („$t$ je aspoň číslo barvy každého vrcholu“) a účel $\min t$.
+  Optimální obarvení lze vždy přečíslovat na barvy $1,\dots,\chi(G)$, takže optimum je opět $\chi(G)$.
+
+
+  "Proč je model nepraktický.".notion
+
+  .enumerate:
+
+    .item:
+
+      "Symetrie.".notion Barvy jsou zaměnitelné: z každého řešení vznikne permutací barev další se stejnou
+      hodnotou, až $n!$ kopií. Branch & bound je prochází všechny – větvení „$x_{v,c}=0$“ jen přesune $v$ do
+      jiné barvy a mez se nezmění.
+
+    .item:
+
+      "Slabá LP relaxace.".notion $x_{v,c}=w_c=\tfrac1n$ pro všechna $v,c$ splňuje (O1)–(O3) a má hodnotu 1. LP mez je
+      tedy 1 pro "každý".emphasize graf – i pro $K_n$ s $\chi=n$. Řešič skoro nic neprořízne.
+
+    .item:
+
+      "Velikost.".notion $n^2$ proměnných i tehdy, když stačí tři barvy.
+
+
+  .centered:
+
+    !tikz:
+      filename: 15i-cviceni-8-05
+      options: 'x=1cm,y=1cm'
+
+      \foreach \X/\cols/\tit in {0/{1,2,1,2,3}/{$w=(1,1,1,0,0)$, hodnota 3}, 4.6/{4,1,4,1,2}/{$w=(1,1,0,1,0)$, hodnota 3}} {
+        \begin{scope}[xshift=\X cm]
+          \foreach \c [count=\i] in \cols {
+            \ifnum\c=1 \def\cc{chRb}\fi \ifnum\c=2 \def\cc{chRz}\fi \ifnum\c=3 \def\cc{chRo}\fi \ifnum\c=4 \def\cc{chRr}\fi
+            \node[v,fill=\cc] (p\i) at ({90+72*(\i-1)}:1.05) {\c};
+            \node[font=\scriptsize,text=black!55] at ({90+72*(\i-1)}:1.55) {$v_\i$};}
+          \draw[e] (p1)--(p2)--(p3)--(p4)--(p5)--(p1);
+          \node[font=\footnotesize] at (0,-1.75) {\tit};
+        \end{scope}}
+      \begin{scope}[xshift=9.2cm]
+        \foreach \i in {1,...,5} {
+          \node[v,fill=black!6,font=\scriptsize] (q\i) at ({90+72*(\i-1)}:1.05) {$\frac15$};
+          \node[font=\scriptsize,text=black!55] at ({90+72*(\i-1)}:1.55) {$v_\i$};}
+        \draw[e] (q1)--(q2)--(q3)--(q4)--(q5)--(q1);
+        \node[font=\footnotesize] at (0,-1.75) {LP: $x_{v,c}=w_c=\frac15$, hodnota 1};
+      \end{scope}
+      \draw[->,thick,black!50] (1.75,0)--(2.85,0) node[midway,below,font=\scriptsize,align=center,text=black!70]{$1\to4$\\ $2\to1$\\ $3\to2$};
+
+  Kružnice $C_5$ s $n=5$ barvami ($\chi(C_5)=3$, v kroužku číslo barvy). Vlevo a uprostřed dvě různá optimální
+  řešení ILP, která se liší jen přečíslováním barev. Celkem má ILP 300 optimálních řešení, ale jen 5 různých
+  rozdělení vrcholů do tří barevných tříd – každé v $5\cdot4\cdot3=60$ kopiích. Vpravo zlomkové řešení LP relaxace
+  ((O1) $5\cdot\frac15=1$, (O2) $\frac15+\frac15\le1$, (O3) $\frac15\le\frac15$) s hodnotou $\sum_cw_c=1$.
+  (Počty ověřeny výčtem.)
+
+
+  "Jak ho vylepšit.".notion
+
+  .itemize:
+
+    .item:
+
+      "Silnější formulace.".notion Sloučit (O2) a (O3) do $x_{u,c}+x_{v,c}\le w_c$ pro hrany ((O3) ponechat jen pro
+      izolované vrcholy). Celočíselná řešení se nezmění, ale LP mez vzroste z 1 na 2 pro každý graf s hranou. Dále
+      "klikové nerovnice".emphasize $\sum_{v\in K}x_{v,c}\le w_c$ pro kliky $K$ (obdoba trojúhelníků u VC v oddíle
+      .reference:ch-resice-ilp-sila-formulace): sečtením přes $c$ dají LP mez aspoň $|K|$. Lze je přidávat jako řezy.
+
+    .item:
+
+      "Méně barev.".notion Místo $n$ barev jen tolik, kolik dá rychlá heuristika ("(nad rámec přednášky)".emphasize
+      např. hladové barvení, které použije nejvýš $\Delta+1$ barev).
+
+    .item:
+
+      "Rozbití symetrie".notion "(nad rámec přednášky)".emphasize: $w_c\ge w_{c+1}$ (barvy se používají od první),
+      vrcholům jedné kliky pevně přidělit barvy $1,2,\dots$.
+
+    .item:
+
+      "Jiný model".notion "(nad rámec přednášky)".emphasize: proměnná $\lambda_S\in\{0,1\}$ pro každou nezávislou množinu
+      $S$, omezení $\sum_{S\ni v}\lambda_S\ge1$ pro každý vrchol, účel $\min\sum_S\lambda_S$. Nemá symetrii barev
+      a má silnější relaxaci (na $C_5$ dá 2,5 místo 2); nezávislých množin je ale exponenciálně mnoho, řeší se
+      generováním sloupců jako crew pairing (oddíl .reference:ch-resice-ilp-resice-v-praxi).
+
+  (Ověřeno skriptem na 150 náhodných grafech do 6 vrcholů: základní model, sloučená varianta, varianta s $w_c\ge w_{c+1}$,
+  min-max varianta i model nezávislých množin dávají $\chi(G)$ spočítané hrubou silou; LP mez základního modelu
+  vyšla vždy 1, sloučené varianty vždy 2.)
+
+
+.Exercise:
+  title: 'Cvičení 8.4 (Max-Cut a nejmenší řez)'
+  label: cv-8-4
+
+  Zapište jako ILP problém $\prob{Max-Cut}$: pro graf $G=(V,E)$ najděte rozdělení vrcholů $V=A\cup B$ na dvě
+  disjunktní části, které maximalizuje počet hran mezi $A$ a $B$. Jak by se model změnil, kdybychom naopak hledali
+  "nejmenší".emphasize řez s neprázdnými částmi $A$ i $B$?
+
+
+.Solution:
+
+  Problém známe z kapitoly .reference:ch-zoo (definice .reference:prob-maxcut, tam v rozhodovací verzi). Označme $n=|V|$,
+  $m=|E|$.
+
+
+  "1. Proměnné.".notion
+
+  .itemize:
+
+    .item:
+
+      $x_v\in\{0,1\}$ pro $v\in V$ … $x_v=1$ právě když $v\in A$ (jinak $v\in B$);
+
+    .item:
+
+      $y_e\in\{0,1\}$ pro $e\in E$ … hrana $e$ se započítá do řezu.
+
+
+  "2. Omezení.".notion Pro každou hranu $e=\{u,v\}\in E$:
+
+  .itemize:
+
+    .item:
+
+      (O1) $y_e\le x_u+x_v$ – jsou-li oba konce v $B$, hrana se nezapočítá;
+
+    .item:
+
+      (O2) $y_e\le 2-x_u-x_v$ – jsou-li oba konce v $A$, hrana se nezapočítá.
+
+  Dohromady: $y_e=1$ jen u hran, jejichž konce jsou v různých částech (XOR z oddílu .reference:ch-resice-ilp-modelovaci-triky).
+
+
+  "3. Účel.".notion $\displaystyle\max\sum_{e\in E}y_e$.
+
+
+  "4. Velikost.".notion $n+m$ binárních proměnných, $2m$ omezení.
+
+
+  "5. Proč optimum ILP = velikost největšího řezu.".notion Pro pevné $x$ smí být $y_e=1$ právě u hran mezi $A$ a $B$,
+  takže hodnota každého přípustného řešení je nejvýš velikost řezu $(A,B)$; maximalizace nastaví $y_e=1$ u všech
+  takových hran a hodnota je přesně velikost řezu. Maximum přes $x$ je tedy největší řez. Dolní meze na $y_e$ nejsou
+  potřeba: maximalizace sama tlačí $y_e$ nahoru.
+
+
+  "Nejmenší řez s neprázdnými částmi.".notion Změní se tři věci:
+
+  .enumerate:
+
+    .item:
+
+      "Směr účelu:".notion $\min\sum_ey_e$. Teď řešič tlačí $y_e$ dolů, takže potřebujeme "dolní".emphasize meze –
+      (O1') $y_e\ge x_u-x_v$ a (O2') $y_e\ge x_v-x_u$ pro každou hranu, tedy $y_e\ge|x_u-x_v|$ (trik s absolutní
+      hodnotou). Hrana mezi částmi pak musí mít $y_e=1$. (O1), (O2) jsou zbytečné (minimalizace sama nastaví $y_e=0$
+      u hran uvnitř části).
+
+    .item:
+
+      "Neprázdnost:".notion (O3) $\sum_vx_v\ge1$ ($A\neq\emptyset$) a (O4) $\sum_vx_v\le n-1$ ($B\neq\emptyset$). Bez nich
+      je optimum triviálně 0: všechny vrcholy do jedné části.
+
+    .item:
+
+      "Velikost:".notion $n+m$ proměnných, $2m+2$ omezení.
+
+  "(nad rámec přednášky)".emphasize Na rozdíl od Max-Cut (NP-těžký) je nejmenší řez polynomiální – lze ho spočítat
+  přes toky v sítích. ILP model je správný, ale zbytečně silná zbraň.
+
+
+  .centered:
+
+    !tikz:
+      filename: 15i-cviceni-8-03
+      options: 'x=1.4cm,y=1.4cm'
+
+      \foreach \i/\a in {1/90,2/162,3/234,4/306,5/18} \coordinate (p\i) at (\a:1.1);
+      \draw[esel] (p1)--(p2) (p2)--(p3) (p3)--(p4) (p5)--(p1);
+      \draw[e,dashed] (p4)--(p5);
+      \node[v,fill=defc!20] at (p1) {1}; \node[v] at (p2) {2}; \node[v,fill=defc!20] at (p3) {3};
+      \node[v] at (p4) {4}; \node[v] at (p5) {5};
+      \node[font=\footnotesize,align=left,anchor=west] at (1.7,0.3) {$A=\{1,3\}$ (modře): $x_1=x_3=1$\\ $B=\{2,4,5\}$\\ řez: 4 hrany ($y_e=1$, zeleně)};
+
+  Max-Cut na kružnici $C_5$: optimum je 4 (všech 5 hran přeříznout nejde, kružnice je lichá). Nejmenší řez
+  s neprázdnými částmi má na $C_5$ hodnotu 2.
+
+
+  (Ověřeno skriptem na 150 náhodných grafech do 6 vrcholů: optimum obou ILP (řešičem a u menších grafů i výčtem
+  všech binárních $(x,y)$) se shoduje s výčtem všech rozdělení $V=A\cup B$.)
+
+
+.Warning:
+  title: 'Typické chyby (8.4)'
+
+  .itemize:
+
+    .item:
+
+      $y_e=|x_u-x_v|$ nebo $y_e=x_u\oplus x_v$ zapsané přímo – není to lineární.
+
+    .item:
+
+      Při minimalizaci ponechat jen horní meze (O1), (O2): řešič nastaví všechna $y_e=0$ a „nejmenší řez“ vyjde 0.
+
+    .item:
+
+      Zapomenout na neprázdnost $A$ a $B$ u nejmenšího řezu.
+
+
+.Exercise:
+  title: 'Cvičení 8.5 (plánování výroby)'
+  label: cv-8-5
+
+  Továrna plánuje výrobu na $m$ měsíců dopředu. V měsíci $t=1,\dots,m$ musí dodat $d_t$ kusů výrobku, za měsíc
+  vyrobí nejvýše 100 kusů. Výrobky lze skladovat do dalších měsíců, uskladnění jednoho kusu stojí 20 Kč za každý
+  měsíc. Pokud se v daném měsíci vyrábí, je nutné nejprve seřídit linku, což stojí 3 000 Kč (bez ohledu na vyrobené
+  množství). Na začátku je sklad prázdný. Zapište jako ILP úlohu najít výrobní plán s nejmenšími náklady.
+
+
+  Příklad ($m=4$):
+
+  .table:
+    columns: 'ccccc'
+
+    .row:
+      head: true
+
+      měsíc $t$
+
+      1
+
+      2
+
+      3
+
+      4
+
+    .row:
+
+      $d_t$
+
+      40
+
+      60
+
+      80
+
+      30
+
+
+.Solution:
+
+  "Interpretace skladného.".notion Zadání neříká přesně, kdy se skladné počítá. Bereme nejpřirozenější čtení: platí se
+  20 Kč za každý kus, který na konci měsíce zůstane na skladě (přechází do dalšího měsíce). Kus vyrobený a dodaný
+  v témž měsíci skladné neplatí.
+
+
+  "1. Proměnné.".notion Pro $t=1,\dots,m$:
+
+  .itemize:
+
+    .item:
+
+      $x_t\in\mathbb Z_{\ge0}$ … počet kusů vyrobených v měsíci $t$;
+
+    .item:
+
+      $s_t\in\mathbb Z_{\ge0}$ … počet kusů na skladě na konci měsíce $t$ (konstanta $s_0=0$, sklad je na začátku
+      prázdný);
+
+    .item:
+
+      $y_t\in\{0,1\}$ … v měsíci $t$ se seřizuje linka (vyrábí se).
+
+
+  "2. Omezení.".notion Pro každé $t=1,\dots,m$:
+
+  .itemize:
+
+    .item:
+
+      (O1) $s_{t-1}+x_t=d_t+s_t$ – "bilance skladu".emphasize: co bylo na skladě plus co se vyrobí, se buď dodá, nebo
+      zůstane na skladě. Spolu s $s_t\ge0$ zajišťuje, že poptávka $d_t$ je splněna včas (nic se nedodává pozdě).
+
+    .item:
+
+      (O2) $x_t\le100\,y_t$ – vyrábět se smí jen po seřízení, a pak nejvýš 100 kusů (vypínač z oddílu
+      .reference:ch-resice-ilp-modelovaci-triky s $M=100$, které je zároveň kapacitou).
+
+
+  "3. Účel.".notion $\displaystyle\min\sum_{t=1}^{m}\bigl(3000\,y_t+20\,s_t\bigr)$ – seřízení plus skladné.
+
+
+  "4. Velikost.".notion $3m$ proměnných ($2m$ celočíselných, $m$ binárních), $2m$ omezení (plus nezápornost). Pro
+  příklad 12 proměnných a 8 omezení.
+
+
+  "5. Proč optimum ILP = nejlevnější plán.".notion Plán výroby $x$, který dodá včas, určí přes (O1) stavy skladu
+  $s_t\ge0$; položíme $y_t=1$ právě v měsících s $x_t>0$ – (O2) platí díky kapacitě 100 a účel jsou přesně náklady
+  plánu. Naopak přípustné řešení ILP je plán, který dodá včas a nepřekročí kapacitu; jeho náklady jsou nejvýš
+  hodnota účelu (ILP smí zaplatit seřízení i v měsíci bez výroby, $y_t=1$, $x_t=0$, ale to je jen dražší). Optima se
+  tedy rovnají.
+
+
+  "Optimum pro příklad: 9 800 Kč.".notion Plán $x=(40,70,100,0)$, sklad $s=(0,10,30,0)$, seřizuje se v měsících
+  1, 2, 3: $3\cdot3000+20\cdot(0+10+30+0)=9000+800=9800$.
+
+  .itemize:
+
+    .item:
+
+      "Aspoň 3 seřízení:".notion poptávka je $40+60+80+30=210>2\cdot100$.
+
+    .item:
+
+      "4 seřízení".notion stojí už 12 000 Kč.
+
+    .item:
+
+      "Přesně 3 seřízení,".notion vyrábět se musí v měsíci 1 ($d_1=40$, sklad prázdný); vynecháme jeden z měsíců 2, 3, 4:
+
+      .itemize:
+
+        .item:
+
+          bez měsíce 2: v měsíci 1 se musí vyrobit aspoň $40+60=100$, tedy $s_1\ge60$, skladné $\ge1200$, celkem $\ge10\,200$;
+
+        .item:
+
+          bez měsíce 3: $s_2\ge80$ a $x_1+x_2\ge180$ dá $x_1\ge80$, $s_1\ge40$, skladné $\ge20\cdot120=2400$, celkem
+          $\ge11\,400$;
+
+        .item:
+
+          bez měsíce 4: $s_3\ge30$; měsíc 3 vyrobí nejvýš 100 z potřebných $80+30=110$, takže $s_2\ge10$, skladné
+          $\ge20\cdot40=800$, celkem $\ge9800$ – a to plán výše dosahuje.
+
+  (Ověřeno skriptem: řešič na ILP i dynamické programování přes stav skladu dávají 9 800; shodují se i na
+  náhodných zadáních s $m\le5$.)
+
+
+  .centered:
+
+    !tikz:
+      filename: 15i-cviceni-8-04
+      options: 'x=1.7cm,y=0.033cm'
+
+      \draw[osa] (0.3,0)--(4.9,0) node[right,font=\footnotesize]{měsíc};
+      \draw[osa] (0.3,0)--(0.3,125);
+      \foreach \v in {50,100} {\draw (0.25,\v)--(0.35,\v); \node[font=\footnotesize,left] at (0.25,\v) {\v};}
+      \draw[gr,dashed] (0.3,100)--(4.7,100) node[pos=0.97,above,font=\footnotesize]{kapacita};
+      \foreach \t/\x/\s/\d in {1/40/0/40,2/70/10/60,3/100/30/80,4/0/0/30} {
+        \fill[defc!35] (\t-0.32,0) rectangle (\t-0.04,\x);
+        \fill[intc!45] (\t+0.04,0) rectangle (\t+0.32,\s);
+        \draw[very thick,warnc] (\t-0.4,\d)--(\t+0.4,\d);
+        \node[font=\footnotesize,below] at (\t,0) {\t};}
+      \fill[defc!35] (5.6,110) rectangle ++(0.25,10); \node[font=\footnotesize,anchor=west] at (5.9,115) {výroba $x_t$};
+      \fill[intc!45] (5.6,90) rectangle ++(0.25,10); \node[font=\footnotesize,anchor=west] at (5.9,95) {sklad $s_t$};
+      \draw[very thick,warnc] (5.6,75)--++(0.25,0); \node[font=\footnotesize,anchor=west] at (5.9,75) {poptávka $d_t$};
+
+  Optimální plán: v měsíci 4 se nevyrábí, jeho poptávku pokryje sklad z měsíce 3 (a 10 kusů z měsíce 2).
+
+
+  "Poznámka k síle formulace.".notion LP relaxace má hodnotu jen 6 300 Kč: stačí $y_t=x_t/100$ a seřízení se
+  „rozpustí“ (oddíl .reference:ch-resice-ilp-sila-formulace). "(nad rámec přednášky)".emphasize Těsnější
+  $M_t=\min(100,\ d_t+\dots+d_m)$, tj. $x_4\le30\,y_4$, zvedne mez na 7 100 Kč a celočíselná řešení nezmění.
+
+
+.Warning:
+  title: 'Typické chyby (8.5)'
+
+  .itemize:
+
+    .item:
+
+      Jen $x_t\ge d_t$ bez skladu – pak nejde vyrábět dopředu a model nezná skladné.
+
+    .item:
+
+      Seřízení bez vazby na výrobu: $3000\,y_t$ v účelu, ale chybí $x_t\le100\,y_t$ – řešič nastaví všechna $y_t=0$.
+
+    .item:
+
+      Podmínka „$y_t=1$, když $x_t>0$“ zapsaná nelineárně ($y_t=\min(1,x_t)$, $x_t\cdot(1-y_t)=0$).
+
+    .item:
+
+      Zapomenutá počáteční podmínka $s_0=0$.

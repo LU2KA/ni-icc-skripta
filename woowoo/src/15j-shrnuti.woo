@@ -1,0 +1,117 @@
+.Section Shrnutí kapitoly
+  label: ch-resice-ilp-shrnuti-kapitoly
+
+
+.Remark:
+  title: 'Co si odnést'
+
+  .enumerate:
+
+    .item:
+
+      "Modelování je řemeslo.".notion Rozhodnutí $\to$ proměnné $\to$ podmínky $\to$ cíl $\to$ kontrola na malé
+      instanci. Logika, big-M, min-max a „buď, anebo“ jdou zapsat lineárně (tabulka v oddíle
+      .reference:ch-resice-ilp-modelovaci-triky); podmínek smí být i exponenciálně mnoho (zákaz podcyklů u TSP).
+
+    .item:
+
+      "Mez je všechno.".notion LP relaxace je v $\PP$ a dává mez na optimum (pro max horní, pro min dolní). Přes
+      dualitu je mez "certifikovaná".emphasize: kombinace omezení s koeficienty $y\ge0$ dokazuje, že lépe to nejde.
+      Integrality gap měří, jak moc relaxace „podvádí“.
+
+    .item:
+
+      "Formulace rozhoduje.".notion Dvě správné formulace se stejnými celočíselnými řešeními mohou mít velmi různou
+      relaxaci: co nejtěsnější $M$, silné vazby $x_{ij}\le y_j$ (sklady: mez 520 vs. 260), řezy navíc. Silnější
+      relaxace ušetří řešiči práci; s TU maticí (párování, toky) je LP rovnou celočíselné.
+
+    .item:
+
+      "Řešič".notion: branch & bound prořezává mezí, řezy a separace ji zpřesňují, gap $=0$ je důkaz optimality.
+      Branch & cut přidává nerovnice na vyžádání (řezy navíc i líná omezení), column generation proměnné. Pokrok
+      algoritmů přinesl víc než pokrok hardwaru.
+
+    .item:
+
+      "Na test".notion (úloha 3, formulace jako ILP): proměnné s oborem a významem, omezení po skupinách s větou,
+      co zajišťují, účelová funkce, velikost programu a zdůvodnění, proč optimum ILP je optimum úlohy (postup
+      v oddíle .reference:ch-resice-ilp-cviceni-8). Typické vzory: výběr / přiřazení ($\sum=1$), konflikt
+      ($x_u+x_v\le1$), použitý zdroj ($x\le y$, kapacita $\sum a_ix_i\le K y$), fixní náklad, min-max.
+
+
+.Table:
+  label: ch-resice-ilp-tab-shrnuti
+
+  .table:
+    columns: 'p{4.2cm}p{9cm}'
+
+    .row:
+      head: true
+
+      pojem
+
+      jednou větou
+
+    .row:
+
+      LP relaxace
+
+      totéž ILP s reálnými proměnnými; v $\PP$, dává mez na OPT
+
+    .row:
+
+      slabá dualita
+
+      $c^Tx\le b^Ty$ pro přípustná $x$ (primál, max) a $y$ (duál, min)
+
+    .row:
+
+      integrality gap
+
+      $\sup_I \mathrm{OPT}(I)/\mathrm{OPT}_{LP}(I)$ (min) – vlastnost formulace
+
+    .row:
+
+      big-M
+
+      $f(x)\le b+M(1-y)$; $M$ horní odhad $f(x)-b$, co nejmenší
+
+    .row:
+
+      branch & bound
+
+      větvení $x_j\le\lfloor x_j^*\rfloor$ / $x_j\ge\lceil x_j^*\rceil$, prořez při $b\le z$ (max)
+
+    .row:
+
+      gap
+
+      $(B-z)/|z|$; $0$ = dokázané optimum
+
+    .row:
+
+      řez
+
+      nerovnost platná pro všechna celočíselná řešení, která odřízne $x^*$
+
+    .row:
+
+      separační orákulum
+
+      k $x^*$ najde porušenou platnou nerovnost, nebo řekne „žádná“
+
+    .row:
+
+      líné omezení
+
+      součást modelu přidávaná až při porušení (podcykly TSP)
+
+    .row:
+
+      column generation
+
+      proměnné (sloupce) přidávané podle duálních cen (crew pairing)
+
+  .caption:
+
+    Pojmy kapitoly v kostce.

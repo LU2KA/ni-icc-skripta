@@ -1,0 +1,62 @@
+.Section Třídy $\PP$ a $\EXP$
+  label: ch-cas-tridy-p-a-exp
+  pdf_string: 'Třídy P a EXP'
+
+
+.Definition:
+  title: 'Třídy časové složitosti'
+  label: def-tridy
+
+  .itemize:
+
+    .item:
+
+      $\DTIME(f)$ je třída jazyků rozhodnutelných (deterministickým TS) v čase $O(f(n))$.
+
+    .item:
+
+      $\displaystyle \PP = \bigcup_{d=1}^{\infty}\DTIME(n^d) \quad$ – deterministický polynomiální čas,
+
+    .item:
+
+      $\displaystyle \EXP = \bigcup_{d=1}^{\infty}\DTIME\bigl(2^{n^d}\bigr) \quad$ – exponenciální čas.
+
+
+.Figure:
+  label: fig-cas-p-v-exp
+
+  !tikz:
+    filename: 03c-tridy-p-a-exp-01
+
+    \fill[defc!6,draw=defc,thick,rounded corners=10pt] (-4.4,-1.5) rectangle (4.4,1.9);
+    \node[font=\sffamily\bfseries,defc,anchor=north east] at (4.3,1.85) {$\EXP=\bigcup_d\DTIME(2^{n^d})$};
+    \fill[exc!12,draw=exc,thick] (-1.6,0) ellipse (2.4 and 1.2);
+    \node[font=\sffamily\bfseries,exc!70!black] at (-1.6,0.55) {$\PP=\bigcup_d\DTIME(n^d)$};
+    \node[font=\scriptsize,align=center] at (-1.6,-0.35) {souvislost grafu,\\ nejkratší cesty, $a^nb^n$, \dots};
+    \node[font=\scriptsize,align=center] at (2.4,-0.3) {TSP (hrubá síla),\\ zobecněné šachy, \dots};
+
+  .caption:
+
+    $\PP\subsetneq\EXP$ (důsledek věty o časové hierarchii, věta .reference:thm-hierarchie).
+
+
+.Concept:
+  title: 'Proč právě polynomiální čas?'
+
+  .itemize:
+
+    .item:
+
+      "Robustnost vůči modelu:".notion TS, RAM i program v C++ se navzájem simulují
+      s nejvýše polynomiálním zpomalením $\Rightarrow$ třída $\PP$ nezávisí na tom, na čem počítáme.
+
+    .item:
+
+      "Skládání:".notion složení polynomiálních algoritmů je polynomiální
+      ($p(q(n))$ je polynom), smíme je tedy volat jako podprocedury.
+
+
+.Warning:
+  title: 'Pozor'
+
+  „Efektivní“ $\neq$ „rychlý v praxi“ – i $n^{100}$ je polynom!

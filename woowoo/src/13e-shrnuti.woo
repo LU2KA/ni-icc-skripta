@@ -1,0 +1,33 @@
+.Section Shrnutí kapitoly
+  label: ch-pspace-shrnuti
+
+
+.Remark:
+  title: 'Co si odnést'
+
+  .itemize:
+
+    .item:
+
+      $\PSPACE$-úplnost s polynomiálními (v čase) redukcemi. $\prob{TQBF}$ je $\PSPACE$-úplný: vyhodnocení stromem v
+      lineárním prostoru; těžkost přes savitchovský rozklad, kde trik „$\exists C_{\mathrm{mid}}\forall A\forall B$“
+      zabrání zdvojování formule (velikost $O(S^2(n))$).
+
+    .item:
+
+      QBF = hra dvou hráčů; vítězná strategie je exponenciální „certifikát“ – proto věříme $\NP\subsetneq\PSPACE$.
+
+    .item:
+
+      Hry: 1 hráč bez cyklení $\to$ $\NP$; vratné tahy nebo 2 hráči s omezenou délkou $\to$ $\PSPACE$; 2 hráči s
+      exponenciálně dlouhou hrou $\to$ $\EXP$.
+
+    .item:
+
+      $\prob{Generalized Geography}$: $\in\PSPACE$ rekurzí $\mathrm{Win}$; $\prob{TQBF}\redp\prob{GG}$ diamanty (volba
+      hodnoty, hráči se střídají sami), Bob volí klauzuli, Alice literál, hrana pro pravdivý literál vede do
+      nenavštívené strany.
+
+    .item:
+
+      Neorientovaná geografie (vrcholy) je v $\PP$: rozhoduje, zda $\nu(G-s)<\nu(G)$.

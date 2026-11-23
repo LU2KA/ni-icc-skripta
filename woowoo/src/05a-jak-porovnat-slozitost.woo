@@ -1,0 +1,213 @@
+.Section Jak porovnat složitost dvou problémů
+  label: ch-redukce-jak-porovnat-slozitost-dvou-problemu
+
+
+Víme, že $\PP\subseteq\NP$, ale nevíme, zda platí rovnost.
+
+
+.Concept:
+  title: 'Cíl kapitoly'
+
+  Když neumíme o problému dokázat, že je "absolutně".emphasize těžký, dokážeme aspoň, že je
+  "relativně".emphasize těžký: „problém $Q$ je alespoň tak těžký jako problém $L$“. A pak najdeme
+  problémy, které jsou ty "vůbec nejtěžší".emphasize v celé třídě $\NP$.
+
+
+"Idea:".notion pokud instanci problému $L$ umíme efektivně „překlopit“ na instanci problému
+$Q$ se stejnou odpovědí, pak kdo umí řešit $Q$, umí řešit i $L$.
+
+
+.Definition:
+  title: 'Polynomiální (Karpova, many-one) redukce'
+  label: def-redukce
+
+  Buďte $L,Q\subseteq\Sigma^*$ jazyky. "Polynomiální redukce".notion z $L$ do $Q$ je funkce
+  $f\colon\Sigma^*\to\Sigma^*$, která
+
+  .enumerate:
+
+    .item:
+
+      je počítatelná v polynomiálním čase (deterministickým TS),
+
+    .item:
+
+      pro každé $x\in\Sigma^*$ splňuje $\quad x\in L \iff f(x)\in Q$.
+
+  Značíme $L\redp Q$ a čteme „$L$ se polynomiálně redukuje na $Q$“.
+
+
+.Figure:
+  label: fig-redukce
+
+  !tikz:
+    filename: 05a-jak-porovnat-slozitost-01
+    options: 'node distance=5mm and 9mm'
+
+    \node[blok] (x) {instance $x$\\ problému $L$};
+    \node[blokd,right=of x] (f) {redukce $f$\\ \footnotesize(polynomiální)};
+    \node[blok,right=of f] (fx) {instance $f(x)$\\ problému $Q$};
+    \node[draw,thick,fill=black!80,text=white,rounded corners=2pt,align=center,font=\sffamily\small,
+          right=of fx,minimum height=12mm] (alg) {algoritmus\\ pro $Q$};
+    \node[bloka,right=9mm of alg,yshift=5mm] (y) {ANO};
+    \node[blokr,right=9mm of alg,yshift=-5mm] (n) {NE};
+    \draw[flow] (x)--(f); \draw[flow] (f)--(fx); \draw[flow] (fx)--(alg);
+    \draw[flow] (alg.east)--(y.west); \draw[flow] (alg.east)--(n.west);
+    \begin{scope}[on background layer]
+      \node[draw=intc,dashed,very thick,rounded corners=6pt,fill=intc!6,inner sep=7pt,
+            fit=(f)(fx)(alg)(y)(n),label={[font=\small\sffamily\bfseries,intc]above:algoritmus pro $L$}] {};
+    \end{scope}
+
+  .caption:
+
+    Redukce jako „adaptér“: algoritmus pro $Q$ spolu s převodem $f$ tvoří algoritmus pro $L$.
+
+
+.Figure:
+  label: fig-redukce-ano-ne-instance
+
+  !tikz:
+    filename: 05a-jak-porovnat-slozitost-02
+
+    \begin{scope}
+      \draw[thick,fill=black!3,rounded corners=8pt] (-2.4,-1.6) rectangle (2.4,1.6);
+      \node[font=\small\sffamily\bfseries,anchor=north west] at (-2.35,1.55) {$\Sigma^*$};
+      \fill[acc!15,draw=acc,thick] (-0.5,0.1) ellipse (1.4 and 0.9);
+      \node[font=\small\bfseries,acc!70!black] at (-0.5,0.75) {$L$};
+      \fill (-1.0,0.0) circle (1.6pt) coordinate (ly1);  \fill (0.1,-0.2) circle (1.6pt) coordinate (ly2);
+      \fill (1.6,0.9) circle (1.6pt) coordinate (ln1);  \fill (1.7,-1.0) circle (1.6pt) coordinate (ln2);
+      \fill (-1.6,-1.2) circle (1.6pt) coordinate (ln3);
+    \end{scope}
+    \begin{scope}[xshift=7.5cm]
+      \draw[thick,fill=black!3,rounded corners=8pt] (-2.4,-1.6) rectangle (2.4,1.6);
+      \node[font=\small\sffamily\bfseries,anchor=north west] at (-2.35,1.55) {$\Sigma^*$};
+      \fill[acc!15,draw=acc,thick] (0.3,0.2) ellipse (1.5 and 0.9);
+      \node[font=\small\bfseries,acc!70!black] at (0.3,0.85) {$Q$};
+      \fill (-0.5,0.1) circle (1.6pt) coordinate (qy1);  \fill (0.6,0.0) circle (1.6pt) coordinate (qy2);
+      \fill (-1.6,-1.0) circle (1.6pt) coordinate (qn1);  \fill (1.5,-1.2) circle (1.6pt) coordinate (qn2);
+    \end{scope}
+    \draw[->,thick,acc!70!black] (ly1) to[bend left=25] (qy1);
+    \draw[->,thick,acc!70!black] (ly2) to[bend left=15] (qy2);
+    \draw[->,thick,rej] (ln1) to[bend left=10] (qn1);
+    \draw[->,thick,rej] (ln2) to[bend right=15] (qn1);
+    \draw[->,thick,rej] (ln3) to[bend right=25] (qn2);
+    \node[font=\small,align=center] at (3.75,1.9) {$f$};
+
+  .caption:
+
+    Redukce posílá ANO-instance na ANO-instance a NE-instance na NE-instance. Nemusí
+    být prostá ani na: $f$ nemusí „zasáhnout“ všechny instance $Q$.
+
+
+.Warning:
+  title: 'Směr redukce'
+
+  $L\redp Q$ znamená „$Q$ je "alespoň tak těžký".emphasize jako $L$“. Chceme-li dokázat, že nový
+  problém $Q$ je těžký, redukujeme "ze známého těžkého problému na $Q$".emphasize, nikdy obráceně.
+  Redukce $Q\redp\prob{SAT}$ by jen ukázala, že $Q$ není těžší než $\prob{SAT}$.
+
+
+.Subsection Vlastnosti polynomiálních redukcí
+  label: ch-redukce-vlastnosti-polynomialnich-redukci
+
+
+.Lemma:
+  title: 'Základní vlastnosti redukcí'
+  label: lem-redvlast
+
+  Buďte $L,Q,R\subseteq\Sigma^*$ jazyky. Pak platí:
+
+  .enumerate:
+
+    .item:
+
+      "Tranzitivita:".notion pokud $L\redp Q$ a $Q\redp R$, pak $L\redp R$.
+
+    .item:
+
+      "Přenos řešitelnosti:".notion pokud $L\redp Q$ a $Q\in\PP$, pak $L\in\PP$.
+
+    .item:
+
+      "Přenos neřešitelnosti:".notion pokud $L\redp Q$ a $L\notin\PP$, pak $Q\notin\PP$.
+
+
+.Figure:
+  label: fig-redukce-tranzitivita
+
+  !tikz:
+    filename: 05a-jak-porovnat-slozitost-03
+
+    \node[blokd,minimum width=14mm] (L) {$L$};
+    \node[blokd,minimum width=14mm,right=30mm of L] (Q) {$Q$};
+    \node[blokd,minimum width=14mm,right=30mm of Q] (R) {$R$};
+    \draw[flow] (L) -- node[above,font=\small]{$f$} node[below,font=\scriptsize]{čas $p(n)$} (Q);
+    \draw[flow] (Q) -- node[above,font=\small]{$g$} node[below,font=\scriptsize]{čas $q(m)$} (R);
+    \draw[flow,thmc,very thick] (L.south) to[bend right=22]
+       node[below,font=\small,align=center,text=thmc]{$g\circ f$: čas $p(n)+q\bigl(p(n)\bigr)$,\\ neboť $|f(x)|\le p(n)$} (R.south);
+
+  .caption:
+
+    Tranzitivita: redukce se skládají. Klíčové je, že výstup polynomiálního stroje má
+    nejvýše polynomiální délku – stroj nestihne napsat víc symbolů, než kolik udělá kroků.
+
+
+.Proof:
+
+  (1) Je-li $f$ redukce $L\redp Q$ v čase $p(n)$ a $g$ redukce $Q\redp R$ v čase $q(m)$, pak
+  $x\in L\iff f(x)\in Q\iff g(f(x))\in R$. Výpočet $g(f(x))$ trvá $p(n)$ kroků na $f(x)$ a
+  protože $|f(x)|\le p(n)$, dalších nejvýše $q(p(n))$ kroků – polynom.
+
+
+  (2) Algoritmus pro $L$: na vstupu $x$ spočti $f(x)$ a spusť na něm polynomiální algoritmus pro
+  $Q$ (obr. .reference:fig-redukce). Čas $p(n)+r(p(n))$, kde $r$ je čas algoritmu pro $Q$.
+
+
+  (3) Je obměnou bodu (2).
+
+
+.Remark:
+  title: 'Uvnitř $\PP$ je redukce příliš hrubá'
+
+  Všechny netriviální problémy v $\PP$ jsou na sebe navzájem polynomiálně redukovatelné. Je-li
+  $L\in\PP$ a $Q$ netriviální (má nějakou ANO-instanci $y_1$ a nějakou NE-instanci $y_0$), pak
+  redukce $f$ může $x$ "rovnou vyřešit".emphasize a vypsat $y_1$ nebo $y_0$. Pro jemnější porovnávání
+  uvnitř $\PP$ bychom potřebovali slabší redukce (např. v logaritmickém prostoru). Viz obr. .reference:fig-redukce-uvnitr-p.
+
+
+.Figure:
+  label: fig-redukce-uvnitr-p
+
+  !tikz:
+    filename: 05a-jak-porovnat-slozitost-04
+
+    \begin{scope}
+      \draw[thick,fill=black!3,rounded corners=8pt] (-2.4,-1.6) rectangle (2.4,1.6);
+      \node[font=\small\sffamily\bfseries,anchor=north west] at (-2.35,1.55) {$\Sigma^*$};
+      \fill[acc!15,draw=acc,thick] (-0.5,0.1) ellipse (1.4 and 0.9);
+      \node[font=\small\bfseries,acc!70!black] at (-0.5,0.75) {$L\in\PP$};
+      \fill (-1.2,0.0) circle (1.6pt) coordinate (ly1);  \fill (-0.4,-0.35) circle (1.6pt) coordinate (ly2);
+      \fill (0.3,0.15) circle (1.6pt) coordinate (ly3);
+      \fill (1.6,0.9) circle (1.6pt) coordinate (ln1);  \fill (1.7,-1.0) circle (1.6pt) coordinate (ln2);
+      \fill (-1.6,-1.2) circle (1.6pt) coordinate (ln3);
+    \end{scope}
+    \begin{scope}[xshift=7.5cm]
+      \draw[thick,fill=black!3,rounded corners=8pt] (-2.4,-1.6) rectangle (2.4,1.6);
+      \node[font=\small\sffamily\bfseries,anchor=north west] at (-2.35,1.55) {$\Sigma^*$};
+      \fill[acc!15,draw=acc,thick] (0.3,0.2) ellipse (1.5 and 0.9);
+      \node[font=\small\bfseries,acc!70!black] at (0.3,0.85) {$Q$};
+      \fill (-0.2,0.0) circle (2.2pt) coordinate (y1);
+      \node[font=\small,anchor=west] at (-0.1,0.0) {$y_1$};
+      \fill (-1.0,-1.15) circle (2.2pt) coordinate (y0);
+      \node[font=\small,anchor=west] at (-0.9,-1.15) {$y_0$};
+      \fill[black!35] (1.2,0.3) circle (1.6pt) (0.9,-0.25) circle (1.6pt) (1.7,-1.1) circle (1.6pt) (-1.8,0.9) circle (1.6pt);
+    \end{scope}
+    \foreach \p/\b in {ly1/22,ly2/12,ly3/6} {\draw[->,thick,acc!70!black] (\p) to[bend left=\b] (y1);}
+    \foreach \p/\b in {ln1/-6,ln2/-8,ln3/-6} {\draw[->,thick,rej] (\p) to[bend left=\b] (y0);}
+    \node[font=\small,align=center] at (3.75,2.1) {$f$: vyřeš $x$ v polynomiálním čase,\\ pak vypiš $y_1$ (ANO) nebo $y_0$ (NE)};
+
+  .caption:
+
+    Redukce z $L\in\PP$ na libovolný netriviální $Q$ nic „nepřekládá“: všechny ANO-instance pošle na jednu pevnou
+    ANO-instanci $y_1$, všechny NE-instance na pevnou NE-instanci $y_0$. "Všimni si:".emphasize šedé instance $Q$
+    redukce vůbec nepoužije – o obtížnosti $Q$ takové $L\redp Q$ nic neříká.

@@ -1,0 +1,523 @@
+.Section Číselné problémy
+  label: ch-cisla-ciselne-problemy
+
+
+Doposud byla čísla v instancích jen „nálepky“ (indexy, prahy $k$). Nyní se samotná "velikost".emphasize čísel
+stane překážkou.
+
+
+.Definition:
+  title: 'Problém $\prob{Subset Sum}$ (součet podmnožiny)'
+  label: prob-subsetsum
+
+  "Vstup:".notion kladná celá čísla $a_1,\dots,a_n$ a cíl $T$.
+
+
+  "Otázka:".notion existuje $I\subseteq\{1,\dots,n\}$ taková, že $\sum_{i\in I}a_i=T$?
+
+
+.Definition:
+  title: 'Problém $\prob{Partition}$ (dva loupežníci)'
+  label: prob-partition
+
+  "Vstup:".notion kladná celá čísla $a_1,\dots,a_n$.
+
+
+  "Otázka:".notion lze je rozdělit na dvě skupiny se stejným součtem?
+
+
+Obojí je v $\NP$: certifikátem je vybraná podmnožina, součet spočítáme.
+
+
+.Subsection $\prob{1-in-3 SAT}\redp\prob{Subset Sum}$
+  label: ch-cisla-1-in-3-sat-subset-sum
+  pdf_string: '1-in-3 SAT ≤p Subset Sum'
+
+
+.Remark:
+  title: 'Redukce: $\prob{1-in-3 SAT} \redp \prob{Subset Sum}$'
+  label: red-subsetsum
+
+  formule $\Phi$ $\;\longmapsto\;$ čísla $v_i,\bar v_i$ a cíl $T$
+
+
+Připomenutí (kapitola .reference:ch-x3c): v 1-in-3 SAT musí být v každé klauzuli "přesně jeden".emphasize literál pravdivý.
+To zní jako sčítání, kde cíl je~1!
+
+
+"Konstrukce.".notion Čísla chápeme jako vektory číslic v soustavě o "základu 4".notion; jedna číslice pro každou
+proměnnou a jedna pro každou klauzuli (celkem $n+m$ číslic).
+
+.itemize:
+
+  .item:
+
+    Pro každou proměnnou $x_i$ dvě čísla: $v_i$ ($x_i=\mathrm{TRUE}$) a $\bar v_i$ ($x_i=\mathrm{FALSE}$).
+    Obě mají 1 v číslici proměnné $x_i$; $v_i$ má navíc 1 v číslicích klauzulí obsahujících literál $x_i$,
+    $\bar v_i$ v číslicích klauzulí s literálem $\lnot x_i$.
+
+  .item:
+
+    Cíl $T$: samé jedničky, $T=11\ldots1_4$.
+
+"Proč základ 4?".notion V číslici proměnné sčítáme nejvýš 2 jedničky, v číslici klauzule nejvýš 3. Součet tedy
+nikdy nepřeteče do vyššího řádu – "číslice se sčítají nezávisle".emphasize.
+
+
+.Example:
+  title: '$\Phi=(x_1\lor\lnot x_2\lor x_3)\land(\lnot x_1\lor x_2\lor x_3)$'
+  label: ex-ssex
+
+  $n=3$, $m=2$, čísla mají $n+m=5$ číslic v základu~4.
+
+  .table:
+    columns: 'lccccc'
+
+    .row:
+      head: true
+
+      Číslo
+
+      $x_1$
+
+      $x_2$
+
+      $x_3$
+
+      $C_1$
+
+      $C_2$
+
+    .row:
+
+      $v_1$ ($x_1=T$)
+
+      1
+
+      0
+
+      0
+
+      1
+
+      0
+
+    .row:
+
+      $\bar v_1$ ($x_1=F$)
+
+      1
+
+      0
+
+      0
+
+      0
+
+      1
+
+    .row:
+
+      $v_2$ ($x_2=T$)
+
+      0
+
+      1
+
+      0
+
+      0
+
+      1
+
+    .row:
+
+      $\bar v_2$ ($x_2=F$)
+
+      0
+
+      1
+
+      0
+
+      1
+
+      0
+
+    .row:
+
+      $v_3$ ($x_3=T$)
+
+      0
+
+      0
+
+      1
+
+      1
+
+      1
+
+    .row:
+
+      $\bar v_3$ ($x_3=F$)
+
+      0
+
+      0
+
+      1
+
+      0
+
+      0
+
+    .row:
+
+      cíl $T$
+
+      1
+
+      1
+
+      1
+
+      1
+
+      1
+
+  Např. $x_1=T$, $x_2=T$, $x_3=F$: $v_1+v_2+\bar v_3=11111_4=T$ $\checkmark$ (v každé klauzuli právě jeden
+  pravdivý literál: v $C_1$ jen $x_1$, v $C_2$ jen $x_2$).
+
+
+(Na slajdu se pruhy nad $\bar v_i$ ztratily – v příkladu je správně $v_1+v_2+\bar v_3$.)
+
+
+.Proof:
+  title: 'Korektnost'
+
+  Díky základu 4 je součet vybraných čísel roven $T$ právě tehdy, když každá číslice dá součet~1.
+
+
+  ($\Rightarrow$) Z ohodnocení vybereme $v_i$ pro $x_i=T$ a $\bar v_i$ pro $x_i=F$. Číslice proměnných: z každé
+  dvojice přesně jedno číslo $\Rightarrow$ součet 1. Číslice klauzulí: jedničku přispějí přesně pravdivé literály,
+  takový je v každé klauzuli právě jeden $\Rightarrow$ součet 1.
+
+
+  ($\Leftarrow$) Číslice proměnné $x_i$ má součet 1 $\Rightarrow$ vybráno přesně jedno z $v_i,\bar v_i$
+  $\Rightarrow$ ohodnocení. Číslice klauzule $C_j$ má součet 1 $\Rightarrow$ v $C_j$ je přesně jeden pravdivý literál.
+
+
+"Velikost.".notion Máme $2n$ čísel a cíl; každé má $n+m$ číslic v základu 4. "Hodnota".emphasize čísla je až
+zhruba $4^{n+m}$ – exponenciálně velká! Ale "zápis".emphasize zabere jen $\log_2 4^{n+m}=2(n+m)$ bitů. Celá instance
+má $O(n(n+m))$ bitů, redukce je polynomiální a $\prob{Subset Sum}$ je NP-úplný.
+
+
+.Warning:
+  title: 'Pozor'
+
+  Hodnoty čísel jsou exponenciální, ale jejich zápis je krátký. Tohle si zapamatujte – celý zbytek kapitoly se
+  točí kolem rozdílu mezi "hodnotou".emphasize čísla a "délkou jeho zápisu".emphasize.
+
+
+.Subsection $\prob{Subset Sum}\redp\prob{Partition}$
+  label: ch-cisla-subset-sum-partition
+  pdf_string: 'Subset Sum ≤p Partition'
+
+
+.Remark:
+  title: 'Redukce: $\prob{Subset Sum} \redp \prob{Partition}$'
+  label: red-partition
+
+  $(a_1,\dots,a_n;\ T)$ $\;\longmapsto\;$ $(a_1,\dots,a_n,\ x,\ y)$
+
+
+Nechť $S=\sum_i a_i$; bez újmy na obecnosti $T\le S$ (jinak je odpověď triviálně NE a vydáme pevnou NE-instanci).
+Přidáme dvě „vyrovnávací“ čísla
+
+.equation:
+
+  x=2S-T,\qquad y=S+T.
+
+Nový celkový součet je $S+(2S-T)+(S+T)=4S$, každý loupežník tedy musí dostat přesně $2S$.
+
+
+.Figure:
+  label: ch-cisla-fig-vyrovnavaci-cisla
+
+  !tikz:
+    filename: 11d-ciselne-problemy-01
+    options: 'x=1cm,y=0.42cm'
+
+    \fill[defc!25,draw=defc,thick] (0,0) rectangle (1.2,6);
+    \fill[acc!30,draw=acc!80!black,thick] (0,6) rectangle (1.2,8);
+    \node[font=\small] at (0.6,3) {$x$}; \node[font=\small] at (0.6,7) {$T$};
+    \node[font=\scriptsize,below] at (0.6,0) {loupežník 1};
+    \fill[intc!30,draw=intc,thick] (3,0) rectangle (4.2,6);
+    \fill[black!10,draw=black!60,thick] (3,6) rectangle (4.2,8);
+    \node[font=\small] at (3.6,3) {$y$}; \node[font=\small] at (3.6,7) {$S-T$};
+    \node[font=\scriptsize,below] at (3.6,0) {loupežník 2};
+    \draw[dashed,gr] (-0.4,8)--(4.6,8) node[right,font=\scriptsize]{$2S$};
+    \node[font=\scriptsize,anchor=west,align=left] at (5.6,5) {$(2S-T)+T=2S$\\[3pt] $(S+T)+(S-T)=2S$};
+
+  .caption:
+
+    Vyrovnávací čísla: $x$ doplní podmnožinu se součtem $T$ na $2S$, $y$ doplní zbytek na $2S$.
+
+
+.Proof:
+  title: 'Korektnost'
+
+  ($\Rightarrow$) Má-li podmnožina $I$ součet $T$, dáme jednomu loupežníkovi $x$ a čísla z $I$
+  ($(2S-T)+T=2S$), druhému $y$ a zbytek ($(S+T)+(S-T)=2S$).
+
+
+  ($\Leftarrow$) Mějme rozdělení na dvě poloviny se součtem $2S$. Protože $x+y=3S>2S$, jsou $x$ a $y$ u různých
+  loupežníků. Loupežník s číslem $x$ musí z původních čísel dosbírat přesně $2S-x=T$ – to je hledaná podmnožina.
+
+
+  Čísla zůstávají zapsaná binárně a narostou jen o konstantní počet bitů, redukce je polynomiální.
+
+
+.Subsection $\prob{Subset Sum}\redp\prob{Knapsack}$
+  label: ch-cisla-subset-sum-knapsack
+  pdf_string: 'Subset Sum ≤p Knapsack'
+
+
+.Definition:
+  title: 'Problém $\prob{Knapsack}$ (problém batohu)'
+  label: prob-knapsack
+
+  "Vstup:".notion předměty s váhami $w_1,\dots,w_n$ a cenami $c_1,\dots,c_n$, nosnost $W$ a cílová cena $C$.
+
+
+  "Otázka:".notion lze vybrat předměty s celkovou váhou $\le W$ a celkovou cenou $\ge C$?
+
+
+.Remark:
+  title: 'Redukce: $\prob{Subset Sum} \redp \prob{Knapsack}$'
+  label: red-knapsack
+
+  $(a_1,\dots,a_n;\ T)$ $\;\longmapsto\;$ $w_i=c_i=a_i$, $W=C=T$
+
+
+Každé číslo $a_i$ se stane předmětem s váhou "i".emphasize cenou $a_i$. Výběr s váhou $\le T$ a cenou $\ge T$ má součet
+přesně $T$. Batoh lze naplnit $\iff$ existuje podmnožina se součtem $T$.
+$\prob{Subset Sum}$ je speciální případ $\prob{Knapsack}$u – "zobecnění těžkého problému je těžké".emphasize.
+
+
+.Subsection Dynamické programování pro Subset Sum
+  label: ch-cisla-dp-subset-sum
+
+
+.Theorem:
+  title: 'Pseudopolynomiální algoritmus'
+  label: thm-ssdp
+
+  $\prob{Subset Sum}$ lze rozhodnout v čase $O(n\cdot T)$.
+
+
+.Proof:
+
+  $\mathrm{DP}[i,w]=\mathrm{TRUE}\iff$ z prvních $i$ čísel lze poskládat přesně součet $w$.
+  Základ: $\mathrm{DP}[0,0]=\mathrm{TRUE}$, ostatní $\mathrm{DP}[0,w]=\mathrm{FALSE}$. Krok: číslo $a_i$ buď nepoužijeme,
+  nebo použijeme:
+
+  .equation:
+
+    \mathrm{DP}[i,w]=\mathrm{DP}[i-1,w]\ \lor\ \mathrm{DP}[i-1,w-a_i]\qquad(\text{druhá možnost jen pro } w\ge a_i).
+
+  Tabulka má $(n+1)\times(T+1)$ políček, každé spočítáme v $O(1)$.
+
+
+.Figure:
+  label: ch-cisla-fig-dp-subset-sum
+
+  !tikz:
+    filename: 11d-ciselne-problemy-02
+    options: 'x=0.8cm,y=0.65cm'
+
+    \foreach \w in {0,...,8} \node[font=\scriptsize] at (\w+0.5,0.6) {\w};
+    \node[font=\scriptsize] at (9.6,0.6) {$w$};
+    \foreach \r/\lab/\set in {0/{$i=0$}/{0}, 1/{$+2$}/{0,2}, 2/{$+3$}/{0,2,3,5}, 3/{$+5$}/{0,2,3,5,7,8}} {
+      \node[font=\scriptsize,anchor=east] at (-0.1,-\r-0.5) {\lab};
+      \foreach \w in {0,...,8} \draw[black!40] (\w,-\r) rectangle (\w+1,-\r-1);
+      \foreach \w in \set \fill[acc!45,draw=black!40] (\w,-\r) rectangle (\w+1,-\r-1);
+    }
+    \draw[->,thick,thmc] (8.5,-2.5)--(8.5,-3.5);
+    \draw[->,thick,thmc] (3.5,-2.5) to[out=-20,in=160] (8.3,-3.5);
+    \node[draw=thmc,very thick,inner sep=0pt,minimum width=0.8cm,minimum height=0.65cm] at (8.5,-3.5) {};
+
+  .caption:
+
+    DP pro čísla $2,3,5$ a cíl $T=8$ (zeleně TRUE). $\mathrm{DP}[3,8]=\mathrm{DP}[2,8]\lor\mathrm{DP}[2,3]=\mathrm{TRUE}$,
+    tedy $3+5=8$.
+
+
+.Warning:
+  title: 'Otázka za milion dolarů (doslova)'
+
+  Čas $O(n\cdot T)$ je přece polynom. Dokázali jsme právě $\PP=\NP$? "Ne!".notion Čas algoritmu měříme vždy vůči
+  "délce zápisu vstupu v bitech".emphasize, ne vůči hodnotám čísel. $T=2^{20}$ zapíšeme binárně na 21 bitů, unárně
+  potřebujeme $\approx10^6$ čárek. Zabírá-li $T$ celkem $k$ bitů, je $T$ až $2^k$ a čas $O(n\cdot T)=O(n\cdot2^k)$
+  je vůči vstupu exponenciální. V naší redukci z 1-in-3 SAT mají čísla hodnotu až $4^{n+m}$, ale zápis jen
+  $2(n+m)$ bitů – redukce je polynomiální a DP zde nepomůže.
+
+
+.Definition:
+  title: 'Pseudopolynomiální algoritmus'
+  label: def-pseudopoly
+
+  Algoritmus je "pseudopolynomiální".emphasize, pokud je jeho čas polynomiální vůči délce vstupu "a velikosti (hodnotě) čísel na vstupu".emphasize
+  – tedy polynomiální, kdyby byla čísla zapsaná unárně – ale může být exponenciální
+  vůči délce binárního zápisu.
+
+
+.Subsection Slabá vs. silná NP-úplnost
+  label: ch-cisla-slaba-vs-silna-np-uplnost
+
+
+.Definition:
+  title: 'Silně a slabě NP-těžký problém'
+  label: def-silne
+
+  Problém je "silně NP-těžký".emphasize, pokud zůstává NP-těžký, i když jsou všechna čísla na vstupu omezena polynomem
+  ve velikosti vstupu (ekvivalentně: i při "unárním".emphasize zápisu čísel).
+
+
+  Problém je "slabě NP-úplný".emphasize, je-li NP-úplný, ale má pseudopolynomiální algoritmus.
+
+
+.Figure:
+  label: ch-cisla-fig-slaba-silna
+
+  !tikz:
+    filename: 11d-ciselne-problemy-03
+    options: 'x=1cm,y=1cm'
+
+    \node[blok,draw=intc,fill=intc!10,text width=60mm,align=left,anchor=north] (w) at (0,0) {%
+      \textbf{Slabě NP-úplné}\\
+      {\scriptsize(pseudopolynomiální DP)}\\[2pt]
+      \prob{Subset Sum}, \prob{Partition}, \prob{Knapsack}\\[2pt]
+      \scriptsize Silně NP-těžké nejsou (pokud $\PP\neq\NP$):\\ pro malá čísla je DP polynomiální.};
+    \node[blok,draw=rej,fill=rej!7,text width=60mm,align=left,anchor=north] (s) at (7,0) {%
+      \textbf{Silně NP-úplné}\\[2pt]
+      \textit{bez čísel:} 3-SAT, 3-Coloring, HP\\
+      \textit{s čísly:} \prob{TSP} (už s vahami $\{1,2\}$),\\
+      \prob{ILP}, \prob{3-Partition}, \prob{Bin Packing}};
+
+  .caption:
+
+    Dvě tváře NP-úplnosti.
+
+
+.Definition:
+  title: 'Problém $\prob{3-Partition}$'
+  label: prob-3partition
+
+  "Vstup:".notion $3q$ kladných celých čísel se součtem $qB$, každé "ostře".emphasize mezi $B/4$ a $B/2$.
+
+
+  "Otázka:".notion lze čísla rozdělit na $q$ trojic, z nichž každá má součet přesně $B$?
+
+
+.Theorem:
+  title: 'Garey, Johnson 1975'
+  label: thm-3partsilne
+
+  $\prob{3-Partition}$ je silně NP-úplný – i s čísly zapsanými unárně. (Bez důkazu.)
+
+
+Rozdíl proti $\prob{Partition}$: tam jsou jen 2 skupiny, tady jich je $q$ a jejich počet roste se vstupem.
+$\prob{3-Partition}$ je typický zdroj redukcí na balení, rozvrhování a hlavolamy.
+
+
+.Subsection $\prob{3-Partition}\redp\prob{Bin Packing}$
+  label: ch-cisla-3-partition-bin-packing
+  pdf_string: '3-Partition ≤p Bin Packing'
+
+
+.Definition:
+  title: 'Problém $\prob{Bin Packing}$ (rozhodovací verze)'
+  label: prob-binpacking
+
+  "Vstup:".notion předměty velikostí $s_1,\dots,s_n$, kapacita koše $B$ a počet košů $q$.
+
+
+  "Otázka:".notion lze všechny předměty rozdělit do $q$ košů tak, aby žádný nepřetekl?
+
+
+.Remark:
+  title: 'Redukce: $\prob{3-Partition} \redp \prob{Bin Packing}$'
+  label: red-binpacking
+
+  $(a_1,\dots,a_{3q};\ B)$ $\;\longmapsto\;$ předměty $a_i$, kapacita $B$, $q$ košů
+
+
+Čísla se stanou předměty, kapacita $B$, $q$ košů. Součet je $qB$, takže každý koš je "přesně".emphasize plný;
+velikosti jsou ostře mezi $B/4$ a $B/2$, takže v každém koši jsou přesně 3 předměty (dva jsou málo, čtyři moc).
+Čísla se nezměnila – redukce zachová i unární zápis, $\prob{Bin Packing}$ je proto "silně".emphasize NP-těžký.
+
+
+.Figure:
+  label: ch-cisla-fig-bin-packing
+
+  !tikz:
+    filename: 11d-ciselne-problemy-04
+    options: 'x=1cm,y=0.2cm'
+
+    \foreach \b/\a/\bb/\c in {0/4/5/6, 1/4/4/7} {
+      \begin{scope}[xshift=\b*2.2cm]
+        \draw[very thick,black!70] (0,15.6)--(0,0)--(1.4,0)--(1.4,15.6);
+        \fill[defc!25,draw=defc] (0.08,0) rectangle (1.32,\a);
+        \fill[intc!30,draw=intc] (0.08,\a) rectangle (1.32,\a+\bb);
+        \fill[acc!30,draw=acc!80!black] (0.08,\a+\bb) rectangle (1.32,15);
+        \node[font=\scriptsize] at (0.7,\a/2) {\a};
+        \node[font=\scriptsize] at (0.7,\a+\bb/2) {\bb};
+        \node[font=\scriptsize] at (0.7,{(\a+\bb+15)/2}) {\c};
+      \end{scope}}
+    \draw[dashed,gr] (-0.3,15)--(3.9,15) node[right,font=\scriptsize]{$B=15$};
+    \node[font=\scriptsize,anchor=west,align=left] at (5.0,8) {čísla $4,5,6,4,4,7$, $q=2$;\\ každé ostře mezi $3{,}75$ a $7{,}5$\\ $\Rightarrow$ v koši přesně 3 předměty};
+
+  .caption:
+
+    3-Partition jako Bin Packing: každý koš je přesně plný a obsahuje trojici.
+
+
+.Warning:
+  title: 'Past: číselné hodnoty a velikost redukce'
+
+  "Typická chyba:".notion těžkost grafového problému $X$ „dokážu“ redukcí ze $\prob{Subset Sum}$u: pro každé číslo
+  $a_i$ vytvořím cestu o $a_i$ vrcholech… "Proč je to špatně?".notion Číslo $a_i$ zabírá na vstupu jen
+  $k=\log_2 a_i$ bitů, cesta má ale $a_i\approx 2^k$ vrcholů – redukce vyrobí exponenciálně velký výstup a
+  "není polynomiální".emphasize.
+
+
+  "Kdy je redukce z číselného problému v pořádku?".notion
+
+  .itemize:
+
+    .item:
+
+      Čísla zůstanou zapsaná binárně (jako u $\prob{Subset Sum}\redp\prob{Partition}$).
+
+    .item:
+
+      Potřebuji-li čísla převést na "strukturu".emphasize (vrcholy, políčka), redukuji ze "silně".emphasize těžkého
+      problému, např. z $\prob{3-Partition}$ – tam jsou čísla polynomiálně malá.
+
+
+.Concept:
+  title: 'Zlaté pravidlo pro praxi'
+
+  Až v praxi narazíte na NP-těžký problém s čísly, zeptejte se: „Je silně, nebo slabě těžký?“
+
+  .itemize:
+
+    .item:
+
+      "Slabě těžký".notion a čísla nejsou obří $\Rightarrow$ pseudopolynomiální DP vás pravděpodobně zachrání.
+
+    .item:
+
+      "Silně těžký".notion $\Rightarrow$ malá čísla nepomohou; sáhněte po ILP řešiči nebo jiném přístupu.

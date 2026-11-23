@@ -1,0 +1,84 @@
+.Section $\prob{IS}\redp\prob{Clique}$: doplněk grafu
+  label: ch-is-is-clique
+
+
+.Remark:
+  title: 'Redukce: $\prob{IS} \redp \prob{Clique}$'
+  label: red-clique
+
+  $(G,k)$ $\;\longmapsto\;$ $(\overline G,\ k)$
+
+
+.Definition:
+  title: 'Problém $\prob{Clique}$ (klika)'
+  label: prob-cliquer
+
+  "Vstup:".notion neorientovaný graf $G=(V,E)$ a číslo $k$.
+
+
+  "Otázka:".notion existuje v $G$ množina $k$ vrcholů, z nichž každé dva jsou spojeny hranou?
+
+
+.Lemma:
+  title: 'Doplněk grafu'
+  label: lem-doplnek
+
+  $S$ je nezávislá množina v $G$ $\iff$ $S$ je klika v doplňku $\overline G$ (vrcholy jsou v $\overline G$ spojeny
+  právě tehdy, když v $G$ spojeny nejsou).
+
+
+.Figure:
+  label: fig-is-doplnek-grafu
+
+  !tikz:
+    filename: 08e-clique-01
+
+    \begin{scope}
+      \foreach \n/\a/\s in {a/90/vsel,b/30/v,c/-30/vsel,d/-90/v,e/-150/vsel,f/150/v} {\node[\s] (\n) at (\a:1.3) {$\n$};}
+      \draw[e] (a)--(b)--(c)--(d)--(e)--(f)--(a) (b)--(e);
+      \node[font=\small\bfseries] at (0,-2.0) {$G$: IS $\{a,c,e\}$};
+    \end{scope}
+    \draw[->,very thick,intc] (2.1,0) -- node[above,font=\small]{doplněk} (3.6,0);
+    \begin{scope}[xshift=5.7cm]
+      \foreach \n/\a/\s in {a/90/vsel,b/30/v,c/-30/vsel,d/-90/v,e/-150/vsel,f/150/v} {\node[\s] (\n) at (\a:1.3) {$\n$};}
+      \draw[e] (a)--(d) (b)--(d) (b)--(f) (c)--(f) (d)--(f);
+      \draw[esel] (a)--(c)--(e)--(a);
+      \node[font=\small\bfseries] at (0,-2.0) {$\overline G$: klika $\{a,c,e\}$};
+    \end{scope}
+
+  .caption:
+
+    „Převrácení“ hran promění nezávislou množinu v kliku.
+
+
+.Corollary:
+  title: '$\prob{IS}\redp\prob{Clique}$'
+  label: cor-isclique
+
+  $(G,k)\mapsto(\overline G,k)$. Doplněk sestrojíme v čase $O(|V|^2)$, takže $\prob{Clique}$ je NP-úplný.
+
+
+.Remark:
+  title: 'Co si odnést'
+
+  .itemize:
+
+    .item:
+
+      $\prob{3-SAT}\redp\prob{IS}$: hrana za proměnnou, trojúhelník za klauzuli, konfliktní hrany mezi $\ell$ a $\neg\ell$; $k=n+m$.
+
+    .item:
+
+      Rigidita gadgetů: IS velikosti $n+m$ musí vzít "právě jeden".emphasize vrchol z každého gadgetu.
+
+    .item:
+
+      $S$ je nezávislá $\iff$ $V\setminus S$ je vrcholové pokrytí: $\prob{IS}\redp\prob{VC}$.
+
+    .item:
+
+      $\prob{VC}$ je speciální případ $\prob{Hitting Set}$u; zobecnění NP-těžkého problému je NP-těžké.
+
+    .item:
+
+      Nezávislá množina v $G$ = klika v doplňku $\overline G$: $\prob{IS}\redp\prob{Clique}$.

@@ -1,0 +1,26 @@
+% Makra a styly obrazku prilohy C (Ukazkovy test, soubory src/18*.woo); prefix chU
+\tikzset{
+  chUlit/.style={v,minimum size=8.5mm,font=\small},
+  chUin/.style={chUlit,fill=acc!25,draw=acc!80!black,very thick},
+  chUcl/.style={v,minimum size=7.5mm,font=\scriptsize,fill=defc!8,draw=defc!80!black},
+  chUa/.style={->,thick,draw=black!75,shorten >=1pt},
+  chUc/.style={->,semithick,draw=defc!45,shorten >=1pt},
+  chUcc/.style={->,semithick,draw=thmc!45,shorten >=1pt},
+  chUabs/.style={->,very thick,draw=acc!80!black,shorten >=1pt},
+}
+% \chUpair{x}{y}{jmeno}{popisek kladneho}{popisek zaporneho}{styl kladneho}{styl zaporneho}
+% promennovy gadget: dva vrcholy (jmeno)p a (jmeno)n spojene hranami v obou smerech
+\newcommand{\chUpair}[7]{%
+  \node[#6] (#3p) at (#1,#2) {#4};
+  \node[#7] (#3n) at ({#1+1.5},#2) {#5};
+  \draw[chUa] (#3p) to[bend left=28] (#3n);
+  \draw[chUa] (#3n) to[bend left=28] (#3p);}
+% \chUtri{x}{y}{jmeno}{index klauzule}: orientovany trojuhelnik c^1 -> c^2 -> c^3 -> c^1 se stredem (x,y);
+% vrcholy se jmenuji (jmeno)a, (jmeno)b, (jmeno)c
+\newcommand{\chUtri}[4]{%
+  \node[chUcl] (#3a) at (#1,{#2+0.85}) {$c_{#4}^1$};
+  \node[chUcl] (#3b) at ({#1+1.1},{#2-0.6}) {$c_{#4}^2$};
+  \node[chUcl] (#3c) at ({#1-1.1},{#2-0.6}) {$c_{#4}^3$};
+  \draw[chUa] (#3a)--(#3b);
+  \draw[chUa] (#3b)--(#3c);
+  \draw[chUa] (#3c)--(#3a);}

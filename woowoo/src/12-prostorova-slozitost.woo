@@ -1,0 +1,16 @@
+.Chapter Prostorová složitost
+  label: ch-prostor
+
+
+Zdroje: přednáška 6 (1. a 2. část).
+
+
+.Concept:
+  title: 'Proč to děláme'
+
+  Dosud jsme složitost měřili jen časem; paměť nás nezajímala, protože algoritmus za čas $T$ nestihne zabrat
+  víc než $T$ buněk. Tato kapitola se ptá, co se změní, když omezíme paměť a čas necháme volný: zavádí prostorové
+  třídy ($\PSPACE$, $\LL$, $\NL$) a zařazuje je do řetězce $\PP\subseteq\NP\subseteq\PSPACE\subseteq\EXP$ k časovým
+  třídám z předchozích kapitol. Savitchova věta ukáže, že odstranění nedeterminismu stojí v prostoru jen kvadrát
+  ($\PSPACE=\NPSPACE$), zatímco u času věříme v exponenciální cenu ($\PP\neq\NP$). Jako aplikaci uvidíme, že
+  $\prob{2-SAT}$ je na rozdíl od $\prob{3-SAT}$ polynomiální, a dokonce leží v $\NL$.

@@ -1,0 +1,102 @@
+.Section Karpův strom: princip štafety
+  label: ch-cook-karpuv-strom-princip-stafety
+
+
+Jakmile víme, že $\prob{SAT}$ je NP-úplný, už nikdy nemusíme simulovat Turingův stroj. Díky
+tranzitivitě redukcí stačí pro NP-těžkost nového problému $Q$ "jediná".emphasize redukce z libovolného
+známého NP-těžkého problému.
+
+
+.Figure:
+  label: ch-cook-fig-princip-stafety
+
+  !tikz:
+    filename: 06b-karpuv-strom-01
+
+    \fill[defc!6,draw=defc,thick,rounded corners=10pt] (-1.2,-1.4) rectangle (3.3,1.6);
+    \node[font=\sffamily\bfseries,defc,anchor=north west] at (-1.1,1.55) {\NP};
+    \node[v,minimum size=8mm,font=\scriptsize] (l1) at (0,0.6) {$L_1$};
+    \node[v,minimum size=8mm,font=\scriptsize] (l2) at (1.0,0.9) {$L_2$};
+    \node[v,minimum size=8mm,font=\tiny] (unp) at (2.3,0.65) {\prob{UNP}};
+    \node[v,minimum size=8mm,font=\scriptsize] (l3) at (0.3,-0.6) {$L_3$};
+    \node[v,minimum size=8mm,font=\scriptsize] (l4) at (1.6,-0.8) {$\cdots$};
+    \node[v,minimum size=11mm,fill=thmc!15,draw=thmc,font=\small\bfseries] (sat) at (6.0,0) {SAT};
+    \foreach \n in {l1,l2,unp,l3,l4} {\draw[->,thick,thmc!70] (\n) to[bend left=5] (sat);}
+    \node[font=\scriptsize,thmc,align=center] at (4.6,1.15) {Cook--Levin\\ (jednou provždy)};
+    \node[v,minimum size=14mm,fill=intc!20,draw=intc,font=\scriptsize\bfseries,align=center] (q) at (9.5,0) {nový\\ $Q$};
+    \draw[->,very thick,intc] (sat) -- node[above,font=\scriptsize,align=center]{nová redukce\\ (stačí jedna)} (q);
+    \draw[->,thick,dashed,acc!70!black] (l3.south) to[out=-30,in=-120] node[below,font=\scriptsize,pos=0.6]{tranzitivita: $L_i\redp Q$ zadarmo} (q.south);
+
+  .caption:
+
+    Princip štafety: $Q_{\text{známý}}\redp Q$ a $Q_{\text{známý}}$ NP-těžký $\Rightarrow$ $Q$ je NP-těžký.
+
+
+.Corollary:
+  title: 'Jak dokazovat NP-úplnost'
+  label: cor-jaknpc
+
+  Abychom ukázali, že $Q$ je NP-úplný, stačí:
+
+  .enumerate:
+
+    .item:
+
+      ukázat $Q\in\NP$ (certifikát + polynomiální verifikátor),
+
+    .item:
+
+      najít známý NP-těžký problém $A$ a polynomiální redukci $A\redp Q$.
+
+
+Richard Karp takto hned rok po Cookovi (1972) dokázal NP-úplnost 21 zásadních problémů:
+
+
+.Figure:
+  label: ch-cook-fig-karpuv-strom
+
+  !tikz:
+    filename: 06b-karpuv-strom-02
+    options: 'level distance=13mm, k/.style={draw,rounded corners=3pt,thick,font=\small,align=center,inner sep=4pt}, edge from parent/.style={draw,->,thick,black!70}'
+
+    \node[k,fill=defc!15] {SAT}
+      child {node[k,fill=defc!15] {3-SAT}
+        child[sibling distance=34mm] {node[k,fill=cyan!15] {3-Barvení}}
+        child[sibling distance=34mm] {node[k,fill=exc!15] {Klika}
+          child[sibling distance=26mm] {node[k,fill=exc!15] {Vertex Cover}}
+          child[sibling distance=26mm] {node[k,fill=exc!15] {Indep.\ Set}}}
+        child[sibling distance=34mm] {node[k,fill=intc!15] {Ham.\ kružnice}
+          child {node[k,fill=intc!15] {Obchodní\\ cestující}}}
+        child[sibling distance=34mm] {node[k,fill=thmc!12] {Subset Sum}
+          child {node[k,fill=thmc!12] {Problém\\ batohu}}}
+      };
+
+  .caption:
+
+    Ukázka z původních 21 Karpových problémů (šipka $A\to B$ znamená redukci $A\redp B$).
+
+
+.Subsection Exploze NP-úplnosti
+  label: ch-cook-exploze-np-uplnosti
+
+
+.Figure:
+  label: ch-cook-fig-lavina-np-uplnosti
+
+  !tikz:
+    filename: 06b-karpuv-strom-03
+
+    \begin{semilogyaxis}[width=10cm,height=4.8cm,ybar,bar width=14mm,ymin=0.7,ymax=20000,
+      symbolic x coords={1971,1972,1979,dnes},xtick=data,axis lines=left,ytick={1,10,100,1000,10000},
+      enlarge x limits=0.2,ylabel={počet známých NP-úpl.},
+      point meta=explicit symbolic,nodes near coords,every node near coord/.append style={font=\scriptsize}]
+      \addplot[fill=defc!40,draw=defc] coordinates {(1971,1) [1 (Cook)] (1972,21) [21 (Karp)] (1979,300) [$>300$ (G\&J)] (dnes,5000) [tisíce]};
+    \end{semilogyaxis}
+
+  .caption:
+
+    Lavina NP-úplnosti (logaritmická osa; „dnes“ je orientační).
+
+
+NP-těžké je dnes například skládání proteinů, návrh čipů, optimální plánování směn, logistika,
+letové řády – a také zobecněné verze her jako Sudoku, Tetris, Hledání min nebo Super Mario Bros.

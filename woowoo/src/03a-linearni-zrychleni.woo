@@ -1,0 +1,73 @@
+.Section Lineární zrychlení: proč nás nezajímají konstanty
+  label: ch-cas-linearni-zrychleni
+
+
+.Theorem:
+  title: 'O lineárním zrychlení'
+  label: thm-speedup
+
+  Pro každé $\varepsilon>0$ a každý stroj $M$ pracující v čase $T_M(n)$ existuje ekvivalentní
+  stroj $M'$ pracující v čase
+
+  .equation:
+
+    T_{M'}(n) \le n + 3 + \bigl\lceil \varepsilon\cdot\bigl(n+T_M(n)\bigr)\bigr\rceil.
+
+
+.Figure:
+  label: fig-cas-linearni-zrychleni
+
+  !tikz:
+    filename: 03a-linearni-zrychleni-01
+
+    \tmtape{0}{0}{a,b,b,a,b,a,a,b,b,_,_,_}{0}
+    \foreach \i in {0,1,2} {\draw[decorate,decoration={brace,amplitude=4pt,mirror},thick,intc]
+      ({\i*2.1+0.05},-0.45) -- ({\i*2.1+2.05},-0.45);}
+    \foreach \i/\t in {0/{(a,b,b)},1/{(a,b,a)},2/{(a,b,b)}} {
+      \node[draw=intc,thick,fill=intc!10,minimum width=20mm,minimum height=7mm,font=\small\ttfamily]
+         at ({\i*2.1+1.05},-1.6) {\t};}
+    \node[note,anchor=west] at (6.6,-1.6) {nová páska: 1 symbol = $m$ starých};
+    \node[note,anchor=west] at (8.6,0) {původní páska};
+
+  .caption:
+
+    Idea zrychlení: zvětšíme abecedu pásky tak, aby jeden symbol nesl $m$ původních
+    buněk. Několik původních kroků pak stroj $M'$ provede najednou.
+
+
+Proč stačí na $m$ kroků stroje $M$ jen pár kroků stroje $M'$, ukazuje obr. .reference:fig-cas-zrychleni-okno.
+
+
+.Figure:
+  label: fig-cas-zrychleni-okno
+
+  !tikz:
+    filename: 03a-linearni-zrychleni-02
+
+    \tmtape{0}{0}{a,b,b,a,b,a,a,b,b}{5}
+    \foreach \x/\t in {0/{levý blok},2.1/{aktuální blok},4.2/{pravý blok}} {
+      \draw[decorate,decoration={brace,amplitude=4pt},thick,defc] ({\x+0.05},0.45) -- ({\x+2.05},0.45)
+        node[midway,above=4pt,font=\scriptsize,text=defc]{\t};}
+    \draw[<->,very thick,intc] (1.05,-1.15) -- (5.25,-1.15);
+    \node[font=\scriptsize,text=intc,anchor=west] at (6.5,-1.15) {kam dojde hlava $M$ za $m=3$ kroky};
+    \node[note,anchor=west] at (6.5,0) {páska $M$};
+    \foreach \i/\t in {0/{(a,b,b)},1/{(a,b,a)},2/{(a,b,b)}} {
+      \node[draw=intc,thick,fill=intc!10,minimum width=20mm,minimum height=7mm,font=\small\ttfamily]
+         at ({\i*2.1+1.05},-2.5) {\t};}
+    \node[draw=intc,very thick,fill=hl,minimum width=20mm,minimum height=7mm,font=\small\ttfamily] at (3.15,-2.5) {(a,b,a)};
+    \draw[headarrow] (3.15,-3.35) -- (3.15,-2.9);
+    \node[note,anchor=west] at (6.5,-2.5) {páska $M'$ ($m=3$)};
+    \node[note,align=center] at (3.15,-4.2) {jeden „takt“ $M'$: přečti levý a pravý blok (stav si je zapamatuje),\\ spočítej ve stavu $m$ kroků $M$, přepiš až tři bloky a posuň hlavu\\ $\Rightarrow$ konstantně mnoho kroků, nezávisle na $m$};
+
+  .caption:
+
+    Simulace po blocích. Za $m$ kroků se hlava $M$ z aktuálního bloku nedostane dál než do sousedního,
+    takže $M'$ zná vše, co výpočet potřebuje. "Všimni si:".emphasize $m$ kroků $M$ stojí konstantně
+    mnoho ($c$) kroků $M'$; volbou $m\ge c/\varepsilon$ klesne čas simulace na zhruba $\varepsilon\cdot T_M(n)$.
+    Člen $n$ ve větě odpovídá úvodnímu přepsání vstupu do bloků. Podrobnosti jsou "(nad rámec přednášky)".emphasize.
+
+
+.Corollary:
+  label: cor-nokonst
+
+  Nemá smysl řešit multiplikativní konstanty – čas zapisujeme v $O$-notaci.

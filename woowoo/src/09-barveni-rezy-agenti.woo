@@ -1,0 +1,16 @@
+.Chapter Barvení, řezy a plánování agentů
+  label: ch-zoo
+
+
+Zdroje: přednáška 4, cvičení 4.
+
+
+.Concept:
+  title: 'Proč to děláme'
+
+  Kapitola přidává k NP-úplným problémům z kapitoly .reference:ch-is tři další: barvení grafu
+  ($\prob{3-Coloring}$ včetně rovinné varianty), maximální řez ($\prob{MaxCut}$) a hledání cest pro více agentů (MAPF).
+  Všechny tři redukce vycházejí ze $\prob{3-SAT}$ nebo $\prob{NAE-3-SAT}$ a stojí na gadgetech, které vynutí
+  binární volbu: u barvení paleta $T,F,B$ a „prasátko“, u řezu těžké hrany, u agentů vzdálenost do cíle rovná makespanu.
+  Vedle těžkosti kapitola ukazuje i to, kdy je barvení snadné (intervalové grafy) a jak modeluje rozvrhy.
+  Na konci je cvičení 4 s řešeními.

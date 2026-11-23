@@ -1,0 +1,964 @@
+.Section Typ 3: Formulace jako ILP nebo SAT
+  label: ch-typove-typ-3-formulace-jako-ilp-nebo-sat
+
+
+Úloha 3 testu: „Formulujte daný problém jako ILP nebo SAT úlohu.“ (6 bodů). Ukázkový test chce u ILP
+proměnné a jejich význam, všechna omezení (u každé skupiny, co zajišťuje), účelovou funkci a velikost programu.
+Postup na papíře je v oddílu .reference:ch-test-postup-ilp-sat.
+
+
+.Subsection Kde to ve skriptech je
+  label: ch-typove-ilp-kde
+
+
+.description:
+
+  .ditem:
+    bullet: 'Tři základní vzory ILP:'
+
+    problém .reference:prob-ilp a oddíl .reference:ch-cisla-ilp: redukce "$\prob{Vertex Cover} \redp \prob{ILP}$"#red-ilpvc (výběr
+    podmnožiny, $x_u+x_v\ge1$), "$\prob{3-SAT} \redp \prob{ILP}$"#red-ilpsat (klauzule jako „součet literálů $\ge1$“, negace jako $1-y$),
+    "$\prob{3-Coloring} \redp \prob{ILP}$"#red-ilpcol (indikátory $x_{v,c}$ „právě jedna barva“ a zákaz stejné barvy na hraně).
+
+  .ditem:
+    bullet: 'Modelování v ILP:'
+
+    kapitola .reference:ch-resice-ilp a cvičení 8: .reference:cv-8-1 (směny s cyklickým týdnem),
+    .reference:cv-8-2 (řezání tyčí podle vzorů), .reference:cv-8-3 (chromatické číslo a proč je přímý model
+    nepraktický), .reference:cv-8-4 (MaxCut a nejmenší řez), .reference:cv-8-5 (výroba se skladem a fixními
+    náklady, velké $M$).
+
+  .ditem:
+    bullet: 'Kódování do SAT:'
+
+    kapitola .reference:ch-resice-sat a cvičení 7: .reference:cv-7-1 (Vertex Cover, Dominating Set),
+    .reference:cv-7-2 (hamiltonovská cesta a kružnice, proměnné „vrchol $v$ na pozici $i$“), .reference:cv-7-3
+    (Tseitinova transformace, parita), .reference:cv-7-4 („nejvýše jeden“ a „nejvýše $k$“ s $O(n)$, resp. $O(nk)$
+    klauzulemi). Starší vzor je převod dláždění na CNF v důkazu Cook–Levinovy věty (redukce "$\prob{Dlaždičkování} \redp \prob{SAT}$"#red-sat:
+    proměnná „dlaždice $i$ na pozici $(x,y)$“ a čtyři typy klauzulí).
+
+  .ditem:
+    bullet: 'Rozvrhy:'
+
+    redukce "$\prob{3-Coloring} \redp \prob{Rozvrh zkoušek}$"#red-rozvrh (rozvrh zkoušek je barvení grafu) a úloha 3 ukázkového testu ("rozvrh zkoušek jako ILP"#ut-3).
+
+  .ditem:
+    bullet: 'Úlohy navíc:'
+
+    ILP: "úloha 11.2"#un-11-2 (tři modelovací vzory na jednom grafu), "10.6"#un-10-6 (1-in-3 SAT jako soustava
+    rovnic), "15.1"#un-15-1 (logické podmínky: ekvivalence, „právě jeden“, implikace), "15.5"#un-15-5 (množstevní
+    sleva, velké $M$); SAT: "úloha 14.5"#un-14-5 (doplnění dam), "14.6"#un-14-6 (Tseitinova transformace),
+    "14.8"#un-14-8 („nejvýše jedna“ binárně).
+
+
+.Subsection Řešené úlohy: ILP a SAT
+  label: ch-typove-ilp-ulohy
+
+
+.Exercise:
+  title: 'Typová úloha 3.1 [6 bodů]'
+  label: typ-3-1
+
+  Kraj chce postavit "nejvýše $p$".notion nemocnic. Je dána množina obcí $O$, množina možných lokalit $L$
+  a vzdálenosti $d_{o,l}\in\N$ obce $o$ od lokality $l$. Každá obec bude spádová k právě jedné postavené
+  nemocnici. Cílem je "minimalizovat největší vzdálenost".notion obce od její spádové nemocnice.
+
+
+  Formulujte úlohu jako celočíselný lineární program. Uveďte proměnné a jejich význam, všechna omezení (u každé
+  skupiny napište, co zajišťuje), účelovou funkci a velikost programu (počet proměnných a omezení vzhledem k $|O|$
+  a $|L|$).
+
+
+.Solution:
+
+  "Proměnné.".notion
+
+  .itemize:
+
+    .item:
+
+      $y_l\in\{0,1\}$ pro $l\in L$: $y_l=1$ právě když se v lokalitě $l$ postaví nemocnice.
+
+    .item:
+
+      $x_{o,l}\in\{0,1\}$ pro $o\in O$, $l\in L$: $x_{o,l}=1$ právě když je obec $o$ spádová k nemocnici v $l$.
+
+    .item:
+
+      $t\ge0$: pomocná proměnná, horní mez na vzdálenost každé obce od její nemocnice (v optimu je rovna největší
+      vzdálenosti). Může být i reálná, optimum je jedna z hodnot $d_{o,l}$.
+
+
+  "Omezení.".notion
+
+  .enumerate:
+
+    .item:
+
+      "Nejvýše $p$ nemocnic:".notion $\displaystyle\sum_{l\in L} y_l\le p$ (jedno omezení).
+
+    .item:
+
+      "Každá obec má právě jednu spádovou nemocnici:".notion $\displaystyle\sum_{l\in L} x_{o,l}=1$ pro každé $o\in O$.
+
+    .item:
+
+      "Spádová smí být jen postavená nemocnice:".notion $x_{o,l}\le y_l$ pro každé $o\in O$, $l\in L$.
+
+    .item:
+
+      "$t$ je aspoň vzdálenost každé obce:".notion $\displaystyle t\ge\sum_{l\in L} d_{o,l}\,x_{o,l}$ pro každé $o\in O$.
+
+
+  Díky omezení 2 je součet v omezení 4 právě vzdálenost obce $o$ od její spádové nemocnice.
+
+
+  "Účelová funkce:".notion $\min\ t$. Maximum $\max_o(\dots)$ není lineární, proto ho nahrazuje proměnná $t$
+  omezená zdola všemi výrazy (trik „minimalizace maxima“).
+
+
+  "Správnost.".notion Každé rozmístění nemocnic s přiřazením obcí dává přípustné řešení s $t$ rovným největší
+  vzdálenosti. Naopak v každém přípustném řešení postavené nemocnice ($y_l=1$) a přiřazení ($x_{o,l}=1$) tvoří
+  platné řešení úlohy a $t$ je aspoň jeho největší vzdálenost; minimalizace stlačí $t$ přesně na ni. Optima se
+  tedy shodují.
+
+
+  "Velikost.".notion Proměnných $|L|+|O|\cdot|L|+1$; omezení $1+|O|+|O|\cdot|L|+|O|=1+2|O|+|O|\cdot|L|$
+  (bez podmínek oboru $\{0,1\}$ a $t\ge0$).
+
+
+.Exercise:
+  title: 'Typová úloha 3.2 [6 bodů]'
+  label: typ-3-2
+
+  Katedra rozděluje studenty $S$ do týmových projektů $P$. Student $s$ ohodnotil projekt $p$ číslem
+  $c_{s,p}\in\{0,\dots,5\}$ (spokojenost). Každý student musí být "v právě jednom".notion projektu. Projekt $p$
+  se buď neotevře (nemá žádného studenta), nebo se otevře a má "nejméně $L_p$ a nejvýše $U_p$".notion studentů,
+  kde $1\le L_p\le U_p$. Dvojice studentů z množiny $K\subseteq\binom S2$ spolu nechtějí pracovat a nesmí být
+  ve stejném projektu. Cílem je "maximalizovat celkovou spokojenost".notion.
+
+
+  Formulujte úlohu jako celočíselný lineární program (proměnné s významem, omezení s tím, co zajišťují, účelová
+  funkce, velikost vzhledem k $|S|$, $|P|$ a $|K|$).
+
+
+.Solution:
+
+  "Proměnné.".notion
+
+  .itemize:
+
+    .item:
+
+      $x_{s,p}\in\{0,1\}$ pro $s\in S$, $p\in P$: $x_{s,p}=1$ právě když student $s$ pracuje na projektu $p$.
+
+    .item:
+
+      $y_p\in\{0,1\}$ pro $p\in P$: $y_p=1$ právě když se projekt $p$ otevře.
+
+
+  "Omezení.".notion
+
+  .enumerate:
+
+    .item:
+
+      "Každý student v právě jednom projektu:".notion $\displaystyle\sum_{p\in P} x_{s,p}=1$ pro každé $s\in S$.
+
+    .item:
+
+      "Zavřený projekt nemá nikoho, otevřený nejvýše $U_p$:".notion $\displaystyle\sum_{s\in S} x_{s,p}\le U_p\,y_p$ pro každé $p\in P$.
+
+    .item:
+
+      "Otevřený projekt má aspoň $L_p$ studentů:".notion $\displaystyle\sum_{s\in S} x_{s,p}\ge L_p\,y_p$ pro každé $p\in P$.
+
+    .item:
+
+      "Konfliktní dvojice ne ve stejném projektu:".notion $x_{s,p}+x_{s',p}\le 1$ pro každé $\{s,s'\}\in K$ a $p\in P$.
+
+
+  Omezení 2 a 3 jsou dvě poloviny podmínky „počet studentů je $0$, nebo leží v $[L_p,U_p]$“, kterou jednou
+  lineární nerovnicí zapsat nejde: binární $y_p$ vybírá, která z obou možností platí (pro $y_p=0$ dává omezení 2 počet $0$
+  a omezení 3 nic neříká, pro $y_p=1$ dávají interval). Protože $L_p\ge1$, nemůže být $y_p=1$ u prázdného projektu.
+
+
+  .centered:
+
+    !tikz:
+      filename: 17c-ilp-sat-02
+      options: 'x=0.95cm,y=1cm'
+
+      % priklad L_p=2, U_p=4; pocet studentu N = sum_s x_{s,p} na ose 0..6
+      \def\osa#1#2#3{% y, popisek, seznam povolenych hodnot
+        \node[font=\small,anchor=east] at (-0.6,#1) {#2};
+        \draw[thick,black!45] (-0.3,#1)--(6.5,#1);
+        \foreach \k in {0,...,6} \node[circle,draw=rej!70,fill=rej!12,minimum size=4.2mm,inner sep=0pt] at (\k,#1) {};
+        \foreach \k in {#3} \node[circle,draw=acc!80!black,fill=acc!45,very thick,minimum size=4.2mm,inner sep=0pt] at (\k,#1) {};}
+      \osa{2.2}{$y_p=0$}{0}
+      \osa{1.1}{$y_p=1$}{2,3,4}
+      \osa{0}{přípustné $N$}{0,2,3,4}
+      \foreach \k in {0,...,6} \node[font=\scriptsize] at (\k,-0.5) {$\k$};
+      \node[font=\footnotesize,anchor=west] at (6.6,-0.5) {$N=\sum_{s} x_{s,p}$};
+      \node[font=\footnotesize,anchor=west,text=black!70] at (6.8,2.2) {(2): $N\le 0$,\ (3): $N\ge 0$};
+      \node[font=\footnotesize,anchor=west,text=black!70] at (6.8,1.1) {(2): $N\le U_p=4$,\ (3): $N\ge L_p=2$};
+      \draw[decorate,decoration={brace,amplitude=4pt,mirror},rej] (0.75,-0.85)--(1.25,-0.85) node[midway,below=4pt,font=\scriptsize,rej]{díra};
+
+  Omezení 2 a 3 pro jeden projekt s $L_p=2$, $U_p=4$ "(příklad nad rámec zadání)".emphasize; $N$ je počet jeho
+  studentů. "Všimni si:".emphasize přípustné hodnoty $\{0\}\cup[L_p,U_p]$ nejsou interval (chybí $1$), takže je
+  nepopíše žádná dvojice nerovnic $a\le N\le b$; binární $y_p$ přepíná mezi dvěma intervaly $[0,0]$ a $[L_p,U_p]$.
+
+
+  "Účelová funkce:".notion $\max\ \sum_{s\in S}\sum_{p\in P} c_{s,p}\,x_{s,p}$.
+
+
+  "Správnost.".notion Platné rozdělení dává přípustné řešení (s $y_p=1$ přesně u neprázdných projektů) se stejnou
+  spokojeností. Naopak z přípustného řešení přečteme rozdělení: podle omezení 1 má každý student jeden projekt, podle
+  omezení 2 a 3 má každý projekt $0$ nebo $L_p$ až $U_p$ studentů, podle omezení 4 nejsou konfliktní dvojice spolu.
+  Nemá-li úloha žádné platné rozdělení, je program nepřípustný.
+
+
+  "Velikost.".notion Proměnných $|S|\cdot|P|+|P|$; omezení $|S|+2|P|+|K|\cdot|P|$.
+
+
+.Exercise:
+  title: 'Typová úloha 3.3 [6 bodů]'
+  label: typ-3-3
+
+  "Přidělení kanálů.".notion Je dán graf $G=(V,E)$: vrcholy jsou vysílače, hrana spojuje vysílače, které by se
+  mohly rušit. K dispozici jsou kanály $1,\dots,k$. Každý vysílač dostane jeden kanál a sousední vysílače musí mít
+  kanály, které se liší "aspoň o 2".notion: $|f(u)-f(v)|\ge2$ pro $\{u,v\}\in E$.
+
+
+  Navrhněte formuli v KNF, která je splnitelná právě tehdy, když přípustné přidělení kanálů existuje. Popište
+  proměnné a jejich význam, klauzule po skupinách s tím, co zajišťují, jak ze splňujícího ohodnocení přečíst
+  přidělení, a počet proměnných a klauzulí vzhledem k $n=|V|$, $|E|$ a $k$.
+
+
+.Solution:
+
+  "Proměnné.".notion $x_{v,c}$ pro $v\in V$, $c\in\{1,\dots,k\}$: $x_{v,c}$ je pravdivá právě když vysílač $v$
+  dostane kanál $c$. Celkem $nk$ proměnných.
+
+
+  "Klauzule.".notion
+
+  .enumerate:
+
+    .item:
+
+      "Alespoň jeden kanál:".notion $(x_{v,1}\lor x_{v,2}\lor\dots\lor x_{v,k})$ pro každé $v\in V$; $n$ klauzulí.
+
+    .item:
+
+      "Nejvýše jeden kanál:".notion $(\lnot x_{v,c}\lor\lnot x_{v,c'})$ pro každé $v\in V$ a $1\le c<c'\le k$;
+      $n\binom k2$ klauzulí.
+
+    .item:
+
+      "Rušení:".notion $(\lnot x_{u,c}\lor\lnot x_{v,c'})$ pro každou hranu $\{u,v\}\in E$ a každou dvojici kanálů
+      s $|c-c'|\le1$ (stejný nebo sousední kanál). Dvojic $(c,c')$ je $k$ se stejným kanálem a $2(k-1)$ se
+      sousedním, tedy $3k-2$ klauzulí na hranu.
+
+
+  "Dekódování:".notion $f(v)$ je to jediné $c$, pro které je $x_{v,c}$ pravdivá (podle skupin 1 a 2 existuje
+  právě jedno).
+
+
+  "Správnost.".notion Je-li $f$ přípustné přidělení, položme $x_{v,c}$ pravdivé právě pro $c=f(v)$: skupiny 1 a 2
+  platí zřejmě a klauzule skupiny 3 by mohla být nesplněná jen při $f(u)=c$, $f(v)=c'$ s $|c-c'|\le1$ pro hranu
+  $\{u,v\}$, což $f$ vylučuje. Naopak ze splňujícího ohodnocení dostaneme podle dekódování funkci $f$ a skupina 3
+  zakazuje, aby sousedé měli kanály vzdálené o méně než 2.
+
+
+  "Velikost:".notion $nk$ proměnných a $n+n\binom k2+|E|(3k-2)$ klauzulí, tedy $O(nk^2+|E|k)$.
+
+
+  "Příklad.".notion Trojúhelník potřebuje $k\ge5$ (tři kanály po dvou vzdálené aspoň o 2, např. $1,3,5$); pro
+  $k=4$ je formule nesplnitelná.
+
+  .centered:
+
+    !tikz:
+      filename: 17c-ilp-sat-01
+
+      \node[v,fill=tT!30] (a) at (0,1.6) {$a$};
+      \node[v,fill=tB!30] (b) at (-1.2,0) {$b$};
+      \node[v,fill=tF!30] (c) at (1.2,0) {$c$};
+      \node[v,fill=tT!30] (d) at (3.2,0) {$d$};
+      \draw[e] (a)--(b)--(c)--(a) (c)--(d);
+      \node[font=\scriptsize] at (0,2.25) {kanál 1};
+      \node[font=\scriptsize] at (-1.2,-0.65) {kanál 3};
+      \node[font=\scriptsize] at (1.2,-0.65) {kanál 5};
+      \node[font=\scriptsize] at (3.2,-0.65) {kanál 1};
+      \node[note,anchor=west,text width=48mm,align=left] at (4.2,0.8) {$k=5$: např. $x_{a,1},x_{b,3},x_{c,5},x_{d,1}$ pravdivé, ostatní nepravdivé. Pro $d$ by šel i kanál 2 nebo 3.};
+
+
+  "Poznámka.".notion Skupinu 2 lze vynechat: formule zůstane ekvisplnitelná, jen se při dekódování vybere
+  libovolný pravdivý kanál (skupina 3 platí pro všechny pravdivé kanály vrcholu, tedy i pro vybraný). Při velkém $k$
+  lze „nejvýše jeden“ zapsat úsporněji s $O(k)$ klauzulemi na vrchol, viz .reference:cv-7-4.
+
+
+.Exercise:
+  title: 'Typová úloha 3.4 [6 bodů]'
+  label: typ-3-4
+
+  Město vybírá, které z investičních projektů $P=\{1,\dots,n\}$ uskuteční. Projekt $j$ stojí $c_j\in\N$
+  a přinese užitek $u_j\in\N$. Každý projekt leží v jedné čtvrti $r(j)\in R$; ve čtvrti $r$, kde se staví aspoň
+  jeden projekt, je navíc třeba "jednou".notion zaplatit zařízení staveniště $f_r\in\N$ (bez ohledu na počet
+  projektů v ní). Celkové náklady nesmí překročit rozpočet $B\in\N$. Dále platí logické podmínky dané množinami:
+
+  .itemize:
+
+    .item:
+
+      $Z\subseteq P\times P$: pro $(i,j)\in Z$ lze projekt $j$ uskutečnit jen spolu s projektem $i$;
+
+    .item:
+
+      skupiny $X_1,\dots,X_q\subseteq P$: z každé skupiny se uskuteční nejvýše jeden projekt;
+
+    .item:
+
+      $T\subseteq P^3$: pro $(i,j,l)\in T$ platí, že uskuteční-li se $i$ i $j$, musí se uskutečnit i $l$;
+
+    .item:
+
+      $S\subseteq P$ (strategické projekty): uskuteční se aspoň dva z nich.
+
+  Cílem je "maximalizovat celkový užitek".notion.
+
+  .enumerate:
+    type: a
+
+    .item:
+
+      Formulujte úlohu jako celočíselný lineární program. Uveďte proměnné a jejich význam, všechna omezení
+      (u každé skupiny napište, co zajišťuje), účelovou funkci a velikost programu vzhledem k $n$, $|R|$, $|Z|$,
+      $q$ a $|T|$.
+
+    .item:
+
+      Vypište program pro instanci níže a rozhodněte, zda je přípustný plán $\{1,2,3\}$. Čtvrti jsou Sever
+      ($f=2$) a Jih ($f=3$), rozpočet $B=17$; projekt 2 lze jen s projektem 1, z projektů 3 a 5 nejvýše jeden,
+      projekty 1 a 4 společně vyžadují projekt 6 a strategické jsou projekty 2, 4, 6.
+
+  .table:
+    columns: 'llcc'
+
+    .row:
+      head: true
+
+      projekt $j$
+
+      čtvrť
+
+      $c_j$
+
+      $u_j$
+
+    .row:
+
+      1 cyklostezka
+
+      Sever
+
+      4
+
+      6
+
+    .row:
+
+      2 lávka
+
+      Sever
+
+      3
+
+      5
+
+    .row:
+
+      3 parkoviště
+
+      Sever
+
+      5
+
+      8
+
+    .row:
+
+      4 zastávka
+
+      Jih
+
+      2
+
+      3
+
+    .row:
+
+      5 park
+
+      Jih
+
+      6
+
+      9
+
+    .row:
+
+      6 hřiště
+
+      Jih
+
+      3
+
+      4
+
+
+.Solution:
+
+  "a) Proměnné.".notion
+
+  .itemize:
+
+    .item:
+
+      $x_j\in\{0,1\}$ pro $j\in P$: $x_j=1$ právě když se projekt $j$ uskuteční.
+
+    .item:
+
+      $y_r\in\{0,1\}$ pro $r\in R$: $y_r=1$ znamená „ve čtvrti $r$ se zaplatí zařízení staveniště“ (musí být $1$,
+      když se ve čtvrti něco staví, viz omezení 5).
+
+
+  "Omezení.".notion Logické podmínky přepíšeme podle tabulky v oddílu
+  .reference:ch-resice-ilp-logika-s-binarnimi-promennymi; u každé stačí ověřit, že nerovnice zakazuje přesně
+  ty kombinace binárních hodnot, které podmínka zakazuje.
+
+  .enumerate:
+
+    .item:
+
+      "Závislost $j\Rightarrow i$:".notion $x_j\le x_i$ pro každé $(i,j)\in Z$. Zakazuje jen $x_j=1$, $x_i=0$.
+
+    .item:
+
+      "Nejvýše jeden ze skupiny:".notion $\displaystyle\sum_{j\in X_s} x_j\le 1$ pro $s=1,\dots,q$.
+
+    .item:
+
+      "$i\land j\Rightarrow l$:".notion $x_i+x_j-1\le x_l$ pro každé $(i,j,l)\in T$. Levá strana je $1$ jen při
+      $x_i=x_j=1$ (jinak $\le0$), takže nerovnice zakazuje jen $x_i=x_j=1$, $x_l=0$.
+
+    .item:
+
+      "Aspoň dva strategické:".notion $\displaystyle\sum_{j\in S} x_j\ge 2$.
+
+    .item:
+
+      "Propojení s fixním nákladem:".notion $x_j\le y_{r(j)}$ pro každé $j\in P$. Staví-li se ve čtvrti cokoli,
+      je $y_r=1$ a poplatek se započítá; započítá se jednou, protože $y_r$ je jedna proměnná na čtvrť.
+
+    .item:
+
+      "Rozpočet:".notion $\displaystyle\sum_{j\in P} c_j x_j+\sum_{r\in R} f_r y_r\le B$.
+
+
+  "Účelová funkce:".notion $\max\ \sum_{j\in P} u_j x_j$.
+
+
+  "Správnost.".notion Je-li $A\subseteq P$ plán splňující všechny podmínky, položme $x_j=1\iff j\in A$
+  a $y_r=1$ právě u čtvrtí, kde leží nějaký projekt z $A$. Omezení 1–4 platí podle podmínek, 5 podle volby $y$
+  a levá strana rozpočtu je přesně cena plánu včetně poplatků, tedy $\le B$; užitek se shoduje. Naopak
+  z přípustného řešení vezmeme $A=\{j: x_j=1\}$. Omezení 1–4 dávají logické podmínky. Podle 5 je $y_r=1$ u každé
+  čtvrti s projektem, takže skutečné náklady plánu jsou nejvýše levá strana rozpočtu (navíc může být $y_r=1$
+  u prázdné čtvrti, to jen plýtvá rozpočtem). Plán je tedy platný se stejným užitkem a optima se shodují.
+
+
+  "Velikost.".notion Proměnných $n+|R|$; omezení $|Z|+q+|T|+1+n+1=|Z|+q+|T|+n+2$ (bez podmínek oboru).
+  Omezení 5 lze sloučit po čtvrtích do $\sum_{j:\,r(j)=r} x_j\le n_r\,y_r$, kde $n_r$ je počet projektů ve
+  čtvrti $r$; to je $|R|$ omezení místo $n$, ale slabší LP relaxace.
+
+
+  "b) Konkrétní program.".notion Proměnné $x_1,\dots,x_6$, $y_S$ (Sever), $y_J$ (Jih), všechny binární.
+
+  .align:
+
+    \max\ & 6x_1+5x_2+8x_3+3x_4+9x_5+4x_6\\
+    \text{(1)}\quad & x_2\le x_1\\
+    \text{(2)}\quad & x_3+x_5\le 1\\
+    \text{(3)}\quad & x_1+x_4-1\le x_6\\
+    \text{(4)}\quad & x_2+x_4+x_6\ge 2\\
+    \text{(5)}\quad & x_1\le y_S,\ x_2\le y_S,\ x_3\le y_S,\quad x_4\le y_J,\ x_5\le y_J,\ x_6\le y_J\\
+    \text{(6)}\quad & 4x_1+3x_2+5x_3+2x_4+6x_5+3x_6+2y_S+3y_J\le 17
+
+  To je $8$ proměnných a $11$ omezení, jak dává vzorec ($|Z|=q=|T|=1$, $n=6$).
+
+
+  Plán $\{1,2,3\}$ stojí $4+3+5+2=14\le17$ (jen Sever) a má užitek $19$, ale "není přípustný".notion: porušuje
+  omezení (4), protože ze strategických projektů obsahuje jen projekt 2 ($1\ge2$ neplatí). Pro kontrolu
+  "(nad rámec zadání)".emphasize: optimum programu je $18$, jediný optimální plán je $\{1,2,4,6\}$ s náklady
+  $4+3+2+3+2+3=17$ (rozpočet je vyčerpán přesně). Bez logických podmínek by optimum bylo $19$ právě s plánem
+  $\{1,2,3\}$.
+
+  .centered:
+
+    !tikz:
+      filename: 17c-ilp-sat-03
+      options: 'x=1cm,y=1cm'
+
+      \tikzset{pj/.style={v,minimum size=7.5mm},pjsel/.style={vsel,minimum size=7.5mm},
+        strat/.style={double,double distance=1.2pt},cj/.style={font=\scriptsize,text=black!70}}
+      \node[pjsel,strat] (p2) at (0,0) {$2$};
+      \node[pjsel] (p1) at (1.9,0) {$1$};
+      \node[pj] (p3) at (0.95,-1.7) {$3$};
+      \node[pjsel,strat] (p4) at (5.0,0) {$4$};
+      \node[pjsel,strat] (p6) at (6.9,0) {$6$};
+      \node[pj] (p5) at (5.95,-1.7) {$5$};
+      \foreach \p/\t in {p2/{3 / 5},p1/{4 / 6},p4/{2 / 3},p6/{3 / 4}} \node[cj,below=1pt of \p] {$\t$};
+      \foreach \p/\t in {p3/{5 / 8},p5/{6 / 9}} \node[cj,below=1pt of \p] {$\t$};
+      \coordinate (sb) at (0,-2.3); \coordinate (jb) at (5.0,-2.3);
+      \begin{scope}[on background layer]
+        \node[draw=defc,fill=defc!5,rounded corners=4pt,thick,inner sep=7pt,fit={(p2) (p1) (p3) (sb)}] (sev) {};
+        \node[draw=intc,fill=intc!6,rounded corners=4pt,thick,inner sep=7pt,fit={(p4) (p6) (p5) (jb)}] (jih) {};
+      \end{scope}
+      \node[font=\scriptsize,anchor=north,text=defc!80!black] at (sev.south) {Sever, $f=2$};
+      \node[font=\scriptsize,anchor=north,text=intc!80!black] at (jih.south) {Jih, $f=3$};
+      \draw[->,thick,black!70] (p2)--(p1) node[midway,above,font=\scriptsize]{(1)};
+      \draw[typpair] (p3)--(p5) node[midway,below,font=\scriptsize,text=rej]{(2) nejvýše jeden};
+      \node[circle,draw=black!60,fill=white,inner sep=1pt,font=\scriptsize] (and) at (3.45,1.25) {$\land$};
+      \draw[thick,black!70] (p1) to[bend left=15] (and);
+      \draw[thick,black!70] (p4) to[bend right=15] (and);
+      \draw[->,thick,black!70] (and) to[out=10,in=110] node[pos=0.35,above,font=\scriptsize]{(3)} (p6);
+      \node[font=\scriptsize,anchor=west,align=left] at (8.0,0.6) {dvojitý kruh:\\ strategický (4)};
+      \node[font=\scriptsize,anchor=west,align=left] at (8.0,-0.6) {pod vrcholem:\\ $c_j$ / $u_j$};
+
+  Instance z části b). Zeleně optimální plán $\{1,2,4,6\}$ s užitkem $18$; platí za obě čtvrti, protože v každé
+  něco staví. "Všimni si:".emphasize plán $\{1,2,3\}$ (jen Sever) by byl levnější i s vyšším užitkem $19$, ale
+  obsahuje jediný strategický projekt.
+
+
+.Exercise:
+  title: 'Typová úloha 3.5 [6 bodů]'
+  label: typ-3-5
+
+  Robot ve skladu má projet všech $n$ stanovišť. Je dán neorientovaný graf $G=(V,E)$, $|V|=n\ge2$, $|E|=m$:
+  hrana spojuje stanoviště, mezi kterými vede přímá chodba. Robot vyjíždí z nabíječky $s\in V$, končí ve výdeji
+  $t\in V$, $t\ne s$, a každé stanoviště navštíví "právě jednou".notion (hamiltonovská cesta z $s$ do $t$).
+
+  .enumerate:
+    type: a
+
+    .item:
+
+      Navrhněte formuli v KNF, která je splnitelná právě tehdy, když taková cesta existuje. Popište proměnné
+      a jejich význam, klauzule po skupinách s tím, co zajišťují, jak ze splňujícího ohodnocení přečíst cestu,
+      a počet proměnných a klauzulí vzhledem k $n$ a $m$.
+
+    .item:
+
+      Robot navíc převáží zásilky: je dána množina dvojic $Q\subseteq\{(a,b)\in V\times V: a\ne b\}$ a pro $(a,b)\in Q$ musí robot
+      navštívit stanoviště $a$ (vyzvednutí) "dříve".notion než $b$ (doručení). Doplňte formuli a určete, o kolik
+      klauzulí vzroste.
+
+
+.Solution:
+
+  "Redukce:".notion hamiltonovská cesta z $s$ do $t$ s podmínkami pořadí $\redp$ $\prob{SAT}$, instance
+  $(G,s,t,Q)$ $\mapsto$ formule $\varphi$. Stejný vzor jako .reference:cv-7-2 (tam orientovaný graf bez pevných
+  konců); zde přibývají pevné konce, neorientované hrany a pořadí.
+
+
+  "a) Proměnné.".notion $p_{v,i}$ pro $v\in V$, $i\in\{1,\dots,n\}$: $p_{v,i}$ je pravdivá právě když je
+  stanoviště $v$ na cestě na $i$-tém místě. Celkem $n^2$ proměnných.
+
+
+  "Klauzule.".notion
+
+  .enumerate:
+
+    .item:
+
+      "Každé stanoviště má aspoň jedno místo:".notion $(p_{v,1}\lor\dots\lor p_{v,n})$ pro každé $v\in V$; $n$ klauzulí.
+
+    .item:
+
+      "Každé stanoviště má nejvýše jedno místo:".notion $(\lnot p_{v,i}\lor\lnot p_{v,j})$ pro každé $v$ a $i<j$;
+      $n\binom n2$ klauzulí.
+
+    .item:
+
+      "Na každém místě je aspoň jedno stanoviště:".notion $(p_{v_1,i}\lor\dots\lor p_{v_n,i})$ pro každé $i$; $n$ klauzulí.
+
+    .item:
+
+      "Na každém místě je nejvýše jedno stanoviště:".notion $(\lnot p_{u,i}\lor\lnot p_{v,i})$ pro každé $i$ a $u\ne v$;
+      $n\binom n2$ klauzulí.
+
+    .item:
+
+      "Sousední místa spojuje chodba:".notion pro každou dvojici $\{u,v\}\notin E$, $u\ne v$, a každé
+      $i=1,\dots,n-1$ dvě klauzule $(\lnot p_{u,i}\lor\lnot p_{v,i+1})$ a $(\lnot p_{v,i}\lor\lnot p_{u,i+1})$
+      (hrana je neorientovaná, zakážeme oba směry nehrany); $2(n-1)\bigl(\binom n2-m\bigr)$ klauzulí.
+
+    .item:
+
+      "Pevné konce:".notion jednotkové klauzule $(p_{s,1})$ a $(p_{t,n})$; $2$ klauzule.
+
+
+  "Dekódování:".notion pro $i=1,\dots,n$ vypiš jediné $v$ s pravdivou $p_{v,i}$.
+
+
+  "Správnost.".notion ($\Rightarrow$) Je-li $s=w_1,w_2,\dots,w_n=t$ hamiltonovská cesta, položme $p_{w_i,i}$
+  pravdivé a ostatní nepravdivé. Je to bijekce stanoviště $\leftrightarrow$ místa, takže platí skupiny 1–4;
+  skupina 5 platí, protože $\{w_i,w_{i+1}\}\in E$ pro každé $i$; skupina 6, protože $w_1=s$, $w_n=t$.
+  ($\Leftarrow$) Podle 1–4 jsou pravdivé proměnné bijekce, tedy pořadí $w_1,\dots,w_n$ všech stanovišť, každé
+  právě jednou. Kdyby $\{w_i,w_{i+1}\}\notin E$, byla by porušena klauzule skupiny 5; je to tedy cesta v $G$
+  a podle 6 začíná v $s$ a končí v $t$.
+
+
+  "Velikost:".notion $n^2$ proměnných a $2n+2n\binom n2+2(n-1)\bigl(\binom n2-m\bigr)+2=O(n^3)$ klauzulí.
+  Ze skupin 1–4 by stačily dvě (1 a 4, nebo 2 a 3), viz .reference:cv-7-2.
+
+
+  "b) Pořadí.".notion Pro každou dvojici $(a,b)\in Q$ zakážeme, aby $b$ bylo na dřívějším místě než $a$:
+
+  .equation:
+
+    (\lnot p_{b,i}\lor\lnot p_{a,j})\qquad\text{pro všechna } 1\le i<j\le n .
+
+  To je $\binom n2$ klauzulí na dvojici, celkem o $|Q|\binom n2$ více, tedy $O(n^3+|Q|n^2)$. Správnost: v ohodnocení
+  splňujícím 1–4 má $a$ jediné místo $j_a$ a $b$ jediné místo $j_b\ne j_a$. Klauzule pro $(a,b)$ jsou porušeny
+  právě tehdy, když $j_b<j_a$, tedy platí všechny právě když $a$ je na cestě před $b$. Proměnné se nemění,
+  dekódování také.
+
+
+  "Úspornější varianta".notion "(nad rámec zadání)".emphasize. Pomocná proměnná $d_{a,i}$ znamená „$a$ je na
+  některém z míst $1,\dots,i$“. Stačí jeden směr: $(\lnot d_{a,1}\lor p_{a,1})$ a
+  $(\lnot d_{a,i}\lor p_{a,i}\lor d_{a,i-1})$ pro $i\ge2$, tedy pravdivé $d_{a,i}$ zaručuje, že $a$ opravdu je
+  na místě $\le i$. Pořadí pak vynutí $(\lnot p_{b,1})$ a $(\lnot p_{b,i}\lor d_{a,i-1})$ pro $i\ge2$. Na dvojici
+  to je $n$ proměnných a $2n$ klauzulí místo $\binom n2$.
+
+
+  "Příklad.".notion Stanoviště $s,a,b,c,t$, chodby $sa,sb,ab,ac,bc,bt,ct$ ($n=5$, $m=7$). Hamiltonovské cesty
+  z $s$ do $t$ jsou tři: $s,a,b,c,t$; $s,a,c,b,t$ a $s,b,a,c,t$. Se zásilkou $Q=\{(c,b)\}$ zbude jediná,
+  $s,a,c,b,t$. Formule má $25$ proměnných a $10+100+24+2+10=146$ klauzulí a právě jeden splňující model, ten
+  z obrázku.
+
+  .centered:
+
+    !tikz:
+      filename: 17c-ilp-sat-04
+      options: 'x=1cm,y=1cm'
+
+      \tikzset{gc/.style={draw=black!45,minimum width=7mm,minimum height=6mm,inner sep=0pt,font=\scriptsize,fill=white},
+        gcT/.style={gc,fill=tT!28},gcF/.style={gc,fill=black!6,text=black!45}}
+      \node[v] (s) at (0,0.8) {$s$};
+      \node[v] (a) at (1.5,1.6) {$a$};
+      \node[v] (b) at (1.5,0) {$b$};
+      \node[v] (c) at (3.0,1.6) {$c$};
+      \node[v] (t) at (3.0,0) {$t$};
+      \draw[e] (s)--(b) (a)--(b) (c)--(t);
+      \draw[esel,->] (s)--(a); \draw[esel,->] (a)--(c); \draw[esel,->] (c)--(b); \draw[esel,->] (b)--(t);
+      \node[font=\scriptsize,align=center] at (1.5,-0.8) {zásilka: $c$ před $b$};
+      \begin{scope}[xshift=4.6cm,yshift=1.9cm]
+        \foreach \i in {1,...,5} \node[font=\scriptsize] at (\i*0.75,0.45) {$i=\i$};
+        \foreach \v/\pos/\r in {s/1/0,a/2/1,b/4/2,c/3/3,t/5/4} {
+          \node[font=\scriptsize,anchor=east] at (0.3,-\r*0.6) {$p_{\v,i}$};
+          \foreach \i in {1,...,5} {
+            \ifnum\i=\pos \node[gcT] at (\i*0.75,-\r*0.6) {1};
+            \else \node[gcF] at (\i*0.75,-\r*0.6) {0}; \fi}}
+      \end{scope}
+
+  Jediný model pro $Q=\{(c,b)\}$: cesta $s,a,c,b,t$ (zeleně) a matice $p_{v,i}$ s jedinou jedničkou v každém
+  řádku i sloupci. "Všimni si:".emphasize cesty $s,a,b,c,t$ a $s,b,a,c,t$ jsou v grafu také, ale mají $b$ před
+  $c$, a vylučuje je tedy klauzule $(\lnot p_{b,i}\lor\lnot p_{c,j})$ pro nějaké $i<j$.
+
+
+.Exercise:
+  title: 'Typová úloha 3.6 [6 bodů]'
+  label: typ-3-6
+
+  Na jednom stroji se má zpracovat $n$ zakázek $J=\{1,\dots,n\}$. Zakázka $j$ trvá $p_j\in\N$, $p_j\ge1$, smí
+  začít až v čase $r_j\in\N$ (kdy dorazí materiál) a má váhu $w_j\ge0$. Stroj dělá najednou nejvýše jednu zakázku
+  a rozpracovanou zakázku nepřerušuje. Je-li $C_j$ čas dokončení zakázky $j$, cílem je
+  "minimalizovat $\sum_j w_jC_j$".notion.
+
+  .enumerate:
+    type: a
+
+    .item:
+
+      Formulujte úlohu jako (smíšený) celočíselný lineární program: proměnné s významem, omezení s tím, co
+      zajišťují, účelová funkce, velikost vzhledem k $n$.
+
+    .item:
+
+      Model obsahuje konstantu $M$ („velké $M$“). Jak velké musí být? Zdůvodněte, že vaše volba neodřízne
+      optimum, a na malém příkladu ukažte, co se stane, je-li $M$ příliš malé.
+
+    .item:
+
+      Zakázka $j$ má navíc termín $d_j\in\N$ a cílem je místo toho minimalizovat vážené zpoždění
+      $\sum_j w_j\max(0,\,C_j-d_j)$. Jak se model změní?
+
+
+.Solution:
+
+  "a) Proměnné.".notion
+
+  .itemize:
+
+    .item:
+
+      $S_j\ge0$ (reálná) pro $j\in J$: čas začátku zakázky $j$. Čas dokončení je $C_j=S_j+p_j$, není potřeba jako
+      zvláštní proměnná.
+
+    .item:
+
+      $z_{ij}\in\{0,1\}$ pro $1\le i<j\le n$: $z_{ij}=1$ právě když jde zakázka $i$ na stroji před zakázkou $j$.
+
+
+  "Omezení.".notion Označme $H=\max_j r_j+\sum_j p_j$ (horizont) a položme $M=H$.
+
+  .enumerate:
+
+    .item:
+
+      "Materiál:".notion $S_j\ge r_j$ pro každé $j$.
+
+    .item:
+
+      "Horizont:".notion $S_j+p_j\le H$ pro každé $j$ (proč to nic nepokazí, viz b).
+
+    .item:
+
+      "Nepřekrývání, buď–anebo:".notion pro každé $i<j$
+
+      .align:
+
+        S_i+p_i &\le S_j+M(1-z_{ij}) &&\text{($z_{ij}=1$: $i$ skončí, než začne $j$)}\\
+        S_j+p_j &\le S_i+M\,z_{ij} &&\text{($z_{ij}=0$: $j$ skončí, než začne $i$).}
+
+  Pro $z_{ij}=1$ platí první nerovnice „naostro“ a druhá je vypnutá, pro $z_{ij}=0$ naopak (vzor „buď, anebo“
+  z oddílu .reference:ch-resice-ilp-maximum-absolutni-hodnota-bud-anebo). Disjunkci dvou nerovnic bez binární
+  proměnné zapsat nejde, přípustná množina není konvexní.
+
+
+  "Účelová funkce:".notion $\min\ \sum_{j\in J} w_j(S_j+p_j)$; člen $\sum_j w_jp_j$ je konstanta.
+
+
+  "Správnost.".notion Rozvrh bez překryvu se zakázkami v pořadí podle začátků a se $C_j\le H$ dává přípustné řešení:
+  $z_{ij}=1$ právě když $i$ začíná dřív než $j$; pak platí první nerovnice dvojice a druhá je vypnutá (viz b).
+  Naopak v přípustném řešení pro každou dvojici $i,j$ platí aspoň jedna z nerovnic $S_i+p_i\le S_j$,
+  $S_j+p_j\le S_i$, tedy se zakázky nepřekrývají, a podle 1 žádná nezačne před $r_j$. Hodnota účelové funkce je
+  $\sum_j w_jC_j$. Že optimum úlohy má $C_j\le H$, ukazuje b).
+
+
+  "Velikost:".notion $n+\binom n2$ proměnných; omezení $2\binom n2=n(n-1)$ pro nepřekrývání a $2n$ mezí
+  (1 a 2), celkem $n(n+1)$.
+
+
+  "b) Jak velké $M$.".notion Vypnutá nerovnice musí platit pro každé řešení, které chceme připustit. Pro
+  $z_{ij}=1$ je vypnutá $S_j+p_j\le S_i+M$, tedy potřebujeme $M\ge S_j+p_j-S_i$. Podle omezení 2 je
+  $S_j+p_j\le H$ a $S_i\ge r_i\ge0$, takže $S_j+p_j-S_i\le H$ a $M=H$ stačí; pro $z_{ij}=0$ symetricky.
+
+
+  Zbývá ukázat, že omezení 2 neodřízne optimum. Vezměme libovolný přípustný rozvrh a "posuňme ho doleva".notion:
+  projdeme zakázky v pořadí, jak jdou na stroji, a každou spustíme v čase $\max(r_j,\ \text{konec předchozí})$.
+  Indukcí podle pořadí se žádné $C_j$ nezvětší a překryv nevznikne. Po posunu stroj stojí jen tehdy, když čeká
+  na materiál; poslední prostoj tedy končí v nějakém $r_j\le\max_j r_j$ a potom stroj pracuje bez přestávky
+  nejvýše $\sum_j p_j$. Proto $C_j\le H$ pro všechna $j$. Protože $w_j\ge0$, posunem se účelová funkce nezhorší –
+  některý optimální rozvrh tedy splňuje omezení 2.
+
+
+  "Příliš malé $M$.".notion Dvě zakázky, $p=(1,1)$, $r=(0,10)$, $w=(1,1)$, $H=12$. Optimum je zakázka 1 v čase
+  $0$ a zakázka 2 v čase $10$: $C=(1,11)$, hodnota $12$. Toto řešení má $z_{12}=1$ a vypnutá nerovnice zní
+  $S_2+p_2\le S_1+M$, tj. $11\le M$. Pro $M=5$ ji optimum porušuje a model vrátí $18$ (zakázka 1 musí začít
+  nejdřív v čase $6$, aby $S_2+1\le S_1+5$). Model je pak tiše špatně – neohlásí chybu, jen horší optimum.
+
+
+  "c) Vážené zpoždění.".notion Přidáme proměnné $T_j\ge0$ (zpoždění zakázky $j$) a omezení
+
+  .equation:
+
+    T_j\ \ge\ S_j+p_j-d_j\qquad\text{pro každé } j\in J,
+
+  účelová funkce $\min\sum_j w_jT_j$. Omezení s $T_j\ge0$ dávají $T_j\ge\max(0,C_j-d_j)$ a minimalizace (při
+  $w_j>0$) stlačí $T_j$ právě na tuto hodnotu; při $w_j=0$ na $T_j$ nezáleží. Je to trik „minimalizace maxima“.
+  Velikost: $n+\binom n2+n$ proměnných a $n(n+1)+n$ omezení. Volba $M=H$ zůstává správná: zpoždění je
+  neklesající v $C_j$, takže posun doleva z b) optimum opět nezhorší.
+
+
+  "Příklad".notion "(nad rámec zadání)".emphasize: $p=(3,2,4,1)$, $r=(0,1,2,7)$, $w=(1,3,2,4)$, tedy $H=7+10=17$.
+  Optimum $\sum_j w_jC_j=66$ dává pořadí $2,3,4,1$: $C=(11,3,7,8)$, $1\cdot11+3\cdot3+2\cdot7+4\cdot8=66$.
+  Pořadí $1,2,3,4$ bez prostoje na začátku dává $76$. S termíny $d=(5,4,9,9)$ je týž rozvrh optimální
+  i pro c), se zpožděním jen u zakázky 1 a hodnotou $1\cdot(11-5)=6$.
+
+  .centered:
+
+    !tikz:
+      filename: 17c-ilp-sat-05
+      options: 'x=0.62cm,y=0.75cm'
+
+      \tikzset{jb/.style={draw,minimum height=5mm,inner sep=0pt,font=\scriptsize,anchor=west},
+        rel/.style={draw=rej,thick},osa/.style={->,draw=black!60}}
+      \foreach \j/\r/\s/\p/\c/\y in {1/0/8/3/defc/3,2/1/1/2/exc/2,3/2/3/4/intc/1,4/7/7/1/warnc/0} {
+        \node[font=\scriptsize,anchor=east] at (-0.3,\y) {zakázka \j};
+        \draw[black!15] (0,\y)--(12,\y);
+        \node[jb,fill=\c!20,draw=\c!80!black,minimum width=\p*0.62cm] at (\s,\y) {$\j$};
+        \draw[rel] (\r,\y-0.45)--(\r,\y+0.45);
+        \pgfmathtruncatemacro{\cc}{\s+\p}
+        \node[font=\scriptsize,anchor=west] at (\s+\p+0.1,\y) {$C_{\j}=\cc$};}
+      \draw[osa] (0,-0.7)--(12.6,-0.7) node[right,font=\scriptsize]{čas};
+      \foreach \t in {0,1,...,12} \draw[black!60] (\t,-0.62)--(\t,-0.78) node[below,font=\tiny]{\t};
+      \node[font=\scriptsize,anchor=west,text=rej] at (0.2,3.75) {červená čárka: uvolnění $r_j$};
+
+  Optimální rozvrh příkladu (pořadí $2,3,4,1$). "Všimni si:".emphasize stroj v čase $0$ až $1$ stojí, ačkoli
+  zakázka 1 je k dispozici – vyplatí se počkat na těžší zakázku 2 ($w_2=3$). Zakázka 1 s nejmenší váhou jde
+  na konec.
+
+
+.Exercise:
+  title: 'Typová úloha 3.7 [6 bodů]'
+  label: typ-3-7
+
+  Galerie má místnosti $V$, $|V|=n$, a dveře mezi nimi dané neorientovaným grafem $G=(V,E)$. Strážce stojící
+  v místnosti $v$ hlídá $v$ a všechny místnosti, do kterých z $v$ vedou dveře, tedy uzavřené okolí
+  $N[v]=\{v\}\cup\{u:\{u,v\}\in E\}$. K dispozici je $k$ strážců, $1\le k\le n$.
+
+  .enumerate:
+    type: a
+
+    .item:
+
+      Navrhněte formuli v KNF, která je splnitelná právě tehdy, když lze strážce rozestavit tak, aby byla hlídána
+      každá místnost (tj. $G$ má dominující množinu velikosti nejvýše $k$). Použijte proměnné „strážce $i$ stojí
+      v místnosti $v$“, žádný čítač. Popište klauzule po skupinách, dekódování a počet proměnných a klauzulí.
+
+    .item:
+
+      Cenné místnosti $W\subseteq V$ musí hlídat aspoň dva různí strážci (smějí stát i ve stejné místnosti).
+      Doplňte formuli.
+
+    .item:
+
+      Kolik modelů má formule pro jedno rozestavení strážců? Navrhněte klauzule, které tuto symetrii odstraní,
+      a zdůvodněte, že nezmění splnitelnost.
+
+
+.Solution:
+
+  "Redukce:".notion $\prob{Dominating Set} \redp \prob{SAT}$, instance $(G,k)$ $\mapsto$ formule $\varphi_{G,k}$;
+  části b) a c) k ní jen přidávají klauzule.
+
+
+  "a) Proměnné.".notion $y_{i,v}$ pro strážce $i\in\{1,\dots,k\}$ a místnost $v\in V$: $y_{i,v}$ je pravdivá
+  právě když strážce $i$ stojí v místnosti $v$. Celkem $kn$ proměnných.
+
+
+  "Klauzule.".notion
+
+  .enumerate:
+
+    .item:
+
+      "Každý strážce někde stojí:".notion $(y_{i,v_1}\lor\dots\lor y_{i,v_n})$ pro každé $i$; $k$ klauzulí.
+
+    .item:
+
+      "Každý strážce stojí nejvýše v jedné místnosti:".notion $(\lnot y_{i,u}\lor\lnot y_{i,v})$ pro každé $i$
+      a $u\ne v$; $k\binom n2$ klauzulí.
+
+    .item:
+
+      "Každá místnost je hlídaná:".notion $\Bigl(\bigvee_{i=1}^{k}\ \bigvee_{u\in N[v]} y_{i,u}\Bigr)$ pro každé
+      $v\in V$ – některý strážce stojí v místnosti, ze které je $v$ vidět; $n$ klauzulí, klauzule pro $v$ má
+      $k\,|N[v]|$ literálů.
+
+
+  "Dekódování:".notion $D=\{v: y_{i,v}\text{ pravdivá pro nějaké } i\}$ je hledaná dominující množina.
+
+
+  "Správnost.".notion ($\Rightarrow$) Nechť $D=\{d_1,\dots,d_s\}$ dominuje a $1\le s\le k$. Strážce $i\le s$
+  postavíme do $d_i$, zbylé strážce $s+1,\dots,k$ do $d_1$. Každý strážce stojí v právě jedné místnosti
+  (skupiny 1, 2) a každé $v$ má v $N[v]$ nějaké $d_i$ se strážcem $i$ (skupina 3). ($\Leftarrow$) Podle skupin 1
+  a 2 stojí strážce $i$ v jediné místnosti $m(i)$, takže $D=\{m(1),\dots,m(k)\}$ má nejvýše $k$ prvků. Klauzule
+  skupiny 3 pro $v$ dává $i$ a $u\in N[v]$ s $u=m(i)\in D$, tedy $D$ dominuje.
+
+
+  Omezení $|D|\le k$ tu "nepotřebuje čítač".emphasize: plyne z toho, že strážců je $k$ a každý stojí na jednom
+  místě. Srovnej se dvěma jinými cestami ke stejnému cíli: .reference:cv-7-1 (proměnné $x_v$ a pozice
+  $y_{v,i}$ ve vybrané množině; strážce $i$ tu hraje roli pozice $i$, jen bez $x_v$ a s povinně obsazenou
+  pozicí, pozor na prohozené indexy) a .reference:cv-7-4 (čítač „nejvýše $k$“).
+
+
+  "Velikost:".notion $kn$ proměnných a $k+k\binom n2+n$ klauzulí, tedy $O(kn^2)$; celková délka klauzulí
+  skupiny 3 je $k\sum_v|N[v]|=k(n+2|E|)$.
+
+
+  "b) Dva strážci.".notion Pro každé $v\in W$ a každého strážce $i$ přidáme klauzuli „$v$ hlídá i někdo jiný
+  než $i$“:
+
+  .equation:
+
+    \Bigl(\bigvee_{j\ne i}\ \bigvee_{u\in N[v]} y_{j,u}\Bigr)\qquad\text{pro každé } v\in W,\ i\in\{1,\dots,k\}.
+
+  Hlídají-li $v$ dva různí strážci $j_1\ne j_2$, je pro každé $i$ aspoň jeden z nich různý od $i$ a klauzule
+  platí. Naopak: klauzule pro $i=1$ dá strážce $j$, který $v$ hlídá, a klauzule pro $i=j$ dá dalšího strážce
+  $j'\ne j$, který $v$ také hlídá. Pro $k=1$ jsou klauzule prázdné a formule je (správně) nesplnitelná. Přibude
+  $|W|\cdot k$ klauzulí o délce $(k-1)|N[v]|$; dekódování se nemění.
+
+
+  "c) Symetrie.".notion Strážci jsou zaměnitelní: přečíslováním strážců vznikne z modelu opět model. Rozestavení
+  s $k$ různými místnostmi tak odpovídá $k!$ modelům (stojí-li někteří strážci spolu, méně). Řešič pak stejnou
+  slepou uličku prochází pro každou kopii znovu (oddíl .reference:ch-resice-sat-symetrie). Očíslujme místnosti
+  $v_1,\dots,v_n$ a požadujme, aby strážci stáli v neklesajícím pořadí místností:
+
+  .equation:
+
+    (\lnot y_{i,v_a}\lor\lnot y_{i+1,v_b})\qquad\text{pro } i=1,\dots,k-1 \text{ a } 1\le b<a\le n .
+
+  To je $(k-1)\binom n2$ klauzulí. "Splnitelnost se nemění:".notion máme-li model, seřadíme strážce podle čísla
+  místnosti a přečíslujeme je; podmínky a) a b) závisí jen na tom, kolik strážců stojí ve které místnosti, takže
+  seřazené ohodnocení je model a nové klauzule splňuje. Každé rozestavení (multimnožina místností) má teď právě
+  jeden model.
+
+
+  "Příklad.".notion Mřížka $2\times3$: místnosti $A,B,C$ nad $D,E,F$, dveře mezi sousedy. Pro $k=2$ jsou
+  dominující dvojice právě $\{A,F\}$, $\{B,E\}$, $\{C,D\}$. Pro $W=\{C\}$ a $k=2$ je formule nesplnitelná:
+  oba strážci by museli stát v $N[C]=\{B,C,F\}$, a pak nikdo nehlídá $D$ ($N[D]=\{A,D,E\}$). Pro $k=3$ už jde
+  např. $B,D,F$. Formule pro $k=3$, $W=\{C\}$ má $18$ proměnných, $3+45+6+3=57$ klauzulí a $57$ modelů; se
+  $30$ klauzulemi symetrie jich zbude $11$ – tolik je přípustných rozestavení.
+
+  .centered:
+
+    !tikz:
+      filename: 17c-ilp-sat-06
+      options: 'x=1cm,y=1cm'
+
+      \tikzset{rm/.style={v,minimum size=8mm},rmg/.style={vsel,minimum size=8mm},
+        wv/.style={double,double distance=1.2pt},cnt/.style={font=\scriptsize,text=defc!80!black}}
+      \foreach \dx/\nadpis in {0/{a) $k=2$: strážci v $B$, $E$},5.4/{b) $k=3$, $W=\{C\}$: strážci v $B$, $D$, $F$}} {
+        \node[font=\scriptsize] at (\dx+1.5,2.35) {\nadpis};}
+      % a)
+      \node[rm] (a1) at (0,1.5) {$A$}; \node[rmg] (b1) at (1.5,1.5) {$B$}; \node[rm] (c1) at (3,1.5) {$C$};
+      \node[rm] (d1) at (0,0) {$D$}; \node[rmg] (e1) at (1.5,0) {$E$}; \node[rm] (f1) at (3,0) {$F$};
+      \draw[e] (a1)--(b1)--(c1) (d1)--(e1)--(f1) (a1)--(d1) (b1)--(e1) (c1)--(f1);
+      \foreach \n/\c/\dx/\dy in {a1/1/-0.55/0.45,b1/2/-0.55/0.45,c1/1/0.55/0.45,d1/1/-0.55/-0.45,e1/2/-0.55/-0.45,f1/1/0.55/-0.45}
+        \node[cnt] at ($(\n)+(\dx,\dy)$) {$\times\c$};
+      % b)
+      \begin{scope}[xshift=5.4cm]
+        \node[rm] (a2) at (0,1.5) {$A$}; \node[rmg] (b2) at (1.5,1.5) {$B$}; \node[rm,wv] (c2) at (3,1.5) {$C$};
+        \node[rmg] (d2) at (0,0) {$D$}; \node[rm] (e2) at (1.5,0) {$E$}; \node[rmg] (f2) at (3,0) {$F$};
+        \draw[e] (a2)--(b2)--(c2) (d2)--(e2)--(f2) (a2)--(d2) (b2)--(e2) (c2)--(f2);
+        \foreach \n/\c/\dx/\dy in {a2/2/-0.55/0.45,b2/1/-0.55/0.45,c2/2/0.55/0.45,d2/1/-0.55/-0.45,e2/3/-0.55/-0.45,f2/1/0.55/-0.45}
+          \node[cnt] at ($(\n)+(\dx,\dy)$) {$\times\c$};
+      \end{scope}
+
+  Zeleně místnosti se strážcem, u každé místnosti počet strážců, kteří ji hlídají; dvojitý kruh je cenná
+  místnost $C$. "Všimni si:".emphasize v a) hlídá $C$ jen strážce v $B$, proto pro $W=\{C\}$ dva strážci
+  nestačí; v b) hlídají $C$ strážci v $B$ a $F$.

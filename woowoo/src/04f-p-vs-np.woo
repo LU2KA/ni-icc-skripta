@@ -1,0 +1,151 @@
+.Section Problém $\PP\overset{?}{=}\NP$
+  label: ch-np-problem-p-vs-np
+  pdf_string: 'Problém P = NP?'
+
+
+.itemize:
+
+  .item:
+
+    $\PP$ = problémy s efektivním (polynomiálním) "algoritmem".emphasize,
+
+  .item:
+
+    $\NP$ = problémy s efektivně (polynomiálně) "ověřitelným řešením".emphasize.
+
+Z definic je zřejmé $\PP\subseteq\NP$: umím-li problém efektivně vyřešit, verifikátor certifikát
+prostě ignoruje a problém vyřeší sám.
+
+
+.Figure:
+  label: fig-np-dva-svety
+
+  !tikz:
+    filename: 04f-p-vs-np-01
+
+    \begin{scope}
+      \node[font=\sffamily\bfseries] at (0,2.0) {svět $\PP\neq\NP$};
+      \fill[thmc!10,draw=thmc,thick] (0,0) ellipse (2.4 and 1.5);
+      \node[font=\sffamily\bfseries,thmc] at (0.9,0.9) {\NP};
+      \fill[exc!18,draw=exc,thick] (-0.8,-0.2) ellipse (1.1 and 0.8);
+      \node[font=\sffamily\bfseries,exc!70!black] at (-0.8,-0.2) {\PP};
+      \node[font=\scriptsize,align=center] at (1.2,-0.35) {SAT, klika,\\ TSP, sudoku};
+      \node[note] at (0,-1.9) {většina vědců věří};
+    \end{scope}
+    \begin{scope}[xshift=7cm]
+      \node[font=\sffamily\bfseries] at (0,2.0) {svět $\PP=\NP$};
+      \fill[exc!18,draw=exc,thick] (0,0) ellipse (2.4 and 1.5);
+      \node[font=\sffamily\bfseries,exc!70!black] at (0,0.3) {$\PP=\NP$};
+      \node[font=\scriptsize,align=center] at (0,-0.5) {vše, co umíme ověřit,\\ umíme i rychle najít};
+      \node[note] at (0,-1.9) {konec kryptografie, \dots};
+    \end{scope}
+
+  .caption:
+
+    Dva možné světy. Který je ten náš, nikdo neví.
+
+
+.Remark:
+  title: 'Nejdůležitější otevřený problém informatiky'
+
+  Platí $\PP=\NP$, nebo $\PP\subsetneq\NP$? Jde o jeden ze sedmi "Millennium Prize Problems".emphasize
+  Clay Mathematics Institute (odměna 1~000~000 USD).
+
+
+.Subsection Co kdyby $\PP=\NP$?
+  label: ch-np-co-kdyby-p-np
+
+
+.Warning:
+  title: 'Konec kryptografie'
+
+  Asymetrické šifrování (RSA) spoléhá na to, že faktorizace je těžká, ale ověření
+  násobením snadné (typický problém v $\NP$). Při $\PP=\NP$ by šly prakticky všechny dnešní
+  šifry zlomit efektivním algoritmem.
+
+
+.Concept:
+  title: 'Zlatý věk optimalizace a AI'
+
+  Plánování směn, logistika či hledání léků by se řešily optimálně a rychle. Dokonalé
+  parametry modelů strojového učení bychom našli v polynomiálním čase přímo, bez zdlouhavého
+  trénování.
+
+
+"Matematika jako problém v $\NP$.".notion V roce 1956 napsal Kurt Gödel dopis Johnu
+von Neumannovi, ve kterém tento problém formuloval (dávno před definicí $\PP$ a $\NP$).
+"Vymyslet".emphasize matematický důkaz je extrémně těžké, ale "zkontrolovat".emphasize hotový důkaz krok
+za krokem je mechanické. Hledání důkazu délky $n$ je tedy typický problém v $\NP$ (certifikátem
+je text důkazu). Pokud by $\PP=\NP$, šlo by dokazování vět s dostatečně krátkým důkazem plně
+automatizovat – kreativitu matematiků by nahradil algoritmus.
+
+
+.Subsection Proč je tak těžké dokázat $\PP\neq\NP$?
+  label: ch-np-proc-je-tak-tezke-dokazat-p-neq-np
+
+
+Teorie složitosti narazila na tři "bariéry".notion – metavěty, které říkají, jaké
+techniky důkazu "nemohou".emphasize fungovat:
+
+
+.Figure:
+  label: fig-np-bariery
+
+  !tikz:
+    filename: 04f-p-vs-np-02
+    options: 'x=1.6cm'
+
+    \draw[very thick,->,black!60] (0,0) -- (6.4,0);
+    \foreach \x/\y/\t/\d in {0.6/1975/{Relativizace}/{Baker, Gill, Solovay:\\ diagonalizace\\ (Halt, hierarchie)\\ P a NP nerozliší},
+                             3.0/1994/{Přirozené důkazy}/{Razborov, Rudich:\\ analýza booleovských\\ obvodů nestačí},
+                             5.4/2008/{Algebraizace}/{Aaronson, Wigderson:\\ ani algebraické metody\\ z 90.~let nestačí}} {
+      \fill[warnc] (\x,0) circle (3pt);
+      \node[font=\small\bfseries,above=3pt] at (\x,0) {\y};
+      \node[blokr,font=\scriptsize,text width=34mm,align=flush center,below=5mm] at (\x,0) {\textbf{\t}\\ \d};}
+
+  .caption:
+
+    Tři bariéry na cestě k důkazu $\PP\neq\NP$.
+
+
+Někteří vědci dokonce zvažují, že vztah $\PP$ vs. $\NP$ je nezávislý na standardních
+axiomech matematiky (ZFC) – tedy že ho nelze dokázat ani vyvrátit.
+
+
+.Remark:
+  title: 'Teaser: interaktivní důkazy'
+
+  Certifikát v $\NP$ je statický („soubor na disku“). Jak dokázat, že dva grafy "nejsou".emphasize
+  izomorfní ($\prob{Graph Non-Isomorphism}$)? Statický polynomiální certifikát neznáme. Co když
+  ale verifikátor smí házet mincí a doptávat se všemocného dokazovatele? Verifikátor za zády
+  jeden z grafů náhodně zamíchá a zeptá se „který to byl?“. Nejsou-li grafy izomorfní,
+  dokazovatel to vždy pozná; jsou-li, může jen hádat. To vede na třídu $\cls{IP}$
+  (Interactive Proofs) a slavnou rovnost $\cls{IP}=\cls{PSPACE}$.
+
+
+.Figure:
+  label: fig-np-gni-protokol
+
+  !tikz:
+    filename: 04f-p-vs-np-03
+
+    \node[draw=defc,fill=defc!8,very thick,rounded corners=4pt,align=center,minimum width=34mm,minimum height=12mm] (V) at (0,0)
+       {\textbf{verifikátor $V$}\\ \footnotesize polynomiální, hází mincí};
+    \node[draw=thmc,fill=thmc!8,very thick,rounded corners=4pt,align=center,minimum width=34mm,minimum height=12mm] (P) at (9,0)
+       {\textbf{dokazovatel $P$}\\ \footnotesize všemocný};
+    \draw[black!40,thick] (V.south) -- (0,-4.4);
+    \draw[black!40,thick] (P.south) -- (9,-4.4);
+    \node[note,anchor=north,text width=34mm,fill=white,inner sep=2pt] at (0,-1.0) {tajně zvolí $i\in\{1,2\}$\\ a náhodně přečísluje\\ vrcholy grafu $G_i$};
+    \draw[->,line width=1.4pt,defc] (0,-2.4) -- node[above,font=\small,text=black]{$H=\pi(G_i)$ \ „který graf to je?“} (9,-2.4);
+    \draw[->,line width=1.4pt,thmc] (9,-3.3) -- node[above,font=\small,text=black]{odpověď $j\in\{1,2\}$} (0,-3.3);
+    \node[bloka,font=\small] at (0,-4.9) {přijmi $\iff j=i$};
+    \node[blok,font=\footnotesize,text width=60mm,align=left] at (4.5,-6.6)
+       {$G_1\not\cong G_2$: $H$ je izomorfní jen s $G_i$ $\Rightarrow$ $P$ odpoví vždy správně.\\
+        $G_1\cong G_2$: $H$ o čísle $i$ nic neprozradí $\Rightarrow$ $P$ jen hádá.};
+
+  .caption:
+
+    Interaktivní důkaz neizomorfismu grafů $G_1,G_2$. "Všimni si:".emphasize místo statického certifikátu
+    rozhoduje náhoda verifikátoru, kterou dokazovatel nevidí. "(nad rámec přednášky)".emphasize Jsou-li grafy
+    izomorfní, uhodne $P$ správně s pravděpodobností $\frac12$; po $t$ nezávislých opakováních obstojí jen
+    s pravděpodobností $2^{-t}$.

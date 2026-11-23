@@ -1,0 +1,270 @@
+.Section Řešiče v praxi
+  label: ch-resice-ilp-resice-v-praxi
+
+
+Branch & cut je kostra každého moderního ILP řešiče. Zbytek přednášky je přehledový: co je v řešičích navíc, které
+existují, kde se ILP nasazuje, kdy sáhnout po jiném nástroji a jak vypadá model s exponenciálně mnoha
+"proměnnými".emphasize.
+
+
+.Subsection Uvnitř moderního řešiče: víc než jen B&C
+  label: ch-resice-ilp-uvnitr-moderniho-resice
+
+
+Kostra je branch & cut, ale výkon dělá "inženýrství".notion:
+
+.itemize:
+
+  .item:
+
+    "presolve".notion – zúžení mezí proměnných, fixace, odstranění redundance;
+
+  .item:
+
+    "řezy".notion – desítky rodin (Gomory/MIR, knapsack cover, clique, …);
+
+  .item:
+
+    "primární heuristiky".notion pro rychlý incumbent – zaokrouhlování, diving, RINS;
+
+  .item:
+
+    "chytré větvení".notion – strong branching, pseudocost branching;
+
+  .item:
+
+    "paralelismus".notion – více uzlů stromu současně.
+
+
+.Remark:
+  title: 'Paralela s CDCL'
+
+  U SAT řešičů je kostra DPLL a výkon dělá CDCL a další inženýrství (přednáška 7, kapitola .reference:ch-resice-sat). U ILP je kostra
+  branch & bound / branch & cut a výkon dělá výčet výše. Jednoduchá kostra + sofistikované inženýrství =
+  řádově lepší výkon.
+
+
+.Subsection Řešiče: komerční i open-source
+  label: ch-resice-ilp-resice-komercni-i-open-source
+
+
+.table:
+  columns: 'p{3.6cm}p{9.4cm}'
+  noheader: true
+
+  .row:
+
+    "komerční".notion (pro akademii zdarma)
+
+    Gurobi, CPLEX (IBM), Xpress (FICO)
+
+  .row:
+
+    "open-source".notion
+
+    SCIP (ZIB), HiGHS, CBC (COIN-OR), GLPK
+
+  .row:
+
+    "rozhraní".notion
+
+    soubory LP/MPS (obdoba formátu DIMACS u SATu); Python: gurobipy, highspy, PuLP, Pyomo, OR-Tools
+
+  .row:
+
+    "benchmarky".notion
+
+    MIPLIB, Mittelmann
+
+
+.Remark:
+  title: 'Pokrok řešičů vs. hardware (MILP, 2001–2020)'
+
+  Algoritmy přinesly zrychlení zhruba $50\times$, hardware zhruba $20\times$, dohromady zhruba $1000\times$ –
+  "algoritmy přinesly víc než hardware".notion. (Koch, Berthold, Pedersen, Vanaret: Progress in mathematical
+  programming solvers from 2001 to 2020, EURO J. Comput. Optim. 10, 2022.)
+
+
+"Jak vypadá soubor LP".notion "(nad rámec přednášky)".emphasize – batoh z oddílu
+.reference:ch-resice-ilp-od-slov-k-modelu ve formátu LP (čtou ho mimo jiné Gurobi, CPLEX, HiGHS, SCIP i CBC).
+Struktura kopíruje matematický zápis: účel, omezení, obor proměnných.
+
+!codeblock:
+  language: text
+
+  \ batoh: w = (2,3,4), c = (3,4,5), W = 6
+  Maximize
+   obj: 3 x1 + 4 x2 + 5 x3
+  Subject To
+   vaha: 2 x1 + 3 x2 + 4 x3 <= 6
+  Binary
+   x1 x2 x3
+  End
+
+
+.Subsection Kde se ILP nasazuje
+  label: ch-resice-ilp-kde-se-ilp-nasazuje
+
+
+.itemize:
+
+  .item:
+
+    "Doprava:".notion rozvrhy vlaků (NS – Nizozemské dráhy), posádky a letadla aerolinek;
+
+  .item:
+
+    "Logistika:".notion rozvoz (vehicle routing), umístění skladů, plánování zásob;
+
+  .item:
+
+    "Energetika:".notion unit commitment – které elektrárny kdy jedou (trhy MISO, PJM v USA);
+
+  .item:
+
+    "Telekomunikace:".notion návrh sítí, přidělování frekvencí;
+
+  .item:
+
+    "Výroba:".notion rozkrojení materiálu (cutting stock, úloha .reference:cv-8-2), plánování výroby (úloha .reference:cv-8-5);
+
+  .item:
+
+    "Sport a školství:".notion rozvrhy lig (MLB), rozvrhy výuky a zkoušek.
+
+
+Společný jmenovatel: "diskrétní rozhodnutí".notion (zapnout, přiřadit, otevřít) a
+"lineární náklady a kapacity".notion.
+
+
+.Subsection Jaký nástroj zvolit
+  label: ch-resice-ilp-jaky-nastroj-zvolit
+
+
+.table:
+  columns: 'll'
+
+  .row:
+    head: true
+
+    problém
+
+    nástroj
+
+  .row:
+
+    čistá logika, rozhodování
+
+    SAT
+
+  .row:
+
+    logika + aritmetika / bitvektory
+
+    SMT
+
+  .row:
+
+    lineární omezení + optimalizace
+
+    "ILP / MIP".notion
+
+  .row:
+
+    malé instance, přesně, se zárukou času
+
+    exponenciální algoritmy
+
+  .row:
+
+    malý parametr (velikost řešení, struktura)
+
+    FPT algoritmy
+
+  .row:
+
+    záruka kvality v polynomiálním čase
+
+    aproximační algoritmy
+
+  .row:
+
+    obrovské instance, stačí „dobré“
+
+    lokální hledání, metaheuristiky
+
+
+.Remark:
+  title: 'Zlaté pravidlo'
+
+  Nejdřív "general-purpose řešič".notion, teprve pak specializace nebo vlastní algoritmus.
+
+
+.Subsection Případová studie: posádky aerolinek (crew pairing)
+  label: ch-resice-ilp-crew-pairing
+
+
+"Zadání.".notion Letecký řád je pevný. Každý let musí obsloužit nějaká posádka, pravidla omezují odpočinek
+a pracovní hodiny. Cíl: co nejlevnější pokrytí.
+
+
+"Pairing".notion je posloupnost letů jedné posádky, která začíná a končí na základně a splňuje pravidla.
+
+
+"Model (set partitioning):".notion pro každý přípustný pairing $p$ s cenou $c_p$ proměnná $x_p\in\{0,1\}$ … použít
+pairing $p$?
+
+.equation:
+
+  \min\sum_p c_p\,x_p\qquad\text{při}\qquad\sum_{p\ni\ell}x_p=1\quad\forall\text{ let }\ell .
+
+Omezení „právě jedna“ (oddíl .reference:ch-resice-ilp-modelovaci-triky) říká, že každý let je v právě jednom
+použitém pairingu.
+
+
+.Figure:
+  label: ch-resice-ilp-fig-crew-pairing
+
+  !tikz:
+    filename: 15h-resice-v-praxi-01
+    options: 'x=1cm,y=0.8cm'
+
+    \foreach \y/\m in {2/PRG,1/VIE,0/BUD} {\draw[black!25] (0,\y)--(7.2,\y); \node[font=\scriptsize\sffamily,anchor=east] at (-0.1,\y) {\m};}
+    \draw[osa] (0,-0.6)--(7.4,-0.6) node[right,font=\scriptsize]{čas};
+    \draw[->,thick,defc] (0.2,2)--(0.9,1);
+    \draw[->,thick,defc] (2.0,1)--(2.8,0);
+    \draw[->,thick,defc] (4.6,0)--(6.2,2);
+    \draw[->,thick,warnc] (0.5,2)--(2.0,0);
+    \draw[->,thick,warnc] (3.2,0)--(4.0,1);
+    \draw[->,thick,warnc] (5.0,1)--(5.8,2);
+
+  .caption:
+
+    Dva pairingy se základnou v Praze (modrý a červený), šipka je jeden let. Každý let je právě v jednom z nich.
+
+
+"Pairingů je exponenciálně mnoho".notion, takže proměnné nejde ani vypsat. Řešení je "column generation".notion
+(generování sloupců): řešíme LP jen s několika pairingy a "duální ceny".emphasize letů (proměnné duálu, oddíl
+.reference:ch-resice-ilp-lp-relaxace-a-dualita) řeknou, který nový pairing by LP zlepšil. Je to zrcadlo separace:
+tam přidáváme řádky (nerovnice) na vyžádání, tady sloupce (proměnné).
+
+
+.Warning:
+  title: 'Typické chyby'
+
+  .itemize:
+
+    .item:
+
+      "Psát vlastní algoritmus dřív než model.".notion Zlaté pravidlo říká opak: nejdřív zkusit obecný řešič.
+
+    .item:
+
+      "Čistě logickou úlohu dávat do ILP.".notion Bez čísel a optimalizace je SAT obvykle přirozenější a rychlejší;
+      ILP se vyplatí, když jsou ve hře kapacity, náklady a počty.
+
+    .item:
+
+      "Zaměnit „$=1$“ a „$\ge1$“.".notion Model ze slajdu chce každý let v "právě jednom".emphasize pairingu.
+      "(nad rámec přednášky)".emphasize Varianta s $\ge1$ (set covering) by dovolila, aby let měl víc posádek
+      (jedna by letěla jako cestující); která verze je správně, rozhoduje zadání.

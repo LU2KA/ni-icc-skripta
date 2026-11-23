@@ -1,0 +1,52 @@
+.Section Velký obraz
+  label: ch-pspace-velky-obraz
+
+
+.Figure:
+  label: ch-pspace-fig-velky-obraz
+
+  !tikz:
+    filename: 13d-velky-obraz-01
+    options: 'x=1cm,y=1cm'
+
+    \fill[rej!5,draw=rej,thick,rounded corners=10pt] (-6.4,-0.4) rectangle (6.4,5.0);
+    \node[font=\sffamily\bfseries,rej] at (5.6,4.6) {\EXP};
+    \fill[thmc!7,draw=thmc,thick] (0,2.2) ellipse (5.9 and 2.55);
+    \node[font=\sffamily\bfseries\small,thmc,align=center] at (0,4.25) {$\PSPACE=\NPSPACE$};
+    \node[font=\scriptsize,thmc,align=center] at (4.65,2.35) {TQBF, GG,\\ Sokoban, Hex};
+    \fill[defc!7,draw=defc,thick] (-0.8,1.75) ellipse (4.2 and 1.95);
+    \node[font=\sffamily\bfseries,defc] at (-0.8,3.35) {\NP};
+    \fill[warnc!15,draw=warnc,thick] (2.0,1.8) ellipse (1.05 and 0.75);
+    \node[font=\scriptsize\bfseries,warnc,align=center] at (2.0,1.8) {NP-úplné\\ \tiny SAT, TSP};
+    \fill[exc!12,draw=exc,thick] (-2.1,1.45) ellipse (2.4 and 1.35);
+    \node[font=\sffamily\bfseries,exc] at (-2.1,2.45) {\PP};
+    \node[font=\tiny,exc] at (-0.8,1.6) {2-SAT};
+    \fill[intc!15,draw=intc,thick] (-2.7,1.1) ellipse (1.35 and 0.8);
+    \node[font=\sffamily\bfseries\scriptsize,intc!80!black] at (-2.7,1.6) {\NL};
+    \node[font=\tiny,intc!80!black] at (-2.1,0.95) {ST-REACH};
+    \fill[black!8,draw=black!60,thick] (-3.5,0.95) ellipse (0.42 and 0.33);
+    \node[font=\sffamily\bfseries\scriptsize] at (-3.5,0.95) {\LL};
+
+  .caption:
+
+    $\LL\subseteq\NL\subseteq\PP\subseteq\NP\subseteq\PSPACE=\NPSPACE\subseteq\EXP$ (za předpokladu, že všechny
+    inkluze jsou ostré).
+
+
+"Co s jistotou víme.".notion
+
+.itemize:
+
+  .item:
+
+    Prostorová hierarchie: $\log n=o(n)$, tedy $\LL\subsetneq\PSPACE$; se Savitchem $\NL\subseteq\DSPACE(\log^2n)\subsetneq\PSPACE$.
+
+  .item:
+
+    Časová hierarchie: $\PP\subsetneq\EXP$.
+
+  .item:
+
+    V řetězci $\LL\subseteq\NL\subseteq\PP\subseteq\NP\subseteq\PSPACE$ je tedy "alespoň jedna".emphasize inkluze ostrá –
+    nevíme která. Nejspíš jsou ostré všechny, ale z pohledu dnešní matematiky je stále možné, že např.
+    $\PP=\PSPACE$ (i když by si na to nikdo nevsadil).
