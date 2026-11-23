@@ -2,7 +2,7 @@
 
 Skripta k předmětu NI-ICC (Úvod do výpočetní složitosti, FIT ČVUT), stejným postupem jako NI-UMI (WooWoo → MkDocs Material).
 
-- `skripta/html/index.html` – hotový web (funguje i offline, včetně hledání)
+- `skripta/html/index.html` – hotový web (funguje i offline, včetně hledání), online na https://lu2ka.github.io/ni-icc-skripta/
 - `skripta/NI-ICC_skripta.pdf` – PDF verze
 - `woowoo/` – zdroj (`src/*.woo`) a nástroje pro sestavení a kontroly, viz `woowoo/README.md`
 
