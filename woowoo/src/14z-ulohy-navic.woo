@@ -6,7 +6,9 @@
 .reference:ch-resice-sat-horn-sat), DPLL a analýzu konfliktu v CDCL (oddíl .reference:ch-resice-sat-jak-funguji-sat-resice),
 formát DIMACS (oddíl .reference:ch-resice-sat-dimacs), kódování problémů do $\prob{SAT}$u se stavebními bloky (oddíl
 .reference:ch-resice-sat-redukce-do-sat a cvičení .reference:ch-resice-sat-cviceni-7) a Tseitinovu transformaci (oddíl
-.reference:ch-resice-sat-tseitinova-transformace).
+.reference:ch-resice-sat-tseitinova-transformace). Pododdíl .reference:ch-resice-sat-ulohy-navic-sbirka přidává čtyři
+úlohy z cizí sbírky: kódování barvení, trojrozměrného párování, hamiltonovské kružnice a dlouhé kružnice do $\prob{SAT}$u
+v podobě, jakou čeká zápočtový test.
 
 
 .Warning:
@@ -15,7 +17,9 @@ formát DIMACS (oddíl .reference:ch-resice-sat-dimacs), kódování problémů 
   Úlohy v tomto oddílu "nejsou".notion oficiální zadání předmětu. Jsou to procvičovací úlohy navíc k látce kapitoly;
   každý běh algoritmu, každé kódování a každé číslo bylo ověřeno krátkým skriptem v Pythonu (simulace algoritmu,
   hrubá síla přes všechna ohodnocení, porovnání kódování s přímým řešením úlohy, kontrola rezolučního důkazu krok
-  za krokem).
+  za krokem). Kódování v pododdílu .reference:ch-resice-sat-ulohy-navic-sbirka jsou porovnána s hrubou silou na všech
+  grafech do 5 vrcholů (u trojrozměrného párování na všech, resp. náhodných instancích s $q\le3$) pomocí malého řešiče
+  DPLL v Pythonu, včetně čtení řešení z modelu a počtů proměnných a klauzulí.
 
 
 .Subsection Rozcvička
@@ -1510,3 +1514,706 @@ formát DIMACS (oddíl .reference:ch-resice-sat-dimacs), kódování problémů 
   a $x_3=1$: $b=(b_1,b_2,b_3)=(0,1,0)$; $x_1$ odpadne klauzulí $(\lnot x_1\lor\lnot b_2)$, $x_2$ klauzulí
   $(\lnot x_2\lor b_1)$, $x_4$ klauzulí $(\lnot x_4\lor b_1)$, $x_5$ klauzulí $(\lnot x_5\lor b_3)$. (Skriptem ověřeno
   pro $n=2,\dots,12$: korektnost přes všechna ohodnocení $x$ i $b$, počet klauzulí $nm$ a propagace z každého $x_i=1$.)
+
+
+.Subsection Úlohy z jiných sbírek
+  label: ch-resice-sat-ulohy-navic-sbirka
+
+
+Úlohy v tomto pododdílu pocházejí ze sbírky „External Practice Bank“, kterou sestavil spolužák z volně dostupných
+materiálů (hlavně MFF UK). Zadání jsou česky převyprávěná, řešení jsou naše. Všechny čtyři úlohy jsou typu 3 testu
+(kódování do $\prob{SAT}$u, postup v oddílu .reference:ch-test-postup-ilp-sat): proměnné s významem, klauzule po
+skupinách, obě implikace, čtení řešení z modelu a velikost formule.
+
+
+.Exercise:
+  title: 'Úloha 14.9 ($k$-barevnost jako SAT v testové podobě)'
+  label: un-14-9
+
+  "Problém $k$-$\prob{Coloring}$.".notion
+
+
+  "Vstup:".notion neorientovaný graf $G=(V,E)$, $n=|V|$, a přirozené číslo $k$ (zapsané binárně).
+
+
+  "Otázka:".notion lze vrcholy $G$ obarvit "nejvýše".emphasize $k$ barvami tak, aby sousední vrcholy měly různé barvy?
+
+
+  Vzorový recept v oddílu .reference:ch-resice-sat-k-barevnost je přesně toto kódování – zkuste ho napsat bez
+  nahlížení, tak jak by vypadal u testu.
+
+  .enumerate:
+    type: a
+
+    .item:
+
+      Sestrojte formuli v CNF, která je splnitelná právě tehdy, když $G$ lze obarvit nejvýše $k$ barvami. Popište
+      proměnné, klauzule zajišťující, že každý vrchol má "právě jednu".emphasize barvu, a klauzule pro správnost
+      obarvení. Dokažte obě implikace a řekněte, jak z modelu přečíst obarvení.
+
+    .item:
+
+      Kolik má formule proměnných a klauzulí? Je velikost polynomiální ve velikosti vstupu, když je $k$ zapsané
+      binárně? Pokud ne, opravte to.
+
+    .item:
+
+      Pro kolo $W_5$ (kružnice $1,2,3,4,5$ a střed $s$ spojený se všemi jejími vrcholy) spočítejte proměnné a klauzule
+      pro $k=3$ a $k=4$ a rozhodněte splnitelnost.
+
+
+  "Zdroj: P. Veselý, ADS2 – cvičení 10–11 (MFF UK), cvičení 2(b).".small
+
+
+.Solution:
+  label: red-un-14-9
+
+  "Redukce:".notion $k$-$\prob{Coloring} \redp \prob{SAT}$, instance $(G,k)$ $\mapsto$ formule $\varphi_{G,k}$ v CNF.
+  (Je to redukce .reference:ch-resice-sat-red-barveni; stavební bloky ALO, AMO a EO jsou v definici
+  .reference:ch-resice-sat-def-bloky.)
+
+
+  "a) Krok 1 – proměnné.".notion $x_{v,c}$ pro $v\in V$, $c\in\{1,\dots,k\}$: $x_{v,c}=1\iff$ „vrchol $v$ má barvu
+  $c$“. Celkem $nk$ proměnných.
+
+
+  "Krok 2 – klauzule.".notion
+
+  .enumerate:
+
+    .item:
+
+      Chceme: každý vrchol má aspoň jednu barvu. $\mathrm{ALO}(x_{v,1},\dots,x_{v,k})=(x_{v,1}\lor\dots\lor x_{v,k})$
+      pro každé $v\in V$. ($n$ klauzulí)
+
+    .item:
+
+      Chceme: každý vrchol má nejvýše jednu barvu. $\mathrm{AMO}$: $(\lnot x_{v,c}\lor\lnot x_{v,d})$ pro každé $v$
+      a $c<d$. ($n\binom k2$ klauzulí) Skupiny 1 a 2 dohromady jsou blok $\mathrm{EO}$ „právě jedna barva“, který
+      zadání chce.
+
+    .item:
+
+      Chceme: sousedé mají různé barvy. Pro každou hranu $\{u,v\}\in E$ a "každou".emphasize barvu $c$ klauzule
+      $(\lnot x_{u,c}\lor\lnot x_{v,c})$ („$u$ a $v$ nemají obě barvu $c$“). ($|E|\cdot k$ klauzulí)
+
+
+  "Krok 3 – formule.".notion $\varphi_{G,k}$ = konjunkce skupin 1–3.
+
+
+  "Krok 4 – korektnost.".notion
+
+  .itemize:
+
+    .item:
+
+      ($\Rightarrow$) Nechť $b:V\to\{1,\dots,k\}$ je správné obarvení. Položíme $x_{v,c}=1\iff b(v)=c$. Každý vrchol
+      má právě jednu pravdivou proměnnou – platí 1 a 2. Pro hranu $\{u,v\}$ je $b(u)\neq b(v)$, takže pro žádné $c$
+      nejsou $x_{u,c}$ a $x_{v,c}$ pravdivé obě – platí 3.
+
+    .item:
+
+      ($\Leftarrow$) Podle 1 a 2 má v modelu každý vrchol $v$ právě jedno $c$ s $x_{v,c}=1$; položíme $b(v)=c$. Kdyby
+      pro hranu $\{u,v\}$ bylo $b(u)=b(v)=c$, neplatila by klauzule $(\lnot x_{u,c}\lor\lnot x_{v,c})$ ze skupiny 3.
+      Tedy $b$ je správné obarvení nejvýše $k$ barvami.
+
+    .item:
+
+      "Čtení řešení:".notion barva vrcholu $v$ je jediné $c$ s $x_{v,c}=1$. Formule nevyžaduje, aby byla použita každá
+      barva – správně, zadání chce "nejvýše".emphasize $k$ barev.
+
+
+  "b) Velikost.".notion $nk$ proměnných a $n+n\binom k2+|E|\,k=O(nk^2+|E|k)$ klauzulí. Pozor: $k$ je na vstupu binárně,
+  zabírá jen asi $\log_2 k$ bitů. Pro $G$ s pár vrcholy a $k=2^{100}$ by formule měla $n\cdot2^{100}$ proměnných – to
+  není polynomiální. Oprava: je-li $k\ge n$, odpověď je $\ANO$ (každý vrchol dostane vlastní barvu) a redukce vydá
+  pevnou splnitelnou formuli, např. $(y)$. Jinak $k<n$ a formule má $O(n^2)$ proměnných a $O(n^3+|E|\,n)$ klauzulí,
+  což je polynomiální ve velikosti vstupu. (Pro $k=0$ a $n\ge1$ je klauzule skupiny 1 prázdná a formule nesplnitelná,
+  což je správně.)
+
+
+  "c) Kolo $W_5$.".notion $n=6$, $|E|=5+5=10$.
+
+  .itemize:
+
+    .item:
+
+      $k=3$: $6\cdot3=18$ proměnných, $6+6\binom32+10\cdot3=6+18+30=54$ klauzulí. "Nesplnitelná.".notion Střed $s$
+      má podle skupiny 1 nějakou barvu $c$. Všech pět vrcholů kružnice sousedí se $s$, takže podle skupiny 3 mají barvu
+      různou od $c$ – zbývají jim dvě barvy. Na kružnici se pak barvy musí střídat, a protože má lichou délku 5,
+      vrcholy $5$ a $1$ dostanou stejnou barvu – spor se skupinou 3.
+
+    .item:
+
+      $k=4$: $6\cdot4=24$ proměnných, $6+6\binom42+10\cdot4=6+36+40=82$ klauzulí. "Splnitelná.".notion Model: $s$ má
+      barvu 4, vrcholy $1,\dots,5$ barvy $1,2,1,2,3$ (tedy $x_{s,4}=x_{1,1}=x_{2,2}=x_{3,1}=x_{4,2}=x_{5,3}=1$, ostatní 0).
+      Modelů je $120=4\cdot30$: střed má 4 možnosti a kružnice $C_5$ má 30 obarvení zbylými třemi barvami.
+
+
+  (Ověřeno skriptem: kódování porovnáno s hrubou silou přes všechna obarvení na všech grafech do 5 vrcholů a
+  $k=1,\dots,n$ – 5 405 instancí, z toho 3 571 kladných –, včetně čtení obarvení z modelu a počtu klauzulí; pro
+  $W_5$ i počty modelů 0 a 120.)
+
+
+.Exercise:
+  title: 'Úloha 14.10 (Trojrozměrné párování jako SAT)'
+  label: un-14-10
+
+  "Problém $\prob{3DM}$ (trojrozměrné párování, 3-Dimensional Matching).".notion
+
+
+  "Vstup:".notion tři disjunktní množiny $X$, $Y$, $Z$, každá s $q$ prvky, a množina trojic $T\subseteq X\times Y\times Z$.
+
+
+  "Otázka:".notion lze vybrat $M\subseteq T$ tak, aby každý prvek $X\cup Y\cup Z$ ležel v "právě jedné".emphasize
+  vybrané trojici?
+
+  .enumerate:
+    type: a
+
+    .item:
+
+      Zakódujte problém do $\prob{SAT}$u: proměnné s významem, klauzule po skupinách, obě implikace, čtení řešení
+      a počet proměnných a klauzulí v závislosti na $q$ a $|T|$.
+
+    .item:
+
+      Pro $q=3$, $X=\{x_1,x_2,x_3\}$, $Y=\{y_1,y_2,y_3\}$, $Z=\{z_1,z_2,z_3\}$ a $T=\{t_1,\dots,t_6\}$ s
+      $t_1=(x_1,y_2,z_3)$, $t_2=(x_2,y_3,z_1)$, $t_3=(x_3,y_1,z_2)$, $t_4=(x_1,y_1,z_1)$, $t_5=(x_2,y_1,z_3)$,
+      $t_6=(x_3,y_3,z_3)$ rozhodněte instanci pomocí unit propagation. Jak dopadne instance bez trojice $t_2$?
+
+
+  "Zdroj: P. Veselý, ADS2 – cvičení 10–11 (MFF UK), cvičení 2(f).".small
+
+
+.Solution:
+  label: red-un-14-10
+
+  "Redukce:".notion $\prob{3DM} \redp \prob{SAT}$, instance $(X,Y,Z,T)$ $\mapsto$ formule $\varphi_T$ v CNF.
+
+
+  "a) Krok 1 – proměnné.".notion Rozhodujeme jen o tom, které trojice vybrat: $s_t$ pro $t\in T$, $s_t=1\iff$
+  „trojice $t$ je vybraná“. Celkem $|T|$ proměnných. Pro prvek $e\in X\cup Y\cup Z$ označme $T_e=\{t\in T: e\in t\}$
+  trojice, které ho obsahují.
+
+
+  "Krok 2 – klauzule.".notion Pro každý z $3q$ prvků $e$ blok $\mathrm{EO}$ nad trojicemi z $T_e$:
+
+  .enumerate:
+
+    .item:
+
+      Chceme: prvek $e$ je pokrytý. $\mathrm{ALO}$: $\bigl(\bigvee_{t\in T_e}s_t\bigr)$. ($3q$ klauzulí) Je-li
+      $T_e=\emptyset$, je klauzule prázdná a formule nesplnitelná – správně, $e$ nemá čím pokrýt.
+
+    .item:
+
+      Chceme: prvek $e$ není pokrytý dvakrát (vybrané trojice jsou disjunktní). $\mathrm{AMO}$:
+      $(\lnot s_t\lor\lnot s_{t'})$ pro $t\neq t'$ z $T_e$. ($\sum_e\binom{|T_e|}2$ klauzulí)
+
+
+  "Krok 3 – formule.".notion $\varphi_T$ = konjunkce skupin 1 a 2 přes všechny prvky.
+
+
+  "Krok 4 – korektnost.".notion
+
+  .itemize:
+
+    .item:
+
+      ($\Rightarrow$) Nechť $M$ je párování, které pokryje každý prvek právě jednou. Položíme $s_t=1\iff t\in M$. Pro
+      každý prvek $e$ je pravdivá právě jedna proměnná z $T_e$ – platí 1 i 2.
+
+    .item:
+
+      ($\Leftarrow$) V modelu vezmeme $M=\{t: s_t=1\}$. Podle 1 a 2 leží každý prvek v právě jedné trojici z $M$.
+      (Počet $|M|=q$ hlídat nemusíme: každá trojice obsahuje právě jeden prvek $X$ a každý prvek $X$ je pokryt právě
+      jednou, takže $|M|=|X|=q$.)
+
+    .item:
+
+      "Čtení řešení:".notion vybrané trojice jsou ty s $s_t=1$.
+
+
+  "Velikost.".notion $|T|\le q^3$ proměnných a $3q+\sum_e\binom{|T_e|}2$ klauzulí. Dvě různé trojice mají společné nejvýše
+  dva prvky, takže $\sum_e\binom{|T_e|}2\le2\binom{|T|}2$ a klauzulí je $O(q+|T|^2)$ – polynomiálně ve velikosti vstupu.
+  Sdílejí-li dvě trojice dva prvky, vznikne táž klauzule $(\lnot s_t\lor\lnot s_{t'})$ dvakrát; druhou kopii lze vynechat.
+
+
+  "b) Instance.".notion Trojice obsahující jednotlivé prvky:
+
+  .table:
+    columns: 'lll'
+
+    .row:
+      head: true
+
+      $X$
+
+      $Y$
+
+      $Z$
+
+    .row:
+
+      $T_{x_1}=\{t_1,t_4\}$
+
+      $T_{y_1}=\{t_3,t_4,t_5\}$
+
+      $T_{z_1}=\{t_2,t_4\}$
+
+    .row:
+
+      $T_{x_2}=\{t_2,t_5\}$
+
+      $T_{y_2}=\{t_1\}$
+
+      $T_{z_2}=\{t_3\}$
+
+    .row:
+
+      $T_{x_3}=\{t_3,t_6\}$
+
+      $T_{y_3}=\{t_2,t_6\}$
+
+      $T_{z_3}=\{t_1,t_5,t_6\}$
+
+
+  Formule má 6 proměnných a $9+(1+1+1)+(3+0+1)+(1+0+3)=9+11=20$ klauzulí. Unit propagation: $\mathrm{ALO}$ pro $y_2$
+  je jednotková klauzule $(s_1)$, pro $z_2$ klauzule $(s_3)$, tedy $s_1=s_3=1$. Klauzule $\mathrm{AMO}$ pak vynulují
+  trojice, které s nimi sdílejí prvek: $s_4=0$ ($x_1$), $s_5=0$ a $s_6=0$ ($z_3$). Klauzule $\mathrm{ALO}$ pro $x_2$,
+  $(s_2\lor s_5)$, se stane jednotkovou: $s_2=1$. Všechny klauzule jsou splněné bez větvení, model je
+  $M=\{t_1,t_2,t_3\}$ a je jediný: $t_1=(x_1,y_2,z_3)$, $t_2=(x_2,y_3,z_1)$, $t_3=(x_3,y_1,z_2)$ pokryjí každý prvek
+  právě jednou.
+
+
+  "Bez $t_2$".notion (5 proměnných, 17 klauzulí) je stále každý prvek v nějaké trojici, ale $y_2$ leží jen v $t_1$,
+  $z_2$ jen v $t_3$ a $x_2$ jen v $t_5$. Propagace vynutí $s_1=s_3=s_5=1$, jenže $t_1$ a $t_5$ sdílejí $z_3$ –
+  klauzule $(\lnot s_1\lor\lnot s_5)$ je v konfliktu. Formule je "nesplnitelná".notion, párování neexistuje.
+
+
+  "(nad rámec přednášky)".emphasize $\prob{3DM}$ je NP-úplný (Karp 1972) a je to speciální případ $\prob{X3C}$
+  (definice .reference:prob-x3c): univerzum $U=X\cup Y\cup Z$, systém množin $T$. Stejné kódování („právě jedna vybraná
+  množina obsahuje prvek“) proto funguje i pro $\prob{X3C}$.
+
+
+  (Ověřeno skriptem: počet modelů porovnán s počtem párování nalezených hrubou silou pro všechna $T$ při $q\le2$
+  a 400 náhodných $T$ při $q=3$ – 658 instancí, z toho 258 kladných; pro instanci z b) i propagace krok za krokem.)
+
+
+.Exercise:
+  title: 'Úloha 14.11 (Hamiltonovská kružnice jako SAT – těžší)'
+  label: un-14-11
+
+  Je dán neorientovaný graf $G=(V,E)$, $n=|V|$. Sestrojte formuli v CNF "polynomiální velikosti".emphasize, která je
+  splnitelná právě tehdy, když $G$ má hamiltonovskou kružnici ($\prob{HC}$). Vysvětlete význam proměnných a každé
+  skupiny klauzulí.
+
+
+  Orientovanou verzi řeší cvičení .reference:cv-7-2 klauzulemi pro nehrany. Tady pište podmínku „další vrchol je
+  soused“ kladně, přes seznamy sousedů, a pohlídejte malé grafy.
+
+  .enumerate:
+    type: a
+
+    .item:
+
+      Kódování, obě implikace, čtení kružnice z modelu, počet proměnných a klauzulí.
+
+    .item:
+
+      Proč nestačí proměnné $y_e$ pro hrany a podmínka „u každého vrcholu jsou vybrané právě dvě hrany“?
+
+    .item:
+
+      Rozhodněte formuli pro „domeček“ (čtverec $1,2,3,4$ a vrchol $5$ spojený s $1$ a $2$) a pro úplný bipartitní
+      graf $K_{2,3}$ se stranami $\{a,b\}$ a $\{c,d,e\}$.
+
+
+  "Zdroj: Příklady ADS2 – cvičení 10 (MFF UK), příklad 90.".small
+
+
+.Solution:
+  label: red-un-14-11
+
+  "Redukce:".notion $\prob{HC} \redp \prob{SAT}$, graf $G$ $\mapsto$ formule $\psi_G$ v CNF.
+
+
+  "Malé grafy.".notion Kružnice má aspoň 3 vrcholy. Pro $n<3$ vydáme pevnou nesplnitelnou formuli $(y)\land(\lnot y)$.
+  Dál $n\ge3$.
+
+
+  "Myšlenka.".notion Hamiltonovská kružnice je pořadí $w_1,w_2,\dots,w_n$ všech vrcholů, v němž jsou sousední vrcholy
+  spojené hranou, a to i poslední s prvním. Kódujeme tedy permutaci: „který vrchol je na kterém místě“.
+
+
+  "a) Krok 1 – proměnné.".notion $p_{v,i}$ pro $v\in V$, $i\in\{1,\dots,n\}$: $p_{v,i}=1\iff$ „vrchol $v$ je na
+  kružnici na $i$-tém místě“. Celkem $n^2$ proměnných. Místo $n+1$ ztotožníme s místem $1$.
+
+
+  "Krok 2 – klauzule.".notion
+
+  .enumerate:
+
+    .item:
+
+      Každý vrchol je na nějakém místě: $(p_{v,1}\lor\dots\lor p_{v,n})$ pro každé $v$. ($n$ klauzulí)
+
+    .item:
+
+      Každý vrchol je nejvýše na jednom místě: $(\lnot p_{v,i}\lor\lnot p_{v,j})$ pro každé $v$ a $i<j$.
+      ($n\binom n2$ klauzulí)
+
+    .item:
+
+      Na každém místě je nějaký vrchol: $(p_{v_1,i}\lor\dots\lor p_{v_n,i})$ pro každé $i$. ($n$ klauzulí)
+
+    .item:
+
+      Na každém místě je nejvýše jeden vrchol: $(\lnot p_{u,i}\lor\lnot p_{v,i})$ pro každé $i$ a $u\neq v$.
+      ($n\binom n2$ klauzulí)
+
+    .item:
+
+      Následník je soused: je-li $u$ na místě $i$, je na místě $i+1$ některý soused $u$. Implikace
+      $p_{u,i}\Rightarrow\bigvee_{v:\{u,v\}\in E}p_{v,i+1}$, tedy klauzule
+      $\bigl(\lnot p_{u,i}\lor\bigvee_{v:\{u,v\}\in E}p_{v,i+1}\bigr)$ pro každé $u$ a $i=1,\dots,n$. ($n^2$ klauzulí)
+      Izolovaný vrchol $u$ dává klauzule $(\lnot p_{u,i})$, které jsou se skupinou 1 ve sporu – správně.
+
+
+  "Krok 3 – formule.".notion $\psi_G$ = konjunkce skupin 1–5.
+
+
+  "Krok 4 – korektnost.".notion
+
+  .itemize:
+
+    .item:
+
+      ($\Rightarrow$) Kružnice $w_1,\dots,w_n$ ($w_{n+1}=w_1$): položíme $p_{w_i,i}=1$, ostatní 0. Skupiny 1–4 platí,
+      protože jde o bijekci vrcholy $\leftrightarrow$ místa. Ve skupině 5 je pro $u\neq w_i$ pravdivý literál
+      $\lnot p_{u,i}$ a pro $u=w_i$ literál $p_{w_{i+1},i+1}$, protože $w_{i+1}$ je soused $w_i$.
+
+    .item:
+
+      ($\Leftarrow$) Podle 1–4 je $\{(v,i):p_{v,i}=1\}$ bijekce, tedy pořadí $w_1,\dots,w_n$, v němž je každý vrchol
+      právě jednou. Klauzule 5 pro $u=w_i$ říká, že na místě $i+1$ je soused $w_i$; tam je ale jen $w_{i+1}$
+      (skupina 4). Tedy $\{w_i,w_{i+1}\}\in E$ pro $i=1,\dots,n$ včetně hrany $\{w_n,w_1\}$. Vrcholy jsou různé a
+      $n\ge3$, takže $w_1,\dots,w_n,w_1$ je kružnice.
+
+    .item:
+
+      "Čtení řešení:".notion pro $i=1,\dots,n$ vypiš jediný $v$ s $p_{v,i}=1$.
+
+    .item:
+
+      Proč $n\ge3$: pro $n=2$ a jedinou hranu $\{u,v\}$ by formule byla splnitelná ($u$, $v$ a zpět), ale „kružnice“
+      by použila tutéž hranu dvakrát.
+
+
+  "Velikost.".notion $n^2$ proměnných a $2n+2n\binom n2+n^2=n^3+2n$ klauzulí; skupina 5 má dohromady
+  $n\sum_u(1+\deg u)=n(n+2|E|)$ literálů. Vše je $O(n^3)$, tedy polynomiální. Proto ten důraz v zadání: „přímočará“
+  formule „kružnice je jedna z $(n-1)!/2$ možných“ by byla exponenciálně velká. Varianta skupiny 5 z cvičení
+  .reference:cv-7-2, $(\lnot p_{u,i}\lor\lnot p_{v,i+1})$ pro $u\neq v$ s $\{u,v\}\notin E$, je také správná a má
+  $2n\bigl(\binom n2-|E|\bigr)$ klauzulí – vyplatí se u hustých grafů.
+
+
+  "Symetrie".notion "(nad rámec přednášky)".emphasize. Každá hamiltonovská kružnice dává $2n$ modelů ($n$ otočení,
+  2 směry). Jednotková klauzule $(p_{v_1,1})$ jich nechá jen 2 a splnitelnost nezmění.
+
+
+  "b) Proč nestačí hrany se stupněm 2.".notion Proměnné $y_e$ s blokem „právě dvě vybrané hrany u každého vrcholu“
+  popisují podgraf, v němž má každý vrchol stupeň 2 – to je "sjednocení disjunktních kružnic".emphasize, ne nutně
+  jedna kružnice. Protipříklad: dva disjunktní trojúhelníky $\{1,2,3\}$ a $\{4,5,6\}$. Vybereme všechny hrany, každý
+  vrchol má stupeň 2 a formule je splnitelná, graf je ale nesouvislý a hamiltonovskou kružnici nemá. Zakázat podcykly
+  přímo by chtělo podmínku pro každou podmnožinu vrcholů – exponenciálně mnoho (stejný problém má model obchodního
+  cestujícího, oddíl .reference:ch-resice-ilp-zakaz-podcyklu). Proměnné pro pořadí $p_{v,i}$ to vyřeší polynomiálně.
+
+
+  "c) Příklady.".notion Pro $n=5$ má formule $25$ proměnných a $5^3+2\cdot5=135$ klauzulí (s variantou pro nehrany
+  $10+100+2\cdot5\cdot(10-6)=150$; oba grafy mají 6 hran).
+
+  .itemize:
+
+    .item:
+
+      Domeček: "splnitelná".notion, například $p_{1,1}=p_{5,2}=p_{2,3}=p_{3,4}=p_{4,5}=1$, tedy kružnice
+      $1,5,2,3,4,1$. Modelů je $10=2\cdot5$ – domeček má jedinou hamiltonovskou kružnici; s klauzulí $(p_{1,1})$
+      zbývají 2 modely (dva směry).
+
+    .item:
+
+      $K_{2,3}$: "nesplnitelná".notion. Každá hrana vede mezi stranami $\{a,b\}$ a $\{c,d,e\}$, takže se strany na
+      kružnici střídají a kružnice obsahuje z obou stran stejně vrcholů; $2\neq3$.
+
+
+  .centered:
+
+    !tikz:
+      filename: 14z-ulohy-navic-07
+      options: 'x=1cm,y=1cm'
+
+      % domecek s hamiltonovskou kruznici 1,5,2,3,4
+      \node[v] (h1) at (0,1.4) {1};
+      \node[v] (h2) at (1.6,1.4) {2};
+      \node[v] (h3) at (1.6,0) {3};
+      \node[v] (h4) at (0,0) {4};
+      \node[v] (h5) at (0.8,2.5) {5};
+      \draw[e] (h1)--(h2);
+      \draw[esel] (h1)--(h5)--(h2)--(h3)--(h4)--(h1);
+      \node[font=\footnotesize] at (0.8,-0.75) {domeček: HC existuje};
+      % K_{2,3}
+      \begin{scope}[xshift=3.6cm]
+        \node[v] (ka) at (0.5,2.2) {$a$};
+        \node[v] (kb) at (2.1,2.2) {$b$};
+        \node[v] (kc) at (0,0.2) {$c$};
+        \node[v] (kd) at (1.3,0.2) {$d$};
+        \node[v] (ke) at (2.6,0.2) {$e$};
+        \foreach \x in {ka,kb} {\foreach \y in {kc,kd,ke} {\draw[e] (\x)--(\y);}}
+        \node[font=\footnotesize] at (1.3,-0.75) {$K_{2,3}$: HC neexistuje};
+      \end{scope}
+      % dva trojuhelniky: 2-faktor bez HC
+      \begin{scope}[xshift=7.6cm]
+        \node[v] (t1) at (0,1.6) {1};
+        \node[v] (t2) at (1.2,1.6) {2};
+        \node[v] (t3) at (0.6,0.4) {3};
+        \node[v] (t4) at (2.4,1.6) {4};
+        \node[v] (t5) at (3.6,1.6) {5};
+        \node[v] (t6) at (3.0,0.4) {6};
+        \draw[esel] (t1)--(t2)--(t3)--(t1);
+        \draw[esel] (t4)--(t5)--(t6)--(t4);
+        \node[font=\footnotesize,align=center] at (1.8,-0.6) {všude stupeň 2,\\ ale HC neexistuje};
+      \end{scope}
+
+
+  Vlevo domeček s jedinou hamiltonovskou kružnicí $1,5,2,3,4$, uprostřed $K_{2,3}$, vpravo protipříklad z bodu b).
+  "Všimni si:".emphasize vpravo splňuje výběr všech hran podmínku „stupeň 2“, a přesto to nejsou jedna kružnice, ale dvě.
+
+
+  (Ověřeno skriptem na všech grafech do 5 vrcholů a 150 náhodných grafech s 6 vrcholy – 1 249 instancí, z toho 282
+  s hamiltonovskou kružnicí –, pro obě varianty skupiny 5 a s klauzulí proti symetrii i bez ní, včetně čtení kružnice
+  z modelu a počtu klauzulí; pro oba příklady i počty modelů 10, 2 a 0.)
+
+
+.Exercise:
+  title: 'Úloha 14.12 (Dlouhá kružnice jako SAT – těžší)'
+  label: un-14-12
+
+  "Problém $\prob{Long Cycle}$ (dlouhá kružnice).".notion
+
+
+  "Vstup:".notion neorientovaný graf $G=(V,E)$, $n=|V|$, a přirozené číslo $k$.
+
+
+  "Otázka:".notion obsahuje $G$ kružnici délky aspoň $k$, tj. s aspoň $k$ hranami? Kružnice nesmí opakovat vrcholy.
+
+  .enumerate:
+    type: a
+
+    .item:
+
+      Sestrojte formuli v CNF polynomiální velikosti, která je splnitelná právě tehdy, když odpověď je $\ANO$.
+      Kódování musí vyloučit opakování vrcholů. Obě implikace, čtení kružnice z modelu, počet proměnných a klauzulí.
+
+    .item:
+
+      Rozhodněte formuli pro $K_{2,3}$ z úlohy .reference:un-14-11 a $k=4$, $k=5$.
+
+    .item:
+
+      Ukažte na malých grafech, co se pokazí, když vynecháte klauzule proti opakování vrcholu, klauzule uzavírající
+      kružnici, nebo když nepohlídáte $k\le2$.
+
+
+  "Zdroj: Příklady ADS2 – cvičení 10 (MFF UK), příklad 95.".small
+
+
+.Solution:
+  label: red-un-14-12
+
+  "Redukce:".notion $\prob{Long Cycle} \redp \prob{SAT}$, instance $(G,k)$ $\mapsto$ formule $\chi_{G,k}$ v CNF.
+
+
+  "Myšlenka.".notion Kružnice délky $L$ má $L$ vrcholů a $L$ hran. Délku dopředu neznáme, proto vrcholy kružnice
+  rozmístíme na místa $1,\dots,n$, obsadíme jen "začátek".emphasize $1,\dots,L$ a budeme chtít $L\ge k$. Oproti
+  hamiltonovské kružnici (úloha .reference:un-14-11) přibudou proměnné „místo je obsazené“ a uzavírací hrana vede
+  z "posledního obsazeného".emphasize místa, ne z místa $n$.
+
+
+  "Ošetření okrajů.".notion Kružnice v grafu bez smyček a násobných hran má aspoň 3 hrany, proto položíme
+  $k:=\max(k,3)$. Je-li pak $k>n$, odpověď je $\NE$ a vydáme $(y)\land(\lnot y)$. Dál $3\le k\le n$.
+
+
+  "a) Krok 1 – proměnné.".notion
+
+  .itemize:
+
+    .item:
+
+      $p_{v,i}$ pro $v\in V$, $i\in\{1,\dots,n\}$: $p_{v,i}=1\iff$ „vrchol $v$ je na kružnici na $i$-tém místě“;
+
+    .item:
+
+      $o_i$ pro $i\in\{1,\dots,n\}$: $o_i=1\iff$ „místo $i$ je obsazené“.
+
+
+  Celkem $n^2+n$ proměnných. Označme $\overline N=\binom n2-|E|$ počet nehran.
+
+
+  "Krok 2 – klauzule.".notion
+
+  .enumerate:
+
+    .item:
+
+      Na každém místě nejvýše jeden vrchol: $(\lnot p_{a,i}\lor\lnot p_{b,i})$ pro každé $i$ a $a\neq b$.
+      ($n\binom n2$ klauzulí)
+
+    .item:
+
+      "Žádný vrchol dvakrát".notion: $(\lnot p_{v,i}\lor\lnot p_{v,j})$ pro každé $v$ a $i<j$. ($n\binom n2$ klauzulí)
+
+    .item:
+
+      Obsazené místo má vrchol: $o_i\Rightarrow\bigvee_v p_{v,i}$, klauzule
+      $(\lnot o_i\lor p_{v_1,i}\lor\dots\lor p_{v_n,i})$ pro každé $i$. ($n$ klauzulí)
+
+    .item:
+
+      Vrchol stojí jen na obsazeném místě: $(\lnot p_{v,i}\lor o_i)$ pro každé $v$ a $i$. ($n^2$ klauzulí)
+
+    .item:
+
+      Obsazená místa tvoří začátek: $o_{i+1}\Rightarrow o_i$, klauzule $(\lnot o_{i+1}\lor o_i)$ pro $i=1,\dots,n-1$.
+      ($n-1$ klauzulí)
+
+    .item:
+
+      Délka aspoň $k$: $(o_k)$. Se skupinou 5 to vynutí $o_1=\dots=o_k=1$. (1 klauzule)
+
+    .item:
+
+      Sousední obsazená místa spojuje hrana: $(\lnot p_{a,i}\lor\lnot p_{b,i+1})$ pro $i=1,\dots,n-1$ a každou
+      uspořádanou dvojici $a\neq b$ s $\{a,b\}\notin E$. ($2(n-1)\overline N$ klauzulí)
+
+    .item:
+
+      Poslední obsazené místo navazuje na první. Místo $i$ je poslední, když $o_i=1$ a $o_{i+1}=0$. Implikace
+      $p_{a,i}\land\lnot o_{i+1}\land p_{b,1}\Rightarrow\bot$ pro nehranu $\{a,b\}$, $a\neq b$, dává klauzuli
+      $(\lnot p_{a,i}\lor o_{i+1}\lor\lnot p_{b,1})$ pro $i=k,\dots,n-1$ a pro $i=n$ klauzuli
+      $(\lnot p_{a,n}\lor\lnot p_{b,1})$. (Pro $i<k$ poslední místo být nemůže, protože $o_k=1$.)
+      ($2(n-k+1)\overline N$ klauzulí)
+
+
+  "Krok 3 – formule.".notion $\chi_{G,k}$ = konjunkce skupin 1–8.
+
+
+  "Krok 4 – korektnost.".notion
+
+  .itemize:
+
+    .item:
+
+      ($\Rightarrow$) Nechť $w_1,\dots,w_L$ je kružnice, $L\ge k$, bez opakování vrcholů. Položíme $p_{w_i,i}=1$ pro
+      $i\le L$, $o_i=1\iff i\le L$, ostatní 0. Skupiny 1 a 2 platí, protože vrcholy i místa jsou různé; 3 a 4, protože
+      obsazená místa jsou právě $1,\dots,L$ a na každém stojí $w_i$; 5 a 6, protože jde o začátek délky $L\ge k$.
+      Skupina 7 platí, protože $\{w_i,w_{i+1}\}\in E$ (a za místem $L$ už nic nestojí). Ve skupině 8 je jediné místo
+      s $p_{a,i}=1$ a $o_{i+1}=0$ místo $L$ a hrana $\{w_L,w_1\}$ existuje.
+
+    .item:
+
+      ($\Leftarrow$) Nechť $L$ je největší $i$ s $o_i=1$. Podle 5 a 6 jsou obsazená právě místa $1,\dots,L$ a
+      $L\ge k\ge3$. Podle 3 a 1 stojí na každém místě $i\le L$ právě jeden vrchol $w_i$, podle 4 za místem $L$ nikdo.
+      Podle 2 jsou $w_1,\dots,w_L$ navzájem různé. Podle 7 je $\{w_i,w_{i+1}\}\in E$ pro $i<L$ a podle 8 (místo $L$
+      je poslední) je $\{w_L,w_1\}\in E$. Tedy $w_1,\dots,w_L,w_1$ je kružnice délky $L\ge k$.
+
+    .item:
+
+      "Čtení řešení:".notion $L=\max\{i:o_i=1\}$, kružnice je $w_1,\dots,w_L$, kde $w_i$ je jediný vrchol s $p_{w_i,i}=1$.
+
+
+  "Velikost.".notion $n^2+n$ proměnných a
+
+  .equation:
+
+    2n\binom n2+n+n^2+(n-1)+1+2(n-1)\overline N+2(n-k+1)\overline N \;=\; n^3+2n+2(2n-k)\,\overline N \;=\; O(n^3)
+
+  klauzulí, tedy polynomiálně. Pro $k=n$ je to hamiltonovská kružnice; $\prob{Long Cycle}$ je proto NP-těžký
+  ($\prob{HC}\redp\prob{Long Cycle}$ volbou $k=n$).
+
+
+  "b) $K_{2,3}$.".notion $n=5$, $|E|=6$, $\overline N=4$, tedy 30 proměnných.
+
+  .itemize:
+
+    .item:
+
+      $k=4$: $125+10+2\cdot4\cdot(10-4)=183$ klauzulí, "splnitelná".notion. Model: $p_{a,1}=p_{c,2}=p_{b,3}=p_{d,4}=1$,
+      $o_1=o_2=o_3=o_4=1$, $o_5=0$, ostatní 0 – kružnice $a,c,b,d,a$ délky 4 (obrázek níže). Modelů je 24: tři
+      kružnice délky 4 (dvojice ze strany $\{c,d,e\}$), každá ve 4 otočeních a 2 směrech.
+
+    .item:
+
+      $k=5$: $125+10+2\cdot4\cdot(10-5)=175$ klauzulí, "nesplnitelná".notion – kružnice délky 5 by byla hamiltonovská
+      a ta v $K_{2,3}$ podle úlohy .reference:un-14-11 neexistuje.
+
+
+  .centered:
+
+    !tikz:
+      filename: 14z-ulohy-navic-08
+      options: 'x=1cm,y=1cm'
+
+      \node[v] (ka) at (0.5,2.2) {$a$};
+      \node[v] (kb) at (2.1,2.2) {$b$};
+      \node[v] (kc) at (0,0.2) {$c$};
+      \node[v] (kd) at (1.3,0.2) {$d$};
+      \node[v] (ke) at (2.6,0.2) {$e$};
+      \foreach \x in {ka,kb} {\foreach \y in {kc,kd,ke} {\draw[e] (\x)--(\y);}}
+      \draw[esel] (ka)--(kc)--(kb)--(kd)--(ka);
+      \begin{scope}[xshift=4.3cm,yshift=2.4cm]
+        \foreach \i in {1,...,5} {\node[font=\scriptsize] at (\i*0.85,0.5) {$i{=}\i$};}
+        \foreach \v/\pos/\r in {a/1/0,b/3/1,c/2/2,d/4/3,e/0/4} {
+          \node[font=\scriptsize,anchor=east] at (0.4,-\r*0.6) {$p_{\v,i}$};
+          \foreach \i in {1,...,5} {
+            \ifnum\i=\pos \node[gcellT] at (\i*0.85,-\r*0.6) {1};
+            \else \node[gcellF] at (\i*0.85,-\r*0.6) {0}; \fi
+          }
+        }
+        \node[font=\scriptsize,anchor=east] at (0.4,-3.2) {$o_i$};
+        \foreach \i in {1,...,5} {
+          \ifnum\i<5 \node[gcellT] at (\i*0.85,-3.2) {1};
+          \else \node[gcellF] at (\i*0.85,-3.2) {0}; \fi
+        }
+      \end{scope}
+
+
+  Vlevo kružnice $a,c,b,d$ v $K_{2,3}$, vpravo model: matice $p_{v,i}$ a řádek $o_i$. "Všimni si:".emphasize sloupec
+  $i=5$ je celý nulový, protože místo 5 není obsazené, a vrchol $e$ na kružnici není – na rozdíl od úlohy
+  .reference:un-14-11 nemusí být každý vrchol na nějakém místě.
+
+
+  "c) Co se pokazí bez některých klauzulí.".notion
+
+  .itemize:
+
+    .item:
+
+      "Bez skupiny 2".notion vrcholy se smějí opakovat. Graf = trojúhelník $\{1,2,3\}$ a izolované vrcholy $4,5,6$,
+      $k=6$: formule je splnitelná, dokonce modelem s týmž vrcholem na všech šesti místech (skupina 7 zakazuje jen
+      nehrany mezi "různými".emphasize vrcholy). I kdybychom zakázali stejný vrchol na sousedních místech, zbude
+      uzavřený sled $1,3,2,1,3,2$ – ale nejdelší kružnice má délku 3.
+
+    .item:
+
+      "Bez skupiny 8".notion se kružnice neuzavře: pro cestu $1-2-3$ a $k=3$ je formule splnitelná pořadím $1,2,3$,
+      ačkoli graf žádnou kružnici nemá.
+
+    .item:
+
+      "Bez $k:=\max(k,3)$".notion: pro jedinou hranu $\{1,2\}$ ($n=2$) a $k=2$ je formule splnitelná pořadím $1,2$ –
+      „kružnice“ $1,2,1$ by prošla tutéž hranu dvakrát.
+
+
+  (Ověřeno skriptem na všech grafech do 5 vrcholů pro všechna $k=0,\dots,n+1$ a na 120 náhodných grafech s 6 vrcholy –
+  8 563 instancí, z toho 4 357 kladných – porovnáním s nejdelší kružnicí nalezenou hrubou silou, včetně čtení kružnice
+  z modelu a vzorce pro počet klauzulí; pro $K_{2,3}$ i počet modelů 24 a všechny tři protipříklady z bodu c).)

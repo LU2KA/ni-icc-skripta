@@ -49,7 +49,9 @@ je poslední oddíl `.Section Shrnutí kapitoly`. Krátké jméno souboru bez di
 **Úlohy navíc** (`NNz-ulohy-navic.woo`, kapitoly 01–15): za shrnutím kapitoly následuje oddíl `.Section Úlohy navíc`
 se štítkem `<štítek kapitoly>-ulohy-navic` – osm úplně vyřešených úloh nad rámec cvičení (nejsou v LaTeXové předloze
 ani ve zdrojích předmětu). Stavba: úvodní odstavec, `.Warning:` s `title: 'Neoficiální úlohy'`, pododdíly
-`Rozcvička` / `Na úrovni testu` / `Těžší úlohy` (štítky `<štítek kapitoly>-ulohy-navic-…`). Úloha je dvojice
+`Rozcvička` / `Na úrovni testu` / `Těžší úlohy` (štítky `<štítek kapitoly>-ulohy-navic-…`) a případně
+`Úlohy z jiných sbírek` (`…-ulohy-navic-sbirka`: převzatá zadání s uvedeným zdrojem, naše řešení, čísla N.9 dál –
+stávající čísla úloh se nepřečíslovávají). Úloha je dvojice
 `.Exercise:` (`title: 'Úloha N.k (název)'`, `label: un-N-k`, N = číslo kapitoly) + `.Solution:`; řešení s redukcí má
 `label: red-un-N-k` a začíná hlavičkou redukce (2.10). Obrázky `filename: NNz-ulohy-navic-01`, … Typové úlohy
 v příloze B (`17a`–`17d`) se číslují `'Typová úloha T.k [6 bodů]'`, `label: typ-T-k`, řešení typu 4 `red-typ-4-k`.
@@ -299,6 +301,15 @@ Zdrojový kód (Python, DIMACS, LP formát): `!codeblock:` s meta `language: pyt
 `"text"#štítek` jen pro objekty (ne pro kapitoly a oddíly); `.reference:štítek` pro cokoli. Za štítkem smí hned být interpunkce.
 Odkazy do jiných kapitol piš podle mechanického pravidla pro štítky, i když cílový soubor ještě neexistuje.
 
+**Vyskakovací definice (jen web).** Pojmy a problémy, které mají definici, se v textu i ve vzorcích samy obalí
+odkazem s okénkem po najetí myší. Ve zdroji se kvůli tomu nic nepíše; seznam pojmů je v `src/pojmy.yaml`
+a obaluje je `tools/link_terms.py` po sestavení webu (spouští ho `build_web.sh` i `preview.sh`). Nová `.Definition:`
+nebo nový problém používaný ve vzorcích (`\prob{…}`) ⇒ přidej záznam do `src/pojmy.yaml`: `box:` se štítkem rámečku,
+nebo `id: pojem-…` s vlastní krátkou definicí, když rámeček není; k tomu `prob:` (přesné argumenty `\prob{…}`),
+`makro:` (třídy jako `NP`) a `text:` (regulární výrazy pro skloňované tvary v textu); anglické názvy z `prob:` se
+v textu hledají samy, `bez_textu:` je vypne (např. obecné slovo „Rozvrh“). Okénko se ukáže i u
+každého `.reference:` na definici, větu, lemma nebo důsledek.
+
 ### 2.10 Rámečky skript → objekty
 
 | LaTeX | WooWoo | meta |
@@ -340,6 +351,9 @@ v `title` smí být `$…$`.
   (má-li už jiný štítek, nech `red-id` na nejbližším objektu). **Každé `red:id` z předlohy musí existovat jako štítek `red-id`**
   (odkazuje na ně graf redukcí v příloze D).
 - Každá nově psaná redukce (nové kapitoly, typové úlohy) začíná touto hlavičkou.
+
+Na webu jsou rozbalovací `.Solution:` a `.Proof:`; u `.Example:` zůstane vidět první blok (zadání příkladu) a vše
+za ním je rozbalovací „Řešení“ – první blok příkladu proto má být zadání. V PDF je všechno rozbalené.
 
 ### 2.11 Co se vypouští
 

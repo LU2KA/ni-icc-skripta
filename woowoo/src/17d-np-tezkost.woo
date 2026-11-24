@@ -74,7 +74,9 @@ v oddílu .reference:ch-test-postup-np.
     "7.7"#un-7-7), .reference:ch-is ("8.4"#un-8-4 až "8.7"#un-8-7), .reference:ch-zoo ("9.4"#un-9-4,
     "9.5"#un-9-5, "9.7"#un-9-7), .reference:ch-x3c ("10.3"#un-10-3 až "10.7"#un-10-7) a .reference:ch-cisla
     ("11.3"#un-11-3 až "11.5"#un-11-5, "11.7"#un-11-7, "11.8"#un-11-8); jednovětý trik ke každé z nich je
-    v oddílu .reference:ch-graf-redukce-z-uloh-navic.
+    v oddílu .reference:ch-graf-redukce-z-uloh-navic. Ze sbírky: "7.10"#un-7-10, "7.11"#un-7-11, "8.10"#un-8-10,
+    "10.9"#un-10-9, "10.10"#un-10-10 a "11.10"#un-11-10 až "11.16"#un-11-16 (HC/HP/UHP, TSP, 0/1 ILP, batoh,
+    Subset Sum a Partition, rozvrh na $m$ strojů, kostra s omezeným stupněm).
 
 
 .Subsection Řešené úlohy: NP-těžkost
@@ -312,7 +314,7 @@ v oddílu .reference:ch-test-postup-np.
   Je to stejná myšlenka „doplňkových čísel“ jako v redukci "$\prob{Subset Sum} \redp \prob{Partition}$"#red-partition.
 
 
-  "3. Polynomialita.".notion Výstup má $n+1$ čísel, každé nejvýše $2\max(S,T)$, tedy s binárním zápisem o $O(1)$
+  "3. Polynomialita.".notion Výstup má $n+1$ čísel, každé nejvýše $2\max(S,T)$, tedy s binárním zápisem o $O(\log n)$
   bitů delším než vstupní čísla; spočítáme ho sčítáním a odčítáním v polynomiálním čase.
 
 

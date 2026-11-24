@@ -6,7 +6,10 @@
 .reference:ch-resice-ilp-modelovaci-triky) a práci s mezí – LP relaxaci a dualitu (oddíl
 .reference:ch-resice-ilp-lp-relaxace-a-dualita), branch & bound (oddíl .reference:ch-resice-ilp-branch-and-bound),
 řezy a sílu formulace (oddíly .reference:ch-resice-ilp-rezy-a-separace a .reference:ch-resice-ilp-sila-formulace).
-Modelovací úlohy řeš podle rámečku "Postup na papíře"#ch-resice-ilp-proc-formulace.
+Modelovací úlohy řeš podle rámečku "Postup na papíře"#ch-resice-ilp-proc-formulace. Pododdíl
+.reference:ch-resice-ilp-ulohy-navic-sbirka přidává deset modelovacích úloh z cizí sbírky (batoh, splnitelnost,
+barvení, pokrytí a párování, množinové pokrytí a balení, obchodní cestující, autobusy) ve tvaru úlohy typu 3
+zápočtového testu.
 
 
 .Warning:
@@ -15,7 +18,9 @@ Modelovací úlohy řeš podle rámečku "Postup na papíře"#ch-resice-ilp-proc
   Úlohy v tomto oddílu "nejsou".notion oficiální zadání předmětu. Jsou to procvičovací úlohy navíc k látce kapitoly;
   všechna čísla v řešeních (optima, LP meze, vrcholy, stromy branch & bound, počty omezení) jsme přepočítali skripty
   a modely porovnali s hrubou silou: výčtem všech celočíselných řešení, LP/ILP řešičem a na náhodných malých
-  instancích.
+  instancích. Modely z pododdílu .reference:ch-resice-ilp-ulohy-navic-sbirka jsme ověřili stejně: výčtem všech
+  0/1 přiřazení na zadaných i na stovkách náhodných malých instancí (optimum modelu se vždy rovnalo optimu úlohy
+  spočítanému přímo), LP meze řešičem.
 
 
 .Subsection Rozcvička
@@ -1269,3 +1274,1124 @@ Modelovací úlohy řeš podle rámečku "Postup na papíře"#ch-resice-ilp-proc
   .reference:ch-resice-ilp-rezy-a-separace): MTZ je malý, ale slabý, zákaz podcyklů silný, ale exponenciální –
   a separace dovolí použít silný model, aniž bychom ho celý vypsali. Části b) a c) jsou ověřeny i výčtem: pro $n\le6$ připustí MTZ přesně ta řešení stupňů, která
   jsou trasou (pro $n=6$ je 120 tras z 265 řešení stupňů).
+
+
+.Subsection Úlohy z jiných sbírek
+  label: ch-resice-ilp-ulohy-navic-sbirka
+
+
+Úlohy v tomto pododdílu pocházejí ze sbírky „External Practice Bank“, kterou sestavil spolužák z volně dostupných
+materiálů (hlavně MFF UK); zadání jsou česky převyprávěná, řešení jsou naše. Všechny jsou typu 3 zápočtového testu
+(formulace jako ILP) a řešení mají tvar, jaký chce postup v oddílu .reference:ch-test-postup-ilp-sat: proměnné
+s významem, omezení po skupinách, účel, velikost a obě strany korespondence řešení. Několik modelů už ve skriptech
+je (batoh, splnitelnost 3-KNF, $\prob{Vertex Cover}$, 3-barvení, obchodní cestující, chromatické číslo); u takové úlohy to v zadání
+přiznáváme a řešení se soustředí na to, co je nové. Úlohy 15.17 a 15.18 jsou těžší.
+
+
+.Exercise:
+  title: 'Úloha 15.9 (batoh jako 0/1 ILP)'
+  label: un-15-9
+
+  Je dáno $n$ nedělitelných předmětů s vahami $w_1,\dots,w_n$ a cenami $v_1,\dots,v_n$ (kladná celá čísla)
+  a kapacita batohu $B$. Je to optimalizační verze problému $\prob{Knapsack}$ (definice .reference:prob-knapsack);
+  model je v oddílu .reference:ch-resice-ilp-batoh-jako-ilp – zkuste ho napsat bez nahlížení.
+
+  .enumerate:
+    type: a
+
+    .item:
+
+      Formulujte 0/1 ILP, které vybere předměty s co největší celkovou cenou a celkovou váhou nejvýš $B$.
+      Uveďte velikost a zdůvodněte obě strany korespondence mezi výběry předmětů a řešeními ILP.
+
+    .item:
+
+      Pro $w=(6,5,5)$, $v=(9,7,7)$, $B=10$ najděte optimum ILP a optimum LP relaxace. Co dá hladový výběr podle
+      poměru cena/váha? Dokažte optimalitu pomocí meze z relaxace.
+
+
+  "Zdroj: M. Balko, Lineární programování a kombinatorická optimalizace – cvičení 2 (MFF UK), úloha 2.".small
+
+
+.Solution:
+
+  "a) Proměnné.".notion $x_i\in\{0,1\}$ pro $i=1,\dots,n$: $x_i=1$ právě když předmět $i$ beru. Obor $\{0,1\}$
+  vyjadřuje nedělitelnost; s $0\le x_i\le1$ by šlo vzít část předmětu.
+
+
+  "Omezení.".notion $\sum_{i=1}^{n}w_ix_i\le B$ – celková váha vybraných předmětů nepřekročí kapacitu.
+
+
+  "Účel.".notion $\max\sum_{i=1}^{n}v_ix_i$ – celková cena vybraných předmětů.
+
+
+  "Velikost.".notion $n$ binárních proměnných a jedno omezení.
+
+
+  "Korespondence.".notion
+
+  .itemize:
+
+    .item:
+
+      "Výběr $\to$ ILP:".notion výběr $S\subseteq\{1,\dots,n\}$ s $\sum_{i\in S}w_i\le B$ zapíšeme jako
+      charakteristický vektor ($x_i=1$ právě pro $i\in S$). Omezení platí, protože $\sum_iw_ix_i=\sum_{i\in S}w_i\le B$,
+      a hodnota účelu je $\sum_{i\in S}v_i$, cena výběru.
+
+    .item:
+
+      "ILP $\to$ výběr:".notion z přípustného $x$ vezmeme $S=\{i: x_i=1\}$. Jeho váha je $\sum_iw_ix_i\le B$, výběr se
+      tedy vejde, a jeho cena je hodnota účelu.
+
+  Obě zobrazení jsou navzájem inverzní a zachovávají hodnotu, takže optimum ILP je cena nejlepšího výběru.
+
+
+  "b) Instance.".notion Všech 8 vektorů: přípustné jsou $(0,0,0)$, $(1,0,0)$ s cenou 9, $(0,1,0)$ a $(0,0,1)$ s cenou 7
+  a $(0,1,1)$ s váhou přesně 10 a cenou 14. Ostatní se nevejdou: $(1,1,0)$ a $(1,0,1)$ váží 11, $(1,1,1)$ váží 16.
+  "Optimum ILP je 14".notion, předměty 2 a 3.
+
+
+  "Hladově".notion podle poměru: $\tfrac96=1{,}5>\tfrac75=1{,}4$, takže nejdřív předmět 1 (váha 6). Pak už se nevejde
+  žádný další ($6+5=11>10$) a hladový výběr má cenu jen 9.
+
+
+  "LP relaxace".notion (hladově s useknutím posledního předmětu jako v příkladu .reference:ch-resice-ilp-ex-batoh-lp):
+  předmět 1 celý, zbývá kapacita 4, z předmětu 2 vezmeme $\tfrac45$. $x^*=(1,\tfrac45,0)$,
+  $\mathrm{OPT}_{LP}=9+\tfrac45\cdot7=14{,}6$. Každý celočíselný výběr má celou cenu, a protože relaxace je mez,
+  je jeho cena nejvýš $\lfloor14{,}6\rfloor=14$ (stejný trik jako v příkladu .reference:ch-resice-ilp-ex-certifikat).
+  Výběr $\{2,3\}$ s cenou 14 je tedy "dokázaně optimální".notion, aniž bychom procházeli všechny vektory.
+  (Ověřeno výčtem všech vektorů na této instanci a na 500 náhodných instancích do 7 předmětů: optimum modelu se
+  rovná nejlepšímu výběru spočítanému přímo; LP hodnota řešičem.)
+
+
+.Exercise:
+  title: 'Úloha 15.10 (splnitelnost KNF jako celočíselná soustava)'
+  label: un-15-10
+
+  Je dána formule v KNF $\Phi=C_1\land\dots\land C_m$ nad proměnnými $x_1,\dots,x_n$; klauzule mohou mít libovolný
+  počet literálů. Pro 3-KNF je to redukce "$\prob{3-SAT}\redp\prob{ILP}$"#red-ilpsat z oddílu
+  .reference:ch-cisla-3-sat-ilp (a "úloha 11.2"#un-11-2 b); tady jsou klauzule libovolně dlouhé.
+
+  .enumerate:
+    type: a
+
+    .item:
+
+      Sestavte soustavu lineárních nerovnic s celočíselnými proměnnými, která má řešení, právě když je $\Phi$
+      splnitelná. Dokažte obě implikace a uveďte velikost soustavy.
+
+    .item:
+
+      Zapište soustavu maticově ($Ay\ge b$) pro $\Phi=(x_1\lor\lnot x_2\lor x_3\lor\lnot x_4)\land(\lnot x_1)\land(x_2\lor x_4)$
+      a najděte všechna její řešení.
+
+    .item:
+
+      Co se stane s prázdnou klauzulí, s klauzulí, která obsahuje $x_i$ i $\lnot x_i$, a s opakovaným literálem?
+
+    .item:
+
+      Proč nestačí reálné proměnné? Ukažte to na nesplnitelné formuli
+      $\Psi=(x_1\lor x_2)\land(\lnot x_1\lor x_2)\land(x_1\lor\lnot x_2)\land(\lnot x_1\lor\lnot x_2)$.
+
+
+  "Zdroj: M. Balko, Lineární programování a kombinatorická optimalizace – cvičení 2 (MFF UK), úloha 3.".small
+
+
+.Solution:
+  label: red-un-15-10
+
+  "Redukce:".notion $\prob{SAT}\redp\prob{ILP}$, formule $\Phi$ $\mapsto$ soustava $Ay\ge b$, $0\le y\le1$,
+  $y\in\mathbb Z^n$ ($n$ proměnných, $m+2n$ nerovnic).
+
+
+  "a) Proměnné.".notion $y_i\in\mathbb Z$ s mezemi $0\le y_i\le1$ (tedy $y_i\in\{0,1\}$): $y_i=1$ právě když je
+  $x_i$ pravdivá. Literál $x_i$ přepíšeme na $y_i$, literál $\lnot x_i$ na $1-y_i$; obojí je hodnota literálu
+  (1 = pravda).
+
+
+  "Omezení.".notion Označme $P_j$, resp. $N_j$ indexy proměnných, které jsou v klauzuli $C_j$ pozitivně, resp. negovaně.
+  Klauzule je „součet hodnot literálů $\ge1$“:
+
+  .equation:
+
+    \sum_{i\in P_j}y_i+\sum_{i\in N_j}(1-y_i)\ \ge\ 1
+    \qquad\iff\qquad
+    \sum_{i\in P_j}y_i-\sum_{i\in N_j}y_i\ \ge\ 1-|N_j|\qquad(j=1,\dots,m).
+
+  V maticovém tvaru má řádek $j$ matice $A$ jedničku u pozitivních proměnných $C_j$, $-1$ u negovaných a nuly jinde;
+  $b_j=1-|N_j|$. Účelová funkce není (jde o přípustnost).
+
+
+  "Velikost.".notion $n$ proměnných, $m$ nerovnic pro klauzule a $2n$ mezí; koeficienty jsou $0,\pm1$ a soustava
+  se vypíše v čase lineárním v délce $\Phi$. Je to tedy polynomiální redukce.
+
+
+  "Korespondence.".notion
+
+  .itemize:
+
+    .item:
+
+      "$\Phi$ splnitelná $\Rightarrow$ soustava má řešení:".notion pro splňující ohodnocení položíme $y_i=1$ pro
+      pravdivé $x_i$ a $y_i=0$ jinak. Meze platí. V každé klauzuli je pravdivý literál, jeho člen v součtu je 1
+      a ostatní členy jsou nezáporné, takže součet je aspoň 1.
+
+    .item:
+
+      "Soustava má řešení $\Rightarrow$ $\Phi$ splnitelná:".notion celé $y_i$ s $0\le y_i\le1$ je 0 nebo 1;
+      ohodnocení $x_i:=y_i$. Každý člen součtu v nerovnici $C_j$ je hodnota jednoho literálu, tedy 0 nebo 1.
+      Součet $\ge1$ znamená, že aspoň jeden člen je 1, tj. aspoň jeden literál $C_j$ je pravdivý. Ohodnocení splňuje
+      všechny klauzule.
+
+  Řešení soustavy a splňující ohodnocení si dokonce odpovídají vzájemně jednoznačně.
+
+
+  "b) Příklad.".notion
+
+  .align:
+
+    (x_1\lor\lnot x_2\lor x_3\lor\lnot x_4)&:\ y_1+(1-y_2)+y_3+(1-y_4)\ge1 &&\iff y_1-y_2+y_3-y_4\ge-1,\\
+    (\lnot x_1)&:\ 1-y_1\ge1 &&\iff -y_1\ge0,\\
+    (x_2\lor x_4)&:\ y_2+y_4\ge1 .
+
+  Tedy
+
+  .equation:
+
+    A=\begin{pmatrix}1&-1&1&-1\\-1&0&0&0\\0&1&0&1\end{pmatrix},\qquad b=\begin{pmatrix}-1\\0\\1\end{pmatrix},
+    \qquad 0\le y\le1,\ y\in\mathbb Z^4 .
+
+  Druhá nerovnice dá $y_1=0$. Třetí připouští $(y_2,y_4)\in\{(1,0),(0,1),(1,1)\}$. První je pak
+  $y_3\ge y_2+y_4-1$: pro $(1,1)$ vynutí $y_3=1$, jinak je $y_3$ libovolné. Řešení $(y_1,y_2,y_3,y_4)$ je pět:
+  $(0,1,0,0)$, $(0,1,1,0)$, $(0,0,0,1)$, $(0,0,1,1)$, $(0,1,1,1)$ – přesně pět splňujících ohodnocení $\Phi$.
+
+
+  "c) Okrajové případy.".notion Důkaz výše nepředpokládal, že jsou literály v klauzuli různé, takže platí beze změny:
+
+  .itemize:
+
+    .item:
+
+      prázdná klauzule dá $0\ge1$ – soustava nemá řešení, stejně jako je nesplnitelná formule s prázdnou klauzulí;
+
+    .item:
+
+      klauzule s $x_i$ i $\lnot x_i$ dá člen $y_i+(1-y_i)=1$, nerovnice platí vždy – klauzule je vždy pravdivá;
+
+    .item:
+
+      opakovaný literál, např. $(x_3\lor x_3)$, dá $2y_3\ge1$; pro celé $y_3\in\{0,1\}$ to znamená $y_3=1$, přesně
+      jako klauzule $(x_3)$.
+
+
+  "d) Reálné proměnné nestačí.".notion Pro $\Psi$:
+
+  .equation:
+
+    y_1+y_2\ge1,\qquad -y_1+y_2\ge0,\qquad y_1-y_2\ge0,\qquad -y_1-y_2\ge-1 .
+
+  Druhá a třetí nerovnice dají $y_1=y_2$, první a čtvrtá pak $2y_1\ge1$ a $2y_1\le1$, tedy $y_1=y_2=\tfrac12$. To
+  není celé číslo, celočíselná soustava řešení nemá ($\Psi$ je nesplnitelná). Reálná soustava ale řešení
+  $y=(\tfrac12,\tfrac12)$ má. Obecně $y\equiv\tfrac12$ splní každou nerovnici klauzule s aspoň dvěma literály (každý
+  člen je $\tfrac12$), takže LP relaxace o splnitelnosti nic neřekne. Kdyby stačily reálné proměnné, řešili bychom
+  $\prob{SAT}$ polynomiálně (LP je v $\PP$); celá obtížnost je v podmínce celočíselnosti.
+
+
+  (Ověřeno skriptem: příklad z b), $\Psi$ a 2 000 náhodných formulí do 5 proměnných včetně prázdných a opakovaných
+  literálů – množina řešení soustavy je vždy přesně množina splňujících ohodnocení.)
+
+
+.Exercise:
+  title: 'Úloha 15.11 (3-barvení jako 0/1 ILP)'
+  label: un-15-11
+
+  Pro neorientovaný graf $G=(V,E)$ sestavte binární ILP, které je přípustné, právě když je $G$ 3-obarvitelný
+  ($\prob{3-Coloring}$, definice .reference:prob-3col). Napište proměnné, všechna omezení pro vrcholy a pro hrany,
+  velikost a obě strany korespondence. Je to redukce "$\prob{3-Coloring}\redp\prob{ILP}$"#red-ilpcol z oddílu
+  .reference:ch-cisla-3-coloring-ilp (procvičená v "úloze 11.2"#un-11-2 c) – zkuste ji napsat bez nahlížení. Navíc:
+
+  .enumerate:
+    type: a
+
+    .item:
+
+      Lze rovnici „právě jedna barva“ nahradit nerovnicí $\ge1$? A nerovnicí $\le1$?
+
+    .item:
+
+      Dokažte přímo z nerovnic, že pro $K_4$ ILP přípustné není. Je přípustná jeho LP relaxace?
+
+
+  "Zdroj: M. Balko, Lineární programování a kombinatorická optimalizace – cvičení 2 (MFF UK), úloha 5.".small
+
+
+.Solution:
+  label: red-un-15-11
+
+  "Redukce:".notion $\prob{3-Coloring}\redp\prob{ILP}$, graf $G$ $\mapsto$ binární ILP s $3|V|$ proměnnými
+  a $|V|+3|E|$ omezeními.
+
+
+  "Proměnné.".notion $x_{v,c}\in\{0,1\}$ pro $v\in V$ a barvu $c\in\{1,2,3\}$: $x_{v,c}=1$ právě když vrchol $v$
+  má barvu $c$.
+
+
+  "Omezení.".notion
+
+  .itemize:
+
+    .item:
+
+      (V) $x_{v,1}+x_{v,2}+x_{v,3}=1$ pro každý $v\in V$ – každý vrchol má právě jednu barvu;
+
+    .item:
+
+      (H) $x_{u,c}+x_{v,c}\le1$ pro každou hranu $\{u,v\}\in E$ a každou barvu $c$ – konce hrany nemají obě barvu $c$.
+
+  Účel není (případně $\min 0$); ptáme se jen na přípustnost.
+
+
+  "Velikost.".notion $3|V|$ binárních proměnných, $|V|$ rovnic (V) a $3|E|$ nerovnic (H); sestavení je lineární
+  v $|V|+|E|$.
+
+
+  "Korespondence.".notion
+
+  .itemize:
+
+    .item:
+
+      "3-obarvení $\to$ řešení:".notion pro obarvení $f:V\to\{1,2,3\}$ položíme $x_{v,c}=1$ právě když $f(v)=c$.
+      (V) platí, protože $v$ má jedinou barvu. Pro hranu $\{u,v\}$ je $f(u)\ne f(v)$, takže pro každé $c$ je nejvýš
+      jedno z $x_{u,c}$, $x_{v,c}$ rovno 1 a (H) platí.
+
+    .item:
+
+      "Řešení $\to$ 3-obarvení:".notion podle (V) má každý vrchol právě jedno $c$ s $x_{v,c}=1$; to je $f(v)$. Kdyby
+      hrana $\{u,v\}$ měla $f(u)=f(v)=c$, bylo by $x_{u,c}+x_{v,c}=2>1$ – spor s (H). Obarvení je tedy vlastní.
+
+  Řešení ILP odpovídají obarvením vzájemně jednoznačně (počet přípustných řešení = počet 3-obarvení).
+
+
+  "a) Rovnice vs. nerovnice.".notion
+
+  .itemize:
+
+    .item:
+
+      "$\ge1$ stačí".notion pro otázku přípustnosti. Směr „obarvení $\to$ řešení“ platí beze změny. Naopak, má-li vrchol
+      víc barev s $x_{v,c}=1$, vybereme mu kteroukoli z nich. Pro hranu $\{u,v\}$ podle (H) neexistuje barva $c$
+      s $x_{u,c}=x_{v,c}=1$, takže vybrané barvy jsou různé. Ztratí se jen vzájemná jednoznačnost: např. izolovaný
+      vrchol má 3 řešení s rovnicí, ale 7 s nerovnicí $\ge1$.
+
+    .item:
+
+      "$\le1$ nestačí".notion: $x\equiv0$ splní (H) i „$\le1$“ v každém grafu, ILP by bylo přípustné i pro $K_4$.
+      Rovnice (V) je potřeba hlavně kvůli části „aspoň jedna barva“.
+
+
+  "b) $K_4$.".notion Vrcholy $1,2,3,4$, každé dva sousední. Pro pevnou barvu $c$ a celočíselné $x$ říkají nerovnice (H),
+  že ze čtyř hodnot $x_{1,c},\dots,x_{4,c}\in\{0,1\}$ nejsou žádné dvě rovny 1, tedy
+  $x_{1,c}+x_{2,c}+x_{3,c}+x_{4,c}\le1$. Sečtením přes tři barvy:
+
+  .equation:
+
+    \sum_{v=1}^{4}\bigl(x_{v,1}+x_{v,2}+x_{v,3}\bigr)\ \le\ 3,
+    \qquad\text{ale podle (V) je tento součet}\ \ 4 .
+
+  Spor, ILP přípustné není. "LP relaxace přípustná je".notion: $x_{v,c}=\tfrac13$ splní (V) ($3\cdot\tfrac13=1$)
+  i (H) ($\tfrac13+\tfrac13\le1$). Krok „žádné dvě jedničky $\Rightarrow$ součet $\le1$“ platí jen pro celá čísla –
+  stejně jako v "úloze 11.2"#un-11-2.
+
+
+  (Ověřeno skriptem na 150 náhodných grafech do 5 vrcholů: počet řešení ILP s rovnicí = počet 3-obarvení, ILP
+  s $\ge1$ je přípustné právě tehdy a každá volba barvy z jeho řešení dá vlastní obarvení; $K_4$ nemá žádné řešení.)
+
+
+.Exercise:
+  title: 'Úloha 15.12 (nejmenší vrcholové pokrytí)'
+  label: un-15-12
+
+  Pro graf $G=(V,E)$ formulujte binární ILP, které vybere co nejméně vrcholů tak, aby každá hrana měla aspoň jeden
+  vybraný konec (optimalizační verze $\prob{Vertex Cover}$, definice .reference:prob-vc). Rozhodovací verze je
+  redukce "$\prob{Vertex Cover}\redp\prob{ILP}$"#red-ilpvc z oddílu .reference:ch-cisla-vc-ilp, optimalizační je
+  v oddílu .reference:ch-resice-ilp-sila-formulace; zkuste ji napsat bez nahlížení. Uveďte velikost a obě strany
+  korespondence. Model vyřešte pro graf „domeček“ níže (čtverec $1,2,3,4$ se střechou $5$ nad hranou $\{1,2\}$)
+  a spočítejte hodnotu LP relaxace. Stejný graf použijeme i v úlohách "15.13"#un-15-13 a "15.14"#un-15-14.
+
+
+  .centered:
+
+    !tikz:
+      filename: 15z-ulohy-navic-07
+      options: 'x=1cm,y=1cm'
+
+      \node[v] (1) at (0,1.4) {1}; \node[v] (2) at (1.4,1.4) {2};
+      \node[v] (3) at (1.4,0) {3}; \node[v] (4) at (0,0) {4}; \node[v] (5) at (0.7,2.45) {5};
+      \draw[e] (1)--(2)--(3)--(4)--(1) (1)--(5)--(2);
+
+
+  "Zdroj: F. Giroire, Combinatorial Optimisation for Telecommunications, cvičení 10.".small
+
+
+.Solution:
+
+  "Proměnné.".notion $x_v\in\{0,1\}$ pro $v\in V$: $x_v=1$ právě když vrchol $v$ je v pokrytí.
+
+
+  "Omezení.".notion $x_u+x_v\ge1$ pro každou hranu $\{u,v\}\in E$ – aspoň jeden konec hrany je vybraný
+  (disjunkce $u\lor v$).
+
+
+  "Účel.".notion $\min\sum_{v\in V}x_v$ – počet vybraných vrcholů.
+
+
+  "Velikost.".notion $|V|$ binárních proměnných, $|E|$ nerovnic.
+
+
+  "Korespondence.".notion Vrcholové pokrytí $C$ $\mapsto$ charakteristický vektor: hrana má konec v $C$, takže
+  $x_u+x_v\ge1$, a hodnota účelu je $|C|$. Naopak z přípustného $x$ vezmeme $C=\{v:x_v=1\}$: nerovnice hrany říká,
+  že aspoň jeden její konec je v $C$, takže $C$ je pokrytí velikosti $\sum_vx_v$. Optimum ILP je tedy $\tau(G)$,
+  velikost nejmenšího pokrytí.
+
+
+  "Domeček.".notion Proměnné $x_1,\dots,x_5$, šest nerovnic
+  $x_1+x_2\ge1$, $x_2+x_3\ge1$, $x_3+x_4\ge1$, $x_1+x_4\ge1$, $x_1+x_5\ge1$, $x_2+x_5\ge1$.
+
+  .itemize:
+
+    .item:
+
+      "Dolní mez 3:".notion sečtením nerovnic trojúhelníku $1,2,5$ je $2(x_1+x_2+x_5)\ge3$, pro celá čísla tedy
+      $x_1+x_2+x_5\ge2$. Hrana $\{3,4\}$ s trojúhelníkem nesdílí vrchol a dá $x_3+x_4\ge1$. Celkem $\sum_vx_v\ge3$.
+
+    .item:
+
+      "Řešení s hodnotou 3:".notion $\{1,2,3\}$ – hrany $12,15,14$ pokryje vrchol 1, hrany $23,25$ vrchol 2, hranu $34$
+      vrchol 3.
+
+  "$\tau=3$".notion; optimální pokrytí jsou čtyři: $\{1,2,3\}$, $\{1,2,4\}$, $\{1,3,5\}$, $\{2,4,5\}$.
+
+
+  "LP relaxace.".notion $x\equiv\tfrac12$ splní všechny nerovnice ($\tfrac12+\tfrac12=1$) s hodnotou $\tfrac52$
+  a podle LP řešiče je to optimum relaxace. Mez $2{,}5<3$, zaokrouhlená nahoru, dá právě 3 – stejný jev jako
+  u $K_3$ v příkladu .reference:ch-resice-ilp-ex-vc-k3: trojúhelník je pro tuto formulaci „zlomkově levnější“.
+
+
+  (Ověřeno výčtem všech 32 vektorů a na 300 náhodných grafech do 6 vrcholů: optimum ILP se rovná nejmenšímu pokrytí
+  spočítanému přímo.)
+
+
+.Exercise:
+  title: 'Úloha 15.13 (nejmenší hranové pokrytí a přípustnost)'
+  label: un-15-13
+
+  "Hranové pokrytí".notion grafu $G=(V,E)$ je množina hran $F\subseteq E$ taková, že každý vrchol je koncem aspoň
+  jedné hrany z $F$. Problém $\prob{Edge Cover}$ (optimalizační verze):
+
+  "Vstup:".notion graf $G=(V,E)$.
+
+
+  "Úkol:".notion najít hranové pokrytí s nejmenším počtem hran (jeho velikost značíme $\rho(G)$).
+
+
+  .enumerate:
+    type: a
+
+    .item:
+
+      Formulujte $\prob{Edge Cover}$ jako binární ILP a zdůvodněte korespondenci.
+
+    .item:
+
+      Jaký předpoklad o $G$ je potřeba, aby bylo ILP přípustné? Dokažte, že je nutný i postačující.
+
+    .item:
+
+      Vyřešte ILP pro domeček z "úlohy 15.12"#un-15-12.
+
+    .item:
+
+      Co by popisovalo ILP, kdyby se v omezení napsalo $=1$ místo $\ge1$?
+
+
+  "Zdroj: F. Giroire, Combinatorial Optimisation for Telecommunications, cvičení 11.".small
+
+
+.Solution:
+
+  "a) Proměnné.".notion $x_e\in\{0,1\}$ pro $e\in E$: $x_e=1$ právě když hrana $e$ je v pokrytí.
+
+
+  "Omezení.".notion $\sum_{e\ni v}x_e\ge1$ pro každý vrchol $v\in V$ – aspoň jedna vybraná hrana končí ve $v$.
+  (Součet je přes hrany s koncem $v$.)
+
+
+  "Účel.".notion $\min\sum_{e\in E}x_e$.
+
+
+  "Velikost.".notion $|E|$ binárních proměnných, $|V|$ nerovnic.
+
+
+  "Korespondence.".notion Hranové pokrytí $F$ $\mapsto$ charakteristický vektor: vrchol $v$ je koncem nějaké hrany
+  z $F$, takže součet u $v$ je aspoň 1; hodnota je $|F|$. Naopak přípustné $x$ $\mapsto$ $F=\{e:x_e=1\}$: nerovnice
+  u $v$ říká, že nějaká hrana z $F$ končí ve $v$, takže $F$ je hranové pokrytí velikosti $\sum_ex_e$. Optimum ILP
+  je $\rho(G)$.
+
+
+  "b) Předpoklad: $G$ nemá izolovaný vrchol".notion (vrchol stupně 0).
+
+  .itemize:
+
+    .item:
+
+      "Nutnost:".notion je-li $v$ izolovaný, je součet v jeho nerovnici prázdný a nerovnice zní $0\ge1$ – ILP
+      přípustné není. Odpovídá to skutečnosti: izolovaný vrchol nepokryje žádná hrana, hranové pokrytí neexistuje.
+
+    .item:
+
+      "Postačitelnost:".notion bez izolovaných vrcholů je přípustné $x\equiv1$ (všechny hrany): každý vrchol má
+      aspoň jednu hranu.
+
+  Než model pošleme řešiči, zkontrolujeme stupně; je-li některý 0, odpovíme rovnou „neexistuje“.
+
+
+  "c) Domeček.".notion Pět nerovnic (vrcholy $1,\dots,5$) nad šesti proměnnými $x_{12},x_{23},x_{34},x_{14},x_{15},x_{25}$.
+
+  .itemize:
+
+    .item:
+
+      "Dolní mez 3:".notion každá hrana pokryje nejvýš dva vrcholy; formálně součet všech pěti nerovnic dá
+      $2\sum_ex_e\ge5$ (každá hrana je ve dvou nerovnicích), tedy pro celá čísla $\sum_ex_e\ge3$.
+
+    .item:
+
+      "Řešení s hodnotou 3:".notion $\{12,34,15\}$ pokryje vrcholy $1,2$ / $3,4$ / $5$.
+
+  "$\rho=3$".notion (optimálních pokrytí je sedm). LP relaxace má hodnotu $2{,}5$, mez $\lceil2{,}5\rceil=3$ je přesná.
+
+
+  "d) Rovnice $=1$".notion by vyžadovala, aby každý vrchol ležel na "právě".emphasize jedné vybrané hraně – to je
+  "perfektní párování".emphasize. Domeček má lichý počet vrcholů, takže by ILP nebylo přípustné, ačkoli hranové
+  pokrytí existuje. Typická chyba: „pokrýt“ je $\ge1$, „rozdělit“ je $=1$.
+
+
+  "Poznámka.".notion "(nad rámec přednášky)".emphasize $\prob{Edge Cover}$ je na rozdíl od $\prob{Vertex Cover}$
+  v $\PP$: z největšího párování (úloha "15.14"#un-15-14) se nejmenší hranové pokrytí dostane přidáním jedné hrany ke
+  každému nespárovanému vrcholu (Gallai: $\rho=|V|-\nu$; u domečku $3=5-2$). Že problém umíme zapsat jako ILP, tedy
+  o jeho obtížnosti nic neříká: model je redukce $\prob{Edge Cover}\redp\prob{ILP}$, a ta ukazuje jen, že problém
+  "není těžší".emphasize než ILP.
+
+
+  (Ověřeno skriptem na domečku a na 300 náhodných grafech do 6 vrcholů: ILP je přípustné právě bez izolovaných
+  vrcholů a jeho optimum se rovná nejmenšímu hranovému pokrytí spočítanému přímo i $|V|-\nu$.)
+
+
+.Exercise:
+  title: 'Úloha 15.14 (největší párování)'
+  label: un-15-14
+
+  "Párování".notion v grafu $G=(V,E)$ je množina hran $M\subseteq E$, z nichž žádné dvě nemají společný vrchol.
+  Problém $\prob{Max Matching}$:
+
+  "Vstup:".notion graf $G=(V,E)$.
+
+
+  "Úkol:".notion najít párování s největším počtem hran (jeho velikost značíme $\nu(G)$).
+
+
+  .enumerate:
+    type: a
+
+    .item:
+
+      Formulujte úlohu jako binární ILP (každý vrchol smí být koncem nejvýš jedné vybrané hrany) a zdůvodněte
+      korespondenci. Potřebuje přípustnost nějaký předpoklad?
+
+    .item:
+
+      Vyřešte ILP pro domeček z "úlohy 15.12"#un-15-12.
+
+    .item:
+
+      Spočítejte LP relaxaci na trojúhelníku $K_3$ a odvoďte řez, který ji opraví. Proč u bipartitních grafů
+      takový řez není potřeba?
+
+
+  "Zdroj: F. Giroire, Combinatorial Optimisation for Telecommunications, cvičení 13.".small
+
+
+.Solution:
+
+  "a) Proměnné.".notion $x_e\in\{0,1\}$ pro $e\in E$: $x_e=1$ právě když hrana $e$ je v párování.
+
+
+  "Omezení.".notion $\sum_{e\ni v}x_e\le1$ pro každý vrchol $v\in V$ – ve $v$ končí nejvýš jedna vybraná hrana.
+
+
+  "Účel.".notion $\max\sum_{e\in E}x_e$.
+
+
+  "Velikost.".notion $|E|$ binárních proměnných, $|V|$ nerovnic.
+
+
+  "Korespondence.".notion Párování $M$ $\mapsto$ charakteristický vektor: kdyby u $v$ byl součet aspoň 2, měly by dvě
+  hrany z $M$ společný vrchol $v$; hodnota je $|M|$. Naopak z přípustného $x$ vezmeme $M=\{e:x_e=1\}$: dvě hrany
+  se společným vrcholem $v$ by daly součet u $v$ aspoň 2, takže $M$ je párování velikosti $\sum_ex_e$. Optimum ILP
+  je $\nu(G)$. "Přípustnost".notion nepotřebuje žádný předpoklad: $x\equiv0$ (prázdné párování) je přípustné vždy.
+
+
+  "b) Domeček.".notion Horní mez: součet všech pěti nerovnic dá $2\sum_ex_e\le5$, tedy pro celá čísla $\sum_ex_e\le2$
+  (pět vrcholů, každá hrana spotřebuje dva). Párování $\{12,34\}$ má dvě hrany, "$\nu=2$".notion (optimálních párování
+  je šest). LP relaxace má hodnotu $2{,}5$ (např. $x\equiv\tfrac12$ na hranách $12$, $25$, $15$ a $x_{34}=1$; podle
+  řešiče to je optimum relaxace).
+
+
+  "c) Trojúhelník.".notion Nerovnice $x_{12}+x_{13}\le1$, $x_{12}+x_{23}\le1$, $x_{13}+x_{23}\le1$. Bod $x\equiv\tfrac12$
+  je přípustný s hodnotou $\tfrac32$ a víc nejde (součet nerovnic: $2\sum x_e\le3$), takže $\mathrm{OPT}_{LP}=\tfrac32$,
+  kdežto $\nu(K_3)=1$. "Řez".notion odvodíme jako v "úloze 15.7"#un-15-7 e: součet tří nerovnic vydělíme dvěma,
+  $x_{12}+x_{13}+x_{23}\le\tfrac32$, a protože vlevo je pro celá $x$ celé číslo, platí $x_{12}+x_{13}+x_{23}\le1$.
+  Bod $x\equiv\tfrac12$ ho porušuje ($\tfrac32>1$) a s ním je LP mez 1. "(nad rámec přednášky)".emphasize Obecně
+  pro každou množinu $S$ s lichým počtem vrcholů platí $\sum_{e\subseteq S}x_e\le\tfrac{|S|-1}2$ a s těmito
+  nerovnicemi je relaxace přesná (Edmonds); polynomiální algoritmus pro párování existuje i bez ILP.
+
+
+  "Bipartitní grafy.".notion Matice omezení je incidenční matice grafu (řádek = vrchol, sloupec = hrana). U bipartitního
+  grafu je totálně unimodulární (definice .reference:ch-resice-ilp-def-tu), takže podle věty
+  .reference:ch-resice-ilp-thm-hoffman-kruskal má polyedr relaxace celočíselné vrcholy a LP rovnou dá $\nu(G)$.
+  Trojúhelník i domeček bipartitní nejsou (obsahují lichou kružnici), takže pro ně tato záruka neplatí – a LP mez
+  $\nu$ u nich skutečně přestřelí (u jiných nebipartitních grafů se ale může i trefit).
+
+
+  .centered:
+
+    !tikz:
+      filename: 15z-ulohy-navic-08
+      options: 'x=1cm,y=1cm'
+
+      \foreach \X/\tit in {0/{VC $\{1,2,3\}$: $\tau=3$}, 3.6/{hranové pokrytí: $\rho=3$}, 7.2/{párování: $\nu=2$}} {
+        \begin{scope}[xshift=\X cm]
+          \coordinate (p1) at (0,1.4); \coordinate (p2) at (1.4,1.4); \coordinate (p3) at (1.4,0);
+          \coordinate (p4) at (0,0); \coordinate (p5) at (0.7,2.45);
+          \draw[efaint,draw=black!35,thick] (p1)--(p2)--(p3)--(p4)--(p1) (p1)--(p5)--(p2);
+          \node[font=\footnotesize] at (0.7,-0.75) {\tit};
+        \end{scope}}
+      \foreach \i/\p in {1/{(0,1.4)},2/{(1.4,1.4)},3/{(1.4,0)}} \node[vsel] at \p {\i};
+      \foreach \i/\p in {4/{(0,0)},5/{(0.7,2.45)}} \node[v] at \p {\i};
+      \begin{scope}[xshift=3.6cm]
+        \draw[defc,line width=2.2pt] (0,1.4)--(1.4,1.4) (1.4,0)--(0,0) (0,1.4)--(0.7,2.45);
+        \foreach \i/\p in {1/{(0,1.4)},2/{(1.4,1.4)},3/{(1.4,0)},4/{(0,0)},5/{(0.7,2.45)}} \node[v] at \p {\i};
+      \end{scope}
+      \begin{scope}[xshift=7.2cm]
+        \draw[acc!80!black,line width=2.2pt] (0,1.4)--(1.4,1.4) (1.4,0)--(0,0);
+        \foreach \i/\p in {1/{(0,1.4)},2/{(1.4,1.4)},3/{(1.4,0)},4/{(0,0)},5/{(0.7,2.45)}} \node[v] at \p {\i};
+      \end{scope}
+
+  Domeček ze tří úloh: vlevo nejmenší vrcholové pokrytí, uprostřed nejmenší hranové pokrytí, vpravo největší párování.
+  "Všimni si:".emphasize hranové pokrytí vzniklo z párování přidáním hrany k nespárovanému vrcholu 5, a $\nu=2\le\tau=3$
+  (každá hrana párování potřebuje vlastní vrchol pokrytí). "(nad rámec přednášky)".emphasize Platí $\alpha+\tau=|V|$
+  a bez izolovaných vrcholů $\nu+\rho=|V|$; tady $2+3=5$ a $2+3=5$.
+
+
+  (Ověřeno skriptem na domečku, $K_3$ a 300 náhodných grafech do 6 vrcholů: optimum ILP se rovná největšímu párování
+  spočítanému přímo; LP hodnoty řešičem.)
+
+
+.Exercise:
+  title: 'Úloha 15.15 (nejmenší pokrytí množinami)'
+  label: un-15-15
+
+  Je dáno univerzum $U$ a jeho podmnožiny $S_1,\dots,S_m$. Sestavte binární ILP, které vybere co nejméně množin
+  tak, aby jejich sjednocení bylo celé $U$ (optimalizační verze $\prob{Set Cover}$ z "cvičení 3.4"#cv-3-4).
+
+  .enumerate:
+    type: a
+
+    .item:
+
+      Model, velikost, korespondence; kdy je ILP přípustné?
+
+    .item:
+
+      Ukažte, že modely z úloh "15.12"#un-15-12 a "15.13"#un-15-13 jsou jeho speciální případy.
+
+    .item:
+
+      Vyřešte pro $U=\{1,\dots,6\}$ a $S_1=\{1,2,3\}$, $S_2=\{3,4\}$, $S_3=\{4,5,6\}$, $S_4=\{1,4\}$, $S_5=\{2,5\}$,
+      $S_6=\{3,6\}$, $S_7=\{5,6\}$.
+
+
+  "Zdroj: F. Giroire, Combinatorial Optimisation for Telecommunications, cvičení 18.".small
+
+
+.Solution:
+
+  "a) Proměnné.".notion $x_j\in\{0,1\}$ pro $j=1,\dots,m$: $x_j=1$ právě když množinu $S_j$ vybereme.
+
+
+  "Omezení.".notion $\sum_{j:\,u\in S_j}x_j\ge1$ pro každý prvek $u\in U$ – aspoň jedna vybraná množina obsahuje $u$.
+
+
+  "Účel.".notion $\min\sum_{j=1}^{m}x_j$ (s cenami množin $\min\sum_jc_jx_j$).
+
+
+  "Velikost.".notion $m$ binárních proměnných a $|U|$ nerovnic; matice omezení je incidenční matice „prvek $\times$
+  množina“.
+
+
+  "Korespondence.".notion Pokrytí $J\subseteq\{1,\dots,m\}$ ($\bigcup_{j\in J}S_j=U$) $\mapsto$ charakteristický
+  vektor: každý prvek leží v nějakém $S_j$, $j\in J$, takže jeho součet je aspoň 1; hodnota $|J|$. Naopak přípustné
+  $x$ $\mapsto$ $J=\{j:x_j=1\}$: nerovnice prvku $u$ říká, že $u$ je v některé vybrané množině, takže sjednocení je
+  $U$; počet vybraných je $\sum_jx_j$.
+
+
+  "Přípustnost:".notion ILP je přípustné, právě když $S_1\cup\dots\cup S_m=U$. Pak stačí $x\equiv1$; jinak prvek
+  $u$, který není v žádné $S_j$, má nerovnici $0\ge1$.
+
+
+  "b) Speciální případy.".notion
+
+  .itemize:
+
+    .item:
+
+      "$\prob{Vertex Cover}$:".notion univerzum $U=E$ a pro každý vrchol $v$ množina $S_v$ hran s koncem $v$. Hrana
+      $\{u,v\}$ leží jen v $S_u$ a $S_v$, takže její nerovnice je $x_u+x_v\ge1$ – přesně model z "úlohy 15.12"#un-15-12.
+
+    .item:
+
+      "$\prob{Edge Cover}$:".notion univerzum $U=V$ a pro každou hranu $e$ množina jejích dvou konců. Nerovnice
+      vrcholu $v$ je $\sum_{e\ni v}x_e\ge1$ – model z "úlohy 15.13"#un-15-13; podmínka „sjednocení je $U$“ je
+      „žádný izolovaný vrchol“.
+
+  Všechny tři modely jsou jeden vzor: „každý prvek je pokryt aspoň jednou“.
+
+
+  "c) Instance.".notion Sedm proměnných, šest nerovnic:
+
+  .gather:
+
+    u=1:\ x_1+x_4\ge1,\quad u=2:\ x_1+x_5\ge1,\quad u=3:\ x_1+x_2+x_6\ge1,\\
+    u=4:\ x_2+x_3+x_4\ge1,\quad u=5:\ x_3+x_5+x_7\ge1,\quad u=6:\ x_3+x_6+x_7\ge1 .
+
+  Jedna množina nestačí (největší má 3 prvky z 6). Dvě stačí: $S_1\cup S_3=U$, tedy "optimum je 2".notion
+  ($x_1=x_3=1$). Je to jediné optimální řešení: dvě množiny pokryjí šest prvků, jen když mají dohromady aspoň šest
+  prvků, tedy obě po třech, a tříprvkové jsou jen $S_1$ a $S_3$.
+
+
+  (Ověřeno výčtem všech $2^7$ vektorů a na 300 náhodných systémech množin: ILP je přípustné právě při
+  $\bigcup S_j=U$ a jeho optimum se rovná nejmenšímu pokrytí spočítanému přímo.)
+
+
+.Exercise:
+  title: 'Úloha 15.16 (největší balení množin)'
+  label: un-15-16
+
+  Je dán systém podmnožin $S_1,\dots,S_m$ univerza $U$. Sestavte binární ILP, které vybere co nejvíc množin, z nichž
+  žádné dvě nemají společný prvek (optimalizační verze $\prob{Set Packing}$ z "úlohy 8.4"#un-8-4).
+
+  .enumerate:
+    type: a
+
+    .item:
+
+      Model „po prvcích“, velikost, korespondence.
+
+    .item:
+
+      Jiná možnost je zakázat každou dvojici protínajících se množin zvlášť: $x_i+x_j\le1$, kdykoli
+      $S_i\cap S_j\ne\emptyset$. Má stejná celočíselná řešení? Který model má lepší LP relaxaci?
+
+    .item:
+
+      Vyřešte pro systém z "úlohy 15.15"#un-15-15 a porovnejte LP meze obou modelů.
+
+
+  "Zdroj: F. Giroire, Combinatorial Optimisation for Telecommunications, cvičení 20.".small
+
+
+.Solution:
+
+  "a) Proměnné.".notion $x_j\in\{0,1\}$: $x_j=1$ právě když množinu $S_j$ vybereme.
+
+
+  "Omezení.".notion $\sum_{j:\,u\in S_j}x_j\le1$ pro každý prvek $u\in U$ – každý prvek je nejvýš v jedné vybrané
+  množině.
+
+
+  "Účel.".notion $\max\sum_{j=1}^{m}x_j$.
+
+
+  "Velikost.".notion $m$ binárních proměnných, $|U|$ nerovnic. Přípustné je vždy ($x\equiv0$).
+
+
+  "Korespondence.".notion Vybrané množiny jsou po dvou disjunktní, právě když žádný prvek neleží ve dvou z nich, tj.
+  právě když pro každý prvek je součet nejvýš 1. Charakteristický vektor disjunktního výběru je tedy přípustný
+  s hodnotou rovnou počtu množin a naopak $\{j:x_j=1\}$ z přípustného $x$ je disjunktní výběr. (Párování z
+  "úlohy 15.14"#un-15-14 je speciální případ: $U=V$, množiny jsou hrany.)
+
+
+  "b) Dvojicový model".notion má stejná celočíselná řešení: obě omezení říkají „žádné dvě vybrané množiny se
+  neprotínají“. Je to nezávislá množina v "konfliktním grafu".emphasize (vrcholy = množiny, hrana = neprázdný průnik),
+  stejně jako v redukci z "úlohy 8.4"#un-8-4.
+
+
+  Relaxace modelu po prvcích je ale "silnější".notion (její polyedr leží uvnitř polyedru dvojicového modelu):
+  množiny obsahující prvek $u$ se protínají po dvou, tvoří tedy kliku konfliktního grafu a nerovnice prvku $u$ je
+  kliková nerovnice z "úlohy 15.7"#un-15-7. Pro $x\ge0$ z ní plyne každá dvojicová nerovnice $x_i+x_j\le1$ s $u\in S_i\cap S_j$.
+  Příklad: $S_1=\{1,2\}$, $S_2=\{1,3\}$, $S_3=\{1,4\}$. Dvojicový model má tři nerovnice a připouští
+  $x\equiv\tfrac12$ s hodnotou $\tfrac32$; model po prvcích má nerovnici $x_1+x_2+x_3\le1$ a LP mez 1, což je
+  optimum.
+
+
+  "c) Instance z úlohy 15.15.".notion Množin je sedm, každá má aspoň 2 prvky a prvků je 6, takže disjunktní výběr má
+  nejvýš 3 množiny. Tři má: $S_4=\{1,4\}$, $S_5=\{2,5\}$, $S_6=\{3,6\}$. "Optimum je 3".notion (jediné). LP meze:
+  model po prvcích (6 nerovnic) dává 3, dvojicový model (13 protínajících se dvojic) $3{,}5$.
+
+
+  (Ověřeno výčtem a na 300 náhodných systémech: oba modely mají stejné optimum jako největší disjunktní výběr
+  spočítaný přímo; LP meze řešičem.)
+
+
+.Exercise:
+  title: 'Úloha 15.17 (oprava ILP pro obchodního cestujícího – těžší)'
+  label: un-15-17
+
+  Je dán úplný graf $G=(V,E)$ s $n$ vrcholy a vahami hran $c_e\ge0$. Uvažujme binární proměnné $x_e$ („hrana $e$
+  je na trase“), účel $\min\sum_ec_ex_e$ a jen podmínky stupňů $\sum_{e\ni v}x_e=2$ pro každý vrchol $v$.
+  Opravený model je v oddílu .reference:ch-resice-ilp-zakaz-podcyklu – zkuste úlohu vyřešit bez nahlížení;
+  hlavní je vysvětlení a protipříklad.
+
+  .enumerate:
+    type: a
+
+    .item:
+
+      Co přesně popisují podmínky stupňů? Pro které $n$ stačí a pro které ne? Najděte ohodnocení, kde je optimum
+      modelu se stupni ostře menší než nejkratší trasa.
+
+    .item:
+
+      Doplňte omezení tak, aby přípustná řešení byla přesně hamiltonovské kružnice, a dokažte obě inkluze.
+
+    .item:
+
+      Ukažte, že místo řezových nerovnic lze psát $\sum_{e\subseteq S}x_e\le|S|-1$. Které z nerovnic jsou opravdu
+      potřeba a kolik jich je?
+
+
+  "Zdroj: M. Balko, Lineární programování a kombinatorická optimalizace – cvičení 2 (MFF UK), úloha 4.".small
+
+
+.Solution:
+
+  "a) Co popisují stupně.".notion Nechť $F=\{e:x_e=1\}$ splňuje podmínky stupňů, tj. v grafu $(V,F)$ má každý vrchol
+  stupeň 2. Vyjdeme z libovolného vrcholu a jdeme po hranách $F$, každou použijeme jednou. Do vrcholu, ve kterém jsme
+  ještě nebyli, vejdeme jednou hranou a druhou odejdeme, takže nikde neuvízneme dřív, než se vrátíme do startu.
+  Komponenta je proto kružnice a $(V,F)$ je "disjunktní sjednocení kružnic přes všechny vrcholy".notion. Trasa je
+  speciální případ s jedinou kružnicí. V grafu bez násobných hran má kružnice aspoň 3 vrcholy.
+
+  .itemize:
+
+    .item:
+
+      "$n\le5$: stupně stačí.".notion Dvě kružnice potřebují aspoň $3+3=6$ vrcholů, takže každé řešení je jediná
+      kružnice, tedy trasa. (Na $K_5$ má model 12 řešení a tras je $\tfrac{4!}2=12$.)
+
+    .item:
+
+      "$n\ge6$: stupně nestačí.".notion Dvě kružnice přes všechny vrcholy (např. trojúhelník a kružnice zbylých
+      $n-3\ge3$ vrcholů) splní všechny podmínky stupňů. Na $K_6$ má model 70 řešení: 60 tras a 10 dvojic disjunktních
+      trojúhelníků.
+
+  "Protipříklad s vahami.".notion $V=\{a_1,a_2,a_3,b_1,b_2,b_3\}$, hrany uvnitř trojice $\{a_1,a_2,a_3\}$ i uvnitř
+  $\{b_1,b_2,b_3\}$ stojí 1, hrany mezi trojicemi stojí 10. Dva trojúhelníky splní stupně s cenou 6 a menší nejde
+  (šest hran, každá stojí aspoň 1). Trasa ale musí množinu $A=\{a_1,a_2,a_3\}$ opustit a zase se do ní vrátit, takže
+  použije aspoň dvě hrany s cenou 10 a stojí aspoň $2\cdot10+4\cdot1=24$; trasa $a_1a_2a_3b_1b_2b_3a_1$ stojí přesně
+  24. "Model se stupni vrátí 6, nejkratší trasa stojí 24".notion – řešič by vydal dva trojúhelníky.
+
+
+  .centered:
+
+    !tikz:
+      filename: 15z-ulohy-navic-09
+      options: 'x=1cm,y=1cm'
+
+      \node[v] (a1) at (0,1.5) {$a_1$}; \node[v] (a2) at (-0.6,0.3) {$a_2$}; \node[v] (a3) at (0.6,0.3) {$a_3$};
+      \node[v] (b1) at (2.4,0.3) {$b_1$}; \node[v] (b2) at (3.6,0.3) {$b_2$}; \node[v] (b3) at (3,1.5) {$b_3$};
+      \draw[warnc,thick] (a1)--(a2)--(a3)--(a1) (b1)--(b2)--(b3)--(b1);
+      \node[font=\footnotesize] at (1.5,-0.55) {stupně: dva trojúhelníky, cena $6$};
+      \begin{scope}[xshift=5.4cm]
+        \node[v] (c1) at (0,1.5) {$a_1$}; \node[v] (c2) at (-0.6,0.3) {$a_2$}; \node[v] (c3) at (0.6,0.3) {$a_3$};
+        \node[v] (d1) at (2.4,0.3) {$b_1$}; \node[v] (d2) at (3.6,0.3) {$b_2$}; \node[v] (d3) at (3,1.5) {$b_3$};
+        \draw[defc,thick] (c1)--(c2)--(c3) (d1)--(d2)--(d3);
+        \draw[rej,thick] (c3)--(d1) node[midway,below,font=\scriptsize]{10};
+        \draw[rej,thick] (d3)--(c1) node[midway,above,font=\scriptsize]{10};
+        \node[font=\footnotesize] at (1.5,-0.55) {trasa: cena $4\cdot1+2\cdot10=24$};
+      \end{scope}
+
+  Protipříklad na $K_6$ (nakresleny jen vybrané hrany; uvnitř trojic stojí hrana 1, mezi nimi 10). Vlevo optimum
+  modelu se stupni, vpravo nejkratší trasa. "Všimni si:".emphasize trasa musí přejít mezi trojicemi aspoň dvakrát.
+
+
+  "b) Oprava: zákaz podcyklů.".notion Přidáme pro každou $\emptyset\ne S\subsetneq V$
+
+  .equation:
+
+    \sum_{e\in\delta(S)}x_e\ \ge\ 2,
+
+  kde $\delta(S)$ jsou hrany s jedním koncem v $S$ a druhým mimo – „trasa musí z každé části měst odjet“.
+
+  .itemize:
+
+    .item:
+
+      "Trasa $\Rightarrow$ přípustné:".notion stupně má trasa 2. Pro $\emptyset\ne S\subsetneq V$ obsahuje trasa vrcholy
+      v $S$ i mimo $S$; projdeme-li ji dokola, přejdeme mezi $S$ a $V\setminus S$ sudý a nenulový počet krát, tedy
+      aspoň dvakrát, a každý přechod je hrana z $\delta(S)$.
+
+    .item:
+
+      "Přípustné $\Rightarrow$ trasa:".notion podle a) je $F$ disjunktní sjednocení kružnic. Kdyby jich bylo víc,
+      zvolíme za $S$ vrcholy jedné z nich: každá hrana $F$ leží uvnitř své kružnice, žádná tedy nevede z $S$ ven,
+      $\sum_{e\in\delta(S)}x_e=0<2$ – spor. Zbývá jediná kružnice přes všech $n$ vrcholů, hamiltonovská kružnice.
+
+  Účel je délka trasy, takže optimum opraveného ILP je optimum $\prob{TSP}$. (Pro neúplný graf vezmeme jen proměnné
+  pro hrany $E$; ILP je pak přípustné, právě když má $G$ hamiltonovskou kružnici – je to tedy i model pro $\prob{HC}$.)
+
+
+  "c) Ekvivalentní tvar.".notion Sečteme podmínky stupňů přes $v\in S$: hrana uvnitř $S$ se započítá dvakrát
+  (u obou konců), hrana z $\delta(S)$ jednou, ostatní vůbec:
+
+  .equation:
+
+    2\!\!\sum_{e\subseteq S}x_e+\sum_{e\in\delta(S)}x_e\ =\ 2|S| .
+
+  Proto pro $x$ splňující stupně platí $\sum_{e\in\delta(S)}x_e\ge2\iff\sum_{e\subseteq S}x_e\le|S|-1$: „uvnitř $S$
+  nesmí být tolik hran, aby z nich vznikla kružnice přes celé $S$“.
+
+
+  "Které nerovnice jsou potřeba.".notion Množiny $S$ a $V\setminus S$ mají stejný řez, z $2^n-2$ nerovnic je tedy
+  různých $2^{n-1}-1$. Pro $|S|=1$ a $|S|=2$ platí nerovnice automaticky ($0\le0$, resp. $x_{uv}\le1$), stejně pro
+  doplňky. Opravdu potřeba jsou jen $S$ s $3\le|S|\le n-3$ (z každé dvojice $S$, $V\setminus S$ jedna). Pro $n=6$ je
+  to 10 nerovnic pro trojice – přesně tolik, kolik je dvojic trojúhelníků, a každá zakáže jednu. Obecně jich je
+  pořád exponenciálně mnoho (pro $n=50$ asi $5{,}6\cdot10^{14}$), proto se přidávají separací (oddíl
+  .reference:ch-resice-ilp-rezy-a-separace) nebo se použije polynomiální, ale slabší MTZ z "úlohy 15.8"#un-15-8.
+
+
+  (Ověřeno výčtem všech $2^{10}$, resp. $2^{15}$ vektorů na $K_5$ a $K_6$: řešení se stupni 12, resp. 70; řezové
+  i „vnitřní“ nerovnice připustí přesně trasy; na $K_6$ stačí 10 nerovnic pro trojice; ceny 6 a 24 výčtem.)
+
+
+.Exercise:
+  title: 'Úloha 15.18 (autobusy pro neslučitelné studenty – těžší)'
+  label: un-15-18
+
+  Na výlet jede $n$ studentů $1,\dots,n$. Některé dvojice spolu nesmějí jet stejným autobusem; množinu těchto
+  neslučitelných dvojic značíme $K$. Autobusy nemají omezenou kapacitu. Chceme objednat co nejméně autobusů.
+  Je to chromatické číslo grafu konfliktů, model je v "cvičení 8.3"#cv-8-3; tady jde o dvě věci, které jsou tam
+  jen zmíněné.
+
+  .enumerate:
+    type: a
+
+    .item:
+
+      Sestavte ILP s pevným počtem $h$ kandidátních autobusů. Jak $h$ zvolit, aby model byl správný, a proč na tom
+      záleží?
+
+    .item:
+
+      Popište symetrii modelu: kolikrát se v něm opakuje každé optimální rozdělení studentů? Doplňte omezení, která
+      symetrii omezí, a dokažte, že se optimum nezmění.
+
+    .item:
+
+      Pro $n=6$ a $K=\{12,23,34,45,15,16,36\}$ najděte optimum a porovnejte počty optimálních řešení bez rozbití
+      symetrie a s ním.
+
+
+  "Zdroj: F. Giroire, Combinatorial Optimisation for Telecommunications, cvičení 16.".small
+
+
+.Solution:
+
+  "Převod na barvení.".notion Studenti jsou vrcholy grafu konfliktů $G=(\{1,\dots,n\},K)$, autobusy jsou barvy:
+  rozdělení do autobusů je přípustné, právě když žádná hrana nespojuje dva studenty v témže autobusu, tj. je to
+  vlastní obarvení. Nejmenší počet autobusů je $\chi(G)$.
+
+
+  "a) Proměnné.".notion Autobusy $b=1,\dots,h$.
+
+  .itemize:
+
+    .item:
+
+      $x_{i,b}\in\{0,1\}$ … student $i$ jede autobusem $b$;
+
+    .item:
+
+      $y_b\in\{0,1\}$ … autobus $b$ objednáme.
+
+
+  "Omezení.".notion
+
+  .itemize:
+
+    .item:
+
+      (O1) $\sum_{b=1}^{h}x_{i,b}=1$ pro každého studenta $i$ – každý jede právě jedním autobusem;
+
+    .item:
+
+      (O2) $x_{i,b}+x_{j,b}\le1$ pro každou dvojici $\{i,j\}\in K$ a každé $b$ – neslučitelní nejedou spolu;
+
+    .item:
+
+      (O3) $x_{i,b}\le y_b$ pro každé $i$ a $b$ – autobus, kterým někdo jede, musíme objednat.
+
+
+  "Účel.".notion $\min\sum_{b=1}^{h}y_b$. "Velikost:".notion $nh+h$ binárních proměnných, $n+h|K|+nh$ omezení.
+
+
+  "Korespondence.".notion Rozdělení do $k\le h$ autobusů (očíslovaných $1,\dots,k$) dá přípustné řešení
+  s $y_1=\dots=y_k=1$ a hodnotou $k$. Naopak z přípustného řešení přečteme autobus každého studenta (O1), (O2) zaručí,
+  že neslučitelní jedou zvlášť, a podle (O3) jedou jen objednanými autobusy, kterých je $\sum_by_b$.
+  "Proto je optimum $\chi(G)$, ale jen když $h\ge\chi(G)$".notion – pro menší $h$ je ILP nepřípustné.
+
+
+  "Volba $h$.".notion
+
+  .itemize:
+
+    .item:
+
+      $h=n$ je bezpečné vždy: každý student svým autobusem.
+
+    .item:
+
+      "Lepší:".notion "(nad rámec přednášky)".emphasize $h=\Delta+1$, kde $\Delta$ je největší počet konfliktů
+      jednoho studenta. Studenty posadíme postupně, každého do prvního autobusu, ve kterém nesedí nikdo s ním
+      neslučitelný. Student má nejvýš $\Delta$ neslučitelných, ti obsadí nejvýš $\Delta$ autobusů, a mezi $\Delta+1$
+      autobusy je tedy aspoň jeden, kde žádný z nich nesedí.
+      Obecně poslouží počet autobusů z "libovolného".emphasize nalezeného rozdělení (heuristika dá horní mez).
+
+  Na $h$ záleží: model má $nh+h$ proměnných a $h|K|$ konfliktních omezení, menší $h$ znamená menší model a méně
+  symetrických kopií (viz b). Příliš malé $h$ ($<\chi$) ale dá nepřípustný model.
+
+
+  "b) Symetrie.".notion Autobusy jsou zaměnitelné: přečíslujeme-li je libovolnou permutací, dostaneme jiné přípustné
+  řešení se stejnou hodnotou. Optimální rozdělení do $k=\chi$ skupin se proto v modelu objeví
+  $h(h-1)\cdots(h-k+1)$krát (kterým autobusem jede první skupina, kterým druhá, …). Branch & bound ty kopie zbytečně
+  prochází (srovnej "cvičení 8.3"#cv-8-3). Přidáme "(nad rámec přednášky)".emphasize rozbití symetrie:
+
+  .itemize:
+
+    .item:
+
+      (S1) $y_b\ge y_{b+1}$ pro $b=1,\dots,h-1$ – autobusy se objednávají od prvního;
+
+    .item:
+
+      (S2) $x_{i,b}=0$ pro $b>i$ – student $i$ smí jet jen autobusem s číslem nejvýš $i$ (student 1 vždy autobusem 1).
+
+
+  "Optimum se nezmění.".notion Omezení přibyla, minimum tedy nemůže klesnout. Ukážeme, že každé rozdělení do $k$
+  autobusů lze přečíslovat tak, aby (S1) a (S2) platily: seřadíme použité autobusy podle nejmenšího čísla studenta,
+  který jimi jede, $m_1<m_2<\dots<m_k$, a autobus s nejmenším studentem $m_b$ dostane číslo $b$. Čísla $m_1<\dots<m_k$
+  jsou různá kladná celá čísla, takže $m_b\ge b$; student $i$ v autobusu $b$ má $i\ge m_b\ge b$ – (S2) platí. Použité
+  autobusy jsou $1,\dots,k$, položíme $y_b=1$ právě pro $b\le k$ – (S1) platí. Hodnota je stále $k$, takže optimum
+  zůstane $\chi(G)$.
+
+
+  "Pozor:".notion (S1) a (S2) symetrii omezí, ale obecně ji neodstraní úplně. Pro 4 studenty s konflikty
+  $13,14,34,23,24$ (optimum 3 autobusy: $\{1,2\}$, $\{3\}$, $\{4\}$) připustí obě řešení „3 autobusem 2,
+  4 autobusem 3“ i „3 autobusem 3, 4 autobusem 2“. "(nad rámec přednášky)".emphasize Úplně by symetrii odstranil
+  požadavek, aby nejmenší student v autobusu $b$ měl menší číslo než nejmenší student v autobusu $b+1$.
+
+
+  "c) Instance.".notion Konflikty tvoří kružnici $1,2,3,4,5$ a student 6 je neslučitelný s 1 a 3.
+
+  .itemize:
+
+    .item:
+
+      "Dolní mez 3:".notion kružnice $1,2,3,4,5$ je lichá; při dvou autobusech by se na ní autobusy musely střídat,
+      což na liché kružnici nejde.
+
+    .item:
+
+      "Horní mez:".notion $\Delta=3$ (studenti 1 a 3), takže stačí $h=4$. Postupné usazování v pořadí $1,\dots,6$ dá
+      $\{1,3\}$, $\{2,4,6\}$, $\{5\}$ – tři autobusy.
+
+  "Optimum jsou 3 autobusy".notion. Rozdělení studentů do tří skupin je celkem 7. Počty optimálních řešení ILP:
+
+  .table:
+    columns: 'lccc'
+
+    .row:
+      head: true
+
+      model
+
+      $h=6$
+
+      $h=4$
+
+      $h=3$
+
+    .row:
+
+      bez rozbití symetrie
+
+      $7\cdot6\cdot5\cdot4=840$
+
+      $7\cdot4\cdot3\cdot2=168$
+
+      $7\cdot3!=42$
+
+    .row:
+
+      s (S1)
+
+      42
+
+      42
+
+      42
+
+    .row:
+
+      s (S1) a (S2)
+
+      7
+
+      7
+
+      7
+
+  Samotné (S1) nechá jen přečíslování autobusů $1,2,3$ ($3!=6$ kopií), s (S2) tu zbude jediné řešení pro každé
+  rozdělení.
+
+
+  .centered:
+
+    !tikz:
+      filename: 15z-ulohy-navic-10
+      options: 'x=1cm,y=1cm'
+
+      \foreach \i/\a/\c/\b in {1/90/chRb/1,2/162/chRz/2,3/234/chRb/1,4/306/chRz/2,5/18/chRo/3} {
+        \node[v,fill=\c] (s\i) at (\a:1.3) {\i};
+        \node[font=\scriptsize,text=black!60] at (\a:1.85) {bus \b};}
+      \node[v,fill=chRz] (s6) at (0,-0.05) {6};
+      \node[font=\scriptsize,text=black!60,anchor=east] at (-0.33,-0.05) {bus 2};
+      \draw[e] (s1)--(s2)--(s3)--(s4)--(s5)--(s1) (s6)--(s1) (s6)--(s3);
+
+  Graf konfliktů instance c) s optimálním rozdělením $\{1,3\}$, $\{2,4,6\}$, $\{5\}$ (barva = autobus).
+  "Všimni si:".emphasize student 6 sedí s 2 a 4, se kterými konflikt nemá.
+
+
+  (Ověřeno skriptem: počty v tabulce i protipříklad z rámečku výčtem; na 150 náhodných grafech do 6 vrcholů dává
+  model s $h=n$ i $h=\Delta+1$, bez i s (S1), (S2), optimum $\chi(G)$ spočítané hrubou silou.)

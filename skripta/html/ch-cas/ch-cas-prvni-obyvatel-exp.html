@@ -5537,11 +5537,11 @@
 <h1 id="34-prvni-obyvatel-exp-obchodni-cestujici">3.4 První obyvatel <span class="arithmatex">\(\EXP\)</span>: obchodní cestující<a class="headerlink" href="#34-prvni-obyvatel-exp-obchodni-cestujici" title="Permanent link">&para;</a></h1>
 <div class="woo">
 <p>Hrubá síla vyzkouší všech <span class="arithmatex">\((n-1)!/2\)</span> túr a každou ohodnotí v čase <span class="woo-nobr"><span class="arithmatex">\(O(n)\)</span>.</span> Protože <span class="woo-nobr"><span class="arithmatex">\(n!\le n^n = 2^{n\log n}\)</span>,</span> platí <span class="woo-nobr"><span class="arithmatex">\(n\cdot n!\le 2^{n\log n+\log n}\le 2^{n^2}\)</span>,</span> a tedy</p>
-<div class="arithmatex">\[\prob{TSP}\in\DTIME\bigl(2^{n^2}\bigr)\subseteq\EXP.\]</div>
+<div class="arithmatex">\[\href{../ch-ts/ch-ts-optimalizacni-vs-rozhodovaci-problemy.html#prob-tsp}{\class{woo-pk-prob-tsp}{\prob{TSP}}}\in\href{ch-cas-tridy-p-a-exp.html#def-tridy}{\class{woo-pk-def-tridy}{\DTIME}}\bigl(2^{n^2}\bigr)\subseteq\href{ch-cas-tridy-p-a-exp.html#def-tridy}{\class{woo-pk-def-tridy}{\EXP}}.\]</div>
 <figure class="woo-float woo-figure" id="fig-cas-rust-funkci"><div class="woo-centered"><img class="woo-fig" src="../figures/03d-obchodni-cestujici-01.svg" width="287" height="210" alt="Obrázek: Růst funkcí." loading="lazy">
 <table><thead><tr><th style="text-align:right"><span class="arithmatex">\(n\)</span></th><th style="text-align:right"><span class="arithmatex">\(n^2\)</span></th><th style="text-align:right"><span class="arithmatex">\(2^n\)</span></th><th style="text-align:right"><span class="arithmatex">\(n!\)</span></th></tr></thead><tbody><tr><td style="text-align:right">10</td><td style="text-align:right">100</td><td style="text-align:right"><span class="arithmatex">\(\approx10^3\)</span></td><td style="text-align:right"><span class="arithmatex">\(\approx10^6\)</span></td></tr><tr><td style="text-align:right">20</td><td style="text-align:right">400</td><td style="text-align:right"><span class="arithmatex">\(\approx10^6\)</span></td><td style="text-align:right"><span class="arithmatex">\(\approx10^{18}\)</span></td></tr><tr><td style="text-align:right">50</td><td style="text-align:right">2&nbsp;500</td><td style="text-align:right"><span class="arithmatex">\(\approx10^{15}\)</span></td><td style="text-align:right"><span class="arithmatex">\(\approx10^{64}\)</span></td></tr></tbody></table>
 <p>Logaritmická osa <span class="woo-nobr"><span class="arithmatex">\(y\)</span>:</span> polynomy rostou „pomalu“, exponenciály přímkově, faktoriál ještě o kus rychleji – ale <span class="arithmatex">\(n! = 2^{O(n\log n)}\)</span> je stále „jen“ exponenciální.</p></div><figcaption><span class="woo-fignum">Obrázek 3.5:</span> Růst funkcí.</figcaption></figure>
-<div class="admonition note woo-remark"><p class="admonition-title">Lepší algoritmy existují</p><p>Held–Karpův algoritmus (dynamické programování, 1962) řeší TSP v čase <span class="woo-nobr"><span class="arithmatex">\(O(n^2 2^n)\)</span>,</span> aniž by procházel všechny túry (ukážeme ve 2. polovině semestru). Podobným prohledáváním lze zvládnout každý problém s krátce kontrolovatelnými důkazy – to je inkluze <span class="arithmatex">\(\NP\subseteq\EXP\)</span> z kapitoly <a href="../ch-np/index.html">4</a>.</p></div>
+<div class="admonition note woo-remark"><p class="admonition-title">Lepší algoritmy existují</p><p>Held–Karpův algoritmus (dynamické programování, 1962) řeší <a class="woo-term" href="../ch-ts/ch-ts-optimalizacni-vs-rozhodovaci-problemy.html#prob-tsp" data-pojem="prob-tsp">TSP</a> v čase <span class="woo-nobr"><span class="arithmatex">\(O(n^2 2^n)\)</span>,</span> aniž by procházel všechny túry (ukážeme ve 2. polovině semestru). Podobným prohledáváním lze zvládnout každý problém s krátce kontrolovatelnými důkazy – to je inkluze <span class="arithmatex">\(\href{../ch-np/ch-np-tridy-nedeterministicke-casove-slozitosti.html#def-ntime}{\class{woo-pk-def-ntime}{\NP}}\subseteq\href{ch-cas-tridy-p-a-exp.html#def-tridy}{\class{woo-pk-def-tridy}{\EXP}}\)</span> z kapitoly <a href="../ch-np/index.html">4</a>.</p></div>
 </div>
 
 
@@ -5650,5 +5650,6 @@
         <script src="../javascripts/woo.js"></script>
       
     
-  </body>
+  <script src="../javascripts/pojmy-data.js"></script><script src="../javascripts/pojmy.js"></script>
+</body>
 </html>

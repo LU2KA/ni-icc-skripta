@@ -4,7 +4,9 @@
 
 Úlohy procvičují redukce mezi variantami SATu: rozsekávání a doplňování klauzulí pomocnými proměnnými
 (oddíl .reference:ch-sat-sat-3-sat), symetrii NAE a pólovou proměnnou (oddíl .reference:ch-sat-nae-3-sat-not-all-equal).
-Poslední úloha ukazuje, proč stejné triky nedají NP-těžkost $\prob{2-SAT}$u.
+Úloha 7.8 ukazuje, proč stejné triky nedají NP-těžkost $\prob{2-SAT}$u. Pododdíl .reference:ch-sat-ulohy-navic-sbirka
+přidává tři úlohy z jiné sbírky: self-redukci SATu dosazováním, $\prob{SAT}\redp\prob{3-SAT}$ v testové podobě
+a 3-SAT s nejvýše třemi klauzulemi na proměnnou.
 
 
 .Warning:
@@ -14,6 +16,9 @@ Poslední úloha ukazuje, proč stejné triky nedají NP-těžkost $\prob{2-SAT}
   každou konstrukci jsme naprogramovali a ekvivalenci splnitelnosti ověřili hrubou silou na tisících malých náhodných
   formulí (s kladnými i zápornými odpověďmi), konkrétní ohodnocení a počty dosazením. Důkazy v úloze 7.8 a poznámka
   o Hallově větě v úloze 7.6 jsou navíc jen ručně odvozené a ověřené na příkladech.
+  U úloh 7.9–7.11 jsme stejně ověřili algoritmus s orákulem (3000 náhodných formulí, orákulum nahrazené hrubou silou),
+  obě redukce (tisíce náhodných formulí; u 7.11 i to, že každá proměnná leží nejvýše ve třech klauzulích), algoritmus
+  z úlohy 7.11 b) (20 000 náhodných formulí) a průběh příkladu v úloze 7.9 b).
 
 
 .Subsection Rozcvička
@@ -942,3 +947,364 @@ Poslední úloha ukazuje, proč stejné triky nedají NP-těžkost $\prob{2-SAT}
   je-li $\PP=\NP$, redukce rozhodne $\prob{3-SAT}$ v polynomiálním čase sama a vypíše pevnou $\ANO$-instanci
   $(x)$, nebo pevnou $\NE$-instanci $(x)\land(\lnot x)$ problému $\prob{2-SAT}$. Protože otázka $\PP$ vs. $\NP$ je
   otevřená, nevíme ani, zda redukce existuje – víme jen, že přímočarý trik z kapitoly nefunguje.
+
+
+.Subsection Úlohy z jiných sbírek
+  label: ch-sat-ulohy-navic-sbirka
+
+
+Úlohy v tomto pododdílu pocházejí ze sbírky „External Practice Bank“, kterou sestavil spolužák z volně dostupných
+materiálů (hlavně MFF UK). Zadání jsou česky převyprávěná, řešení jsou naše. Úloha 7.9 je self-redukce (typ 2
+testu), úlohy 7.10 a 7.11 jsou důkazy NP-úplnosti (typ 4) a obě se kryjí s látkou, kterou už skripta mají – berte
+je jako opakování „bez nahlížení“.
+
+
+.Exercise:
+  title: 'Úloha 7.9 (splňující ohodnocení z orákula pro SAT)'
+  label: un-7-9
+
+  Máte orákulum, které o formuli $\varphi$ v CNF v jednom kroku rozhodne, zda je splnitelná. Formule $\varphi$
+  má proměnné $x_1,\dots,x_n$.
+
+  .enumerate:
+    type: a
+
+    .item:
+
+      Pomocí orákula najděte splňující ohodnocení $\varphi$, nebo oznamte, že neexistuje. Proměnné do formule
+      "dosazujte".emphasize a u každého dotazu přesně popište, jakou formuli orákulu posíláte (včetně případů, kdy
+      dosazením vznikne prázdná klauzule nebo formule bez klauzulí). Zdůvodněte správnost a určete počet dotazů.
+
+    .item:
+
+      Proveďte algoritmus pro $\varphi=(x_1\lor x_2)\land(\lnot x_1\lor x_3)\land(\lnot x_1\lor\lnot x_3)\land(\lnot x_2\lor x_3)$.
+
+  Totéž zadání řeší typová úloha .reference:typ-2-1 přidáváním jednotkových klauzulí; tady jde o druhou
+  variantu, dosazování, a o to, jak vypadají dotazované formule.
+
+  "Zdroj: P. Veselý, ADS2 – cvičení 10–11 (MFF UK), cvičení 1(a).".small
+
+
+.Solution:
+  label: red-un-7-9
+
+  "Redukce s orákulem:".notion $\prob{SAT}$ – hledání ohodnocení $\to$ $\prob{SAT}$ – rozhodovací verze.
+  Jak: proměnné po jedné dosazujeme a orákulem hlídáme, že zbylá formule zůstává splnitelná.
+
+
+  "Dosazení.".notion Pro proměnnou $x$ a hodnotu $b\in\{0,1\}$ vznikne formule $\varphi|_{x=b}$ takto: každou
+  klauzuli, ve které je literál pravdivý při $x=b$ (tj. $x$ pro $b=1$, $\lnot x$ pro $b=0$), vynecháme – je splněná;
+  z ostatních klauzulí vyškrtneme literál nepravdivý při $x=b$. Výsledek je zase formule v CNF, jen bez proměnné $x$
+  a nejvýše tak dlouhá jako $\varphi$. Dva krajní případy rozhodneme bez orákula:
+
+  .itemize:
+
+    .item:
+
+      vznikla "prázdná klauzule".notion (všechny její literály byly nepravdivé) – formule je nesplnitelná, odpověď $\NE$;
+
+    .item:
+
+      nezbyla "žádná klauzule".notion – prázdná konjunkce je pravdivá, odpověď $\ANO$.
+
+  "Klíčová vlastnost:".notion $\varphi|_{x=b}$ je splnitelná, právě když $\varphi$ má splňující ohodnocení s $x=b$.
+  Ohodnocení $h$ ostatních proměnných splňuje $\varphi|_{x=b}$, právě když $h\cup\{x=b\}$ splňuje $\varphi$:
+  vynechané klauzule splní $x=b$ a vyškrtnuté literály jsou při $x=b$ nepravdivé, takže zbytek klauzule je pravdivý,
+  právě když je pravdivá celá klauzule.
+
+
+  "a) Algoritmus.".notion
+
+  .enumerate:
+
+    .item:
+
+      Zeptej se na $\varphi$. Při $\NE$ ohodnocení neexistuje – konec.
+
+    .item:
+
+      $\varphi_0:=\varphi$. Pro $i=1,\dots,n$: zeptej se na $\varphi_{i-1}|_{x_i=1}$. Při $\ANO$ polož $x_i:=1$
+      a $\varphi_i:=\varphi_{i-1}|_{x_i=1}$, při $\NE$ polož $x_i:=0$ a $\varphi_i:=\varphi_{i-1}|_{x_i=0}$
+      (na tuto formuli se už neptáme).
+
+    .item:
+
+      Vydej $(x_1,\dots,x_n)$.
+
+
+  "Invariant:".notion $\varphi_i$ je splnitelná a pro každé její splňující ohodnocení $h$ splňuje $h$ spolu
+  s hodnotami $x_1,\dots,x_i$ zvolenými algoritmem formuli $\varphi$.
+
+  .itemize:
+
+    .item:
+
+      Na začátku platí podle prvního dotazu.
+
+    .item:
+
+      Krok $\ANO$: $\varphi_{i-1}|_{x_i=1}$ je podle orákula splnitelná; druhá část plyne z klíčové vlastnosti
+      a invariantu pro $\varphi_{i-1}$.
+
+    .item:
+
+      Krok $\NE$: $\varphi_{i-1}$ je splnitelná, ale žádné její splňující ohodnocení nemá $x_i=1$ (jinak by byla
+      splnitelná $\varphi_{i-1}|_{x_i=1}$). Má tedy splňující ohodnocení s $x_i=0$ a podle klíčové vlastnosti je
+      $\varphi_i=\varphi_{i-1}|_{x_i=0}$ splnitelná. Tady orákulum "nepotřebujeme".emphasize – to je celá výhoda
+      rozhodovací verze: $\NE$ v jedné větvi zaručí $\ANO$ ve druhé.
+
+  Formule $\varphi_n$ nemá žádnou proměnnou a je splnitelná, takže nemá žádnou klauzuli (prázdná klauzule by ji
+  udělala nesplnitelnou). Jejím jediným (prázdným) ohodnocením je splněná, a podle invariantu tedy vydané
+  $(x_1,\dots,x_n)$ splňuje $\varphi$.
+
+
+  "Počet a velikost dotazů:".notion nejvýše $1+n$ dotazů, každý na formuli nejvýše tak dlouhou jako $\varphi$
+  (dosazení formuli jen zkracuje). Dotazy s prázdnou klauzulí nebo bez klauzulí odpadnou. Mezi dotazy počítáme
+  dosazení v čase $O(|\varphi|)$, celkem $O(n\cdot|\varphi|)$ kroků mimo orákulum: algoritmus je polynomiální
+  vzhledem k volání orákula.
+
+
+  "b) Průběh.".notion
+
+  .table:
+    columns: 'clcl'
+
+    .row:
+      head: true
+
+      dotaz
+
+      formule
+
+      odpověď
+
+      důsledek
+
+    .row:
+
+      1
+
+      $\varphi$
+
+      $\ANO$
+
+      ohodnocení existuje
+
+    .row:
+
+      2
+
+      $\varphi|_{x_1=1}=(x_3)\land(\lnot x_3)\land(\lnot x_2\lor x_3)$
+
+      $\NE$
+
+      $x_1:=0$, $\varphi_1=(x_2)\land(\lnot x_2\lor x_3)$
+
+    .row:
+
+      3
+
+      $\varphi_1|_{x_2=1}=(x_3)$
+
+      $\ANO$
+
+      $x_2:=1$, $\varphi_2=(x_3)$
+
+    .row:
+
+      –
+
+      $\varphi_2|_{x_3=1}$: žádná klauzule
+
+      $\ANO$ bez orákula
+
+      $x_3:=1$
+
+  Výsledek $(x_1,x_2,x_3)=(0,1,1)$ splňuje všechny čtyři klauzule; je to jediné splňující ohodnocení $\varphi$
+  (ověřeno dosazením všech 8 ohodnocení). Orákulum jsme volali třikrát. Při dosazení $x_1=1$ zmizela klauzule
+  $(x_1\lor x_2)$ a z ostatních klauzulí s $\lnot x_1$ zbyly jednotkové $(x_3)$ a $(\lnot x_3)$ – sporné, ale
+  algoritmus to nepozná sám, rozhodne orákulum.
+
+
+  "Srovnání s typovou úlohou .reference:typ-2-1.".notion Přidání jednotkové klauzule $(x_i)$ a dosazení $x_i=1$ dávají
+  ekvisplnitelné formule. Dosazení formuli zkracuje a dovolí odpovědět na krajní případy bez orákula, přidávání
+  klauzulí nechává formuli čitelnou („$\varphi$ plus to, co jsme zafixovali“). U testu stačí kterákoli varianta.
+
+
+.Exercise:
+  title: 'Úloha 7.10 ($\prob{SAT}\redp\prob{3-SAT}$ bez nahlížení)'
+  label: un-7-10
+
+  Převeďte splnitelnost libovolné formule v CNF na splnitelnost formule v CNF, jejíž každá klauzule má
+  "nejvýše tři".notion literály. Použijte pomocné proměnné, zachovejte splnitelnost a dokažte, že výstup má
+  polynomiální velikost. Výsledek zformulujte jako důkaz NP-úplnosti $\prob{3-SAT}$.
+
+
+  Tuto redukci obsahuje oddíl .reference:ch-sat-sat-3-sat (redukce .reference:red-sat3sat a lemma
+  .reference:lem-3satkor) – zkuste ji napsat bez nahlížení, v úplné testové podobě. Na konkrétní formuli ji
+  procvičuje úloha .reference:un-7-1.
+
+  "Zdroj: Příklady ADS2 – cvičení 10 (MFF UK), příklad 4(b).".small
+
+
+.Solution:
+  label: red-un-7-10
+
+  "Redukce:".notion $\prob{SAT} \redp \prob{3-SAT}$, formule $\varphi$ v CNF $\mapsto$ formule $\varphi'$, v níž má
+  každá klauzule nejvýše tři literály (dlouhé klauzule rozsekneme řetězem nových proměnných).
+
+
+  "1. $\prob{3-SAT}\in\NP$.".notion Certifikát je ohodnocení proměnných; dosazení do všech klauzulí trvá $O(|\varphi'|)$.
+
+
+  "2. Konstrukce.".notion Klauzule s nejvýše třemi literály necháme beze změny (zadání připouští i kratší; chceme-li
+  přesně tři, zopakujeme literál jako v oddílu .reference:ch-sat-sat-3-sat). Klauzuli
+  $C=(\ell_1\lor\dots\lor\ell_k)$ s $k\ge4$ nahradíme $k-2$ klauzulemi
+
+  .equation:
+
+    (\ell_1\lor\ell_2\lor z_1)\land(\lnot z_1\lor\ell_3\lor z_2)\land\dots\land(\lnot z_{k-4}\lor\ell_{k-2}\lor z_{k-3})\land(\lnot z_{k-3}\lor\ell_{k-1}\lor\ell_k),
+
+  kde $z_1,\dots,z_{k-3}$ jsou "nové proměnné, pro každou klauzuli jiné".notion.
+
+
+  "3. Polynomialita.".notion Klauzule délky $k\ge4$ dá $k-2$ klauzulí a $k-3$ nových proměnných. Má-li $\varphi$
+  celkem $L$ výskytů literálů, má $\varphi'$ nejvýše $L$ klauzulí, nejvýše $L$ nových proměnných a nejvýše $3L$
+  výskytů literálů. Konstrukce je jeden průchod formulí, čas $O(L)$.
+
+
+  "4. ($\Rightarrow$)".notion Nechť $h$ splňuje $\varphi$. Krátké klauzule zůstaly a jsou pravdivé. V dlouhé klauzuli
+  $C$ vybereme pravdivý literál $\ell_i$ a položíme $z_j=1$ pro $j\le i-2$ a $z_j=0$ pro $j\ge i-1$. Kousky vlevo
+  od kousku s $\ell_i$ splní literál $z_j=1$, kousky vpravo literál $\lnot z_{j}$ s $z_j=0$ a kousek
+  s $\ell_i$ splní $\ell_i$. (Pro $i\le2$ jsou všechna $z_j=0$, pro $i\ge k-1$ všechna $z_j=1$.) Proměnné $z_j$
+  různých klauzulí jsou různé, takže volby si nepřekážejí a rozšířené $h$ splňuje $\varphi'$.
+
+
+  "5. ($\Leftarrow$)".notion Nechť $g$ splňuje $\varphi'$; ukážeme, že jeho zúžení na proměnné $\varphi$ splňuje
+  $\varphi$. Krátké klauzule jsou v $\varphi'$ beze změny. Kdyby dlouhá klauzule $C$ měla všechny literály nepravdivé,
+  první kousek vynutí $z_1=1$, druhý pak $z_2=1$, …, předposlední $z_{k-3}=1$ a poslední kousek
+  $(\lnot z_{k-3}\lor\ell_{k-1}\lor\ell_k)$ je nepravdivý – spor s tím, že $g$ splňuje $\varphi'$.
+
+
+  "6. Závěr.".notion $\prob{SAT}$ je NP-úplný (věta .reference:thm-cooklevin, Cook–Levin) a
+  $\prob{SAT}\redp\prob{3-SAT}$, tedy $\prob{3-SAT}$ je NP-těžký a podle bodu 1 NP-úplný. Skripta definují
+  $\prob{3-SAT}$ s "přesně".emphasize třemi literály v klauzuli, proto v bodu 2 krátké klauzule doplníme opakováním
+  literálu; splnitelnost se tím nemění a velikost vzroste nejvýše třikrát.
+
+
+  "Typické chyby.".notion (1) Společné pomocné proměnné pro různé klauzule: v ($\Rightarrow$) pak hodnotu $z_j$
+  „chtějí“ dvě klauzule různě (protipříklad v úloze .reference:un-7-1 d). (2) Řetěz bez prvního či posledního kousku
+  – pak je ($\Leftarrow$) nepravdivá, protože chybí „konec štafety“, který vyrobí spor. (3) Důkaz jen ($\Rightarrow$).
+
+
+.Exercise:
+  title: 'Úloha 7.11 (každá proměnná nejvýše ve třech klauzulích – těžší)'
+  label: un-7-11
+
+  Problém $\prob{3-SAT-3K}$: je dána formule v CNF, ve které má každá klauzule nejvýše tři literály a každá
+  proměnná leží "nejvýše ve třech klauzulích".notion; je splnitelná?
+
+  .enumerate:
+    type: a
+
+    .item:
+
+      Dokažte, že $\prob{3-SAT-3K}$ je NP-úplný redukcí z $\prob{3-SAT}$. Vysvětlete gadget, který proměnnou
+      „zkopíruje“, a jak se vynutí, aby všechny kopie měly stejnou hodnotu.
+
+    .item:
+
+      "(nad rámec přednášky)".emphasize Ukažte, že trojka je nejmenší možná: leží-li každá proměnná nejvýše ve
+      "dvou".emphasize klauzulích (délka klauzulí libovolná), lze splnitelnost rozhodnout v polynomiálním čase.
+
+  Část a) se kryje s úlohou .reference:un-7-6 ($\prob{3-SAT-3}$, kde se počítají "výskyty".emphasize, ne
+  klauzule); řešení ji jen shrne a ukáže, v čem se zadání liší. Část b) je naše doplnění.
+
+  "Zdroj: Příklady ADS2 – cvičení 10 (MFF UK), příklad 4(c).".small
+
+
+.Solution:
+  label: red-un-7-11
+
+  "Redukce:".notion $\prob{3-SAT} \redp \prob{3-SAT-3K}$, formule $\varphi$ $\mapsto$ $\varphi_3$ z úlohy
+  .reference:un-7-6 (každý výskyt proměnné dostane vlastní kopii, kopie téže proměnné spojí cyklus implikací).
+
+
+  "Rozdíl proti úloze 7.6.".notion „Nejvýše tři výskyty“ je silnější podmínka než „nejvýše tři klauzule“: tři
+  výskyty leží nejvýše ve třech klauzulích, ale formule $(x\lor x\lor y)\land(\lnot x\lor z)\land(x\lor\lnot z)$
+  má čtyři výskyty $x$ jen ve třech klauzulích. Každá instance $\prob{3-SAT-3}$ je tedy instancí $\prob{3-SAT-3K}$
+  a NP-těžkost by plynula už z úlohy .reference:un-7-6 identickou redukcí. Zadání ale chce gadget, proto ho shrneme.
+  Podmínka „nejvýše tři literály“ je podstatná: dvouprvkové klauzule cyklu jsou nutné, protože formule, v níž má každá
+  klauzule přesně tři různé proměnné a každá proměnná leží nejvýše ve třech klauzulích, je vždy splnitelná (Tovey,
+  poznámka u úlohy .reference:un-7-6; důkaz přes Hallovu větu funguje i pro počítání klauzulí).
+
+
+  "a) 1. V $\NP$.".notion Certifikát je ohodnocení; dosazení trvá $O(|\varphi|)$.
+
+
+  "2. Gadget kopírování.".notion Nechť proměnná $x$ má v $\varphi$ celkem $k$ výskytů. Zavedeme kopie
+  $x^{(1)},\dots,x^{(k)}$ a $i$-tý výskyt nahradíme kopií $x^{(i)}$ se stejným znaménkem. Pro $k\ge2$ přidáme
+  "cyklus implikací".notion
+
+  .equation:
+
+    (\lnot x^{(1)}\lor x^{(2)})\land(\lnot x^{(2)}\lor x^{(3)})\land\dots\land(\lnot x^{(k-1)}\lor x^{(k)})\land(\lnot x^{(k)}\lor x^{(1)}),
+
+  tedy $x^{(1)}\Rightarrow x^{(2)}\Rightarrow\dots\Rightarrow x^{(k)}\Rightarrow x^{(1)}$ (obrázek u úlohy .reference:un-7-6).
+  Kopie $x^{(i)}$ leží v klauzuli svého výskytu a ve dvou klauzulích cyklu (vstupní a výstupní implikace), celkem
+  ve třech klauzulích; pro $k=1$ jen v jedné. Klauzule mají 3, resp. 2 literály.
+
+
+  "3. Polynomialita.".notion Pro $m$ klauzulí je výskytů $3m$, vznikne $3m$ kopií a nejvýše $3m$ klauzulí cyklů,
+  celkem nejvýše $4m$ klauzulí.
+
+
+  "4. ($\Rightarrow$)".notion Splňuje-li $h$ formuli $\varphi$, dáme každé kopii $x^{(i)}$ hodnotu $h(x)$. Původní
+  klauzule mají stejné hodnoty literálů a implikace mezi stejnými hodnotami platí.
+
+
+  "5. ($\Leftarrow$) – konzistence.".notion Nechť $g$ splňuje $\varphi_3$. Je-li některá kopie $x^{(i)}$ rovna 1,
+  implikace po obvodu cyklu vynutí 1 u všech kopií $x$; jinak jsou všechny 0. Kopie mají tedy stejnou hodnotu
+  a $h(x):=g(x^{(1)})$ dává každé klauzuli $\varphi$ stejné hodnoty literálů jako jejímu obrazu v $\varphi_3$, takže
+  $h$ splňuje $\varphi$. Uzavření cyklu je nutné: s cestou $x^{(1)}\Rightarrow\dots\Rightarrow x^{(k)}$ by kopie
+  mohly mít hodnoty $0\dots01\dots1$ (protipříklad v úloze .reference:un-7-6).
+
+
+  "6. Závěr.".notion $\prob{3-SAT}$ je NP-úplný, tedy $\prob{3-SAT-3K}$ je NP-těžký a s bodem 1 NP-úplný.
+
+
+  "b) Dvě klauzule na proměnnou.".notion Nejdřív vynecháme klauzule, které obsahují $x$ i $\lnot x$ (jsou vždy
+  pravdivé), a v každé klauzuli sloučíme opakované literály. Pak opakujeme, dokud formule má proměnné:
+
+  .enumerate:
+
+    .item:
+
+      Obsahuje-li formule prázdnou klauzuli, odpověz $\NE$. Nemá-li žádnou klauzuli, odpověz $\ANO$.
+
+    .item:
+
+      Vezmi libovolnou proměnnou $x$. Vyskytuje-li se jen kladně (nebo jen záporně), polož ji rovnou 1 (resp. 0)
+      a klauzule s ní vynech – splní je.
+
+    .item:
+
+      Jinak leží $x$ v klauzuli $C_1$ a $\lnot x$ v jiné klauzuli $C_2$ a jinde $x$ není. Obě nahraď jedinou
+      klauzulí $R=(C_1\setminus\{x\})\lor(C_2\setminus\{\lnot x\})$ (tzv. "rezolventa".emphasize); obsahuje-li $R$
+      nějakou dvojici $y$, $\lnot y$, nepřidávej ji vůbec.
+
+  "Proč krok 3 zachová splnitelnost.".notion Splňuje-li $h$ původní formuli: při $h(x)=1$ musí $C_2$ splnit jiný literál
+  než $\lnot x$, při $h(x)=0$ musí $C_1$ splnit jiný literál než $x$ – v obou případech je $R$ pravdivá. Naopak
+  splňuje-li $g$ novou formuli (bez $x$), je v $R$ pravdivý literál z $C_1$, nebo z $C_2$. V prvním případě
+  položíme $x=0$ (splní $C_2$), ve druhém $x=1$ (splní $C_1$); ostatní klauzule $x$ neobsahují. Krok 2 je zřejmý.
+
+
+  "Proč se podmínka zachová a algoritmus je polynomiální.".notion Proměnná $y\ne x$ leží v $R$, jen pokud ležela
+  v $C_1$ nebo v $C_2$; klauzule $C_1$, $C_2$ nahradila nejvýše jedna klauzule $R$, počet klauzulí s $y$ se tedy nezvětší a podmínka „nejvýše dvě klauzule“ platí dál
+  (proto je krok 3 správně: $x$ je přesně v $C_1$ a $\lnot x$ přesně v $C_2$). Každý průchod odstraní aspoň jednu
+  proměnnou a formule se neprodlouží ($R$ má méně literálů než $C_1$ a $C_2$ dohromady), takže stačí nejvýše $n$
+  průchodů po $O(|\varphi|)$ krocích. Rezolventa může mít víc než tři literály – algoritmus délku klauzulí nepotřebuje.
+
+
+  Hranice mezi snadným a těžkým tedy leží mezi dvěma a třemi klauzulemi na proměnnou – stejně jako u $\prob{X3C}$
+  (úloha .reference:un-10-8) mezi dvěma a třemi výskyty prvku.

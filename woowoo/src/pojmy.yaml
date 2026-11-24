@@ -1,0 +1,1227 @@
+# Pojmy pro vyskakovací okénka s definicí na webu skript (čte je tools/link_terms.py).
+# Záznam s `box:` = štítek rámečku .Definition ve skriptech (okénko ukáže ten rámeček);
+# záznam s `id: pojem-…` = pojem bez rámečku, definice je v `title` + `body` (Markdown, vzorce v $…$),
+# `odkaz` je id místa ve skriptech, kde je pojem zaveden. U obou: `prob` = přesné argumenty \prob{…},
+# `makro` = makra tříd ve vzorcích (bez \), `text` = regulární výrazy (Python re) pro běžný text;
+# anglické názvy z `prob` se v textu hledají samy, kromě těch v `bez_textu`;
+# hranice slov přidává program sám. Každý řetězec v `prob`/`makro` smí být jen u jednoho záznamu.
+# Záznamy jsou seřazené podle kapitol.
+
+# ---------------------------------------------------------------- 1 Problémy a Turingův stroj
+- box: def-abeceda
+  prob: []
+  makro: []
+  text: ['[Aa]beced[aěouy]\w*']
+
+- box: def-instance
+  prob: []
+  makro: []
+  text: ['ANO-instanc\w*', 'NE-instanc\w*', '[Vv]elikost\w* vstupu']
+
+- box: prob-tsp
+  prob: [TSP]
+  makro: []
+  text: ['[Oo]bchodn\w+ cestující\w*', 'TSP\w*']
+
+- id: pojem-self-redukce
+  title: 'Self-redukce (samo-redukovatelnost)'
+  body: |
+    Technika, jak z algoritmu pro **rozhodovací** verzi problému (černé skříňky, orákula, které odpovídá jen
+    ANO/NE) získat **konkrétní řešení**: instanci postupně upravujeme (mažeme hrany či vrcholy, přidáváme
+    omezení) a orákulem hlídáme, že řešení v ní pořád existuje. Hodnotu optima předtím najdeme binárním
+    vyhledáváním přes práh $k$. Orákulum se smí ptát jen na instance téhož problému.
+  odkaz: ch-ts-od-optima-k-reseni-samo-redukovatelnost
+  prob: []
+  makro: []
+  text: ['[Ss]elf-redukc\w*', '[Ss]amo-redukovateln\w+', '[Ss]elf-reducibility']
+
+- box: def-dts
+  prob: []
+  makro: []
+  text: ['[Dd]eterministick\w+ Turing\w+ stroj\w*', 'DTS', '[Tt]uring\w+ stroj\w*', 'TS']
+
+- box: def-fm
+  prob: []
+  makro: []
+  text: ['[Ff]unkc\w+ počítan\w+ TS']
+
+# ---------------------------------------------------------------- 2 Vyčíslitelnost
+- box: def-rekurzivni
+  prob: []
+  makro: []
+  text: ['[Rr]ekurzivně spočetn\w+', '[Rr]ekurzivn\w+ jazyk\w*', '[Nn]erozhodnuteln\w+']
+
+- box: def-uc
+  prob: [UC]
+  makro: []
+  text: []
+
+- box: prob-halt
+  prob: [HaltingProblem, Halt]
+  makro: []
+  text: ['[Pp]roblém\w* zastavení']
+
+- id: pojem-empty
+  title: 'Problém $\prob{Empty}$'
+  body: |
+    **Vstup:** kód Turingova stroje $\enc{M}$.
+
+    **Otázka:** je $L_M=\emptyset$, tj. nepřijme $M$ žádné slovo?
+
+    Jako jazyk: $\prob{Empty}=\{\enc{M} \mid L_M=\emptyset\}$.
+  odkaz: un-2-6
+  prob: [Empty]
+  makro: []
+  text: []
+
+- id: pojem-eq
+  title: 'Problém $\prob{Eq}$'
+  body: |
+    **Vstup:** kódy dvou Turingových strojů $\enc{M_1,M_2}$.
+
+    **Otázka:** přijímají oba stroje tentýž jazyk, tj. $L_{M_1}=L_{M_2}$?
+
+    Jako jazyk: $\prob{Eq}=\{\enc{M_1,M_2} \mid L_{M_1}=L_{M_2}\}$.
+  odkaz: un-2-7
+  prob: [Eq]
+  makro: []
+  text: []
+
+# ---------------------------------------------------------------- 3 Třídy P a EXP
+- box: def-casova
+  prob: []
+  makro: []
+  text: ['[Čč]asov\w+ složitost\w*']
+
+- box: def-tridy
+  prob: []
+  makro: [DTIME, PP, EXP]
+  text: []
+
+- box: def-konstr
+  prob: []
+  makro: []
+  text: ['[Čč]asově konstruovateln\w+']
+
+- id: pojem-square
+  title: 'Problém $\prob{Square}$'
+  body: |
+    **Vstup:** přirozené číslo $n$.
+
+    **Otázka:** je $n$ druhou mocninou celého čísla?
+  odkaz: un-3-6
+  prob: [Square]
+  makro: []
+  text: []
+
+- id: pojem-ba
+  title: 'Problém $\prob{BA}$ (bounded acceptance)'
+  body: |
+    **Vstup:** $\enc{M,x,k}$ – kód deterministického TS $M$, slovo $x$ a číslo $k$ zapsané **binárně**.
+
+    **Otázka:** přijme $M$ slovo $x$ během nejvýše $k$ kroků?
+
+    $\prob{BA}_1$ je totéž s $k$ zapsaným unárně jako $1^k$.
+  odkaz: un-3-8
+  prob: [BA]
+  makro: []
+  text: []
+
+# ---------------------------------------------------------------- 4 Nedeterminismus a NP
+- box: def-ndts
+  prob: []
+  makro: []
+  text: ['[Nn]edeterministick\w+ Turing\w+ stroj\w*', '[Nn]edeterministick\w+ stroj\w*', 'NDTS']
+
+- box: def-ntime
+  prob: []
+  makro: [NTIME, NP, NEXP]
+  text: ['NP', '[Nn]edeterministick\w+ časov\w+ složitost\w*', '[Čč]asov\w+ složitost\w* NDTS']
+
+- box: def-verifikator
+  prob: []
+  makro: []
+  text: ['[Vv]erifikátor\w*', '[Cc]ertifikát\w*']
+
+- box: def-nphat
+  prob: []
+  makro: [NPhat]
+  text: ['[Cc]ertifikátov\w+ definic\w*']
+
+- box: prob-composites
+  prob: [Composites]
+  makro: []
+  text: []
+
+- id: pojem-exact-clique
+  title: 'Problém $\prob{Exact Clique}$'
+  body: |
+    **Vstup:** graf $G$ a číslo $k$.
+
+    **Otázka:** má **největší** klika v $G$ právě $k$ vrcholů?
+  odkaz: un-4-3
+  prob: [Exact Clique]
+  makro: []
+  text: []
+
+- id: pojem-cnf-taut
+  title: 'Problém $\prob{CNF-TAUT}$'
+  body: |
+    **Vstup:** formule v CNF.
+
+    **Otázka:** je formule tautologie (pravdivá při každém ohodnocení)?
+  odkaz: un-4-3
+  prob: [CNF-TAUT]
+  makro: []
+  text: []
+
+- id: pojem-dnf-taut
+  title: 'Problém $\prob{DNF-TAUT}$'
+  body: |
+    **Vstup:** formule v DNF (disjunkce konjunkcí literálů).
+
+    **Otázka:** je formule tautologie (pravdivá při každém ohodnocení)?
+  odkaz: un-4-3
+  prob: [DNF-TAUT]
+  makro: []
+  text: []
+
+- id: pojem-set-cover
+  title: 'Problém $\prob{Set Cover}$'
+  body: |
+    **Vstup:** univerzum $U$, systém jeho podmnožin $\mathcal S=\{S_1,\dots,S_m\}$ a číslo $k$.
+
+    **Otázka:** lze vybrat nejvýše $k$ množin ze $\mathcal S$ tak, aby jejich sjednocení bylo celé $U$?
+  odkaz: cv-3-4
+  prob: [Set Cover]
+  makro: []
+  text: []
+
+- id: pojem-fact
+  title: 'Problém $\prob{FACT}$'
+  body: |
+    **Vstup:** čísla $n\ge2$ a $m$ zapsaná binárně.
+
+    **Otázka:** má $n$ dělitele $d$ s $1<d\le m$?
+  odkaz: un-4-6
+  prob: [FACT]
+  makro: []
+  text: []
+
+- id: pojem-dnf-sat
+  title: 'Problém $\prob{DNF-SAT}$'
+  body: |
+    **Vstup:** formule v DNF (disjunkce termů, term je konjunkce literálů).
+
+    **Otázka:** je formule splnitelná?
+  odkaz: un-4-7
+  prob: [DNF-SAT]
+  makro: []
+  text: []
+
+# ---------------------------------------------------------------- 5 Redukce a NP-úplnost
+- box: def-redukce
+  prob: []
+  makro: [redp]
+  text: ['[Pp]olynomiáln\w+ redukc\w*']
+
+- box: def-nphard
+  prob: []
+  makro: []
+  text: ['NP-těžk\w+', 'NP-úpln\w+', 'NP-hard', 'NP-complete']
+
+- box: prob-unp
+  prob: [UNP]
+  makro: []
+  text: []
+
+- id: pojem-bnp
+  title: 'Problém $\prob{BNP}$'
+  body: |
+    Stejný jako $\prob{UNP}$, jen číslo $k$ je zapsané **binárně**.
+
+    **Vstup:** kód nedeterministického stroje $M$, slovo $x$ a číslo $k$ (binárně).
+
+    **Otázka:** přijme $M$ slovo $x$ během nejvýše $k$ kroků?
+  odkaz: un-5-5
+  prob: [BNP]
+  makro: []
+  text: []
+
+- id: pojem-orakulum
+  title: 'Redukce s orákulem'
+  body: |
+    Redukce, která algoritmus pro jiný problém **volá jako podprogram**, klidně víckrát. Ten algoritmus je
+    *orákulum* – černá skříňka, ze které nás zajímá jen odpověď. Karpova (polynomiální) redukce je zvláštní
+    případ: orákulum se ptáme jen jednou a jeho odpověď vracíme beze změny.
+  odkaz: fig-graf-redukce-s-orakulem
+  prob: []
+  makro: []
+  text: ['[Rr]edukc\w+ s orákul\w+', '[Oo]rákul\w*']
+
+# ---------------------------------------------------------------- 6 Cook–Levinova věta
+- box: prob-sat
+  prob: [SAT]
+  makro: []
+  text: ['SAT']
+
+- box: prob-dlazdickovani
+  prob: [Dlaždičkování]
+  makro: []
+  text: []
+
+# ---------------------------------------------------------------- 7 Varianty SAT
+- id: pojem-3sat
+  title: 'Problém $\prob{3-SAT}$'
+  body: |
+    **Vstup:** formule v 3-CNF, tj. v CNF, kde má každá klauzule **přesně 3** literály.
+
+    **Otázka:** je formule splnitelná?
+  odkaz: red-sat3sat
+  prob: [3-SAT]
+  makro: []
+  text: ['3-SAT\w*']
+
+- box: prob-nae
+  prob: [NAE-3-SAT]
+  makro: []
+  text: ['NAE-3-SAT\w*']
+
+- id: pojem-pozitivni-nae
+  title: 'Problém $\prob{Pozitivní NAE-3-SAT}$'
+  body: |
+    $\prob{NAE-3-SAT}$ bez negací (pozitivní, monotónní): všechny literály jsou kladné.
+
+    **Vstup:** formule v 3-CNF bez negací.
+
+    **Otázka:** existuje ohodnocení, při kterém v žádné klauzuli nemají všechny tři literály stejnou hodnotu?
+  odkaz: ch-sat-pozitivni-nae-3-sat
+  prob: [Pozitivní NAE-3-SAT, pozitivní NAE-3-SAT]
+  makro: []
+  text: ['[Pp]ozitivn\w+ (?:\(monotónn\w+\) )?NAE-3-SAT\w*']
+
+- id: pojem-double-sat
+  title: 'Problém $\prob{Double-SAT}$'
+  body: |
+    **Vstup:** formule $\varphi$ v CNF.
+
+    **Otázka:** má $\varphi$ **aspoň dvě různá** splňující ohodnocení?
+  odkaz: un-7-4
+  prob: [Double-SAT]
+  makro: []
+  text: []
+
+- id: pojem-e3sat
+  title: 'Problém $\prob{E3-SAT}$'
+  body: |
+    **Vstup:** formule v CNF, kde každá klauzule obsahuje **přesně tři literály s navzájem různými
+    proměnnými** (ani dvakrát týž literál, ani $x$ a $\lnot x$ v téže klauzuli).
+
+    **Otázka:** je formule splnitelná?
+  odkaz: un-7-5
+  prob: [E3-SAT]
+  makro: []
+  text: []
+
+- id: pojem-3sat-3
+  title: 'Problém $\prob{3-SAT-3}$'
+  body: |
+    **Vstup:** formule v CNF, ve které má každá klauzule **nejvýše tři** literály a každá proměnná se
+    vyskytuje **nejvýše třikrát** (výskyty $x$ a $\lnot x$ se počítají dohromady).
+
+    **Otázka:** je formule splnitelná?
+  odkaz: un-7-6
+  prob: [3-SAT-3]
+  makro: []
+  text: []
+
+- id: pojem-monotonni-3sat
+  title: 'Problém $\prob{Monotónní 3-SAT}$'
+  body: |
+    Klauzule je *monotónní*, jsou-li všechny její literály kladné, nebo všechny záporné.
+
+    **Vstup:** 3-CNF formule (3 literály v klauzuli, opakování dovoleno), jejíž každá klauzule je monotónní.
+
+    **Otázka:** je formule splnitelná?
+  odkaz: un-7-7
+  prob: [Monotónní 3-SAT]
+  makro: []
+  text: []
+
+# ---------------------------------------------------------------- 8 Nezávislé množiny, pokrytí, kliky
+- box: prob-is
+  prob: [IS, Independent Set]
+  makro: []
+  text: ['[Nn]ezávisl\w+ množin\w*']
+
+- id: pojem-gadget
+  title: 'Gadget'
+  body: |
+    Lokální struktura (podgraf, rovnice, podmínka), ze které stavíme redukci. Simuluje chování prvků
+    původního problému (proměnných, klauzulí) – např. gadget proměnné vynutí výběr ohodnocení, gadget
+    klauzule její splnění.
+  odkaz: fig-is-dva-smery
+  prob: []
+  makro: []
+  text: ['[Gg]adget\w*']
+
+- box: prob-vc
+  prob: [VC, Vertex Cover]
+  makro: []
+  text: ['[Vv]rcholov\w+ pokryt\w*']
+
+- box: prob-hs
+  prob: [Hitting Set]
+  makro: []
+  text: []
+
+- box: prob-cliquer
+  prob: [Clique, Kliky, Kliku]
+  makro: []
+  text: []
+
+- id: pojem-subgraph-isomorphism
+  title: 'Problém $\prob{Subgraph Isomorphism}$'
+  body: |
+    **Vstup:** grafy $G$ a $H$.
+
+    **Otázka:** obsahuje $G$ podgraf izomorfní s $H$? (Tj. existuje prosté zobrazení $f\colon V(H)\to V(G)$
+    takové, že pro každou hranu $\{u,v\}\in E(H)$ je $\{f(u),f(v)\}\in E(G)$?)
+  odkaz: cv-3-2
+  prob: [Subgraph Isomorphism]
+  makro: []
+  text: []
+
+- id: pojem-half-clique
+  title: 'Problém $\prob{Half-Clique}$'
+  body: |
+    **Vstup:** graf $G$ na $n$ vrcholech.
+
+    **Otázka:** obsahuje $G$ kliku velikosti alespoň $n/2$?
+  odkaz: cv-3-3
+  prob: [Half-Clique]
+  makro: []
+  text: []
+
+- id: pojem-fvs
+  title: 'Problém $\prob{Feedback Vertex Set}$'
+  body: |
+    **Vstup:** neorientovaný jednoduchý graf $G=(V,E)$ a číslo $k$.
+
+    **Otázka:** existuje $F\subseteq V$, $|F|\le k$, taková, že graf $G-F$ neobsahuje žádnou kružnici (je to les)?
+  odkaz: cv-3-5
+  prob: [Feedback Vertex Set, FVS]
+  makro: []
+  text: []
+
+- id: pojem-dominating-set
+  title: 'Problém $\prob{Dominating Set}$'
+  body: |
+    **Vstup:** graf $G=(V,E)$ a číslo $k$.
+
+    **Otázka:** existuje $D\subseteq V$, $|D|\le k$, taková, že každý vrchol mimo $D$ má souseda v $D$?
+  odkaz: cv-3-6
+  prob: [Dominating Set, DS]
+  makro: []
+  text: []
+
+- id: pojem-set-packing
+  title: 'Problém $\prob{Set Packing}$ (balení množin)'
+  body: |
+    **Vstup:** konečné univerzum $U$, systém podmnožin $S_1,\dots,S_r\subseteq U$ a číslo $k$.
+
+    **Otázka:** lze ze systému vybrat $k$ množin, které jsou po dvou disjunktní?
+  odkaz: un-8-4
+  prob: [Set Packing]
+  makro: []
+  text: []
+
+- id: pojem-dense-subgraph
+  title: 'Problém $\prob{Dense Subgraph}$'
+  body: |
+    **Vstup:** graf $G=(V,E)$ a čísla $k$, $l$.
+
+    **Otázka:** existuje $S\subseteq V$, $|S|=k$, takové, že indukovaný podgraf $G[S]$ má **alespoň** $l$ hran?
+  odkaz: un-8-5
+  prob: [Dense Subgraph]
+  makro: []
+  text: []
+
+- id: pojem-sparse-subgraph
+  title: 'Problém $\prob{Sparse Subgraph}$'
+  body: |
+    **Vstup:** graf $G=(V,E)$ a čísla $k$, $l$.
+
+    **Otázka:** existuje $S\subseteq V$, $|S|=k$, takové, že indukovaný podgraf $G[S]$ má **nejvýše** $l$ hran?
+  odkaz: un-8-5
+  prob: [Sparse Subgraph]
+  makro: []
+  text: []
+
+- id: pojem-min-ones-monotone-2sat
+  title: 'Problém $\prob{Min-Ones Monotone 2-SAT}$'
+  body: |
+    **Vstup:** formule $\varphi$ v KNF nad proměnnými $y_1,\dots,y_N$, v níž má každá klauzule tvar
+    $(y_i\lor y_j)$ pro dvě různé proměnné (žádné negace), a číslo $k$.
+
+    **Otázka:** existuje ohodnocení splňující $\varphi$, v němž je **nejvýše $k$** proměnných rovno $1$?
+  odkaz: un-8-6
+  prob: [Min-Ones Monotone 2-SAT]
+  makro: []
+  text: []
+
+- id: pojem-clique-and-is
+  title: 'Problém $\prob{Clique and IS}$'
+  body: |
+    **Vstup:** graf $G$ a číslo $k$ (binárně).
+
+    **Otázka:** obsahuje $G$ kliku velikosti $k$ **a zároveň** nezávislou množinu velikosti $k$?
+  odkaz: un-8-7
+  prob: [Clique and IS]
+  makro: []
+  text: []
+
+# ---------------------------------------------------------------- 9 Barvení, řezy, agenti
+- box: prob-3col
+  prob: [3-Coloring, 3-Col]
+  makro: []
+  text: ['3-barven\w*', '3-Coloring\w*']
+
+- box: prob-rozvrh
+  prob: [Rozvrh zkoušek, Rozvrh]
+  bez_textu: [Rozvrh]            # „Rozvrh“ v textu je většinou obecné slovo
+  makro: []
+  text: ['[Rr]ozvrh\w* zkoušek']
+
+- box: def-intgraf
+  prob: []
+  makro: []
+  text: ['[Ii]ntervalov\w+ graf\w*']
+
+- box: prob-planar
+  prob: [Planar 3-Coloring]
+  makro: []
+  text: ['Planar 3-Coloring']
+
+- id: pojem-2coloring
+  title: 'Problém $\prob{2-Coloring}$'
+  body: |
+    **Vstup:** graf $G$.
+
+    **Otázka:** lze vrcholy grafu $G$ obarvit dvěma barvami tak, aby žádná hrana nespojovala dva vrcholy
+    stejné barvy?
+
+    Na rozdíl od $\prob{3-Coloring}$ je v $\PP$.
+  odkaz: un-9-2
+  prob: [2-Coloring]
+  makro: []
+  text: []
+
+- id: pojem-clique-cover
+  title: 'Problém $\prob{Clique Cover}$ (pokrytí klikami)'
+  body: |
+    **Vstup:** graf $G=(V,E)$ a číslo $k$.
+
+    **Otázka:** lze $V$ rozdělit na nejvýše $k$ disjunktních množin $Q_1,\dots,Q_j$ ($j\le k$) tak, aby každá
+    $Q_i$ byla klika?
+  odkaz: un-9-5
+  prob: [Clique Cover]
+  makro: []
+  text: []
+
+- box: prob-maxcut
+  prob: [MaxCut, Max-Cut, (vážený) MaxCut]
+  makro: []
+  text: ['[Mm]aximáln\w+ řez\w*', 'MaxCut\w*']
+
+- id: pojem-max-bisection
+  title: 'Problém $\prob{Max Bisection}$'
+  body: |
+    *Bisekce* grafu s $2h$ vrcholy je rozdělení $V=A\cup B$ s $|A|=|B|=h$.
+
+    **Vstup:** graf $G$ se sudým počtem vrcholů a číslo $k$.
+
+    **Otázka:** existuje bisekce, která přeřízne **aspoň** $k$ hran?
+  odkaz: un-9-7
+  prob: [Max Bisection]
+  makro: []
+  text: []
+
+- id: pojem-min-bisection
+  title: 'Problém $\prob{Min Bisection}$'
+  body: |
+    *Bisekce* grafu s $2h$ vrcholy je rozdělení $V=A\cup B$ s $|A|=|B|=h$.
+
+    **Vstup:** graf $G$ se sudým počtem vrcholů a číslo $k$.
+
+    **Otázka:** existuje bisekce, která přeřízne **nejvýše** $k$ hran?
+  odkaz: un-9-7
+  prob: [Min Bisection]
+  makro: []
+  text: []
+
+- id: pojem-max-2-sat
+  title: 'Problém $\prob{MAX-2-SAT}$'
+  body: |
+    **Vstup:** formule $\varphi$ v CNF, jejíž každá klauzule obsahuje nejvýše dva literály, a číslo $k$.
+
+    **Otázka:** existuje ohodnocení proměnných, které splní alespoň $k$ klauzulí formule $\varphi$?
+  odkaz: cv-4-4
+  prob: [MAX-2-SAT]
+  makro: []
+  text: []
+
+- box: prob-mapf
+  prob: [MAPF]
+  makro: []
+  text: ['MAPF', '[Mm]ultiagent\w* [Pp]ath [Ff]inding']
+
+# ---------------------------------------------------------------- 10 Přesná pokrytí
+- box: prob-1in3
+  prob: [1-in-3 SAT, 1-in-3-SAT, One-in-Three 3-SAT, (pozitivní) 1-in-3 SAT]
+  makro: []
+  text: ['1-in-3 SAT\w*']
+
+- id: pojem-pozitivni-1in3
+  title: 'Problém pozitivní (monotónní) $\prob{1-in-3 SAT}$'
+  body: |
+    $\prob{1-in-3 SAT}$ bez negací: všechny literály jsou kladné.
+
+    **Vstup:** formule v 3-CNF bez negací.
+
+    **Otázka:** existuje ohodnocení, při kterém je v každé klauzuli **přesně jeden** literál pravdivý?
+  odkaz: prob-1in3
+  prob: [Monotónní 1-in-3 SAT, monotónního 1-in-3 SAT]
+  makro: []
+  text: ['[Pp]ozitivn\w+ 1-in-3 SAT\w*', '[Mm]onotónn\w+ 1-in-3 SAT\w*']
+
+- box: prob-x3c
+  prob: [X3C]
+  makro: []
+  text: ['X3C']
+
+- id: pojem-exact-cover
+  title: 'Problém $\prob{Exact Cover}$'
+  body: |
+    **Vstup:** univerzum $U$ a systém $\mathcal S$ jeho podmnožin **libovolných** velikostí.
+
+    **Otázka:** lze vybrat podsystém, který pokryje každý prvek $U$ právě jednou?
+  odkaz: un-10-3
+  prob: [Exact Cover]
+  makro: []
+  text: []
+
+- id: pojem-exact-hitting-set
+  title: 'Problém $\prob{Exact Hitting Set}$ (EHS)'
+  body: |
+    **Vstup:** konečná množina $A$ a systém jejích podmnožin $B_1,\dots,B_r$.
+
+    **Otázka:** existuje $H\subseteq A$ taková, že $|H\cap B_j|=1$ pro všechna $j$ (každou množinu zasáhne
+    přesně jednou)?
+  odkaz: un-10-4
+  prob: [Exact Hitting Set]
+  makro: []
+  text: []
+
+- id: pojem-01-soustava
+  title: 'Problém $\prob{0/1 soustava rovnic}$'
+  body: |
+    **Vstup:** celočíselná matice $A$ typu $r\times n$ a vektor $b\in\mathbb Z^r$.
+
+    **Otázka:** existuje $y\in\{0,1\}^n$ s $Ay=b$?
+  odkaz: un-10-6
+  prob: [0/1 soustava rovnic]
+  makro: []
+  text: []
+
+- id: pojem-x4c
+  title: 'Problém $\prob{X4C}$'
+  body: |
+    **Vstup:** univerzum $U$ s $|U|=4q$ a systém $\mathcal S$ **čtyřprvkových** podmnožin $U$.
+
+    **Otázka:** lze vybrat $q$ množin tak, aby byl každý prvek pokryt právě jednou?
+  odkaz: un-10-7
+  prob: [X4C]
+  makro: []
+  text: []
+
+# ---------------------------------------------------------------- 11 Cesty, ILP, čísla
+- box: prob-dhp
+  prob: [DHP, Directed Hamiltonian Path]
+  makro: []
+  text: ['DHP']
+
+- id: pojem-uhp
+  title: 'Problém $\prob{UHP}$ (neorientovaná hamiltonovská cesta)'
+  body: |
+    **Vstup:** neorientovaný graf $G$ a vrcholy $S,T$.
+
+    **Otázka:** existuje v $G$ cesta z $S$ do $T$, která navštíví každý vrchol právě jednou?
+  odkaz: ch-cisla-dhp-uhp
+  prob: [UHP]
+  makro: []
+  text: ['[Nn]eorientovan\w+ hamiltonovsk\w+ cest\w*']
+
+- id: pojem-hc
+  title: 'Problém $\prob{HC}$ (hamiltonovská kružnice)'
+  body: |
+    **Vstup:** graf $G$.
+
+    **Otázka:** má $G$ hamiltonovskou kružnici – kružnici, která projde každým vrcholem právě jednou?
+    (Pro grafy s méně než 3 vrcholy je odpověď $\NE$.)
+
+    Skripta ho používají hlavně pro neorientované grafy (redukce $\prob{HC}\redp\prob{TSP}$, úloha 11.3);
+    v redukci $\prob{DHP}\redp\prob{HC}$ a ve cvičení 7.2 ($\prob{Hamiltonian Cycle}$) jde o orientovaný graf
+    a orientovanou kružnici.
+  odkaz: ch-cisla-dhp-hc
+  prob: [HC, Hamiltonian Cycle]
+  makro: []
+  text: ['[Hh]amiltonovsk\w+ kružnic\w*']
+
+- id: pojem-hp
+  title: 'Problém $\prob{HP}$ (hamiltonovská cesta)'
+  body: |
+    **Vstup:** neorientovaný graf $G$.
+
+    **Otázka:** má $G$ hamiltonovskou cestu – cestu, která navštíví každý vrchol právě jednou (konce jsou
+    libovolné)?
+
+    Ve cvičení 7.2 ($\prob{Hamiltonian Path}$) jde o orientovaný graf a orientovanou cestu; verze s pevnými
+    konci $S,T$ je $\prob{UHP}$, resp. orientovaná $\prob{DHP}$.
+  odkaz: un-11-3
+  prob: [HP, Hamiltonian Path, Hamiltonovská cesta, (U)HP]
+  makro: []
+  text: ['[Hh]amiltonovsk\w+ cest\w*']
+
+- box: prob-longpath
+  prob: [Longest Path]
+  makro: []
+  text: []
+
+- box: prob-ilp
+  prob: [ILP, Integer Linear Programming]
+  makro: []
+  text: []
+
+- box: prob-steiner
+  prob: [Steiner Tree]
+  makro: []
+  text: ['[Ss]teiner\w+ strom\w*']
+
+- box: prob-subsetsum
+  prob: [Subset Sum]
+  makro: []
+  text: []
+
+- box: prob-partition
+  prob: [Partition]
+  makro: []
+  text: []
+
+- box: prob-knapsack
+  prob: [Knapsack]
+  makro: []
+  text: ['[Pp]roblém\w* batohu']
+
+- box: def-pseudopoly
+  prob: []
+  makro: []
+  text: ['[Pp]seudopolynomiáln\w+']
+
+- box: def-silne
+  prob: []
+  makro: []
+  text: ['[Ss]ilně NP-(?:těžk|úpln)\w+', '[Ss]labě NP-(?:těžk|úpln)\w+']
+
+- box: prob-3partition
+  prob: [3-Partition]
+  makro: []
+  text: ['3-Partition\w*']
+
+- box: prob-binpacking
+  prob: [Bin Packing]
+  makro: []
+  text: ['Bin Packing\w*']
+
+- box: prob-exactpath
+  prob: [Exact Path (DAG)]
+  makro: []
+  text: []
+
+- box: prob-wexactpath
+  prob: [Weighted Exact Path]
+  makro: []
+  text: []
+
+- box: prob-rsp
+  prob: [Restricted Shortest Path]
+  makro: []
+  text: []
+
+- box: prob-powerss
+  prob: [Power Subset Sum]
+  makro: []
+  text: []
+
+- box: prob-balsplit
+  prob: [Balanced Split]
+  makro: []
+  text: []
+
+- id: pojem-zero-subset-sum
+  title: 'Problém $\prob{Zero Subset Sum}$'
+  body: |
+    **Vstup:** celá čísla $b_1,\dots,b_n$ (mohou být záporná; zapsaná binárně se znaménkem).
+
+    **Otázka:** existuje **neprázdná** množina $J\subseteq\{1,\dots,n\}$ se $\sum_{i\in J}b_i=0$?
+  odkaz: un-11-4
+  prob: [Zero Subset Sum]
+  makro: []
+  text: []
+
+- id: pojem-3way-partition
+  title: 'Problém $\prob{3-Way Partition}$ (tři loupežníci)'
+  body: |
+    **Vstup:** kladná celá čísla $a_1,\dots,a_n$.
+
+    **Otázka:** lze je rozdělit do **tří** skupin se stejným součtem?
+  odkaz: un-11-5
+  prob: [3-Way Partition]
+  makro: []
+  text: []
+
+- id: pojem-unary-subset-sum
+  title: 'Problém $\prob{Unary Subset Sum}$'
+  body: |
+    $\prob{Subset Sum}$, v němž jsou čísla $a_1,\dots,a_n$ i cíl $T$ zapsaná **unárně** (číslo $a$ jako $1^a$).
+
+    **Otázka:** existuje $I\subseteq\{1,\dots,n\}$ taková, že $\sum_{i\in I}a_i=T$?
+  odkaz: un-11-6
+  prob: [Unary Subset Sum]
+  makro: []
+  text: []
+
+# ---------------------------------------------------------------- 12 Prostorová složitost
+- box: def-prostor
+  prob: []
+  makro: [DSPACE, NSPACE, PSPACE, NPSPACE]
+  text: ['[Pp]rostorov\w+ složitost\w*', 'PSPACE']
+
+- box: def-prostor-konstr
+  prob: []
+  makro: []
+  text: ['[Pp]rostorově konstruovateln\w+']
+
+- box: def-lnl
+  prob: []
+  makro: [LL, NL]
+  text: ['NL']
+
+- box: prob-streach
+  prob: [ST-REACH]
+  makro: []
+  text: ['ST-REACH']
+
+- box: def-conp
+  prob: []
+  makro: [coNP, coNL]
+  text: ['coNP', 'coNL', '[Dd]opl(?:něk|ňk)\w* jazyk\w*']
+
+- id: pojem-unsat
+  title: 'Problém $\prob{UNSAT}$'
+  body: |
+    **Vstup:** booleovská formule $\varphi$.
+
+    **Otázka:** je $\varphi$ nesplnitelná?
+
+    Leží v $\coNP$. Pozor: $\overline{\prob{SAT}}\neq\prob{UNSAT}$ – doplněk obsahuje i vstupy, které nejsou formulí.
+  odkaz: def-conp
+  prob: [UNSAT]
+  makro: []
+  text: []
+
+- id: pojem-taut
+  title: 'Problém $\prob{TAUT}$'
+  body: |
+    **Vstup:** booleovská formule $\varphi$.
+
+    **Otázka:** je $\varphi$ tautologie (pravdivá při každém ohodnocení)?
+
+    Leží v $\coNP$; platí $\varphi\in\prob{TAUT}\iff\lnot\varphi\in\prob{UNSAT}$.
+  odkaz: def-conp
+  prob: [TAUT]
+  makro: []
+  text: []
+
+- box: def-scc
+  prob: []
+  makro: []
+  text: ['[Ss]ilně souvisl\w+ komponent\w*', 'SCC', '[Kk]ondenzac\w*', '[Tt]opologick\w+ uspořádán\w*']
+
+- id: pojem-2sat
+  title: 'Problém $\prob{2-SAT}$'
+  body: |
+    **Vstup:** formule v 2-CNF, tj. v CNF, kde má každá klauzule **nejvýš dva** literály.
+
+    **Otázka:** je formule splnitelná?
+
+    Na rozdíl od $\prob{3-SAT}$ je v $\PP$ (implikační graf a silně souvislé komponenty), dokonce v $\NL$.
+  odkaz: thm-2sat
+  prob: [2-SAT]
+  makro: []
+  text: ['2-SAT\w*']
+
+# ---------------------------------------------------------------- 13 PSPACE-úplnost a hry
+- box: def-pspaceuplny
+  prob: []
+  makro: []
+  text: ['PSPACE-úpln\w+', 'PSPACE-těžk\w+']
+
+- box: prob-tqbf
+  prob: [TQBF, QBF]
+  makro: []
+  text: ['TQBF']
+
+- box: prob-gg
+  prob: [Generalized Geography, GG]
+  makro: []
+  text: ['Generalized Geography', 'GG']
+
+- id: pojem-misere-gg
+  title: 'Problém $\prob{Misère GG}$ (geografie naruby)'
+  body: |
+    Pravidla jako $\prob{Generalized Geography}$, ale hráč, který nemůže táhnout, **vyhrál**.
+
+    **Otázka:** má Alice vítěznou strategii?
+  odkaz: un-13-8
+  prob: [Misère GG]
+  makro: []
+  text: ['[Gg]eografi\w+ naruby']
+
+# ---------------------------------------------------------------- 14 SAT řešiče
+- box: ch-resice-sat-def-horn
+  prob: []
+  makro: []
+  text: ['[Hh]ornov\w+ (?:klauzul|formul)\w*']
+
+- id: pojem-horn-sat
+  title: 'Problém $\prob{Horn-SAT}$'
+  body: |
+    **Vstup:** Hornova formule – CNF, v níž každá klauzule obsahuje **nejvýše jeden kladný** literál.
+
+    **Otázka:** je formule splnitelná?
+
+    Rozhodne se v polynomiálním čase jediným hladovým průchodem (unit propagation).
+  odkaz: ch-resice-sat-horn-sat
+  prob: [Horn-SAT]
+  makro: []
+  text: ['Horn-SAT\w*']
+
+- box: ch-resice-sat-def-xor
+  prob: [XOR-SAT]
+  makro: []
+  text: ['XOR klauzul\w*', 'XOR-SAT\w*']
+
+- box: ch-resice-sat-def-dpll
+  prob: []
+  makro: []
+  text: ['DPLL']
+
+- box: ch-resice-sat-def-implikacni-graf-cdcl
+  prob: []
+  makro: []
+  text: ['[Ii]mplikačn\w+ graf\w* CDCL']
+
+- box: ch-resice-sat-def-bloky
+  prob: []
+  makro: []
+  text: ['ALO', 'AMO', 'AMK']
+
+- box: ch-resice-sat-def-smt
+  prob: []
+  makro: []
+  text: ['SMT', 'DPLL\(T\)']
+
+- box: ch-resice-sat-def-schur
+  prob: [Schur]
+  makro: []
+  text: ['[Ss]churov\w+ čísl\w*']
+
+- id: pojem-queens-completion
+  title: 'Problém $\prob{Queens Completion}$ (doplnění dam)'
+  body: |
+    **Vstup:** šachovnice $n\times n$ a množina políček $P$, na kterých už stojí dámy.
+
+    **Otázka:** lze přidat další dámy tak, aby jich na šachovnici bylo celkem $n$ a žádné dvě se neohrožovaly
+    (nestály ve stejném řádku, sloupci ani na stejné diagonále)?
+  odkaz: un-14-5
+  prob: [Queens Completion]
+  makro: []
+  text: []
+
+- id: pojem-coloring
+  title: 'Problém $\prob{Coloring}$ ($k$-barevnost)'
+  body: |
+    **Vstup:** graf $G=(V,E)$ a počet barev $k$.
+
+    **Otázka:** lze vrcholy $G$ obarvit $k$ barvami tak, aby sousedé měli různé barvy?
+
+    Pro pevné $k$ (není součástí vstupu) se píše $k\text{-}\prob{Coloring}$; pro $k\ge3$ je NP-úplný.
+  odkaz: ch-resice-sat-k-barevnost
+  prob: [Coloring]
+  makro: []
+  text: []
+
+# ---------------------------------------------------------------- 15 ILP řešiče
+- box: ch-resice-ilp-def-ilp
+  prob: []
+  makro: []
+  text: ['[Cc]eločíseln\w+ lineárn\w+ programován\w*', 'ILP', '0/1-ILP', 'MILP', 'MIP']
+
+- box: ch-resice-ilp-def-terminologie
+  prob: []
+  makro: []
+  text: ['[Pp]řípustn\w+ řešení', '[Oo]ptimáln\w+ řešení']
+
+- box: ch-resice-ilp-def-lp-relaxace
+  prob: []
+  makro: []
+  text: ['LP relaxac\w*']
+
+- box: ch-resice-ilp-def-dual
+  prob: []
+  makro: []
+  text: ['[Pp]rimál\w*', '[Dd]uál(?:u|em)?']
+
+- box: ch-resice-ilp-def-integrality-gap
+  prob: []
+  makro: []
+  text: ['[Ii]ntegrality gap\w*']
+
+- box: ch-resice-ilp-def-tu
+  prob: []
+  makro: []
+  text: ['[Tt]otáln\w+ unimodulárn\w+', '[Tt]otáln\w+ unimodularit\w*']
+
+- box: ch-resice-ilp-def-gap
+  prob: []
+  makro: []
+  text: ['[Oo]ptimality gap\w*', '[Cc]ertifikát\w* optimality']
+
+- box: ch-resice-ilp-def-rez
+  prob: []
+  makro: []
+  text: ['Gomoryho řez\w*', 'Chvátal\w*–Gomory\w* řez\w*']
+
+- box: ch-resice-ilp-def-separacni-orakulum
+  prob: []
+  makro: []
+  text: ['[Ss]eparačn\w+ orákul\w*']
+
+# ---------------------------------------------------------------- Příloha B Typové úlohy
+- id: pojem-pfp
+  title: 'Problém $\prob{Path with Forbidden Pairs}$ (PFP)'
+  body: |
+    **Vstup:** orientovaný graf $G=(V,A)$, vrcholy $s,t\in V$ a množina zakázaných dvojic $P\subseteq\binom V2$.
+
+    **Otázka:** existuje v $G$ orientovaná cesta (bez opakování vrcholů) z $s$ do $t$, která z žádné dvojice
+    $\{u,v\}\in P$ neobsahuje oba vrcholy?
+  odkaz: typ-4-1
+  prob: [PFP, Path with Forbidden Pairs]
+  makro: []
+  text: []
+
+- id: pojem-deg3-spanning-tree
+  title: 'Problém $\prob{Deg-3 Spanning Tree}$'
+  body: |
+    **Vstup:** souvislý neorientovaný graf $G$.
+
+    **Otázka:** má $G$ kostru (podgraf, který je stromem a obsahuje všechny vrcholy), v níž má každý vrchol
+    stupeň nejvýše 3?
+  odkaz: typ-4-2
+  prob: [Deg-3 Spanning Tree]
+  makro: []
+  text: []
+
+- id: pojem-fas
+  title: 'Problém $\prob{Feedback Arc Set}$ (FAS)'
+  body: |
+    **Vstup:** orientovaný graf $G=(V,A)$ a číslo $k$.
+
+    **Otázka:** existuje množina hran $F\subseteq A$, $|F|\le k$, taková, že graf $(V,A\setminus F)$ neobsahuje
+    žádný orientovaný cyklus?
+  odkaz: typ-4-4
+  prob: [FAS, Feedback Arc Set]
+  makro: []
+  text: []
+
+- id: pojem-ridka-mnozina
+  title: 'Problém $\prob{Řídká množina}$ (dissociation set)'
+  body: |
+    Množina $S\subseteq V$ je *řídká*, pokud každý vrchol z $S$ má v $S$ nejvýše jednoho souseda.
+
+    **Vstup:** neorientovaný graf $G=(V,E)$ a číslo $k$.
+
+    **Otázka:** existuje v $G$ řídká množina $S$ s $|S|\ge k$?
+  odkaz: typ-4-5
+  prob: [Řídká množina]
+  makro: []
+  text: ['[Řř]ídk\w+ množin\w*']
+
+- id: pojem-spolecne-slovo
+  title: 'Problém $\prob{Společné slovo}$'
+  body: |
+    **Vstup:** $m$ deterministických konečných automatů $A_1,\dots,A_m$ nad abecedou $\{0,1\}$ a číslo $n$
+    zapsané unárně ($1^n$).
+
+    **Otázka:** existuje slovo $w\in\{0,1\}^n$ (délky přesně $n$), které přijímají všechny automaty?
+  odkaz: typ-4-6
+  prob: [Společné slovo]
+  makro: []
+  text: []
+
+- id: pojem-vyvazene-rozdeleni
+  title: 'Problém $\prob{Vyvážené rozdělení}$'
+  body: |
+    **Vstup:** $2N$ kladných celých čísel $b_1,\dots,b_{2N}$ (binárně).
+
+    **Otázka:** lze čísla rozdělit na dvě skupiny **po $N$ číslech** se stejným součtem?
+  odkaz: typ-4-7
+  prob: [Vyvážené rozdělení]
+  makro: []
+  text: []
+
+# ---------------------------------------------------------------- Příloha C Ukázkový test
+- id: pojem-jadro
+  title: 'Problém $\prob{Jádro}$'
+  body: |
+    Množina $K\subseteq V$ orientovaného grafu $G=(V,A)$ je *jádro*, je-li **nezávislá** (mezi žádnými dvěma
+    vrcholy $K$ nevede hrana) a **absorbující** (z každého $v\notin K$ vede hrana do nějakého vrcholu $K$).
+
+    **Vstup:** orientovaný graf $G$.
+
+    **Otázka:** má $G$ jádro?
+  odkaz: ut-4
+  prob: [Jádro]
+  makro: []
+  text: []
+
+# ---------------------------------------------------------------- úlohy ze sbírky (pododdíly „Úlohy z jiných sbírek“)
+- id: pojem-graph-isomorphism
+  title: 'Problém $\prob{Graph Isomorphism}$ (izomorfismus grafů)'
+  body: |
+    **Vstup:** grafy $G$ a $H$.
+
+    **Otázka:** existuje bijekce $\psi\colon V(G)\to V(H)$, pro kterou $uv\in E(G)\iff\psi(u)\psi(v)\in E(H)$?
+
+    Je v $\NP$, ale neví se, zda je NP-úplný.
+  odkaz: un-4-9
+  prob: [Graph Isomorphism]
+  makro: []
+  text: []
+
+- id: pojem-3sat-3k
+  title: 'Problém $\prob{3-SAT-3K}$'
+  body: |
+    **Vstup:** formule v CNF, kde má každá klauzule nejvýše tři literály a každá proměnná leží nejvýše ve
+    **třech klauzulích**.
+
+    **Otázka:** je formule splnitelná?
+
+    Na rozdíl od $\prob{3-SAT-3}$ (úloha 7.6) se nepočítají výskyty, ale klauzule.
+  odkaz: un-7-11
+  prob: [3-SAT-3K]
+  makro: []
+  text: []
+
+- id: pojem-3dm
+  title: 'Problém $\prob{3DM}$ (trojrozměrné párování)'
+  body: |
+    **Vstup:** disjunktní množiny $X,Y,Z$, každá s $q$ prvky, a množina trojic $T\subseteq X\times Y\times Z$.
+
+    **Otázka:** existuje $M\subseteq T$ taková, že každý prvek $X\cup Y\cup Z$ leží v právě jedné trojici z $M$
+    (pak $|M|=q$)?
+
+    Je to zvláštní případ $\prob{X3C}$.
+  odkaz: un-10-10
+  prob: [3DM]
+  makro: []
+  text: ['[Tt]rojrozměrn\w+ párován\w+']
+
+- id: pojem-01-ilp
+  title: 'Problém $\prob{0-1 ILP}$ (0/1 celočíselná přípustnost)'
+  body: |
+    **Vstup:** celočíselná matice $A$ typu $p\times n$ a celočíselný vektor $b$.
+
+    **Otázka:** existuje $x\in\{0,1\}^n$ s $Ax\ge b$?
+  odkaz: un-11-12
+  prob: [0-1 ILP]
+  makro: []
+  text: []
+
+- id: pojem-multiprocessor-scheduling
+  title: 'Problém $\prob{Multiprocessor Scheduling}$ (rozvrh na $m$ strojů)'
+  body: |
+    **Vstup:** délky úloh $p_1,\dots,p_n$, počet strojů $m$ a termín $D$.
+
+    **Otázka:** lze úlohy rozdělit na $m$ stejných strojů tak, aby součet délek na každém stroji byl nejvýše $D$?
+  odkaz: un-11-15
+  prob: [Multiprocessor Scheduling]
+  makro: []
+  text: []
+
+- id: pojem-rozvrh-dva-stroje
+  title: 'Problém $\prob{Rozvrh na dva stroje}$'
+  body: |
+    **Vstup:** délky úloh $p_1,\dots,p_n\in\N$ (zapsané binárně) a termín $D\in\N$.
+
+    **Otázka:** lze úlohy rozdělit na dva stejné stroje tak, aby součet délek úloh na každém stroji byl nejvýše $D$?
+  odkaz: typ-4-3
+  prob: [Rozvrh na dva stroje]
+  makro: []
+  text: []
+
+- id: pojem-bounded-degree-spanning-tree
+  title: 'Problém $\prob{Bounded-Degree Spanning Tree}$ (kostra s omezeným stupněm)'
+  body: |
+    **Vstup:** graf $G$ a číslo $k\ge1$.
+
+    **Otázka:** má $G$ kostru, v níž má každý vrchol stupeň nejvýše $k$?
+  odkaz: un-11-16
+  prob: [Bounded-Degree Spanning Tree]
+  makro: []
+  text: []
+
+- id: pojem-long-cycle
+  title: 'Problém $\prob{Long Cycle}$ (dlouhá kružnice)'
+  body: |
+    **Vstup:** neorientovaný graf $G$ a přirozené číslo $k$.
+
+    **Otázka:** obsahuje $G$ kružnici (bez opakování vrcholů) s aspoň $k$ hranami?
+  odkaz: un-14-12
+  prob: [Long Cycle]
+  makro: []
+  text: []
+
+- id: pojem-edge-cover
+  title: 'Problém $\prob{Edge Cover}$ (hranové pokrytí)'
+  body: |
+    **Vstup:** graf $G=(V,E)$.
+
+    **Úkol:** najít nejmenší $F\subseteq E$ takovou, že každý vrchol je koncem aspoň jedné hrany z $F$
+    (existuje, právě když $G$ nemá izolovaný vrchol).
+  odkaz: un-15-13
+  prob: [Edge Cover]
+  makro: []
+  text: ['[Hh]ranov\w+ pokryt\w+']
+
+- id: pojem-max-matching
+  title: 'Problém $\prob{Max Matching}$ (největší párování)'
+  body: |
+    **Vstup:** graf $G=(V,E)$.
+
+    **Úkol:** najít největší párování – množinu hran, z nichž žádné dvě nemají společný vrchol.
+  odkaz: un-15-14
+  prob: [Max Matching]
+  makro: []
+  text: []

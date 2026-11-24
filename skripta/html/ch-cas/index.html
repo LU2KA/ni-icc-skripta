@@ -5546,11 +5546,11 @@
 <h1 id="3-casova-slozitost-tridy-p-a-exp">3 Časová složitost: třídy P a EXP<a class="headerlink" href="#3-casova-slozitost-tridy-p-a-exp" title="Permanent link">&para;</a></h1>
 <div class="woo">
 <p>Zdroje: přednáška 1.</p>
-<div class="admonition tip woo-concept"><p class="admonition-title">Proč to děláme</p><p>Z kapitoly <a href="../ch-vycisl/index.html">2</a> víme, co nelze spočítat vůbec. U rekurzivních problémů ale v praxi nestačí, že algoritmus „jednou skončí“ – zajímá nás, kolik spotřebuje času a prostoru. Kapitola proto zavádí časovou složitost Turingova stroje, vysvětluje, proč čas zapisujeme v <span class="arithmatex">\(O\)</span>-notaci (lineární zrychlení), a definuje třídy <span class="arithmatex">\(\PP\)</span> a <span class="woo-nobr"><span class="arithmatex">\(\EXP\)</span>.</span> Věta o časové hierarchii nakonec dá bezpodmínečně <span class="woo-nobr"><span class="arithmatex">\(\PP\subsetneq\EXP\)</span>:</span> s asymptoticky víc časem rozhodneme striktně víc jazyků.</p></div>
+<div class="admonition tip woo-concept"><p class="admonition-title">Proč to děláme</p><p>Z kapitoly <a href="../ch-vycisl/index.html">2</a> víme, co nelze spočítat vůbec. U rekurzivních problémů ale v praxi nestačí, že algoritmus „jednou skončí“ – zajímá nás, kolik spotřebuje času a prostoru. Kapitola proto zavádí <a class="woo-term" href="#def-casova" data-pojem="def-casova">časovou složitost</a> <a class="woo-term" href="../ch-ts/ch-ts-turinguv-stroj.html#def-dts" data-pojem="def-dts">Turingova stroje</a>, vysvětluje, proč čas zapisujeme v <span class="arithmatex">\(O\)</span>-notaci (lineární zrychlení), a definuje třídy <span class="arithmatex">\(\href{ch-cas-tridy-p-a-exp.html#def-tridy}{\class{woo-pk-def-tridy}{\PP}}\)</span> a <span class="woo-nobr"><span class="arithmatex">\(\href{ch-cas-tridy-p-a-exp.html#def-tridy}{\class{woo-pk-def-tridy}{\EXP}}\)</span>.</span> Věta o časové hierarchii nakonec dá bezpodmínečně <span class="woo-nobr"><span class="arithmatex">\(\href{ch-cas-tridy-p-a-exp.html#def-tridy}{\class{woo-pk-def-tridy}{\PP}}\subsetneq\href{ch-cas-tridy-p-a-exp.html#def-tridy}{\class{woo-pk-def-tridy}{\EXP}}\)</span>:</span> s asymptoticky víc časem rozhodneme striktně víc jazyků.</p></div>
 <p><strong>Čas jako míra složitosti.</strong> Zajímají nás spotřebované zdroje:</p>
-<ol><li><strong>čas</strong> – počet kroků Turingova stroje,</li><li><strong>prostor</strong> – počet různých buněk pásky, které hlava navštíví.</li></ol>
-<p>Odteď se zabýváme jen rekurzivními jazyky.</p>
-<div class="admonition info woo-definition" id="def-casova"><p class="admonition-title">Definice 3.1: Časová složitost</p><p>TS <span class="arithmatex">\(M\)</span> pracuje v čase <span class="woo-nobr"><span class="arithmatex">\(T_M(n)\)</span>,</span> pokud výpočet <span class="arithmatex">\(M\)</span> na <em>libovolném</em> vstupu délky <span class="arithmatex">\(n\)</span> skončí po nejvýše <span class="arithmatex">\(T_M(n)\)</span> krocích (jde o analýzu nejhoršího případu).</p></div>
+<ol><li><strong>čas</strong> – počet kroků <a class="woo-term" href="../ch-ts/ch-ts-turinguv-stroj.html#def-dts" data-pojem="def-dts">Turingova stroje</a>,</li><li><strong>prostor</strong> – počet různých buněk pásky, které hlava navštíví.</li></ol>
+<p>Odteď se zabýváme jen <a class="woo-term" href="../ch-vycisl/index.html#def-rekurzivni" data-pojem="def-rekurzivni">rekurzivními jazyky</a>.</p>
+<div class="admonition info woo-definition" id="def-casova"><p class="admonition-title">Definice 3.1: Časová složitost</p><p><a class="woo-term" href="../ch-ts/ch-ts-turinguv-stroj.html#def-dts" data-pojem="def-dts">TS</a> <span class="arithmatex">\(M\)</span> pracuje v čase <span class="woo-nobr"><span class="arithmatex">\(T_M(n)\)</span>,</span> pokud výpočet <span class="arithmatex">\(M\)</span> na <em>libovolném</em> vstupu délky <span class="arithmatex">\(n\)</span> skončí po nejvýše <span class="arithmatex">\(T_M(n)\)</span> krocích (jde o analýzu nejhoršího případu).</p></div>
 </div>
 
 <h2 id="oddily-kapitoly">Oddíly kapitoly<a class="headerlink" href="#oddily-kapitoly" title="Permanent link">&para;</a></h2>
@@ -5669,5 +5669,6 @@
         <script src="../javascripts/woo.js"></script>
       
     
-  </body>
+  <script src="../javascripts/pojmy-data.js"></script><script src="../javascripts/pojmy.js"></script>
+</body>
 </html>

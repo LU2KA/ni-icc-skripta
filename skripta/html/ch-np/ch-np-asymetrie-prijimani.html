@@ -5612,10 +5612,10 @@
 
 <h2 id="ch-np-rozbijime-myty-o-nedeterminismu">4.2.1 Rozbíjíme mýty o nedeterminismu<a class="headerlink" href="#ch-np-rozbijime-myty-o-nedeterminismu" title="Permanent link">&para;</a></h2>
 <div class="woo">
-<div class="admonition warning woo-warning"><p class="admonition-title">Mýtus 1: „Stroj paralelně zkouší všechny možnosti“</p><p>Představa, že se NDTS při větvení rozdvojí do vláken, která pak spolu komunikují na sdílené pásce, je <strong>špatně</strong>. NDTS provádí vždy jen <em>jeden</em> sekvenční výpočet; otázka „existuje přijímající větev?“ se vyhodnocuje <em>mimo</em> stroj. Zkoumáme vlastnost grafu (stromu), nejde o multithreading.</p></div>
+<div class="admonition warning woo-warning"><p class="admonition-title">Mýtus 1: „Stroj paralelně zkouší všechny možnosti“</p><p>Představa, že se <a class="woo-term" href="ch-np-od-determinismu-k-nedeterminismu.html#def-ndts" data-pojem="def-ndts">NDTS</a> při větvení rozdvojí do vláken, která pak spolu komunikují na sdílené pásce, je <strong>špatně</strong>. <a class="woo-term" href="ch-np-od-determinismu-k-nedeterminismu.html#def-ndts" data-pojem="def-ndts">NDTS</a> provádí vždy jen <em>jeden</em> sekvenční výpočet; otázka „existuje přijímající větev?“ se vyhodnocuje <em>mimo</em> stroj. Zkoumáme vlastnost grafu (stromu), nejde o multithreading.</p></div>
 <div class="woo-centered"><img class="woo-fig" src="../figures/04b-asymetrie-prijimani-03.svg" width="500" height="159" alt="Obrázek: Rozbíjíme mýty o nedeterminismu" loading="lazy"></div>
-<div class="admonition warning woo-warning"><p class="admonition-title">Mýtus 2: „Stroj má magickou intuici“</p><p>NDTS nic „nehádá“ – dopředu neví, kam cesty vedou. Přechodová relace jen definuje hrany grafu a my se jako matematici ptáme: <em>existuje v tomto grafu cesta z kořene do <span class="woo-nobr"><span class="arithmatex">\(\qA\)</span>?</span></em></p></div>
-<div class="admonition note woo-remark"><p class="admonition-title">Proč se tedy v literatuře mluví o „hádání“?</p><p>Je to jen úzus z pohledu vnějšího pozorovatele. Podíváme-li se <em>pouze</em> na jedinou přijímající větev (zelená cesta na obr. <a href="ch-np-od-determinismu-k-nedeterminismu.html#fig-np-strom">4.2</a>), vypadá to, jako by stroj v každém větvení provedl „zázračně správnou volbu“. Tento pohled budeme masivně využívat u certifikátů.</p></div>
+<div class="admonition warning woo-warning"><p class="admonition-title">Mýtus 2: „Stroj má magickou intuici“</p><p><a class="woo-term" href="ch-np-od-determinismu-k-nedeterminismu.html#def-ndts" data-pojem="def-ndts">NDTS</a> nic „nehádá“ – dopředu neví, kam cesty vedou. Přechodová relace jen definuje hrany grafu a my se jako matematici ptáme: <em>existuje v tomto grafu cesta z kořene do <span class="woo-nobr"><span class="arithmatex">\(\qA\)</span>?</span></em></p></div>
+<div class="admonition note woo-remark"><p class="admonition-title">Proč se tedy v literatuře mluví o „hádání“?</p><p>Je to jen úzus z pohledu vnějšího pozorovatele. Podíváme-li se <em>pouze</em> na jedinou přijímající větev (zelená cesta na obr. <a href="ch-np-od-determinismu-k-nedeterminismu.html#fig-np-strom">4.2</a>), vypadá to, jako by stroj v každém větvení provedl „zázračně správnou volbu“. Tento pohled budeme masivně využívat u <a class="woo-term" href="ch-np-od-hadani-k-overovani-certifikaty.html#def-verifikator" data-pojem="def-verifikator">certifikátů</a>.</p></div>
 </div>
 
 
@@ -5724,5 +5724,6 @@
         <script src="../javascripts/woo.js"></script>
       
     
-  </body>
+  <script src="../javascripts/pojmy-data.js"></script><script src="../javascripts/pojmy.js"></script>
+</body>
 </html>

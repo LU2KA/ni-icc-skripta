@@ -56,7 +56,9 @@ například mimo jiné požadavek na čas, prostor, (ne)determinismus.“ (6 bod
 
     oddíl .reference:ch-ts-ulohy-navic – "úloha 1.4"#un-1-4 (stejně $a$ jako $b$ na jedné pásce), "1.5"#un-1-5
     (dvě pásky), "1.6"#un-1-6 (mocniny dvojky), "1.8"#un-1-8 (čas $O(n\log n)$ na jedné pásce); nedeterministický
-    stroj v "úloze 4.4"#un-4-4; stroje v logaritmickém prostoru v "úlohách 12.4"#un-12-4 a "12.7"#un-12-7.
+    stroj v "úloze 4.4"#un-4-4; stroje v logaritmickém prostoru v "úlohách 12.4"#un-12-4 a "12.7"#un-12-7. Ze sbírky (pododdíl .reference:ch-ts-ulohy-navic-sbirka): "1.9"#un-1-9 až "1.11"#un-1-11 (jedna páska,
+    odškrtávání), "1.12"#un-1-12 (sčítání na více páskách v lineárním čase), "1.13"#un-1-13 (kopírování) a těžší
+    "1.14"#un-1-14 až "1.17"#un-1-17 (převody zápisu čísla, prvočísla, simulace pásek, krok na místě).
 
 
 .Subsection Řešené úlohy: Turingovy stroje

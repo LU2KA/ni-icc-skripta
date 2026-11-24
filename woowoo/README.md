@@ -19,6 +19,8 @@ přes MkDocs Material, stejným postupem jako skripta NI-UMI. Hotový web je o s
 - `tools/tikz/` – preambule obrázků: `macros.tex` a `styles.tex` (z `../latex-skripta/preamble.tex` a `kapitoly/makra.tex`),
   `local-NN.tex` (makra jedné kapitoly)
 - `tools/mkdocs/` – styly, skripty a MathJax webu (makra `\PP`, `\NP`, `\prob`, `\redp`… v `javascripts/mathjax-config.js`)
+- `src/pojmy.yaml` + `tools/link_terms.py` – vyskakovací definice na webu: po sestavení obalí pojmy v textu a ve vzorcích
+  odkazem a okénkem s definicí (`tools/mkdocs/javascripts/pojmy.js`); `build_web.sh serve` je nemá
 
 Zdroje předmětu jsou v `../ni-icc/` (klon repozitáře předmětu, **jen ke čtení** – nic se tam nezapisuje,
 necommituje ani nepushuje).

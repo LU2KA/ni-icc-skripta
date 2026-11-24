@@ -6,7 +6,8 @@
 .reference:ch-np-od-determinismu-k-nedeterminismu a .reference:ch-np-jak-navrhovat-nedeterministicke-stroje),
 certifikátovou definici $\NP$ (oddíl .reference:ch-np-od-hadani-k-overovani-certifikaty), vztah $\NP\subseteq\EXP$
 (oddíl .reference:ch-np-tridy-nedeterministicke-casove-slozitosti) a důsledky případné rovnosti $\PP=\NP$
-(oddíl .reference:ch-np-problem-p-vs-np).
+(oddíl .reference:ch-np-problem-p-vs-np). Pododdíl .reference:ch-np-ulohy-navic-sbirka přidává úlohu z jiné sbírky:
+hledání izomorfismu grafů pomocí orákula pro rozhodovací verzi.
 
 
 .Warning:
@@ -15,7 +16,9 @@ certifikátovou definici $\NP$ (oddíl .reference:ch-np-od-hadani-k-overovani-ce
   Úlohy v tomto oddílu "nejsou".notion oficiální zadání předmětu. Jsou to procvičovací úlohy navíc k látce kapitoly;
   stroje z úloh 4.1 a 4.4 jsou odsimulované na všech vstupech do délky 12, resp. 9, verifikátory a algoritmy
   porovnané programem s hrubou silou na malých instancích a všechna čísla spočítaná programem; čisté důkazy
-  (uzávěrové vlastnosti, dolní mez v úloze 4.7) jsou ověřené jen na malých případech.
+  (uzávěrové vlastnosti, dolní mez v úloze 4.7) jsou ověřené jen na malých případech. U úlohy 4.9 jsme tvrzení
+  o značkách porovnali s hrubou silou (všechny bijekce) na 400 náhodných dvojicích grafů do 5 vrcholů a celý
+  algoritmus spustili na 300 náhodných dvojicích izomorfních grafů do 6 vrcholů; průběh v části c) spočítal skript.
 
 
 .Subsection Rozcvička
@@ -1054,3 +1057,178 @@ certifikátovou definici $\NP$ (oddíl .reference:ch-np-od-hadani-k-overovani-ce
   Rozklad $w=100\cdot1111$ ale dává $4=2\cdot2$ a $15=3\cdot5$, oba kousky jsou v $L$ a $w\in L^*$; certifikát je
   $(r=2;\ j_1=3;\ c_1=2,\ c_2=3)$. "Všimni si:".emphasize je to jediný vhodný rozklad – např. $1001\cdot111$ dá
   $9$ a $7$, ale $7$ je prvočíslo; řez před nulou nejde, protože kousek nesmí začínat nulou.
+
+
+.Subsection Úlohy z jiných sbírek
+  label: ch-np-ulohy-navic-sbirka
+
+
+Úlohy v tomto pododdílu pocházejí ze sbírky „External Practice Bank“, kterou sestavil spolužák z volně dostupných
+materiálů (hlavně MFF UK). Zadání jsou česky převyprávěná, řešení jsou naše. Úloha 4.9 je self-redukce (typ 2 testu)
+pro problém, který NP-úplný být nemusí; postup je stejný jako v oddílu .reference:ch-test-postup-self-redukce.
+
+
+.Exercise:
+  title: 'Úloha 4.9 (izomorfismus grafů z rozhodovací verze – těžší)'
+  label: un-4-9
+
+  Grafy $G$ a $H$ jsou "izomorfní".notion, existuje-li bijekce $\psi\colon V(G)\to V(H)$ taková, že
+  $uv\in E(G)\iff\psi(u)\psi(v)\in E(H)$. Máte orákulum pro $\prob{Graph Isomorphism}$, které o dvou grafech v jednom
+  kroku rozhodne, zda jsou izomorfní.
+
+  .enumerate:
+    type: a
+
+    .item:
+
+      Ukažte, jak do dotazu zakódovat částečné přiřazení „$u_1\mapsto v_1,\dots,u_t\mapsto v_t$“: sestrojte grafy
+      $G_P$, $H_P$, které jsou izomorfní, právě když existuje izomorfismus $G\to H$ splňující $\psi(u_j)=v_j$ pro
+      $j=1,\dots,t$. Tvrzení dokažte.
+
+    .item:
+
+      Pomocí orákula najděte izomorfismus $\psi\colon V(G)\to V(H)$, nebo oznamte, že neexistuje. Určete počet
+      a velikost dotazů vzhledem k $n=|V(G)|$.
+
+    .item:
+
+      Proveďte algoritmus pro cesty $G=u_1u_2u_3$ (hrany $u_1u_2$, $u_2u_3$) a $H=v_2v_1v_3$ (hrany $v_2v_1$, $v_1v_3$).
+
+  "Nápověda: přiřazení vynuťte stejnými „značkami“ přilepenými k $u_j$ a $v_j$, různými pro různá $j$.".emphasize
+
+  "Zdroj: O. Goldreich, Computational Complexity: A Conceptual Perspective, cvičení 2.12.".small
+
+
+.Solution:
+  label: red-un-4-9
+
+  "Redukce s orákulem:".notion $\prob{Graph Isomorphism}$ – nalezení izomorfismu $\to$ $\prob{Graph Isomorphism}$ –
+  rozhodovací verze. Jak: vrcholy $G$ po jednom „přišpendlíme“ k vrcholům $H$ stejnými značkami (velkými klikami
+  různých velikostí) a orákulem hlídáme, že izomorfismus respektující přišpendlení pořád existuje.
+
+
+  Kde je rozdíl proti ostatním self-redukcím: nejde nic mazat ani fixovat jednotkovou klauzulí – podmínku
+  „$u\mapsto v$“ musí nést sám dotazovaný "pár grafů".emphasize, a to musí jít o instanci téhož problému.
+
+
+  "a) Značka.".notion Pro $j\ge1$ a vrchol $u$ přidáme ke grafu "novou klikou".notion $Q_j$ s $n+j$ vrcholy a každý
+  vrchol $Q_j$ spojíme s $u$. Vznikne klika $K_j=Q_j\cup\{u\}$ s $n+j+1$ vrcholy. Pro přiřazení
+  $P=(u_1\mapsto v_1,\dots,u_t\mapsto v_t)$ (různé $u_j$, různé $v_j$) je $G_P$ graf $G$ se značkou $Q_j$ u $u_j$
+  pro každé $j\le t$ a $H_P$ graf $H$ se stejně velkými značkami $Q'_j$ u $v_j$.
+
+
+  "Tvrzení:".notion $G_P\cong H_P$ $\iff$ existuje izomorfismus $\psi\colon G\to H$ s $\psi(u_j)=v_j$ pro $j=1,\dots,t$.
+
+
+  "($\Leftarrow$)".notion Izomorfismus $\psi$ rozšíříme libovolnou bijekcí $Q_j\to Q'_j$ pro každé $j$. Hrany uvnitř
+  kliky jdou na hrany kliky a hrany mezi $Q_j$ a $u_j$ na hrany mezi $Q'_j$ a $v_j=\psi(u_j)$.
+
+
+  "($\Rightarrow$)".notion Nechť $\varphi\colon G_P\to H_P$ je izomorfismus.
+
+  .enumerate:
+
+    .item:
+
+      "Značky se zobrazí na značky.".notion Klika s více než $n$ vrcholy obsahuje vrchol značky ($G$ má jen $n$
+      vrcholů); vrchol z $Q_j$ sousedí jen s vrcholy $K_j$, celá klika tedy leží v $K_j$. Maximální kliky s více než
+      $n$ vrcholy jsou proto přesně $K_1,\dots,K_t$ a mají navzájem různé velikosti $n+2,\dots,n+t+1$. Izomorfismus
+      zobrazuje maximální kliky na maximální kliky stejné velikosti, takže $\varphi(K_j)=K'_j$ a zbylé vrcholy $G$
+      jdou na zbylé vrcholy $H$.
+
+    .item:
+
+      "Vrchol $u_j$ jde na $v_j$, nebo na tom nezáleží.".notion Vrcholy $Q_j$ nemají sousedy mimo $K_j$; $u_j$ je
+      má, právě když $\deg_G(u_j)\ge1$. Je-li $\deg_G(u_j)\ge1$, má i $\varphi(u_j)$ souseda mimo $K'_j$, takže
+      $\varphi(u_j)=v_j$. Je-li $\deg_G(u_j)=0$, nemá žádný vrchol $K_j$ sousedy mimo $K_j$, tedy ani žádný vrchol
+      $K'_j$, a $\deg_H(v_j)=0$.
+
+    .item:
+
+      Položíme $\psi(u_j)=v_j$ a $\psi(x)=\varphi(x)$ pro ostatní vrcholy $G$. Podle bodu 1 je to bijekce
+      $V(G)\to V(H)$. Hrany mezi původními vrcholy jsou v $G_P$ i $H_P$ stejné jako v $G$ a $H$. Dvojice bez
+      izolovaného $u_j$ zobrazuje $\psi$ stejně jako $\varphi$, takže hranu zachová; dvojice s izolovaným $u_j$
+      hranu nemá v $G$ a její obraz s izolovaným $v_j$ ji nemá v $H$. $\psi$ je izomorfismus s $\psi(u_j)=v_j$.
+
+
+  "Proč různé velikosti.".notion Se stejně velkými značkami by orákulum přijalo i „prohozené“ přiřazení:
+  přišpendlení $u_1\mapsto v_1$, $u_2\mapsto v_2$ by splnil i izomorfismus s $u_1\mapsto v_2$, $u_2\mapsto v_1$.
+  Velikost $n+j>n$ zase zaručí, že se značka nesplete s klikou původního grafu.
+
+
+  "b) Algoritmus.".notion Vrcholy $G$ jsou $u_1,\dots,u_n$.
+
+  .enumerate:
+
+    .item:
+
+      Má-li $H$ jiný počet vrcholů než $G$, grafy izomorfní nejsou. Jinak se zeptej na $(G,H)$; při $\NE$ konec.
+
+    .item:
+
+      $P:=()$. Pro $t=1,\dots,n$: procházej dosud nepoužité vrcholy $v\in V(H)$. Pro každý kromě posledního se zeptej
+      na $(G_{P'},H_{P'})$, kde $P'=P+(u_t\mapsto v)$; při $\ANO$ polož $P:=P'$ a jdi na další $t$. Dojde-li se
+      k poslednímu nepoužitému vrcholu, přiřaď $u_t$ k němu bez dotazu.
+
+    .item:
+
+      Vydej $\psi(u_t)=v_t$ podle $P$.
+
+
+  "Invariant:".notion existuje izomorfismus $G\to H$, který respektuje $P$ (podle tvrzení: $G_P\cong H_P$). Na
+  začátku platí podle dotazu 1. V kroku $t$ vezmeme takový izomorfismus $\psi$; vrchol $v^*=\psi(u_t)$ není použitý
+  ($\psi$ je prostá) a $\psi$ respektuje i $P+(u_t\mapsto v^*)$, takže dotaz s $v^*$ by dal $\ANO$. Algoritmus tedy
+  přiřadí $u_t$ k vrcholu s odpovědí $\ANO$ (invariant platí podle tvrzení), nebo – když všechny dřívější kandidáty
+  dostaly $\NE$ – k poslednímu kandidátovi, kterým pak musí být $v^*$.
+
+
+  "Konec.".notion Po kroku $n$ existuje izomorfismus respektující všech $n$ přiřazení; ten je určený jednoznačně
+  a je to vydané $\psi$.
+
+
+  "Počet a velikost dotazů:".notion v kroku $t$ je $n-t+1$ kandidátů a nejvýše $n-t$ dotazů, celkem nejvýše
+  $1+\sum_{t=1}^{n}(n-t)=1+\frac{n(n-1)}2=O(n^2)$. Dotazovaný graf má nejvýše $n+\sum_{j=1}^{n}(n+j)=\frac{3n(n+1)}2$
+  vrcholů a $|E|+\sum_{j=1}^{n}\binom{n+j+1}2=O(n^3)$ hran, je tedy polynomiálně velký a algoritmus je polynomiální
+  vzhledem k volání orákula.
+
+
+  .centered:
+
+    !tikz:
+      filename: 04z-ulohy-navic-04
+
+      \newcommand\tagQ[3]{%
+        \foreach \k/\dx/\dy in {1/-0.6/1.2,2/-0.2/1.5,3/0.2/1.5,4/0.6/1.2}
+          \node[circle,fill=acc!70!black,inner sep=0pt,minimum size=2.2mm] (#1q\k) at ($(#2,#3)+(\dx,\dy)$) {};
+        \foreach \a/\b in {1/2,1/3,1/4,2/3,2/4,3/4} \draw[acc!70!black] (#1q\a)--(#1q\b);
+        \foreach \k in {1,...,4} \draw[acc!70!black] (#1)--(#1q\k);}
+      \foreach \r/\y/\c/\ans in {1/0/b/{dotaz $u_1\mapsto v_1$: \NE\\ \footnotesize $u_1$ má v $G$ jednoho souseda, $v_1$ v $H$ dva},
+                                2/-3.2/a/{dotaz $u_1\mapsto v_2$: \ANO}} {
+        \node[v] (g\r a) at (0,\y) {$u_1$}; \node[v] (g\r b) at (1.2,\y) {$u_2$}; \node[v] (g\r c) at (2.4,\y) {$u_3$};
+        \draw[e] (g\r a)--(g\r b)--(g\r c);
+        \node[v] (h\r a) at (4.4,\y) {$v_2$}; \node[v] (h\r b) at (5.6,\y) {$v_1$}; \node[v] (h\r c) at (6.8,\y) {$v_3$};
+        \draw[e] (h\r a)--(h\r b)--(h\r c);
+        \tagQ{g\r a}{0}{\y}
+        \tagQ{h\r\c}{\ifnum\r=1 5.6\else 4.4\fi}{\y}
+        \node[anchor=west,align=left,font=\small] at (7.6,\y+0.6) {\ans};
+      }
+      \node[note] at (1.2,-0.7) {$G_P$};
+      \node[note] at (5.6,-0.7) {$H_P$};
+      \node[note,acc!70!black,anchor=east] at (-0.8,1.2) {$Q_1=K_4$};
+
+  Dotazy 2 a 3 v části c): obě strany dostanou stejnou značku $Q_1$ (klika se $n+1=4$ vrcholy spojená
+  s přišpendleným vrcholem, zeleně). "Všimni si:".emphasize izomorfismus musí značku zobrazit na značku, a tedy $u_1$
+  na vrchol se značkou; prostřední vrchol $v_1$ má ale jiný stupeň v původním grafu než koncový $u_1$.
+
+
+  "c) Průběh.".notion Dotaz 1: $(G,H)$ – $\ANO$ (obě jsou cesty se třemi vrcholy). Krok $t=1$: dotaz 2 $u_1\mapsto v_1$:
+  $\NE$; dotaz 3 $u_1\mapsto v_2$: $\ANO$. Krok $t=2$ (kandidáti $v_1,v_3$): dotaz 4 $u_2\mapsto v_1$ se značkami
+  $Q_1$ ($4$ vrcholy) u $u_1,v_2$ a $Q_2$ ($5$ vrcholů) u $u_2,v_1$: $\ANO$. Krok $t=3$: zbývá jen $v_3$, bez dotazu.
+  Výsledek $\psi=(u_1\mapsto v_2,\ u_2\mapsto v_1,\ u_3\mapsto v_3)$, 4 dotazy (mez $1+\frac{3\cdot2}2=4$). Hrany
+  $u_1u_2\mapsto v_2v_1$ a $u_2u_3\mapsto v_1v_3$ jsou hranami $H$.
+
+
+  "Poznámka".notion "(nad rámec přednášky)".emphasize. $\prob{Graph Isomorphism}$ je v $\NP$ (cvičení .reference:cv-2-3),
+  ale není známo, zda je NP-úplný ani zda je v $\PP$ (Babai 2015 dal kvazipolynomiální algoritmus). Hledání
+  izomorfismu proto nelze odbýt odkazem na self-redukci SATu (typová úloha .reference:typ-2-1): s orákulem jen pro
+  izomorfismus grafů potřebujeme konstrukci, která přiřazení zakóduje do grafů samotných.

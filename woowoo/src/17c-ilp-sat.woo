@@ -48,7 +48,9 @@ Postup na papíře je v oddílu .reference:ch-test-postup-ilp-sat.
     ILP: "úloha 11.2"#un-11-2 (tři modelovací vzory na jednom grafu), "10.6"#un-10-6 (1-in-3 SAT jako soustava
     rovnic), "15.1"#un-15-1 (logické podmínky: ekvivalence, „právě jeden“, implikace), "15.5"#un-15-5 (množstevní
     sleva, velké $M$); SAT: "úloha 14.5"#un-14-5 (doplnění dam), "14.6"#un-14-6 (Tseitinova transformace),
-    "14.8"#un-14-8 („nejvýše jedna“ binárně).
+    "14.8"#un-14-8 („nejvýše jedna“ binárně). Ze sbírky: ILP "11.12"#un-11-12 (0/1 přípustnost),
+    "15.9"#un-15-9 až "15.18"#un-15-18 (batoh, KNF, 3-barvení, pokrytí, párování, balení množin, TSP, autobusy);
+    SAT "14.9"#un-14-9 až "14.12"#un-14-12 ($k$-barevnost, trojrozměrné párování, hamiltonovská a dlouhá kružnice).
 
 
 .Subsection Řešené úlohy: ILP a SAT

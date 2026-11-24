@@ -5,7 +5,10 @@
 Úlohy procvičují látku celé kapitoly: hamiltonovské cesty a kružnice (oddíl .reference:ch-cisla-hamiltonovska-cesta),
 tři modelovací vzory ILP (oddíl .reference:ch-cisla-ilp) a hlavně číselné problémy – dynamické programování, redukce
 s „vyrovnávacím“ číslem, unární a binární zápis a rozdíl mezi slabou a silnou NP-úplností (oddíly
-.reference:ch-cisla-ciselne-problemy a .reference:sec-podezrele).
+.reference:ch-cisla-ciselne-problemy a .reference:sec-podezrele). Pododdíl .reference:ch-cisla-ulohy-navic-sbirka
+přidává osm úloh ze sbírky jiného předmětu: self-redukci hamiltonovské kružnice, redukce mezi hamiltonovskými
+problémy a důkazy NP-úplnosti $\prob{TSP}$, 0/1 celočíselného programování, batohu, rozvrhování a kostry
+s omezeným stupněm.
 
 
 .Warning:
@@ -14,7 +17,9 @@ s „vyrovnávacím“ číslem, unární a binární zápis a rozdíl mezi slab
   Úlohy v tomto oddílu "nejsou".notion oficiální zadání předmětu. Jsou to procvičovací úlohy navíc k látce kapitoly;
   všechny tabulky, počty a protipříklady jsou spočítané programem a každá redukce i každý algoritmus byly ověřeny
   hrubou silou na všech malých instancích (u hamiltonovských problémů na všech grafech s nejvýše 6 vrcholy),
-  doplněných o tisíce náhodných instancí.
+  doplněných o tisíce náhodných instancí. Úlohy 11.9–11.16 ze sbírky jsou ověřené stejně: hamiltonovské redukce,
+  self-redukce a kostry na všech grafech s nejvýše 5 vrcholy a stovkách náhodných grafů s 6–7 vrcholy, číselné
+  redukce a model $\prob{0-1 ILP}$ na tisících náhodných malých instancí, vždy s odpověďmi $\ANO$ i $\NE$.
 
 
 .Subsection Rozcvička
@@ -756,3 +761,722 @@ s „vyrovnávacím“ číslem, unární a binární zápis a rozdíl mezi slab
 
   "c) Velikost.".notion Každé číslo má $n+m$ číslic v základu 3, tedy nejvýš $\lceil(n+m)\log_2 3\rceil$ bitů; $2n$ čísel a
   cíl dají $O(n(n+m))$ bitů. Základ je konstanta, takže polynomiální je redukce pro každý pevný základ.
+
+
+.Subsection Úlohy z jiných sbírek
+  label: ch-cisla-ulohy-navic-sbirka
+
+
+Úlohy 11.9–11.16 pocházejí ze sbírky „External Practice Bank“, kterou sestavil spolužák z volně dostupných materiálů
+(hlavně MFF UK). Zadání jsou česky převyprávěná, řešení jsou naše. Několik úloh se kryje s látkou kapitoly nebo
+s typovými úlohami; u nich to v zadání přiznáváme a řešení je v kompaktní testové podobě s odkazem. Zkuste je nejdřív
+napsat bez nahlížení. Poslední úloha je těžší (ve sbírce „STRETCH“).
+
+
+.Exercise:
+  title: 'Úloha 11.9 (najdi hamiltonovskou kružnici pomocí orákula)'
+  label: un-11-9
+
+  Máte orákulum, které pro neorientovaný graf v jednom kroku odpoví, zda obsahuje hamiltonovskou kružnici
+  ($\prob{HC}$). Je dán graf $G=(V,E)$, $n=|V|\ge3$, $m=|E|$.
+
+  .enumerate:
+    type: a
+
+    .item:
+
+      Najděte hamiltonovskou kružnici v $G$ (nebo oznamte, že není) "mazáním hran".emphasize. Je to typová úloha
+      .reference:typ-2-3 – napište ji bez nahlížení.
+
+    .item:
+
+      Najděte ji jinak: kružnici "stavějte".emphasize od pevného vrcholu $v_0$ jako cestu $P=v_0,v_1,\dots,v_i$ a
+      v každém kroku vynuťte další hranu. Orákulum zná jen otázku „má graf hamiltonovskou kružnici?“; ukažte, jak do
+      grafu zakódovat podmínku „kružnice musí obsahovat všechny hrany cesty $P$“. "Nápověda:".emphasize vynucenou hranu
+      rozdělte novým vrcholem. Zdůvodněte, proč každá vynucená volba zachová existenci řešení, a odhadněte počet a
+      velikost dotazů.
+
+
+  "Zdroj: Příklady ADS2 – cvičení 10 (MFF UK), úloha 8(b).".small
+
+
+.Solution:
+  label: red-un-11-9
+
+  "Redukce s orákulem:".notion $\prob{HC}$ – nalezení kružnice $\to$ $\prob{HC}$ – rozhodovací verze. Jak: a) hrany
+  po jedné mažeme, b) hrany po jedné vynucujeme podrozdělením; orákulum pokaždé hlídá, že kružnice existuje.
+
+
+  "a) Mazání hran (shrnutí typové úlohy .reference:typ-2-3).".notion Zeptáme se na $G$; při $\NE$ konec. Jinak
+  $H:=G$ a pro každou hranu $e$ se zeptáme na $H-e$; při $\ANO$ hranu smažeme. "Invariant:".notion $H$ má
+  hamiltonovskou kružnici. Na konci $H$ obsahuje kružnici $K$ a žádnou hranu navíc (taková hrana by se dala smazat
+  už v okamžiku svého testu, protože tehdejší graf bez ní obsahoval $K$). Dotazů je $1+m$, každý na podgraf $G$.
+
+
+  "b) Vynucení hrany podrozdělením.".notion Pro cestu $P$ v $G$ označme $G_P$ graf, v němž každou hranu
+  $\{v_j,v_{j+1}\}$ cesty $P$ nahradíme cestičkou $v_j-w_j-v_{j+1}$ přes nový vrchol $w_j$ (původní hranu smažeme).
+
+  .itemize:
+
+    .item:
+
+      "Tvrzení:".notion $G_P$ má hamiltonovskou kružnici, právě když ji má $G$ s tím, že kružnice obsahuje všechny
+      hrany $P$.
+
+    .item:
+
+      "($\Leftarrow$)".notion V takové kružnici v $G$ nahradíme každou hranu $\{v_j,v_{j+1}\}$ cestičkou přes $w_j$;
+      vznikne kružnice v $G_P$ přes všechny původní i nové vrcholy.
+
+    .item:
+
+      "($\Rightarrow$)".notion Vrchol $w_j$ má v $G_P$ stupeň 2, takže hamiltonovská kružnice v $G_P$ prochází
+      cestičkou $v_j-w_j-v_{j+1}$ celou. Každou takovou cestičku stáhneme zpět na hranu $\{v_j,v_{j+1}\}$ (je v $G$);
+      zbude kružnice v $G$ přes všech $n\ge3$ vrcholů, která obsahuje všechny hrany $P$.
+
+
+  "Algoritmus.".notion
+
+  .enumerate:
+
+    .item:
+
+      Zeptej se na $G$. Při $\NE$ kružnice neexistuje – konec.
+
+    .item:
+
+      $P:=(v_0)$. Dokud $P$ nemá $n$ vrcholů: nechť $v_i$ je poslední vrchol $P$ a $u_1,\dots,u_r$ jeho sousedé mimo
+      $P$. Postupně pro $u=u_1,u_2,\dots,u_{r-1}$ se zeptej na $G_{P+u}$ ($P$ prodloužená o hranu $\{v_i,u\}$); při
+      prvním $\ANO$ prodluž $P$ o $u$. Dostal-li každý z $u_1,\dots,u_{r-1}$ odpověď $\NE$, prodluž $P$ o $u_r$
+      "bez dotazu".emphasize.
+
+    .item:
+
+      Vydej hrany $P$ a hranu $\{v_{n-1},v_0\}$.
+
+
+  "Invariant:".notion $G$ má hamiltonovskou kružnici obsahující všechny hrany $P$ (podle tvrzení: $G_P$ má
+  hamiltonovskou kružnici). Na začátku je to první dotaz. Krok s odpovědí $\ANO$ ho zachová podle tvrzení. Proč je
+  správná volba $u_r$ bez dotazu: podle invariantu existuje kružnice $K\supseteq P$; v ní má $v_i$ dva sousedy, jeden
+  je předchůdce na $P$ (pro $i=0$ libovolný z nich) a druhý, $u$, leží mimo $P$ – jinak by se kružnice uzavřela dřív,
+  než projde všech $n$ vrcholů. Takže $\{v_i,u\}\in E$ a $u\in\{u_1,\dots,u_r\}$; protože $u_1,\dots,u_{r-1}$
+  dostaly $\NE$, je $u=u_r$. Speciálně je vždy $r\ge1$ a algoritmus se nezasekne.
+
+
+  "Konec.".notion Když má $P$ všech $n$ vrcholů, kružnice $K\supseteq P$ z invariantu má o jednu hranu víc než $P$
+  a ta spojuje konce: $K=P+\{v_{n-1},v_0\}$. Výstup je tedy hamiltonovská kružnice v $G$.
+
+
+  "Počet a velikost dotazů.".notion Ve vrcholu $v_i$ je nejvýš $\deg(v_i)-1$ dotazů (u $v_0$), resp. $\deg(v_i)-2$
+  (předchůdce je na $P$ a poslední kandidát se netestuje). Celkem nejvýš $1+\sum_v\deg(v)=1+2m$ dotazů, tedy $O(m)$
+  stejně jako u mazání. Graf $G_P$ má nejvýš $n+(n-1)$ vrcholů a $m+(n-1)$ hran, takže každý dotaz má polynomiální
+  velikost.
+
+
+  .centered:
+
+    !tikz:
+      filename: 11z-ulohy-navic-07
+      options: 'scale=0.82,every node/.style={transform shape}'
+
+      \def\pent{%
+        \node[v] (a) at (90:1.6) {$a$};
+        \node[v] (b) at (18:1.6) {$b$};
+        \node[v] (c) at (-54:1.6) {$c$};
+        \node[v] (d) at (-126:1.6) {$d$};
+        \node[v] (e) at (162:1.6) {$e$};}
+      \tikzset{wv/.style={v,fill=intc!25,minimum size=5mm,font=\scriptsize}}
+      \begin{scope}
+        \pent
+        \node[wv] (w1) at (54:1.9) {$w_1$};
+        \draw[e] (a)--(c) (b)--(c) (b)--(d) (c)--(d) (d)--(e) (e)--(a);
+        \draw[e,intc,very thick] (a)--(w1)--(b);
+        \node[font=\large\sffamily,align=center] at (0,-2.8) {dotaz 2: $G_P$ pro $P=a,b$\\ \ANO\ $\Rightarrow$ $P:=a,b$};
+      \end{scope}
+      \begin{scope}[xshift=5.6cm]
+        \pent
+        \node[wv] (w1) at (54:1.9) {$w_1$};
+        \node[wv] (w2) at (-18:1.9) {$w_2$};
+        \draw[e] (a)--(c) (b)--(d) (c)--(d) (d)--(e) (e)--(a);
+        \draw[e,intc,very thick] (a)--(w1)--(b)--(w2)--(c);
+        \node[font=\large\sffamily,align=center] at (0,-2.8) {dotaz 3: $P=a,b,c$\\ \ANO\ $\Rightarrow$ $P:=a,b,c$};
+      \end{scope}
+      \begin{scope}[xshift=11.2cm]
+        \pent
+        \draw[e] (a)--(c) (b)--(d);
+        \draw[esel] (a)--(b) (b)--(c) (c)--(d) (d)--(e) (e)--(a);
+        \node[font=\large\sffamily,align=center] at (0,-2.8) {$c\to d$, $d\to e$ bez dotazu\\ (jediný kandidát)};
+      \end{scope}
+
+
+  Postup b) na grafu z typové úlohy .reference:typ-2-3 (hrany $ac,ab,bc,bd,cd,de,ea$, $v_0=a$, sousedé v abecedním
+  pořadí): stačí $3$ dotazy, mazání hran jich potřebuje $1+7=8$. "Všimni si:".emphasize vrchol $w_j$ stupně 2
+  „přišpendlí“ hranu ke kružnici – tak se do dotazu zakóduje částečné řešení, aniž bychom potřebovali jiné orákulum.
+  V nejhorším případě ale b) není lepší než a), oba postupy mají $O(m)$ dotazů.
+
+
+.Exercise:
+  title: 'Úloha 11.10 (HC, HP a HP s pevnými konci)'
+  label: un-11-10
+
+  Neorientované verze hamiltonovských problémů: $\prob{HC}$ (má $G$ hamiltonovskou kružnici? pro $n<3$ je odpověď
+  $\NE$), $\prob{HP}$ (má $G$ hamiltonovskou cestu s libovolnými konci?) a $\prob{UHP}$ (pro graf $G$ a dva různé
+  vrcholy $S\neq T$: má $G$ hamiltonovskou cestu z $S$ do $T$?).
+
+
+  Sestrojte přímé polynomiální redukce $\prob{UHP}\redp\prob{HP}$, $\prob{HP}\redp\prob{UHP}$,
+  $\prob{HC}\redp\prob{UHP}$ a $\prob{UHP}\redp\prob{HC}$ a u každé dokažte obě implikace. Redukce
+  $\prob{HP}\redp\prob{HC}$ a $\prob{HC}\redp\prob{HP}$ jsou úloha .reference:un-11-3, orientované verze jsou
+  v oddílu .reference:ch-cisla-hamiltonovska-cesta ("$\prob{DHP}\redp\prob{UHP}$"#red-uhp,
+  "$\prob{DHP}\redp\prob{HC}$"#red-hc). Proč u $\prob{UHP}\redp\prob{HC}$ nestačí přidat hranu $\{S,T\}$?
+
+
+  "Zdroj: Příklady ADS2 – cvičení 10 (MFF UK), úloha 91.".small
+
+
+.Solution:
+  label: red-un-11-10
+
+  "Redukce:".notion $\prob{UHP}\redp\prob{HP}$, $(G,S,T)$ $\mapsto$ $G$ s listy $S'$ u $S$ a $T'$ u $T$;
+  $\prob{HP}\redp\prob{UHP}$, $G$ $\mapsto$ $(G+S+T,\ S,\ T)$ s novými vrcholy $S,T$ spojenými se všemi vrcholy $G$;
+  $\prob{HC}\redp\prob{UHP}$, $G$ $\mapsto$ $(G+v',\ v,\ v')$ s kopií $v'$ vrcholu $v$; $\prob{UHP}\redp\prob{HC}$,
+  $(G,S,T)$ $\mapsto$ $G+w$ s novým vrcholem $w$ spojeným jen s $S$ a $T$.
+
+
+  Všechny tři problémy jsou v $\NP$ (certifikát = pořadí vrcholů). Všude je $n=|V|$, $m=|E|$ a výstup má (kromě
+  pevné $\NE$-instance ve (3)) nejvýš $n+2$ vrcholů a $m+2n$ hran, sestrojíme ho v lineárním čase. U $\prob{UHP}$ je $S\neq T$, tedy $n\ge2$.
+
+
+  .centered:
+
+    !tikz:
+      filename: 11z-ulohy-navic-08
+      options: 'x=1cm,y=1cm'
+
+      \tikzset{gbox/.style={draw=black!50,fill=black!4,ellipse,minimum width=27mm,minimum height=17mm},
+        nv/.style={v,fill=intc!25},sv/.style={hv}}
+      % (1) UHP <= HP
+      \begin{scope}
+        \node[gbox] at (0,0) {}; \node[gr,font=\scriptsize] at (0,0.55) {$G$};
+        \node[sv] (S) at (-0.65,-0.1) {$S$}; \node[sv] (T) at (0.65,-0.1) {$T$};
+        \node[nv] (S1) at (-1.75,-0.1) {$S'$}; \node[nv] (T1) at (1.75,-0.1) {$T'$};
+        \draw[e] (S)--(S1) (T)--(T1);
+        \node[font=\scriptsize,align=center] at (0,-1.35) {(1) $\prob{UHP}\redp\prob{HP}$:\\ listy vynutí konce};
+      \end{scope}
+      % (2) HP <= UHP
+      \begin{scope}[xshift=4.3cm]
+        \node[gbox] at (0,0) {}; \node[gr,font=\scriptsize] at (0,0.55) {$G$};
+        \node[hv] (u1) at (-0.7,-0.15) {}; \node[hv] (u2) at (0,-0.3) {}; \node[hv] (u3) at (0.7,-0.15) {};
+        \node[nv] (S) at (-1.0,1.35) {$S$}; \node[nv] (T) at (1.0,1.35) {$T$};
+        \draw[e,black!45] (S)--(u1) (S)--(u2) (S)--(u3) (T)--(u1) (T)--(u2) (T)--(u3);
+        \node[font=\scriptsize,align=center] at (0,-1.35) {(2) $\prob{HP}\redp\prob{UHP}$:\\ $S,T$ spojené se všemi};
+      \end{scope}
+      % (3) HC <= UHP
+      \begin{scope}[xshift=8.6cm]
+        \node[gbox] at (0,0) {}; \node[gr,font=\scriptsize] at (-0.2,0.55) {$G$};
+        \node[sv] (v) at (-0.65,-0.05) {$v$}; \node[hv] (x) at (0.4,0.3) {$x$}; \node[hv] (y) at (0.4,-0.45) {$y$};
+        \node[nv] (v1) at (1.75,-0.05) {$v'$};
+        \draw[e] (v)--(x) (v)--(y) (v1)--(x) (v1)--(y);
+        \node[font=\scriptsize,align=center] at (0,-1.35) {(3) $\prob{HC}\redp\prob{UHP}$:\\ $N(v')=N(v)$, konce $v,v'$};
+      \end{scope}
+      % (4) UHP <= HC
+      \begin{scope}[xshift=12.9cm]
+        \node[gbox] at (0,0) {}; \node[gr,font=\scriptsize] at (0,0.55) {$G$};
+        \node[sv] (S) at (-0.65,-0.1) {$S$}; \node[sv] (T) at (0.65,-0.1) {$T$};
+        \node[nv] (w) at (0,1.35) {$w$};
+        \draw[e] (S)--(w)--(T);
+        \node[font=\scriptsize,align=center] at (0,-1.35) {(4) $\prob{UHP}\redp\prob{HC}$:\\ $w$ stupně 2};
+      \end{scope}
+
+
+  Čtyři konstrukce; nové vrcholy oranžově. "Všimni si:".emphasize každý gadget je jen list nebo vrchol stupně 2 –
+  vrchol stupně 1 musí být koncem cesty, vrchol stupně 2 má na kružnici obě své hrany.
+
+
+  "(1) $\prob{UHP}\redp\prob{HP}$.".notion Přidáme listy $S'$ (hrana $\{S',S\}$) a $T'$ (hrana $\{T',T\}$).
+
+  .itemize:
+
+    .item:
+
+      "($\Rightarrow$)".notion Cesta $S,\dots,T$ přes $V$ prodloužená na $S',S,\dots,T,T'$ je hamiltonovská v $G'$.
+
+    .item:
+
+      "($\Leftarrow$)".notion $G'$ má $n+2\ge4$ vrcholů a $S',T'$ mají stupeň 1; vnitřní vrchol cesty potřebuje
+      dva sousedy, takže $S'$ a $T'$ jsou konce. Cesta je tedy $S',S,\dots,T,T'$ a její vnitřek je hamiltonovská cesta
+      z $S$ do $T$ v $G$ (mezi vrcholy $V$ jsou jen hrany $G$).
+
+
+  "(2) $\prob{HP}\redp\prob{UHP}$.".notion Přidáme dva nové vrcholy $S,T$ (navzájem nespojené), každý spojený se
+  všemi vrcholy $G$, a ptáme se na cestu z $S$ do $T$.
+
+  .itemize:
+
+    .item:
+
+      "($\Rightarrow$)".notion Z hamiltonovské cesty $u_1,\dots,u_n$ v $G$ je $S,u_1,\dots,u_n,T$.
+
+    .item:
+
+      "($\Leftarrow$)".notion Cesta $S,u_1,\dots,u_n,T$ v $G'$ má mezi konci právě všechny vrcholy $V$ a hrany mezi
+      nimi jsou hrany $G$; $u_1,\dots,u_n$ je hamiltonovská cesta v $G$. (Na koncích $u_1,u_n$ nezáleží – proto se
+      $S$ a $T$ spojují se "všemi".emphasize vrcholy.)
+
+
+  "(3) $\prob{HC}\redp\prob{UHP}$.".notion Pro $n<3$ vydáme pevnou $\NE$-instanci: hvězdu $K_{1,3}$ se $S,T$
+  ve dvou listech (cesta z listu do listu přes střed třetí list mine). Jinak zvolíme vrchol $v$, přidáme jeho kopii $v'$
+  se stejnými sousedy (bez hrany $\{v,v'\}$) a položíme $S=v$, $T=v'$.
+
+  .itemize:
+
+    .item:
+
+      "($\Rightarrow$)".notion Z kružnice $v,u_1,\dots,u_{n-1},v$: vrchol $u_{n-1}$ je soused $v$, tedy i $v'$, a
+      $v,u_1,\dots,u_{n-1},v'$ je hamiltonovská cesta z $S$ do $T$.
+
+    .item:
+
+      "($\Leftarrow$)".notion Cesta $v,w_1,\dots,w_{n-1},v'$ prochází všemi vrcholy $V\setminus\{v\}$. Vrchol
+      $w_{n-1}$ je soused $v'$, tedy i $v$, a $v,w_1,\dots,w_{n-1},v$ je kružnice v $G$ s $n\ge3$ vrcholy.
+
+  Druhá část úlohy .reference:un-11-3 ($\prob{HC}\redp\prob{HP}$) je přesně tato konstrukce, za kterou je připojena
+  redukce (1): listy $s,t$ tam vynucují konce $v,v'$.
+
+
+  "(4) $\prob{UHP}\redp\prob{HC}$.".notion Přidáme nový vrchol $w$ s hranami $\{w,S\}$ a $\{w,T\}$.
+
+  .itemize:
+
+    .item:
+
+      "($\Rightarrow$)".notion Cesta $S,\dots,T$ přes $V$ spolu s $w$ dá kružnici $w,S,\dots,T,w$ s $n+1\ge3$
+      vrcholy.
+
+    .item:
+
+      "($\Leftarrow$)".notion $w$ má stupeň 2, kružnice tedy obsahuje obě hrany $\{S,w\}$, $\{w,T\}$. Odebereme-li
+      $w$, zbude hamiltonovská cesta z $S$ do $T$ v $G$.
+
+
+  "Proč ne hrana $\{S,T\}$.".notion Hamiltonovská kružnice v $G+\{S,T\}$ tu hranu použít nemusí. Protipříklad:
+  $G=C_4$ s vrcholy $a,b,c,d$ (v tomto pořadí na kružnici), $S=a$, $T=c$. Hamiltonovská cesta z $a$ do $c$ neexistuje
+  ($a$ i $c$ jsou sousedé právě $b$ a $d$, takže cesta $a,b,\dots$ musí $c$ navštívit dřív než $d$), ale $G+\{a,c\}$
+  hamiltonovskou kružnici má ($a,b,c,d,a$ je už v $G$). V orientované redukci "$\prob{DHP}\redp\prob{HC}$"#red-hc
+  hrana $T\to S$ stačí, protože do $S$ jiná hrana nevede; neorientovaně tuto roli hraje vrchol $w$ stupně 2.
+
+
+  "Závěr.".notion Z NP-úplnosti $\prob{DHP}$ a redukce "$\prob{DHP}\redp\prob{UHP}$"#red-uhp je $\prob{UHP}$
+  NP-úplný a redukce (1), (4) přenesou NP-úplnost na $\prob{HP}$ a $\prob{HC}$; redukce (2), (3) ukazují, že
+  všechny tři problémy jsou na sebe navzájem převoditelné. Složením (2) a (4) vznikne graf, v němž cestička $S-w-T$
+  funguje jako jediný vrchol spojený se všemi – to je redukce $\prob{HP}\redp\prob{HC}$ z úlohy .reference:un-11-3.
+
+
+.Exercise:
+  title: 'Úloha 11.11 (obchodní cestující je NP-úplný)'
+  label: un-11-11
+
+  Rozhodovací $\prob{TSP}$ (problém .reference:prob-tsp): je dán úplný graf na $n$ městech, celočíselné vzdálenosti
+  $w(e)\ge0$ zapsané binárně a mez $k$; existuje okruh přes všechna města (hamiltonovská kružnice) délky nejvýš $k$?
+  Dokažte, že $\prob{TSP}$ je NP-úplný, redukcí z neorientovaného $\prob{HC}$.
+
+
+  Redukce je v oddílu .reference:ch-cisla-hamiltonovska-cesta ("$\prob{HC}\redp\prob{TSP}$"#red-tsp) – napište
+  úplný důkaz bez nahlížení. Zůstane problém NP-úplný, splňují-li vzdálenosti trojúhelníkovou nerovnost?
+
+
+  "Zdroj: P. Kučera, NTIN090 – skripta (MFF UK), §11.4, cvičení 4.".small
+
+
+.Solution:
+  label: red-un-11-11
+
+  "Redukce:".notion $\prob{HC}\redp\prob{TSP}$, graf $G=(V,E)$ $\mapsto$ $(K_n,\ w,\ k=n)$ s $w(e)=1$ pro $e\in E$
+  a $w(e)=2$ jinak.
+
+
+  "1. Problém je v $\NP$.".notion Certifikát je pořadí měst ($n$ čísel po $\lceil\log_2 n\rceil$ bitech). Ověříme, že
+  je to permutace, sečteme $n$ vzdáleností okruhu a porovnáme s $k$; sčítání binárních čísel je polynomiální.
+
+
+  "2. Konstrukce.".notion Pro $n<3$ je odpověď $\NE$ a vydáme pevnou $\NE$-instanci: $K_3$ se všemi vzdálenostmi 1
+  a $k=0$. Jinak úplný graf na $V$, hranám $G$ vzdálenost 1, ostatním dvojicím 2, mez $k=n$.
+
+
+  "3. Polynomialita.".notion $\binom n2$ vzdáleností po dvou bitech a mez s $O(\log n)$ bity, čas $O(n^2)$.
+
+
+  "4. ($\Rightarrow$)".notion Hamiltonovská kružnice v $G$ je okruh v $K_n$ z $n$ hran vzdálenosti 1, délka je
+  $n\le k$.
+
+
+  "5. ($\Leftarrow$)".notion Okruh přes $n$ měst má přesně $n$ hran, každou délky aspoň 1. Má-li délku nejvýš $n$,
+  mají všechny jeho hrany délku 1, jsou to tedy hrany $G$, a okruh je hamiltonovská kružnice v $G$.
+
+
+  "6. Závěr.".notion $\prob{HC}$ je NP-úplný, tedy $\prob{TSP}$ je NP-těžký a podle bodu 1 NP-úplný.
+
+
+  "Trojúhelníková nerovnost.".notion Vzdálenosti z $\{1,2\}$ ji splňují automaticky: $w(x,z)\le2=1+1\le w(x,y)+w(y,z)$.
+  Redukce tedy dokazuje NP-úplnost i pro "metrický".emphasize $\prob{TSP}$. Navíc jsou čísla nejvýš 2, takže problém
+  zůstane NP-úplný i se vzdálenostmi zapsanými unárně – $\prob{TSP}$ je silně NP-úplný (definice .reference:def-silne).
+
+
+.Exercise:
+  title: 'Úloha 11.12 (0/1 celočíselná přípustnost)'
+  label: un-11-12
+
+  Problém $\prob{0-1 ILP}$. "Vstup:".notion celočíselná matice $A$ typu $p\times n$ a celočíselný vektor $b$ délky $p$
+  (čísla zapsaná binárně). "Otázka:".notion existuje $x\in\{0,1\}^n$ s $Ax\ge b$?
+
+
+  Dokažte, že $\prob{0-1 ILP}$ je NP-úplný. Porovnejte s oddílem .reference:ch-cisla-ilp: tam je omezení $Ax\le b$,
+  proměnné celočíselné a důkaz příslušnosti do $\NP$ není triviální. Redukce
+  "$\prob{3-SAT}\redp\prob{ILP}$"#red-ilpsat tam je – napište ji v tvaru $Ax\ge b$ celou.
+
+
+  "Zdroj: P. Kučera, NTIN090 – skripta (MFF UK), §11.4, cvičení 5.".small
+
+
+.Solution:
+  label: red-un-11-12
+
+  "Redukce:".notion $\prob{3-SAT}\redp\prob{0-1 ILP}$, formule $\Phi$ s proměnnými $y_1,\dots,y_n$ a klauzulemi
+  $C_1,\dots,C_p$ $\mapsto$ $(A,b)$, řádek $j$ za klauzuli $C_j$, sloupec $i$ za proměnnou $y_i$.
+
+
+  "1. Problém je v $\NP$.".notion Certifikát je samotné $x\in\{0,1\}^n$, tedy $n$ bitů. Spočítáme každý součin
+  $\sum_i a_{ji}x_i$ (sečteme nejvýš $n$ binárních čísel) a porovnáme s $b_j$, polynomiálně v délce vstupu. U obecného
+  $\prob{ILP}$ by se muselo dokázat, že existuje řešení s krátkým zápisem; pro $x\in\{0,1\}^n$ to odpadá.
+
+
+  "2. Konstrukce.".notion Význam proměnných: $x_i=1$ $\iff$ $y_i=\mathrm{TRUE}$. Hodnota literálu je $x_i$ pro $y_i$
+  a $1-x_i$ pro $\lnot y_i$. Klauzule je splněná, právě když součet hodnot jejích literálů je aspoň 1:
+
+  .equation:
+
+    \sum_{y_i\in C_j}x_i+\sum_{\lnot y_i\in C_j}(1-x_i)\ \ge\ 1
+    \quad\iff\quad
+    \sum_{y_i\in C_j}x_i-\sum_{\lnot y_i\in C_j}x_i\ \ge\ 1-q_j ,
+
+  kde $q_j$ je počet negovaných literálů v $C_j$. Tedy $a_{ji}$ = (počet výskytů $y_i$ v $C_j$) $-$ (počet výskytů
+  $\lnot y_i$ v $C_j$) a $b_j=1-q_j$. (Klauzule s $y_i$ i $\lnot y_i$ dá v $i$-tém sloupci 0 a omezení je pak vždy
+  splněné, stejně jako klauzule.) Účelová funkce není, jde jen o přípustnost.
+
+
+  "3. Polynomialita.".notion Matice má $p\cdot n$ čísel z $\{-3,\dots,3\}$, vektor $b$ čísla z $\{-2,\dots,1\}$;
+  velikost $O(pn)$.
+
+
+  "4. ($\Rightarrow$)".notion Splňující ohodnocení dá $x$. V každé klauzuli je pravdivý literál s hodnotou 1, ostatní
+  mají hodnotu $\ge0$, součet je $\ge1$ a omezení $j$ platí.
+
+
+  "5. ($\Leftarrow$)".notion Pro přípustné $x\in\{0,1\}^n$ položíme $y_i=\mathrm{TRUE}$ $\iff$ $x_i=1$. Hodnoty
+  literálů jsou 0 nebo 1 a v řádku $j$ mají součet $\ge1$, takže některý literál $C_j$ má hodnotu 1, tj. je pravdivý.
+  Každá klauzule je splněná.
+
+
+  "6. Závěr.".notion $\prob{3-SAT}$ je NP-úplný, tedy $\prob{0-1 ILP}$ je NP-těžký a podle bodu 1 NP-úplný.
+
+
+  "Příklad.".notion $\Phi=(y_1\lor y_2\lor\lnot y_3)\land(\lnot y_1\lor\lnot y_2\lor y_3)\land(y_1\lor\lnot y_2\lor\lnot y_3)\land(\lnot y_1\lor y_2\lor y_3)$:
+
+  .equation:
+
+    A=\begin{pmatrix}1&1&-1\\-1&-1&1\\1&-1&-1\\-1&1&1\end{pmatrix},\qquad b=\begin{pmatrix}0\\-1\\-1\\0\end{pmatrix}.
+
+  Přípustná $x$ jsou právě $(0,0,0)$, $(0,1,0)$, $(1,0,1)$, $(1,1,1)$ – přesně čtyři splňující ohodnocení $\Phi$.
+
+
+  "Na tvaru nezáleží.".notion $Ax\ge b$ $\iff$ $(-A)x\le-b$, takže tvar „$\ge$“ a „$\le$“ jsou zaměnitelné. Stejně
+  dobře poslouží redukce "$\prob{Vertex Cover}\redp\prob{ILP}$"#red-ilpvc: $x_u+x_v\ge1$ pro hrany a
+  $-\sum_v x_v\ge-k$.
+
+
+.Exercise:
+  title: 'Úloha 11.13 (rozhodovací batoh je NP-úplný)'
+  label: un-11-13
+
+  Rozhodovací $\prob{Knapsack}$ (problém .reference:prob-knapsack): předměty s kladnými celočíselnými vahami $w_i$ a
+  cenami $c_i$, nosnost $W$ a cílová cena $C$ (vše binárně); lze vybrat předměty s celkovou vahou $\le W$ a cenou
+  $\ge C$? Dokažte, že je NP-úplný. Redukce je v oddílu .reference:ch-cisla-ciselne-problemy
+  ("$\prob{Subset Sum}\redp\prob{Knapsack}$"#red-knapsack) – napište úplný důkaz bez nahlížení. Proč to není ve sporu
+  s algoritmem v čase $O(n\cdot W)$ ze cvičení .reference:cv-5-1?
+
+
+  "Zdroj: P. Kučera, NTIN090 – skripta (MFF UK), §11.4, cvičení 6.".small
+
+
+.Solution:
+  label: red-un-11-13
+
+  "Redukce:".notion $\prob{Subset Sum}\redp\prob{Knapsack}$, instance $(a_1,\dots,a_n;\ T)$ $\mapsto$ $w_i=c_i=a_i$,
+  $W=C=T$.
+
+
+  "1. Problém je v $\NP$.".notion Certifikát je vybraná množina předmětů ($n$ bitů); sečteme váhy a ceny a porovnáme
+  s $W$ a $C$, polynomiálně v délce binárního zápisu.
+
+
+  "2. Konstrukce.".notion Každé číslo $a_i$ se stane předmětem s vahou i cenou $a_i$; nosnost i cílová cena jsou $T$.
+
+
+  "3. Polynomialita.".notion Každé číslo vypíšeme dvakrát, výstup má dvojnásobnou délku.
+
+
+  "4. ($\Rightarrow$)".notion Má-li $I$ součet $T$, mají vybrané předměty váhu $T\le W$ a cenu $T\ge C$.
+
+
+  "5. ($\Leftarrow$)".notion Výběr $I$ s vahou $\le T$ a cenou $\ge T$: váha i cena jsou totéž číslo
+  $s=\sum_{i\in I}a_i$, takže $T\le s\le T$, tj. $s=T$ a $I$ řeší $\prob{Subset Sum}$.
+
+
+  "6. Závěr.".notion $\prob{Subset Sum}$ je NP-úplný, tedy $\prob{Knapsack}$ je NP-těžký a podle bodu 1 NP-úplný.
+
+
+  "Spor s DP?".notion Ne. Čas $O(n\cdot W)$ je polynomiální v "hodnotě".emphasize $W$, ale $W$ s $k$ bity může být až
+  $2^k-1$; algoritmus je pseudopolynomiální (definice .reference:def-pseudopoly). $\prob{Knapsack}$ je tedy jen
+  slabě NP-úplný a polynomiální algoritmus by dal $\PP=\NP$. V redukci výše se čísla nemění, takže těžké instance
+  $\prob{Knapsack}$u mají velká $W$ – přesně ta, pro která je DP pomalé.
+
+
+.Exercise:
+  title: 'Úloha 11.14 (Subset Sum a Partition oběma směry)'
+  label: un-11-14
+
+  Sestrojte polynomiální redukce oběma směry mezi $\prob{Subset Sum}$ (problém .reference:prob-subsetsum, cíl
+  $T\ge0$) a $\prob{Partition}$ (problém .reference:prob-partition).
+
+  .enumerate:
+    type: a
+
+    .item:
+
+      $\prob{Partition}\redp\prob{Subset Sum}$. Co s lichým součtem?
+
+    .item:
+
+      $\prob{Subset Sum}\redp\prob{Partition}$ s "jediným".emphasize přidaným číslem. Ošetřete $2T<S$, $2T>S$ i $T>S$,
+      kde $S=\sum_i a_i$. (Redukce "$\prob{Subset Sum}\redp\prob{Partition}$"#red-partition ve skriptech přidává čísla dvě.)
+
+
+  "Zdroj: P. Veselý, ADS2 – cvičení 10–11 (MFF UK), úloha 2(c).".small
+
+
+.Solution:
+  label: red-un-11-14
+
+  "Redukce:".notion $\prob{Partition}\redp\prob{Subset Sum}$, $(a_1,\dots,a_n)$ $\mapsto$ $(a_1,\dots,a_n;\ S/2)$;
+  $\prob{Subset Sum}\redp\prob{Partition}$, $(a_1,\dots,a_n;\ T)$ $\mapsto$ $(a_1,\dots,a_n,\ d)$ s $d=|S-2T|$.
+
+
+  Oba problémy jsou v $\NP$ (oddíl .reference:ch-cisla-ciselne-problemy); stačí redukce.
+
+
+  "a) $\prob{Partition}\redp\prob{Subset Sum}$.".notion Je-li $S$ liché, rozdělení na dvě stejné poloviny neexistuje
+  a vydáme pevnou $\NE$-instanci $(2;\ 1)$. Jinak vydáme stejná čísla a cíl $T=S/2$ (jedno dělení, lineární čas).
+  ($\Rightarrow$) Jedna polovina rozdělení je podmnožina se součtem $S/2$. ($\Leftarrow$) Podmnožina $I$ se součtem
+  $S/2$ a její doplněk (součet $S-S/2=S/2$) tvoří rozdělení. $\prob{Partition}$ je speciální případ
+  $\prob{Subset Sum}$u, vyrovnávací čísla nejsou potřeba.
+
+
+  "b) $\prob{Subset Sum}\redp\prob{Partition}$.".notion Přidáme jedno číslo $d=|S-2T|$ (je-li $d=0$, nepřidáme
+  nic). Výstup má o jedno číslo víc a $d\le\max(S,2T)\le 2n\cdot\max(a_1,\dots,a_n,T)$ má nejvýš o
+  $\lceil\log_2 n\rceil+1$ bitů víc než nejdelší vstupní číslo; polynomiální.
+
+  .itemize:
+
+    .item:
+
+      "Případ $2T\le S$:".notion $d=S-2T$, celkový součet $S+d=2(S-T)$, každá polovina musí mít $S-T$.
+      ($\Rightarrow$) $I\cup\{d\}$ má součet $T+S-2T=S-T$, zbytek $S-T$. ($\Leftarrow$) Polovina obsahující $d$
+      (pro $d=0$ libovolná) má kromě $d$ původní čísla se součtem $S-T-d=T$.
+
+    .item:
+
+      "Případ $2T>S$:".notion $d=2T-S>0$, celkový součet $2T$, každá polovina musí mít $T$. ($\Rightarrow$) $I$ má
+      součet $T$; zbytek spolu s $d$ má $S-T+2T-S=T$. ($\Leftarrow$) Polovina "bez".emphasize $d$ obsahuje jen
+      původní čísla a má součet $T$.
+
+    .item:
+
+      "Případ $T>S$".notion zvláštní ošetření nepotřebuje, patří do druhého případu: $d=2T-S>T$, takže $d$ se do
+      poloviny $T$ nevejde, rozdělení neexistuje – a podmnožina se součtem $T>S$ také ne.
+
+
+  "Příklad.".notion $(3,5,9;\ 8)$: $S=17$, $d=1$, čísla $3,5,9,1$ se rozdělí na $\{3,5,1\}$ a $\{9\}$ (po 9);
+  $(3,5,9;\ 12)$: $d=7$, rozdělení $\{3,9\}$, $\{5,7\}$ (po 12). Pro $(3,5,9;\ 7)$ je $d=3$ a čísla $3,5,9,3$ (součet
+  20) rozdělit na dvě desítky nejdou – součty podmnožin $3,5,9$ jsou $0,3,5,8,9,12,14,17$, sedmička mezi nimi není.
+
+
+  "Srovnání.".notion Skripta přidávají dvě čísla $x=2S-T$, $y=S+T$ a předpokládají $T\le S$; jedno číslo $|S-2T|$ stačí
+  a obejde se bez zvláštních případů. Stejné číslo $d$ i termín $D=\max(T,S-T)$ (velikost poloviny) používá typová
+  úloha .reference:typ-4-3.
+
+
+.Exercise:
+  title: 'Úloha 11.15 (rozvrh na m strojů)'
+  label: un-11-15
+
+  Problém $\prob{Multiprocessor Scheduling}$ (rozvrh na $m$ stejných strojů). "Vstup:".notion délky úloh
+  $p_1,\dots,p_n$ (kladná celá čísla, binárně), počet strojů $m$ a termín $D$. "Otázka:".notion lze úlohy rozdělit na
+  $m$ strojů tak, aby součet délek na každém stroji byl nejvýš $D$?
+
+  .enumerate:
+    type: a
+
+    .item:
+
+      Dokažte redukcí z $\prob{Partition}$, že problém je NP-úplný, a to i pro každé "pevné".emphasize $m\ge2$.
+      (Pro $m=2$ je to $\prob{Rozvrh na dva stroje}$ z typové úlohy .reference:typ-4-3 a $\prob{Bin Packing}$ se
+      dvěma koši z úlohy .reference:un-11-7.)
+
+    .item:
+
+      Srovnejte s $\prob{Bin Packing}$ (problém .reference:prob-binpacking). Je problém silně, nebo slabě NP-úplný?
+
+
+  "Zdroj: P. Kučera, NTIN090 – skripta (MFF UK), §11.4, cvičení 6.".small
+
+
+.Solution:
+  label: red-un-11-15
+
+  "Redukce:".notion $\prob{Partition}\redp\prob{Multiprocessor Scheduling}$ s pevným $m\ge2$, instance
+  $(a_1,\dots,a_n)$ $\mapsto$ úlohy $a_1,\dots,a_n$ a $m-2$ „vatových“ úloh délky $S/2$, $m$ strojů, $D=S/2$.
+
+
+  "1. Problém je v $\NP$.".notion Certifikát je přiřazení úloh strojům ($n$ čísel z $\{1,\dots,m\}$); sečteme
+  zatížení strojů a porovnáme s $D$, polynomiálně v délce vstupu.
+
+
+  "2. Konstrukce.".notion $S=\sum_ia_i$. Je-li $S$ liché, vydáme pevnou $\NE$-instanci: jedna úloha délky 2, $m$
+  strojů, $D=1$. Jinak úlohy $a_1,\dots,a_n$, navíc $m-2$ úloh délky $S/2$, $m$ strojů a $D=S/2$.
+
+
+  "3. Polynomialita.".notion $m$ je konstanta, přidáme $m-2$ čísel s bity jako $S$; lineární čas.
+
+
+  "4. ($\Rightarrow$)".notion Rozdělení $I$, $\bar I$ s polovinami $S/2$ dáme na stroje 1 a 2, každou vatovou úlohu
+  na vlastní stroj $3,\dots,m$. Každý stroj má zatížení přesně $S/2=D$.
+
+
+  "5. ($\Leftarrow$)".notion Celková délka je $S+(m-2)S/2=mS/2=mD$, takže v rozvrhu do termínu $D$ má každý stroj
+  zatížení "přesně".emphasize $D$. Vatová úloha má délku $D$, stroj s ní je jí plný a žádnou další (kladnou) úlohu
+  nemá – vatové úlohy obsadí $m-2$ různých strojů. Na zbylých dvou strojích jsou právě úlohy $a_1,\dots,a_n$ a každý
+  má součet $S/2$: to je rozdělení pro $\prob{Partition}$.
+
+
+  "6. Závěr.".notion $\prob{Partition}$ je NP-úplný, tedy problém je NP-těžký pro každé pevné $m\ge2$ (a tím spíš
+  s $m$ na vstupu) a podle bodu 1 NP-úplný.
+
+
+  "Příklad.".notion $(3,5,6,8,4)$, $m=3$: $S=26$, $D=13$, úlohy $3,5,6,8,4,13$; rozvrh $\{13\}$, $\{5,8\}$,
+  $\{3,6,4\}$. Pro $(3,5,6,8,2)$ je $S=24$, $D=12$ a rozvrh neexistuje, protože součet 12 z čísel $3,5,6,8,2$
+  poskládat nejde.
+
+
+  "Pozor na $m$ na vstupu.".notion Vatových úloh je $m-2$; pro $m$ zapsané binárně by jich bylo exponenciálně mnoho
+  vůči délce zápisu $m$. Proto bereme $m$ pevné; pro problém s $m$ na vstupu stačí volit $m=2$.
+
+
+  "b) Bin Packing.".notion Je to tentýž problém: stroj = koš, termín $D$ = kapacita $B$, $m$ = počet košů $q$. S $m$
+  na vstupu je proto $\prob{Multiprocessor Scheduling}$ "silně".emphasize NP-úplný (redukce
+  "$\prob{3-Partition}\redp\prob{Bin Packing}$"#red-binpacking). Pro každé pevné $m$ je jen "slabě".emphasize
+  NP-úplný: DP přes zatížení $m-1$ strojů "(nad rámec přednášky)".emphasize běží v čase $O(n\cdot m\cdot(D+1)^{m-1})$, pseudopolynomiálně (úloha
+  .reference:un-11-7).
+
+
+.Exercise:
+  title: 'Úloha 11.16 (kostra s omezeným stupněm – těžší)'
+  label: un-11-16
+
+  Problém $\prob{Bounded-Degree Spanning Tree}$. "Vstup:".notion neorientovaný graf $G=(V,E)$, $n=|V|$, a přirozené
+  číslo $k\ge1$. "Otázka:".notion má $G$ kostru, v níž má každý vrchol stupeň nejvýš $k$?
+
+  .enumerate:
+    type: a
+
+    .item:
+
+      Dokažte, že problém je NP-úplný.
+
+    .item:
+
+      Pro která $k$ je problém triviální (polynomiální)?
+
+    .item:
+
+      Dokažte, že je NP-úplný pro každé "pevné".emphasize $k\ge2$. Navazuje na typovou úlohu .reference:typ-4-2
+      ($\prob{Deg-3 Spanning Tree}$, tj. $k=3$).
+
+
+  "Zdroj: P. Kučera, NTIN090 – skripta (MFF UK), §11.4, cvičení 7.".small
+
+
+.Solution:
+  label: red-un-11-16
+
+  "Redukce:".notion $\prob{HP}\redp\prob{Bounded-Degree Spanning Tree}$, graf $G$ $\mapsto$ $(G,\ 2)$; pro pevné
+  $k\ge3$ graf $G$ $\mapsto$ $(G',\ k)$, kde $G'$ vznikne přivěšením $k-2$ nových listů ke každému vrcholu.
+
+
+  "1. Problém je v $\NP$.".notion Certifikát je množina $n-1$ hran. Ověříme, že jsou z $E$, že spojují všechny
+  vrcholy (prohledáním; souvislý graf s $n-1$ hranami je strom) a že žádný vrchol nemá víc než $k$ z nich.
+
+
+  "a) $k$ na vstupu: stačí $k=2$.".notion Strom, v němž mají všechny vrcholy stupeň nejvýš 2, je cesta; kostra se
+  stupni $\le2$ je tedy totéž co hamiltonovská cesta. Redukce $G\mapsto(G,2)$ je identita (lineární čas) a
+  ($\Rightarrow$) i ($\Leftarrow$) plynou z této rovnosti. Z NP-úplnosti $\prob{HP}$ (úloha .reference:un-11-3) a
+  bodu 1 je problém NP-úplný.
+
+
+  "b) Triviální $k$.".notion
+
+  .itemize:
+
+    .item:
+
+      "$k=1$:".notion strom na $n$ vrcholech má $n-1$ hran a součet stupňů $2(n-1)$; se stupni $\le1$ je
+      $2(n-1)\le n$, tedy $n\le2$. Odpověď je $\ANO$, právě když $n=1$, nebo $n=2$ a oba vrcholy jsou spojené.
+
+    .item:
+
+      "$k\ge n-1$:".notion ve stromu na $n$ vrcholech má každý vrchol stupeň nejvýš $n-1$, omezení nic neříká.
+      Odpověď je $\ANO$, právě když je $G$ souvislý (prohledání do šířky).
+
+  Netriviální zůstávají hodnoty $2\le k<n-1$; NP-úplný je problém zejména pro každé pevné $k\ge2$ (část c). Ne každé
+  takové $k$ je ale těžké: pro $k=n-2$ ($n\ge4$) je odpověď $\ANO$, právě když je $G$ souvislý a není to hvězda
+  (hvězdu v kostře rozbije výměna jedné hrany).
+
+
+  "c) Pevné $k\ge3$.".notion Pro $k=2$ viz část a). Jinak redukce musí zachovat dané $k$, a proto potřebuje gadget
+  jako v typové úloze .reference:typ-4-2.
+
+  .itemize:
+
+    .item:
+
+      "Konstrukce.".notion Ke každému vrcholu $v\in V$ přivěsíme $k-2$ nových listů $v^{(1)},\dots,v^{(k-2)}$ (hrany
+      $\{v,v^{(j)}\}$). Graf $G'$ má $n(k-1)$ vrcholů a $m+n(k-2)$ hran; $k$ je konstanta, čas je lineární.
+
+    .item:
+
+      "($\Rightarrow$)".notion Hamiltonovská cesta $v_1,\dots,v_n$ je kostra $G$; přidáním všech listů vznikne
+      kostra $G'$. Vnitřní vrcholy cesty mají stupeň $2+(k-2)=k$, koncové $1+(k-2)=k-1$, listy 1.
+
+    .item:
+
+      "($\Leftarrow$)".notion Kostra $T'$ grafu $G'$ musí obsahovat každou hranu $\{v,v^{(j)}\}$ (jinak by list
+      $v^{(j)}$ nebyl připojen). Odebereme všechny listy $v^{(j)}$; zbude strom $T$ na $V$ s hranami $G$ a
+      $\deg_T(v)=\deg_{T'}(v)-(k-2)\le2$. $T$ je tedy hamiltonovská cesta v $G$.
+
+    .item:
+
+      "Závěr.".notion $\prob{HP}$ je NP-úplný, tedy problém s pevným $k$ je NP-těžký a podle bodu 1 NP-úplný.
+
+
+  "Proč ne listy i pro $k$ na vstupu.".notion Počet listů $k-2$ je hodnota čísla $k$; při binárním zápisu $k$ by graf
+  $G'$ mohl být exponenciálně velký. Pro $k\ge n-1$ je to ale zbytečné (část b), takže stačí $k<n-1$ a pak by gadget
+  byl polynomiální. Pro důkaz s $k$ na vstupu je ovšem nejjednodušší část a).

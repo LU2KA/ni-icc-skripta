@@ -4,8 +4,9 @@
 
 Úlohy procvičují redukci $\prob{3-SAT}\redp\prob{IS}$ (oddíl .reference:ch-is-nezavisla-mnozina), vztahy mezi
 nezávislou množinou, vrcholovým pokrytím a klikou (oddíly .reference:ch-is-vertex-cover a .reference:ch-is-is-clique)
-a krátké redukce typu „zobecnění“, „doplnění grafu“ a „přestrojení“ jako ve cvičení .reference:sec-cv3. Poslední
-úloha ukazuje, kde těžkost IS končí.
+a krátké redukce typu „zobecnění“, „doplnění grafu“ a „přestrojení“ jako ve cvičení .reference:sec-cv3. Úloha 8.8
+ukazuje, kde těžkost IS končí. Pododdíl .reference:ch-is-ulohy-navic-sbirka přidává dvě úlohy z jiné sbírky:
+hledání největší nezávislé množiny pomocí orákula a NP-úplnost $\prob{Hitting Set}$.
 
 
 .Warning:
@@ -14,6 +15,9 @@ a krátké redukce typu „zobecnění“, „doplnění grafu“ a „přestroj
   Úlohy v tomto oddílu "nejsou".notion oficiální zadání předmětu. Jsou to procvičovací úlohy navíc k látce kapitoly;
   všechny redukce byly ověřeny programem hrubou silou (všechny grafy do 6 vrcholů a 600 náhodných grafů se 7
   a 8 vrcholy, obě odpovědi ANO i NE), konkrétní čísla a průběhy algoritmů spočítal skript, obecné důkazy jsou psané ručně.
+  U úloh 8.9 a 8.10 jsme algoritmus s orákulem (orákulum nahrazené hrubou silou) porovnali s hrubou silou na 3000
+  náhodných grafech do 8 vrcholů a obě redukce na $\prob{Hitting Set}$ na 1500 náhodných instancích; průběh v úloze 8.9 b)
+  spočítal skript.
 
 
 .Subsection Rozcvička
@@ -897,3 +901,254 @@ a krátké redukce typu „zobecnění“, „doplnění grafu“ a „přestroj
   redukce $\prob{3-SAT}$ na $\prob{IS}$ v lesích, platilo by $\PP=\NP$. "(nad rámec přednášky)".emphasize Bez
   důkazu uvádíme známý výsledek: $\prob{IS}$ zůstává NP-úplný už pro grafy s maximálním stupněm 3. Hranice mezi
   snadným a těžkým (za předpokladu $\PP\ne\NP$) je tedy mezi stupněm 2 a 3.
+
+
+.Subsection Úlohy z jiných sbírek
+  label: ch-is-ulohy-navic-sbirka
+
+
+Úlohy v tomto pododdílu pocházejí ze sbírky „External Practice Bank“, kterou sestavil spolužák z volně dostupných
+materiálů (hlavně MFF UK). Zadání jsou česky převyprávěná, řešení jsou naše. Úloha 8.9 je self-redukce (typ 2
+testu), úloha 8.10 důkaz NP-úplnosti (typ 4), který skripta už obsahují – berte ji jako opakování „bez nahlížení“.
+
+
+.Exercise:
+  title: 'Úloha 8.9 (největší nezávislá množina z orákula)'
+  label: un-8-9
+
+  Máte orákulum, které pro graf $G$ a číslo $k$ v jednom kroku odpoví, zda $G$ má nezávislou množinu velikosti
+  "alespoň".notion $k$ (rozhodovací verze $\prob{IS}$, definice .reference:prob-is).
+
+  .enumerate:
+    type: a
+
+    .item:
+
+      Pomocí orákula najděte některou největší nezávislou množinu grafu $G=(V,E)$, $n=|V|$. Vrcholy do množiny
+      vybírejte přímo (ne jen mazáním nepotřebných vrcholů). Zdůvodněte správnost a omezte počet dotazů a velikost
+      dotazovaných instancí.
+
+    .item:
+
+      Proveďte algoritmus pro cestu $v_1v_2v_3v_4v_5$ (hrany $v_1v_2$, $v_2v_3$, $v_3v_4$, $v_4v_5$), vrcholy
+      procházejte v pořadí $v_2,v_1,v_3,v_4,v_5$.
+
+  Obdobné úlohy: největší klika mazáním vrcholů (cvičení .reference:cv-2-4) a nejmenší vrcholové pokrytí
+  (typová úloha .reference:typ-2-2).
+
+  "Zdroj: P. Veselý, ADS2 – cvičení 10–11 (MFF UK), cvičení 1(b).".small
+
+
+.Solution:
+  label: red-un-8-9
+
+  "Redukce s orákulem:".notion $\prob{IS}$ – největší nezávislá množina $\to$ $\prob{IS}$ – rozhodovací verze.
+  Jak: $\alpha(G)$ binárním vyhledáváním, pak vrcholy po jednom zkusmo vybíráme (a mažeme jejich sousedy), dokud
+  orákulum potvrzuje, že zbytek grafu množinu doplní na $\alpha(G)$.
+
+
+  "a) 1. Hodnota $\alpha(G)$.".notion Platí $0\le\alpha(G)\le n$ a odpověď je "monotónní".emphasize v $k$:
+  má-li $G$ nezávislou množinu velikosti aspoň $k$, má ji i pro každé menší $k$. Binární vyhledávání na $[lo,hi]=[0,n]$
+  s invariantem $lo\le\alpha(G)\le hi$: pro $mid=\lceil(lo+hi)/2\rceil$ se zeptej na $(G,mid)$; při $\ANO$ polož
+  $lo:=mid$, při $\NE$ polož $hi:=mid-1$. Skonči při $lo=hi$, to je $\alpha(G)$. Interval má $n+1$ hodnot, stačí
+  nejvýše $\lceil\log_2(n+1)\rceil$ dotazů.
+
+
+  "2. Nalezení množiny.".notion Značení: $N[v]$ je vrchol $v$ spolu se svými sousedy "v aktuálním grafu".emphasize
+  $G'$, $G'-X$ je graf bez vrcholů $X$ a hran z nich. Polož $I:=\emptyset$, $G':=G$, $k':=\alpha(G)$ a pro každý
+  vrchol $v\in V$ v pevném pořadí:
+
+  .itemize:
+
+    .item:
+
+      je-li $k'=0$, skonči; není-li $v$ v $G'$ (byl smazán dřív), přeskoč ho;
+
+    .item:
+
+      jinak se zeptej na $(G'-N[v],\ k'-1)$ – „doplní zbytek grafu $v$ na $k'$ vrcholů?“ (dotaz s prahem $0$ má
+      odpověď $\ANO$ a orákulum na něj nepotřebujeme);
+
+    .item:
+
+      při $\ANO$ vyber $v$: $I:=I\cup\{v\}$, $G':=G'-N[v]$, $k':=k'-1$; při $\NE$ vrchol zahoď: $G':=G'-\{v\}$.
+
+  Vydej $I$.
+
+
+  "Invariant:".notion $I$ je nezávislá, žádný vrchol $G'$ nesousedí s žádným vrcholem $I$, $|I|+k'=\alpha(G)$
+  a $G'$ má nezávislou množinu velikosti $k'$.
+
+  .itemize:
+
+    .item:
+
+      Na začátku platí podle části 1.
+
+    .item:
+
+      Krok $\ANO$: $v$ leží v $G'$, nesousedí tedy s $I$, a $I\cup\{v\}$ je nezávislá. Graf $G'-N[v]$ neobsahuje
+      sousedy $v$ ani sousedy $I$ a podle orákula má nezávislou množinu velikosti $k'-1$.
+
+    .item:
+
+      Krok $\NE$: žádná nezávislá množina $S$ grafu $G'$ s $|S|=k'$ neobsahuje $v$ – jinak by $S\setminus\{v\}$
+      byla nezávislá množina velikosti $k'-1$ v $G'-N[v]$ a orákulum by řeklo $\ANO$. Množina velikosti $k'$, kterou
+      $G'$ podle invariantu má, tedy leží v $G'-\{v\}$.
+
+
+  "Konec.".notion Každý vrchol se buď zpracuje, nebo je předtím smazán, takže po průchodu všemi vrcholy je $G'$
+  prázdný. Prázdný graf má nezávislou množinu velikosti $k'$ jen pro $k'=0$, algoritmus tedy vždy skončí s $k'=0$.
+  Pak je $I$ nezávislá a $|I|=\alpha(G)$, tedy největší.
+
+
+  "Počet a velikost dotazů:".notion nejvýše $\lceil\log_2(n+1)\rceil$ v části 1 a nejvýše jeden na vrchol v části 2,
+  celkem nejvýše $\lceil\log_2(n+1)\rceil+n=O(n)$. Každý dotaz je indukovaný podgraf $G$ (nejvýše $n$ vrcholů
+  a $|E|$ hran) s prahem nejvýše $n$, tedy instance velikosti nejvýše $|\langle G\rangle|+O(\log n)$. Mezi dotazy
+  jen mažeme vrcholy v polynomiálním čase, celý algoritmus je polynomiální vzhledem k volání orákula.
+
+
+  "b) Průběh.".notion Binární vyhledávání: dotaz $(P_5,3)$: $\ANO$, interval $[3,5]$; dotaz $(P_5,4)$: $\NE$,
+  interval $[3,3]$, tedy $\alpha=3$. Hledání:
+
+  .table:
+    columns: 'clccl'
+
+    .row:
+      head: true
+
+      vrchol
+
+      dotaz $(G'-N[v],\ k'-1)$
+
+      odpověď
+
+      $I$
+
+      zbylý graf $G'$, $k'$
+
+    .row:
+
+      $v_2$
+
+      $(v_4v_5,\ 2)$ (hrana)
+
+      $\NE$
+
+      $\emptyset$
+
+      $v_1$; cesta $v_3v_4v_5$; $k'=3$
+
+    .row:
+
+      $v_1$
+
+      $(v_3v_4v_5,\ 2)$
+
+      $\ANO$
+
+      $\{v_1\}$
+
+      cesta $v_3v_4v_5$; $k'=2$
+
+    .row:
+
+      $v_3$
+
+      $(\{v_5\},\ 1)$
+
+      $\ANO$
+
+      $\{v_1,v_3\}$
+
+      $v_5$; $k'=1$
+
+    .row:
+
+      $v_4$
+
+      (smazán)
+
+      –
+
+      $\{v_1,v_3\}$
+
+      $v_5$; $k'=1$
+
+    .row:
+
+      $v_5$
+
+      $(\emptyset,\ 0)$
+
+      $\ANO$ bez orákula
+
+      $\{v_1,v_3,v_5\}$
+
+      prázdný; $k'=0$
+
+  Celkem 5 dotazů na orákulum (mez $\lceil\log_2 6\rceil+5=8$). Vrchol $v_2$ neleží v žádné největší nezávislé množině
+  (ta je jediná, $\{v_1,v_3,v_5\}$), proto první dotaz dal $\NE$.
+
+
+  "Varianta mazáním.".notion Jako v cvičení .reference:cv-2-4 lze vrcholy jen mazat: ptáme se na $(G'-\{v\},\ \alpha(G))$
+  a při $\ANO$ vrchol smažeme. Na konci zbude právě $\alpha(G)$ vrcholů bez hran – každý zbylý vrchol leží
+  v každé největší nezávislé množině zbylého grafu. Počet dotazů je stejný. "Pozor:".emphasize obě varianty musí
+  běžet s "přesnou".emphasize hodnotou $\alpha(G)$; s menším prahem by orákulum souhlasilo i s volbami, které
+  k největší množině nevedou.
+
+
+.Exercise:
+  title: 'Úloha 8.10 ($\prob{Hitting Set}$ je NP-úplný)'
+  label: un-8-10
+
+  Je dáno univerzum $U$, systém jeho podmnožin $\mathcal S=\{S_1,\dots,S_m\}$ a číslo $k$. Existuje $H\subseteq U$,
+  $|H|\le k$, které protne každou množinu systému ($H\cap S_i\ne\emptyset$ pro všechna $i$)? Dokažte, že tento
+  problém ($\prob{Hitting Set}$, definice .reference:prob-hs) je NP-úplný.
+
+
+  Redukci obsahuje oddíl .reference:ch-is-vc-hitting-set (redukce .reference:red-hs) – zkuste důkaz napsat bez
+  nahlížení, v úplné testové podobě.
+
+  "Zdroj: P. Kučera, NTIN090 – skripta (MFF UK), §11.4, cvičení 10.".small
+
+
+.Solution:
+  label: red-un-8-10
+
+  "Redukce:".notion $\prob{VC} \redp \prob{Hitting Set}$, instance $(G,c)$ $\mapsto$ $(U=V,\ \mathcal S=E,\ k=c)$
+  (každá hrana je dvouprvková množina svých koncových vrcholů).
+
+
+  "1. $\prob{Hitting Set}\in\NP$.".notion Certifikát je množina $H\subseteq U$. Ověříme $|H|\le k$ a pro každou
+  množinu $S_i$, že obsahuje prvek z $H$: $O(|H|\cdot\sum_i|S_i|)$ porovnání, polynomiálně.
+
+
+  "2. Konstrukce.".notion Pro instanci $(G,c)$ problému $\prob{VC}$ (definice .reference:prob-vc), $G=(V,E)$, položíme
+  $U=V$, $\mathcal S=\{\{u,v\}\mid uv\in E\}$ a $k=c$.
+
+
+  "3. Polynomialita.".notion $|U|=n$, množin je $m=|E|$ a každá má dva prvky; výstup sestrojíme v čase $O(n+m)$.
+
+
+  "4. ($\Rightarrow$)".notion Nechť $C$ je vrcholové pokrytí, $|C|\le c$. Každá hrana $uv$ má konec v $C$, tedy
+  $C\cap\{u,v\}\ne\emptyset$ pro každou množinu systému. $H=C$ je zasahující množina velikosti nejvýše $k=c$.
+
+
+  "5. ($\Leftarrow$)".notion Nechť $H\subseteq V$, $|H|\le k$, protne každou množinu $\{u,v\}$. Pak má každá hrana
+  $uv$ konec v $H$ a $H$ je vrcholové pokrytí velikosti nejvýše $c$.
+
+
+  "6. Závěr.".notion $\prob{VC}$ je NP-úplný (věta .reference:thm-isnpc a redukce .reference:red-vc), tedy
+  $\prob{Hitting Set}$ je NP-těžký a s bodem 1 NP-úplný.
+
+
+  "Druhá cesta (pro kontrolu).".notion $\prob{Set Cover}\redp\prob{Hitting Set}$ „transpozicí“: z instance
+  $(U,\mathcal S,k)$ problému $\prob{Set Cover}$ (cvičení .reference:cv-3-4) uděláme univerzum $\mathcal S$ (prvky jsou
+  množiny) a pro každý prvek $u\in U$ množinu $B_u=\{S\in\mathcal S\mid u\in S\}$. Podsystém $\mathcal C$ pokrývá
+  $U$, právě když pro každé $u$ obsahuje množinu s $u$, tj. právě když $\mathcal C$ zasáhne každou $B_u$; mez $k$ zůstává.
+  (Prvek $u$, který neleží v žádné množině, dá $B_u=\emptyset$ a obě odpovědi jsou $\NE$.)
+
+
+  "Typická chyba.".notion Opačný směr $\prob{Hitting Set}\redp\prob{VC}$ NP-těžkost nedokazuje. Zobecnění
+  těžkého problému je těžké, speciální případ být nemusí (oddíl .reference:ch-is-vc-hitting-set, rámeček Poučení).

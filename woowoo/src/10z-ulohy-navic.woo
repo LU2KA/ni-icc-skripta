@@ -4,8 +4,9 @@
 
 Úlohy procvičují podmínku „přesně jednou“: řešení konkrétních instancí $\prob{1-in-3 SAT}$ a $\prob{X3C}$
 (oddíly .reference:ch-x3c-1-in-3-sat a .reference:ch-x3c-exact-cover), běh redukce z oddílu .reference:ch-x3c-3-sat-x3c
-a nové redukce z $\prob{X3C}$ a $\prob{1-in-3 SAT}$ na příbuzné problémy. Poslední úloha ukazuje, kde těžkost
-$\prob{X3C}$ končí.
+a nové redukce z $\prob{X3C}$ a $\prob{1-in-3 SAT}$ na příbuzné problémy. Úloha 10.8 ukazuje, kde těžkost
+$\prob{X3C}$ končí. Pododdíl .reference:ch-x3c-ulohy-navic-sbirka přidává dvě úlohy z jiné sbírky:
+NP-úplnost $\prob{X3C}$ v testové podobě a redukci třírozměrného párování na soustavu $Ay=\mathbf 1$.
 
 
 .Warning:
@@ -14,7 +15,9 @@ $\prob{X3C}$ končí.
   Úlohy v tomto oddílu "nejsou".notion oficiální zadání předmětu. Jsou to procvičovací úlohy navíc k látce kapitoly;
   všechna čísla a řešení konkrétních instancí jsou spočítaná programem a každá redukce (i algoritmus z úlohy 10.8)
   byla porovnána s řešením hrubou silou na všech, resp. na tisících náhodných malých instancích (s odpovědí $\ANO$
-  i $\NE$); samotné důkazy jsou psané ručně.
+  i $\NE$); samotné důkazy jsou psané ručně. U úloh 10.9 a 10.10 jsme stejně ověřili obě redukce: 700 náhodných
+  formulí s nejvýše třemi proměnnými a čtyřmi klauzulemi (exaktní pokrytí hledal program), resp. 3000 náhodných instancí
+  $\prob{3DM}$ s $q\le3$; soustavu z úlohy 10.10 b) vyřešil program zkoušením všech vektorů.
 
 
 .Subsection Rozcvička
@@ -864,3 +867,192 @@ $\prob{X3C}$ končí.
   tj. soustava podmínek „$y_S=1$“ a „$y_S+y_{S'}=1$“ – proto stačí 2-obarvení. Garey a Johnson uvádějí, že X3C je
   NP-úplný už tehdy, leží-li každý prvek v nejvýše "třech".emphasize množinách "(nad rámec přednášky)".emphasize;
   hranice mezi $\PP$ a NP-úplností tu leží mezi dvěma a třemi výskyty.
+
+
+.Subsection Úlohy z jiných sbírek
+  label: ch-x3c-ulohy-navic-sbirka
+
+
+Úlohy v tomto pododdílu pocházejí ze sbírky „External Practice Bank“, kterou sestavil spolužák z volně dostupných
+materiálů (hlavně MFF UK). Zadání jsou česky převyprávěná, řešení jsou naše. Obě úlohy jsou důkazy NP-těžkosti
+(typ 4 testu); úloha 10.9 se kryje s oddílem .reference:ch-x3c-exact-cover – berte ji jako opakování „bez nahlížení“.
+
+
+.Exercise:
+  title: 'Úloha 10.9 ($\prob{X3C}$ je NP-úplný)'
+  label: un-10-9
+
+  Je dáno univerzum $U$ s $|U|=3q$ a systém $\mathcal S$ tříprvkových podmnožin $U$. Lze z $\mathcal S$ vybrat
+  podsystém, který pokryje každý prvek $U$ "právě jednou".notion? Dokažte, že tento problém ($\prob{X3C}$, definice
+  .reference:prob-x3c) je NP-úplný.
+
+
+  Důkaz redukcí $\prob{3-SAT}\redp\prob{X3C}$ je v oddílu .reference:ch-x3c-3-sat-x3c (redukce .reference:red-x3c,
+  lemmata .reference:lem-x3c1 a .reference:lem-x3c2) – zkuste ho napsat bez nahlížení, v úplné testové podobě
+  (konstrukce, počty prvků, obě implikace). Na konkrétní formuli ho procvičuje úloha .reference:un-10-2.
+
+  "Zdroj: P. Kučera, NTIN090 – skripta (MFF UK), §11.4, cvičení 8.".small
+
+
+.Solution:
+  label: red-un-10-9
+
+  "Redukce:".notion $\prob{3-SAT} \redp \prob{X3C}$, formule $\Phi$ $\mapsto$ $(U,\mathcal S)$: proměnná je
+  „ozubené kolo“ s literálovými prvky, klauzule dvojice prvků, kterou pokryje jen volný (pravdivý) literál,
+  a „úklidové“ dvojice pokryjí zbylé literálové prvky.
+
+
+  "1. $\prob{X3C}\in\NP$.".notion Certifikát je vybraný podsystém (nejvýše $|\mathcal S|$ indexů). Pro každý prvek
+  spočítáme, v kolika vybraných množinách leží, a ověříme, že právě v jedné: čas $O(|U|+|\mathcal S|)$.
+
+
+  "2. Konstrukce.".notion $\Phi$ má proměnné $x_1,\dots,x_n$ a klauzule $C_1,\dots,C_m$ (tři literály, mohou se opakovat).
+
+  .itemize:
+
+    .item:
+
+      "Proměnná $x_i$:".notion prvky cyklu $v_{i,1},\dots,v_{i,2m}$ a literálové prvky $p^T_{i,j}$, $p^F_{i,j}$
+      pro $j=1,\dots,m$; množiny $T_{i,j}=\{v_{i,2j-1},v_{i,2j},p^F_{i,j}\}$ a $F_{i,j}=\{v_{i,2j},v_{i,2j+1},p^T_{i,j}\}$
+      (indexy cyklu bereme modulo $2m$). Výběr všech $T_{i,\cdot}$ znamená $x_i=1$: zabere prvky $p^F$
+      (nepravdivého literálu $\lnot x_i$) a nechá volné $p^T$.
+
+    .item:
+
+      "Klauzule $C_j$:".notion prvky $c^1_j,c^2_j$ a pro každý literál $\ell\in C_j$ množina
+      $\{c^1_j,c^2_j,p_{\ell,j}\}$, kde $p_{\ell,j}=p^T_{i,j}$ pro $\ell=x_i$ a $p_{\ell,j}=p^F_{i,j}$ pro $\ell=\lnot x_i$.
+
+    .item:
+
+      "Úklid:".notion $K=m(n-1)$ dvojic nových prvků $g^1_k,g^2_k$ a pro každou dvojici $k$ a každý literálový prvek $p$
+      množina $\{g^1_k,g^2_k,p\}$.
+
+  "Počty.".notion $|U|=n(2m+2m)+2m+2K=6mn$, tedy $q=2mn$. Volné literálové prvky po výběru ohodnocení: $mn$; klauzule
+  jich spotřebují $m$, úklid zbylých $K=mn-m$. (Pozor na slajd prosemináře, viz rámeček v oddílu .reference:ch-x3c-3-sat-x3c.)
+
+
+  "3. Polynomialita.".notion $|U|=6mn$ a $|\mathcal S|\le 2mn+3m+2mn\cdot K=O(m^2n^2)$; konstrukce vypíše každou
+  množinu v konstantním čase.
+
+
+  "4. ($\Rightarrow$)".notion Nechť $h$ splňuje $\Phi$. Pro $h(x_i)=1$ vybereme všechny $T_{i,j}$, pro $h(x_i)=0$
+  všechny $F_{i,j}$: každý prvek cyklu je pokryt právě jednou a volné zůstanou právě literálové prvky pravdivých
+  literálů ($p^T_{i,j}$ pro $h(x_i)=1$, $p^F_{i,j}$ pro $h(x_i)=0$), celkem $mn$ prvků. V každé klauzuli $C_j$ zvolíme jeden pravdivý literál $\ell$ a množinu $\{c^1_j,c^2_j,p_{\ell,j}\}$;
+  prvky $p_{\ell,j}$ různých klauzulí jsou různé (liší se indexem $j$). Zbude $mn-m=K$ volných literálových prvků,
+  ty bijektivně přiřadíme dvojicím $g^1_k,g^2_k$ úklidovými množinami. Každý prvek je pokryt právě jednou.
+
+
+  "5. ($\Leftarrow$)".notion Nechť $\mathcal C$ je exaktní pokrytí. Prvky cyklu proměnné $x_i$ leží jen v množinách
+  $T_{i,\cdot}$ a $F_{i,\cdot}$: prvek $v_{i,2j}$ jen v $T_{i,j}$ a $F_{i,j}$, prvek $v_{i,2j+1}$ jen v $F_{i,j}$
+  a $T_{i,j+1}$. Je-li $T_{i,j}\in\mathcal C$, není tam $F_{i,j}$ (jinak by $v_{i,2j}$ byl pokryt dvakrát), a tedy
+  $v_{i,2j+1}$ musí pokrýt $T_{i,j+1}$. Po obvodu cyklu jsou v $\mathcal C$ buď všechny $T_{i,\cdot}$, nebo žádná;
+  ve druhém případě musí prvky $v_{i,2j}$ pokrýt všechny $F_{i,\cdot}$. Položíme $h(x_i)=1$, právě když
+  $T_{i,\cdot}\subseteq\mathcal C$. Prvek $c^1_j$ pokrývá některá množina $\{c^1_j,c^2_j,p_{\ell,j}\}$, takže
+  $p_{\ell,j}$ nepokrývá gadget proměnné. Pro $\ell=x_i$ to znamená, že $F_{i,j}\notin\mathcal C$, tedy $h(x_i)=1$;
+  pro $\ell=\lnot x_i$, že $T_{i,j}\notin\mathcal C$, tedy $h(x_i)=0$. V obou případech je $\ell$ pravdivý
+  a $C_j$ splněná.
+
+
+  "6. Závěr.".notion $\prob{3-SAT}$ je NP-úplný, tedy $\prob{X3C}$ je NP-těžký a s bodem 1 NP-úplný.
+
+
+  "Proč ne z 1-in-3 SAT.".notion Redukce .reference:red-x3c1in3 je kratší, ale její množiny $S_{x_i}$ mají
+  tolik prvků, kolik má $x_i$ výskytů, ne tři; jako úplný důkaz pro X3C by ji bylo nutné doplnit. U testu je
+  bezpečnější celá konstrukce z $\prob{3-SAT}$ výše.
+
+
+.Exercise:
+  title: 'Úloha 10.10 (3-rozměrné párování jako soustava $Ay=\mathbf 1$)'
+  label: un-10-10
+
+  Problém $\prob{3DM}$ (perfektní třírozměrné párování):
+
+
+  "Vstup:".notion tři disjunktní množiny $X$, $Y$, $Z$, každá s $q$ prvky, a množina trojic $T\subseteq X\times Y\times Z$.
+
+
+  "Otázka:".notion existuje $M\subseteq T$, $|M|=q$, taková, že každý prvek $X\cup Y\cup Z$ leží v právě jedné
+  trojici z $M$?
+
+  .enumerate:
+    type: a
+
+    .item:
+
+      Sestrojte polynomiální redukci $\prob{3DM}$ na speciální případ problému $\prob{0/1 soustava rovnic}$
+      z úlohy .reference:un-10-6: existuje $y\in\{0,1\}^n$ s $Ay=\mathbf 1$, kde matice $A$ má jen prvky $0$ a $1$ a $\mathbf 1$
+      je vektor samých jedniček? Dokažte obě implikace.
+
+    .item:
+
+      Sestavte soustavu pro $q=2$, $X=\{a_1,a_2\}$, $Y=\{b_1,b_2\}$, $Z=\{c_1,c_2\}$ a trojice
+      $t_1=(a_1,b_1,c_1)$, $t_2=(a_1,b_2,c_2)$, $t_3=(a_2,b_2,c_2)$, $t_4=(a_2,b_1,c_2)$ a vyřešte ji.
+
+    .item:
+
+      Plyne z a) NP-úplnost soustavy $Ay=\mathbf 1$, když skripta NP-úplnost $\prob{3DM}$ nedokazují?
+
+  Neznámé značíme $y$ jako v úloze .reference:un-10-6 (ve sbírce $x$).
+
+  "Zdroj: P. Veselý, ADS2 – cvičení 10–11 (MFF UK), cvičení 2(e).".small
+
+
+.Solution:
+  label: red-un-10-10
+
+  "Redukce:".notion $\prob{3DM} \redp \prob{0/1 soustava rovnic}$ (s $A\in\{0,1\}^{3q\times|T|}$ a $b=\mathbf 1$),
+  instance $(X,Y,Z,T)$ $\mapsto$ incidenční matice $A$: řádek za prvek, sloupec za trojici.
+
+
+  "a) 1. V $\NP$.".notion Certifikát je vektor $y\in\{0,1\}^n$; součin $Ay$ spočítáme a porovnáme s $\mathbf 1$
+  v čase $O(3q\cdot|T|)$.
+
+
+  "2. Konstrukce.".notion Označme $W=X\cup Y\cup Z$ ($|W|=3q$). Matice $A$ má řádek pro každý prvek $w\in W$ a sloupec
+  pro každou trojici $t\in T$, přičemž $A_{w,t}=1$, právě když $w\in t$. Proměnná $y_t=1$ znamená „trojice $t$ je
+  v párování“. Rovnice řádku $w$ zní
+
+  .equation:
+
+    \sum_{t\in T,\ w\in t} y_t = 1 \qquad\text{(prvek $w$ leží v právě jedné vybrané trojici).}
+
+
+  "3. Polynomialita.".notion Matice má $3q$ řádků a $|T|\le q^3$ sloupců, v každém sloupci právě tři jedničky;
+  sestavení v čase $O(q\cdot|T|)$.
+
+
+  "4. ($\Rightarrow$)".notion Nechť $M$ je perfektní párování. Položíme $y_t=1$ pro $t\in M$, jinak $0$. Levá strana
+  rovnice $w$ je počet trojic z $M$ obsahujících $w$, tedy $1$.
+
+
+  "5. ($\Leftarrow$)".notion Nechť $y\in\{0,1\}^n$ splňuje $Ay=\mathbf 1$; položíme $M=\{t\mid y_t=1\}$. Rovnice
+  $w$ říká, že $w$ leží v právě jedné trojici z $M$. Zbývá $|M|=q$: sečteme všechny rovnice; každý sloupec obsahuje
+  tři jedničky, takže
+
+  .equation:
+
+    3q=\sum_{w\in W}(Ay)_w=\sum_{t\in T}3y_t=3|M| .
+
+  $M$ je tedy perfektní třírozměrné párování.
+
+
+  "b)".notion Řádky $a_1,a_2,b_1,b_2,c_1,c_2$, sloupce $t_1,\dots,t_4$ (neznámá $y_i$ patří trojici $t_i$):
+
+  .equation:
+
+    A=\begin{pmatrix}1&1&0&0\\0&0&1&1\\1&0&0&1\\0&1&1&0\\1&0&0&0\\0&1&1&1\end{pmatrix},\qquad
+    A\begin{pmatrix}y_1\\y_2\\y_3\\y_4\end{pmatrix}=\begin{pmatrix}1\\1\\1\\1\\1\\1\end{pmatrix}.
+
+  Řádek $c_1$ dá $y_1=1$, řádek $a_1$ pak $y_2=0$, řádek $b_1$ dá $y_4=0$ a řádek $a_2$ dá $y_3=1$; řádky $b_2$
+  a $c_2$ platí ($0+1=1$, $0+1+0=1$). Jediné řešení $y=(1,0,1,0)$, tedy $M=\{t_1,t_3\}$ (ověřeno i zkoušením všech
+  16 vektorů).
+
+
+  "c)".notion Ne přímo: redukce z $\prob{3DM}$ dává NP-těžkost jen tehdy, je-li NP-těžký $\prob{3DM}$, a to skripta
+  nedokazují ("(nad rámec přednášky)".emphasize: $\prob{3DM}$ je NP-úplný, Karp 1972). Konstrukce ale nikde nevyužila,
+  že trojice „mají po jednom prvku z $X$, $Y$, $Z$“: incidenční matice funguje pro libovolný systém tříprvkových
+  množin, tedy i jako redukce $\prob{X3C}\redp\prob{0/1 soustava rovnic}$ s $b=\mathbf 1$ (důkaz je doslova stejný).
+  $\prob{X3C}$ je NP-úplný (kapitola .reference:ch-x3c), takže soustava $Ay=\mathbf 1$ s 0/1 maticí je NP-úplná
+  i bez $\prob{3DM}$. Je to jen maticový zápis $\prob{Exact Cover}$ z úlohy .reference:un-10-3 b): sloupce jsou množiny, řádky
+  prvky. A protože rovnost $Ay=\mathbf 1$ je dvojice nerovností $Ay\ge\mathbf 1$, $-Ay\ge-\mathbf 1$, jde zároveň
+  o speciální případ $\prob{0-1 ILP}$ z úlohy .reference:un-11-12 (tam se neznámé značí $x$).

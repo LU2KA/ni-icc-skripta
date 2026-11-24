@@ -1,7 +1,8 @@
 #!/bin/sh
 # Sestaví web skript (MkDocs Material) z .woo souborů.
 #   tools/build_web.sh          výstup: ../skripta/html/index.html (jinam: SKRIPTA_OUT=/cesta)
-#   tools/build_web.sh serve    sestaví a spustí náhled na http://127.0.0.1:8000 (při změně .woo spusť znovu)
+#   tools/build_web.sh serve    sestaví a spustí náhled na http://127.0.0.1:8000 (při změně .woo spusť znovu;
+#                               bez vyskakovacích definic, ty doplní až tools/link_terms.py po buildu)
 # Potřebuje: python3 s PyMuPDF, lualatex (obrázky TikZ) a .venv s mkdocs-material
 #   (python3.11 -m venv .venv && .venv/bin/pip install mkdocs-material).
 # Mezivýsledky jdou do .build/ (dá se kdykoli smazat, jen se pak obrázky překládají znovu).
@@ -15,5 +16,6 @@ if [ "$1" = "serve" ]; then
   NO_MKDOCS_2_WARNING=1 .venv/bin/mkdocs serve -f .build/mkdocs/mkdocs.yml
 else
   NO_MKDOCS_2_WARNING=1 .venv/bin/mkdocs build -q -f .build/mkdocs/mkdocs.yml
+  .venv/bin/python tools/link_terms.py "$OUT/html"      # vyskakovací definice (src/pojmy.yaml)
   echo "web: $OUT/html/index.html"
 fi

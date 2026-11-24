@@ -18,6 +18,7 @@ echo "== check_tikz"; python3 tools/check_tikz.py $FILES || RC=1
 echo "== check_tikz --math"; python3 tools/check_tikz.py --math $FILES || RC=1
 echo "== woo2mkdocs --only=$1"; python3 tools/woo2mkdocs.py --only="$1" || RC=1
 NO_MKDOCS_2_WARNING=1 "$MKDOCS" build -q -f ".build/preview-$TAG/mkdocs/mkdocs.yml" || RC=1
+.venv/bin/python tools/link_terms.py --partial ".build/preview-$TAG/site" || RC=1
 if [ "$2" != "nomath" ]; then
   echo "== check_web_math"; python3 tools/check_web_math.py ".build/preview-$TAG/site" || RC=1
 fi

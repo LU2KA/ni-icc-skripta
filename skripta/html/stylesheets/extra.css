@@ -91,7 +91,7 @@
 }
 .md-typeset .woo-toggle:hover { background: var(--md-accent-fg-color--transparent); }
 .md-typeset .woo-toggle:focus-visible { outline: 2px solid var(--md-accent-fg-color); outline-offset: 2px; }
-.md-typeset details.woo-solution > summary { cursor: pointer; }
+.md-typeset details.woo-solution > summary, .md-typeset details.woo-proof > summary { cursor: pointer; }
 @media (prefers-reduced-motion: reduce) { .md-typeset .woo-toggle { transition: none; } }
 
 /* tisk: řešení vytisknout rozbalená nejde spolehlivě ve všech prohlížečích, aspoň obrázky nedělit */
@@ -153,3 +153,49 @@
 .md-typeset table:not([class]) th { min-width: 0; }
 /* vzorec a interpunkce těsně za ním drží na jednom řádku */
 .md-typeset .woo-nobr { white-space: nowrap; }
+
+/* Vyskakovací definice (javascripts/pojmy.js, odkazy doplňuje tools/link_terms.py) */
+.md-typeset .woo-term {
+  color: inherit;
+  text-decoration: underline dotted;
+  text-decoration-color: var(--md-default-fg-color--light);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+  cursor: help;
+}
+.md-typeset .woo-term:hover, .md-typeset .woo-term:focus {
+  color: var(--md-typeset-a-color);
+  text-decoration-color: currentColor;
+}
+/* pojem ve vzorci: barva textu, po najetí barva odkazu */
+.md-typeset mjx-container[jax] a { color: inherit; fill: currentColor; stroke: currentColor; cursor: help; }
+.md-typeset mjx-container[jax] a:hover { color: var(--md-typeset-a-color); }
+.woo-pojem {
+  position: absolute;
+  z-index: 10;
+  display: none;
+  box-sizing: border-box;
+  width: max-content;
+  max-width: min(34rem, calc(100vw - 16px));
+  max-height: 60vh;
+  overflow: auto;
+  padding: 0.7rem 0.9rem;
+  font-size: 0.72rem;
+  background: var(--md-default-bg-color);
+  color: var(--md-default-fg-color);
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-left: 3px solid var(--md-typeset-a-color);
+  border-radius: 0.3rem;
+  box-shadow: var(--md-shadow-z2);
+}
+.woo-pojem--on { display: block; }
+.woo-pojem-in > :first-child { margin-top: 0; }
+.woo-pojem-in > :last-child { margin-bottom: 0; }
+.woo-pojem p { margin: 0.45em 0; }
+.md-typeset .woo-pojem-title { font-weight: 700; }
+.md-typeset .woo-pojem-go { font-size: 0.65rem; }
+.woo-pojem img { max-width: 100%; height: auto; }
+.woo-pojem mjx-container[display="true"] { overflow-x: auto; overflow-y: hidden; }
+/* tečkované podtržení pojmu ve vzorci (čáru dokresluje pojmy.js) */
+.md-typeset mjx-container[jax] a line.woo-ul { stroke: currentColor; opacity: 0.7; }
+.md-typeset mjx-container[jax] a:hover line.woo-ul { opacity: 1; }

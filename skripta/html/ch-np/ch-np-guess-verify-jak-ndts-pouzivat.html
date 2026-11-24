@@ -5536,11 +5536,10 @@
 
 <h1 id="43-guess-verify-jak-ndts-pouzivat">4.3 Guess &amp; Verify: jak NDTS používat<a class="headerlink" href="#43-guess-verify-jak-ndts-pouzivat" title="Permanent link">&para;</a></h1>
 <div class="woo">
-<p>Nedeterministický stroj typicky pracuje ve dvou fázích:</p>
+<p><a class="woo-term" href="ch-np-od-determinismu-k-nedeterminismu.html#def-ndts" data-pojem="def-ndts">Nedeterministický stroj</a> typicky pracuje ve dvou fázích:</p>
 <figure class="woo-float woo-figure" id="fig-np-guess-verify"><div class="woo-centered"><img class="woo-fig" src="../figures/04c-guess-verify-01.svg" width="587" height="74" alt="Obrázek: Paradigma Guess &amp; Verify. Délka hádání i ověření musí být polynomiální." loading="lazy"></div><figcaption><span class="woo-fignum">Obrázek 4.5:</span> Paradigma Guess &amp; Verify. Délka hádání i ověření musí být polynomiální.</figcaption></figure>
-<div class="admonition example woo-example" id="ex-np-klika-gv"><p class="admonition-title">Příklad 4.3: NDTS pro <span class="arithmatex">\(\prob{Kliku}\)</span></p><p>Obsahuje graf <span class="arithmatex">\(G\)</span> kliku velikosti <span class="woo-nobr"><span class="arithmatex">\(k\)</span>?</span></p>
-<ol><li><strong>Guess:</strong> stroj prochází vrcholy a u každého se nedeterministicky rozhodne „zapiš ho na pásku / přeskoč ho“. Ve stromu vzniknou větve pro <em>všechny</em> podmnožiny vrcholů.</li><li><strong>Verify:</strong> zkontroluje, že vybraná podmnožina má velikost <span class="arithmatex">\(\ge k\)</span> a že mezi každými dvěma vybranými vrcholy vede hrana. Pokud ano <span class="arithmatex">\(\to\)</span> <span class="woo-nobr"><span class="arithmatex">\(\qA\)</span>,</span> jinak <span class="woo-nobr"><span class="arithmatex">\(\qR\)</span>.</span></li></ol>
-<p>Pokud klika velikosti <span class="arithmatex">\(\ge k\)</span> existuje, jedna z větví ji „vygenerovala“ a ověřila, a stroj tedy přijme.</p></div>
+<div class="admonition example woo-example" id="ex-np-klika-gv"><p class="admonition-title">Příklad 4.3: NDTS pro <span class="arithmatex">\(\href{../ch-is/ch-is-is-clique.html#prob-cliquer}{\class{woo-pk-prob-cliquer}{\prob{Kliku}}}\)</span></p><p>Obsahuje graf <span class="arithmatex">\(G\)</span> kliku velikosti <span class="woo-nobr"><span class="arithmatex">\(k\)</span>?</span></p><details class="success woo-solution woo-example-solution"><summary>Řešení</summary><ol><li><strong>Guess:</strong> stroj prochází vrcholy a u každého se nedeterministicky rozhodne „zapiš ho na pásku / přeskoč ho“. Ve stromu vzniknou větve pro <em>všechny</em> podmnožiny vrcholů.</li><li><strong>Verify:</strong> zkontroluje, že vybraná podmnožina má velikost <span class="arithmatex">\(\ge k\)</span> a že mezi každými dvěma vybranými vrcholy vede hrana. Pokud ano <span class="arithmatex">\(\to\)</span> <span class="woo-nobr"><span class="arithmatex">\(\qA\)</span>,</span> jinak <span class="woo-nobr"><span class="arithmatex">\(\qR\)</span>.</span></li></ol>
+<p>Pokud klika velikosti <span class="arithmatex">\(\ge k\)</span> existuje, jedna z větví ji „vygenerovala“ a ověřila, a stroj tedy přijme.</p></details></div>
 <figure class="woo-float woo-figure" id="fig-np-klika-guess"><div class="woo-centered"><img class="woo-fig" src="../figures/04c-guess-verify-02.svg" width="599" height="219" alt="Obrázek: Fáze Guess pro kliku jako binární strom voleb „beru / neberu“." loading="lazy"></div><figcaption><span class="woo-fignum">Obrázek 4.6:</span> Fáze Guess pro kliku jako binární strom voleb „beru / neberu“.</figcaption></figure>
 </div>
 
@@ -5650,5 +5649,6 @@
         <script src="../javascripts/woo.js"></script>
       
     
-  </body>
+  <script src="../javascripts/pojmy-data.js"></script><script src="../javascripts/pojmy.js"></script>
+</body>
 </html>

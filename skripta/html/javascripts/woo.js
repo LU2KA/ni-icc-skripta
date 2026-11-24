@@ -1,7 +1,9 @@
-// Tlačítko "Rozbalit všechna řešení" na stránkách, kde nějaká řešení jsou.
+// Tlačítko "Rozbalit všechna řešení / důkazy" na stránkách, kde nějaké rozbalovací rámečky jsou.
 (function () {
   function init() {
-    var sols = Array.prototype.slice.call(document.querySelectorAll("details.woo-solution"));
+    var sols = Array.prototype.slice.call(document.querySelectorAll("details.woo-solution, details.woo-proof"));
+    var nSol = document.querySelectorAll("details.woo-solution").length, nPf = sols.length - nSol;
+    var whatAll = nSol && nPf ? "všechna řešení a důkazy" : nPf ? "všechny důkazy" : "všechna řešení";
     var h1 = document.querySelector(".md-content__inner h1");
     if (!sols.length || !h1) return;
     var btn = document.createElement("button");
@@ -10,7 +12,7 @@
     function allOpen() { return sols.every(function (d) { return d.open; }); }
     function label() {
       var open = allOpen();
-      btn.textContent = open ? "Sbalit všechna řešení" : "Rozbalit všechna řešení (" + sols.length + ")";
+      btn.textContent = open ? "Sbalit " + whatAll : "Rozbalit " + whatAll + " (" + sols.length + ")";
       btn.setAttribute("aria-pressed", open ? "true" : "false");
     }
     btn.addEventListener("click", function () {
@@ -22,13 +24,13 @@
     label();
     h1.insertAdjacentElement("afterend", btn);
   }
-  // Odkaz může mířit na tabulku nebo vzorec uvnitř sbaleného řešení: rozbal ho, ať je cíl vidět.
+  // Odkaz může mířit na tabulku nebo vzorec uvnitř sbaleného řešení (nebo na sbalený důkaz): rozbal ho.
   function reveal() {
     var id = decodeURIComponent(location.hash.slice(1));
     var el = id && document.getElementById(id);
     if (!el) return;
     var opened = false;
-    for (var d = el.parentElement && el.parentElement.closest("details"); d; d = d.parentElement && d.parentElement.closest("details")) {
+    for (var d = el.closest("details"); d; d = d.parentElement && d.parentElement.closest("details")) {
       if (!d.open) { d.open = true; opened = true; }
     }
     if (opened) el.scrollIntoView();

@@ -11,7 +11,8 @@ Sestavení a umístění výstupů řeší tools/build_web.sh a tools/build_pdf.
 Jak se co převádí:
   .Chapter            -> složka s index.md (úvod kapitoly + seznam oddílů)
   .Section            -> samostatná stránka, .Subsection -> nadpis na stránce
-  objekty (.Example:) -> rámečky Material (admonition), .Solution: je rozbalovací
+  objekty (.Example:) -> rámečky Material (admonition), .Solution: a .Proof: jsou rozbalovací,
+  u .Example: se rozbaluje vše za prvním blokem (zadáním)
   režim --pdf         -> jedna stránka: kapitola = h1, oddíl = h2, pododdíl = h3; řešení jsou rozbalená,
                          odkazy vedou na kotvy uvnitř dokumentu (v PDF fungují jako skoky)
   !tikz:              -> SVG (přeloží se lualatexem přes tools/check_tikz.py, PDF -> SVG přes PyMuPDF)
@@ -673,7 +674,8 @@ def render_object(node, ctx):
         t_html = inline(title, ctx)
         if name == "Theorem":
             head = f"{prefix} ({t_html})"
-        elif prefix and title.split()[0].rstrip(":").casefold() == prefix.split()[0].casefold():
+        elif prefix and (title.split()[0].rstrip(":").casefold() == prefix.split()[0].casefold()
+                         or (name == "Proof" and "důkaz" in title.casefold())):   # „Náznak důkazu“
             head = t_html                       # „Postup: Postup na papíře“ – název už typem rámečku začíná
         elif prefix:
             head = f"{prefix}: {t_html}"
@@ -681,9 +683,17 @@ def render_object(node, ctx):
             head = t_html
     else:
         head = prefix or DEFAULT_TITLE.get(name, name)
-    body = render_nodes(node.children, ctx)
+    kids = [c for c in node.children if c.kind in ("par", "env")]
+    if name == "Example" and not PDF and len(kids) >= 2:
+        # příklad: první blok (zadání) zůstane vidět, zbytek je rozbalovací řešení
+        body = (render_nodes(kids[:1], ctx) + '<details class="success woo-solution woo-example-solution">'
+                f'<summary>Řešení</summary>{render_nodes(kids[1:], ctx)}</details>')
+    else:
+        body = render_nodes(node.children, ctx)
     ctx.title = old_title if name != "Exercise" and name != "Example" else ctx.title
     ctx.prev_object = name
+    if name == "Proof" and not PDF:                                # důkaz je na webu rozbalovací
+        return f'<details class="{kind} woo-proof"{ident}><summary>{head}</summary>{body}</details>'
     return (f'<div class="admonition {kind} woo-{name.lower()}{extra}"{ident}>'
             f'<p class="admonition-title">{head}</p>{body}</div>')
 
@@ -937,7 +947,7 @@ def write_pdf_doc(chapters):
             if body:
                 parts.append(body)
     (DOCS / "index.md").write_text("\n\n".join(parts) + "\n", encoding="utf-8")
-    copy_assets(skip=("tex-svg-full.js", "mathjax-config.js", "woo.js"))
+    copy_assets(skip=("tex-svg-full.js", "mathjax-config.js", "woo.js", "pojmy.js"))
     write_config({
         "site_name": SITE_NAME,
         "site_description": SITE_DESC,

@@ -546,6 +546,14 @@ s voláním orákula (oddíl .reference:ch-graf-redukce-s-orakulem-a-vycisliteln
 
   .row:
 
+    "$\prob{Graph Isomorphism}$: nalezení izomorfismu $\to$ rozhodnutí (s orákulem)"#red-un-4-9
+
+    přiřazení $u_j\mapsto v_j$ vynutí kliky různých velikostí přilepené k oběma vrcholům
+
+    4.9
+
+  .row:
+
     "$\prob{UNP}\redp\prob{UNP}_{=}$"#red-un-5-6
 
     stroj smí s přijetím libovolně dlouho čekat; $k\mapsto k+1$
@@ -602,6 +610,30 @@ s voláním orákula (oddíl .reference:ch-graf-redukce-s-orakulem-a-vycisliteln
 
   .row:
 
+    "$\prob{SAT}$: nalezení ohodnocení $\to$ rozhodnutí (s orákulem)"#red-un-7-9
+
+    dosazuj proměnné jednu po druhé; NE pro $x=1$ znamená, že projde $x=0$; nejvýš $n+1$ dotazů
+
+    7.9
+
+  .row:
+
+    "$\prob{SAT}\redp\prob{3-SAT}$"#red-un-7-10
+
+    dlouhou klauzuli rozsekni řetězem vlastních pomocných proměnných
+
+    7.10
+
+  .row:
+
+    "$\prob{3-SAT}\redp\prob{3-SAT-3K}$"#red-un-7-11
+
+    každý výskyt vlastní kopie, kopie spojí cyklus implikací (konstrukce z úlohy 7.6)
+
+    7.11
+
+  .row:
+
     "$\prob{IS}\redp\prob{Set Packing}$"#red-un-8-4
 
     $S_v$ = vrchol $v$ a jeho hrany; disjunktní množiny = nesousední vrcholy
@@ -631,6 +663,22 @@ s voláním orákula (oddíl .reference:ch-graf-redukce-s-orakulem-a-vycisliteln
     přidej $k$ izolovaných vrcholů – nezávislá množina je zadarmo
 
     8.7
+
+  .row:
+
+    "$\prob{IS}$: největší množina $\to$ rozhodnutí (s orákulem)"#red-un-8-9
+
+    $\alpha$ binárním vyhledáváním; $v$ vezmi, má-li $G-N[v]$ nezávislou množinu velikosti $k-1$
+
+    8.9
+
+  .row:
+
+    "$\prob{VC}\redp\prob{Hitting Set}$, $\prob{Set Cover}\redp\prob{Hitting Set}$"#red-un-8-10
+
+    hrany jako dvouprvkové množiny; transpozice systému množin
+
+    8.10
 
   .row:
 
@@ -706,6 +754,22 @@ s voláním orákula (oddíl .reference:ch-graf-redukce-s-orakulem-a-vycisliteln
 
   .row:
 
+    "$\prob{3-SAT}\redp\prob{X3C}$"#red-un-10-9
+
+    ozubená kola pro proměnné, dvojice prvků pro klauzule, $m(n-1)$ úklidových dvojic
+
+    10.9
+
+  .row:
+
+    "$\prob{3DM}\redp\prob{0/1 soustava rovnic}$"#red-un-10-10
+
+    incidenční matice: řádek = prvek, sloupec = trojice, pravá strana samé jedničky
+
+    10.10
+
+  .row:
+
     "$\prob{HP}\redp\prob{HC}$ a $\prob{HC}\redp\prob{HP}$"#red-un-11-3
 
     univerzální vrchol uzavře cestu; kopie vrcholu se dvěma listy kružnici rozpojí
@@ -746,6 +810,70 @@ s voláním orákula (oddíl .reference:ch-graf-redukce-s-orakulem-a-vycisliteln
 
   .row:
 
+    "$\prob{HC}$: nalezení kružnice $\to$ rozhodnutí (s orákulem)"#red-un-11-9
+
+    vynucenou hranu rozdělíme novým vrcholem stupně 2; nejvýš $1+2m$ dotazů
+
+    11.9
+
+  .row:
+
+    "$\prob{UHP}\redp\prob{HP}$, $\prob{HP}\redp\prob{UHP}$, $\prob{HC}\redp\prob{UHP}$, $\prob{UHP}\redp\prob{HC}$"#red-un-11-10
+
+    listy přivěšené na $S,T$; nové konce spojené se všemi vrcholy; kopie $v'$ vrcholu $v$; nový vrchol sousedící jen s $S$ a $T$
+
+    11.10
+
+  .row:
+
+    "$\prob{HC}\redp\prob{TSP}$"#red-un-11-11
+
+    hrany váhy 1, nehrany váhy 2, mez $n$ – instance je metrická a čísla jsou nejvýš 2, proto je TSP i silně NP-úplný
+
+    11.11
+
+  .row:
+
+    "$\prob{3-SAT}\redp\prob{0-1 ILP}$"#red-un-11-12
+
+    řádek za klauzuli: kladný literál $+1$, záporný $-1$, pravá strana $1-{}$počet negací
+
+    11.12
+
+  .row:
+
+    "$\prob{Subset Sum}\redp\prob{Knapsack}$"#red-un-11-13
+
+    váha i cena předmětu je $a_i$, kapacita i cílová cena je $T$
+
+    11.13
+
+  .row:
+
+    "$\prob{Partition}\redp\prob{Subset Sum}$ a $\prob{Subset Sum}\redp\prob{Partition}$"#red-un-11-14
+
+    $T=S/2$ (lichý součet $\mapsto$ pevná NE-instance); opačně přidat číslo $d=|S-2T|$
+
+    11.14
+
+  .row:
+
+    "$\prob{Partition}\redp\prob{Multiprocessor Scheduling}$"#red-un-11-15
+
+    $m-2$ výplňových úloh délky $S/2$, termín $D=S/2$
+
+    11.15
+
+  .row:
+
+    "$\prob{HP}\redp\prob{Bounded-Degree Spanning Tree}$"#red-un-11-16
+
+    pro $k=2$ identita; pro pevné $k\ge3$ přivěs ke každému vrcholu $k-2$ listů
+
+    11.16
+
+  .row:
+
     "$\prob{SAT}\redp\prob{TQBF}$, $\prob{TAUT}\redp\prob{TQBF}$"#red-un-13-4
 
     samé $\exists$, resp. samé $\forall$ před formulí
@@ -767,6 +895,54 @@ s voláním orákula (oddíl .reference:ch-graf-redukce-s-orakulem-a-vycisliteln
     proměnná za políčko; řádky a sloupce „právě jedna“, diagonály „nejvýše jedna“
 
     14.5
+
+  .row:
+
+    "$k\text{-}\prob{Coloring}\redp\prob{SAT}$"#red-un-14-9
+
+    $x_{v,c}$, právě jedna barva za vrchol, konce hrany nikdy stejnou; pro $k\ge n$ triviální formule
+
+    14.9
+
+  .row:
+
+    "$\prob{3DM}\redp\prob{SAT}$"#red-un-14-10
+
+    proměnná za trojici, „právě jedna“ přes trojice obsahující daný prvek
+
+    14.10
+
+  .row:
+
+    "$\prob{HC}\redp\prob{SAT}$"#red-un-14-11
+
+    permutační matice $p_{v,i}$; vrchol na místě $i+1$ sousedí s vrcholem na místě $i$ (cyklicky)
+
+    14.11
+
+  .row:
+
+    "$\prob{Long Cycle}\redp\prob{SAT}$"#red-un-14-12
+
+    místa $p_{v,i}$ a obsazenost $o_i$ (obsazený prefix délky $\ge k$), žádný vrchol dvakrát, uzavírací hrana
+
+    14.12
+
+  .row:
+
+    "$\prob{SAT}\redp\prob{ILP}$"#red-un-15-10
+
+    literál $\lnot x$ jako $1-y$, klauzule libovolné délky = součet hodnot literálů $\ge1$
+
+    15.10
+
+  .row:
+
+    "$\prob{3-Coloring}\redp\prob{ILP}$"#red-un-15-11
+
+    $x_{v,c}$, „právě jedna barva“ za vrchol, $x_{u,c}+x_{v,c}\le1$ za hranu a barvu
+
+    15.11
 
   .row:
 

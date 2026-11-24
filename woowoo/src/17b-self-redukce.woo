@@ -49,7 +49,9 @@
     bullet: 'Úlohy navíc:'
 
     "úloha 4.6"#un-4-6 – rozklad čísla na prvočinitele pomocí rozhodovací verze (binární vyhledávání nejmenšího
-    dělitele, počet dotazů polynomiální v délce zápisu čísla).
+    dělitele, počet dotazů polynomiální v délce zápisu čísla). Ze sbírky: "7.9"#un-7-9 (splňující ohodnocení dosazováním),
+    "8.9"#un-8-9 (největší nezávislá množina), "11.9"#un-11-9 (hamiltonovská kružnice, vynucení hrany rozdělením) a
+    těžší "4.9"#un-4-9 (izomorfismus grafů, značky z klik).
 
 
 .Subsection Řešené úlohy: self-redukce
