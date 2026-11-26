@@ -208,14 +208,14 @@
   makro: []
   text: []
 
-- id: pojem-dnf-sat
-  title: 'Problém $\prob{DNF-SAT}$'
+- id: pojem-lcs
+  title: 'Problém $\prob{nejdelší společné podposloupnosti}$ (LCS)'
   body: |
-    **Vstup:** formule v DNF (disjunkce termů, term je konjunkce literálů).
+    **Vstup:** binární slova $w_1,\dots,w_m$ a číslo $k$ zadané unárně (vstup $1^k\#w_1\#\cdots\#w_m$).
 
-    **Otázka:** je formule splnitelná?
-  odkaz: un-4-7
-  prob: [DNF-SAT]
+    **Otázka:** existuje slovo délky $k$, které je podposloupností (vznikne vynecháním některých písmen) všech slov $w_1,\dots,w_m$?
+  odkaz: cv-2-2
+  prob: [nejdelší společné podposloupnosti, nejdelší společná podposloupnost]
   makro: []
   text: []
 
@@ -267,6 +267,83 @@
 
 - box: prob-dlazdickovani
   prob: [Dlaždičkování]
+  makro: []
+  text: []
+
+- id: pojem-formula-sat
+  title: 'Problém $\prob{Formula-SAT}$'
+  body: |
+    **Vstup:** výroková formule $\varphi$ ze spojek $\lnot$, $\land$, $\lor$ a závorek, libovolně vnořená (nemusí být v CNF).
+
+    **Otázka:** existuje ohodnocení proměnných, při kterém je $\varphi$ pravdivá?
+  odkaz: un-6-1
+  prob: [Formula-SAT]
+  makro: []
+  text: []
+
+- id: pojem-non-equivalence
+  title: 'Problém $\prob{Non-Equivalence}$'
+  body: |
+    **Vstup:** dvě formule $\varphi$ a $\psi$ v CNF nad proměnnými $x_1,\dots,x_n$.
+
+    **Otázka:** existuje ohodnocení, při kterém má $\varphi$ jinou pravdivostní hodnotu než $\psi$ (formule nejsou ekvivalentní)?
+  odkaz: un-6-2
+  prob: [Non-Equivalence]
+  makro: []
+  text: []
+
+- id: pojem-max-sat
+  title: 'Problém $\prob{MAX-SAT}$'
+  body: |
+    **Vstup:** formule $\varphi$ v CNF s klauzulemi $C_1,\dots,C_m$ (každá má aspoň jeden literál) a číslo $k$.
+
+    **Otázka:** existuje ohodnocení, které splní **aspoň $k$** klauzulí?
+  odkaz: un-6-3
+  prob: [MAX-SAT]
+  makro: []
+  text: []
+
+- id: pojem-half-max-sat
+  title: 'Problém $\prob{Half-MAX-SAT}$'
+  body: |
+    **Vstup:** formule $\varphi$ v CNF s klauzulemi $C_1,\dots,C_m$ (každá má aspoň jeden literál).
+
+    **Otázka:** existuje ohodnocení, které splní aspoň $\lceil m/2\rceil$ klauzulí? (Je to $\prob{MAX-SAT}$ s pevným prahem.)
+  odkaz: un-6-3
+  prob: [Half-MAX-SAT]
+  makro: []
+  text: []
+
+- id: pojem-half-sat
+  title: 'Problém $\prob{Half-SAT}$'
+  body: |
+    **Vstup:** formule $\varphi$ v CNF s proměnnými $x_1,\dots,x_N$.
+
+    **Otázka:** existuje ohodnocení, které $\varphi$ splňuje a při kterém má **přesně $N/2$** proměnných hodnotu $1$?
+  odkaz: un-6-4
+  prob: [Half-SAT]
+  makro: []
+  text: []
+
+- id: pojem-another-sat
+  title: 'Problém $\prob{Another-SAT}$'
+  body: |
+    **Vstup:** formule $\varphi$ v CNF a ohodnocení $h$, které $\varphi$ splňuje.
+
+    **Otázka:** má $\varphi$ ještě jiné splňující ohodnocení (různé od $h$)?
+  odkaz: un-6-5
+  prob: [Another-SAT]
+  makro: []
+  text: []
+
+- id: pojem-min-ones-sat
+  title: 'Problém $\prob{Min-Ones SAT}$'
+  body: |
+    **Vstup:** formule $\varphi$ v CNF nad $x_1,\dots,x_n$ a číslo $k$.
+
+    **Otázka:** existuje ohodnocení, které $\varphi$ splňuje a má **nejvýše $k$** proměnných rovných $1$?
+  odkaz: un-6-6
+  prob: [Min-Ones SAT]
   makro: []
   text: []
 
@@ -345,6 +422,28 @@
     **Otázka:** je formule splnitelná?
   odkaz: un-7-7
   prob: [Monotónní 3-SAT]
+  makro: []
+  text: []
+
+- id: pojem-set-splitting
+  title: 'Problém $\prob{Set Splitting}$'
+  body: |
+    **Vstup:** konečná množina $U$ a systém jejích podmnožin $S_1,\dots,S_r$.
+
+    **Otázka:** lze prvky $U$ obarvit dvěma barvami tak, aby žádná z množin $S_j$ nebyla jednobarevná?
+  odkaz: un-7-1
+  prob: [Set Splitting]
+  makro: []
+  text: []
+
+- id: pojem-flip-sat
+  title: 'Problém $\prob{Flip-SAT}$'
+  body: |
+    **Vstup:** formule $\varphi$ v CNF.
+
+    **Otázka:** existuje ohodnocení $h$ takové, že formuli $\varphi$ splňuje $h$ **i** překlopené ohodnocení $\bar h$ (všechny hodnoty prohozené)?
+  odkaz: un-7-2
+  prob: [Flip-SAT]
   makro: []
   text: []
 
@@ -481,6 +580,28 @@
   makro: []
   text: []
 
+- id: pojem-partial-vc
+  title: 'Problém $\prob{Partial VC}$ (částečné vrcholové pokrytí)'
+  body: |
+    **Vstup:** graf $G=(V,E)$ a čísla $k$ a $t$.
+
+    **Otázka:** existuje množina $C\subseteq V$, $|C|\le k$, která pokrývá aspoň $t$ hran (aspoň $t$ hran má v $C$ aspoň jeden konec)?
+  odkaz: un-8-1
+  prob: [Partial VC]
+  makro: []
+  text: []
+
+- id: pojem-triangle-free-is
+  title: 'Problém $\prob{Triangle-free IS}$'
+  body: |
+    **Vstup:** graf $G$ **bez trojúhelníků** a číslo $k$.
+
+    **Otázka:** má $G$ nezávislou množinu velikosti aspoň $k$?
+  odkaz: un-8-8
+  prob: [Triangle-free IS]
+  makro: []
+  text: []
+
 # ---------------------------------------------------------------- 9 Barvení, řezy, agenti
 - box: prob-3col
   prob: [3-Coloring, 3-Col]
@@ -512,7 +633,7 @@
     stejné barvy?
 
     Na rozdíl od $\prob{3-Coloring}$ je v $\PP$.
-  odkaz: un-9-2
+  odkaz: ch-zoo-ulohy-navic-nez-zacnes
   prob: [2-Coloring]
   makro: []
   text: []
@@ -575,6 +696,39 @@
   prob: [MAPF]
   makro: []
   text: ['MAPF', '[Mm]ultiagent\w* [Pp]ath [Ff]inding']
+
+- id: pojem-max-3-cut
+  title: 'Problém $\prob{Max 3-Cut}$'
+  body: |
+    **Vstup:** graf $G=(V,E)$ a číslo $k$.
+
+    **Otázka:** lze $V$ rozdělit na tři disjunktní části (některá smí být prázdná) tak, aby aspoň $k$ hran mělo konce v různých částech?
+  odkaz: un-9-1
+  prob: [Max 3-Cut]
+  makro: []
+  text: []
+
+- id: pojem-prideleni-kanalu
+  title: 'Problém $\prob{Přidělení kanálů}$'
+  body: |
+    **Vstup:** graf $G=(V,E)$ (vysílače a dvojice, které se mohou rušit) a číslo $k$.
+
+    **Otázka:** lze každému vrcholu přidělit kanál $f(v)\in\{1,\dots,k\}$ tak, aby $|f(u)-f(v)|\ge2$ pro každou hranu $\{u,v\}$?
+  odkaz: un-9-2
+  prob: [Přidělení kanálů]
+  makro: []
+  text: []
+
+- id: pojem-exact-cut
+  title: 'Problém $\prob{Exact Cut}$'
+  body: |
+    **Vstup:** graf $G=(V,E)$ a číslo $k$.
+
+    **Otázka:** existuje rozdělení $V=A\cup B$, které přeřízne **přesně** $k$ hran?
+  odkaz: un-9-3
+  prob: [Exact Cut]
+  makro: []
+  text: []
 
 # ---------------------------------------------------------------- 10 Přesná pokrytí
 - box: prob-1in3
@@ -642,6 +796,28 @@
     **Otázka:** lze vybrat $q$ množin tak, aby byl každý prvek pokryt právě jednou?
   odkaz: un-10-7
   prob: [X4C]
+  makro: []
+  text: []
+
+- id: pojem-2-in-4-sat
+  title: 'Problém $\prob{2-in-4 SAT}$'
+  body: |
+    **Vstup:** formule v CNF, v níž má každá klauzule přesně čtyři literály.
+
+    **Otázka:** existuje ohodnocení, při kterém jsou v každé klauzuli pravdivé **právě dva** literály?
+  odkaz: un-10-2
+  prob: [2-in-4 SAT]
+  makro: []
+  text: []
+
+- id: pojem-partition-into-triangles
+  title: 'Problém $\prob{Partition into Triangles}$'
+  body: |
+    **Vstup:** graf $G=(V,E)$ s $|V|=3q$.
+
+    **Otázka:** lze $V$ rozdělit na $q$ disjunktních trojic tak, aby každá trojice tvořila v $G$ trojúhelník?
+  odkaz: un-10-8
+  prob: [Partition into Triangles]
   makro: []
   text: []
 
@@ -790,14 +966,14 @@
   makro: []
   text: []
 
-- id: pojem-unary-subset-sum
-  title: 'Problém $\prob{Unary Subset Sum}$'
+- id: pojem-rozvrh-s-okny
+  title: 'Problém $\prob{Rozvrh s okny}$'
   body: |
-    $\prob{Subset Sum}$, v němž jsou čísla $a_1,\dots,a_n$ i cíl $T$ zapsaná **unárně** (číslo $a$ jako $1^a$).
+    **Vstup:** $n$ úloh; úloha $j$ má délku $p_j\ge1$, čas uvolnění $r_j$ a termín $d_j$ (čísla zapsaná binárně).
 
-    **Otázka:** existuje $I\subseteq\{1,\dots,n\}$ taková, že $\sum_{i\in I}a_i=T$?
-  odkaz: un-11-6
-  prob: [Unary Subset Sum]
+    **Otázka:** lze úlohy rozvrhnout bez přerušení na **jeden** stroj, tj. zvolit začátky $\sigma_j$ s $r_j\le\sigma_j$ a $\sigma_j+p_j\le d_j$ tak, aby se žádné dva intervaly $[\sigma_j,\sigma_j+p_j)$ nepřekrývaly?
+  odkaz: un-11-8
+  prob: [Rozvrh s okny]
   makro: []
   text: []
 
@@ -969,6 +1145,83 @@
     Pro pevné $k$ (není součástí vstupu) se píše $k\text{-}\prob{Coloring}$; pro $k\ge3$ je NP-úplný.
   odkaz: ch-resice-sat-k-barevnost
   prob: [Coloring]
+  makro: []
+  text: []
+
+- id: pojem-latin-square-completion
+  title: 'Problém $\prob{Latin Square Completion}$ (doplnění latinského čtverce)'
+  body: |
+    **Vstup:** číslo $n$ a částečně vyplněná tabulka $n\times n$, tj. množina $P$ trojic $(r,s,v)$ „na políčku $(r,s)$ je číslo $v$“.
+
+    **Otázka:** lze tabulku doplnit na latinský čtverec (v každém řádku i sloupci je každé z čísel $1,\dots,n$ právě jednou)?
+  odkaz: un-14-1
+  prob: [Latin Square Completion]
+  makro: []
+  text: []
+
+- id: pojem-instalace-balicku
+  title: 'Problém $\prob{Instalace balíčků}$'
+  body: |
+    **Vstup:** množina balíčků $B$, skupiny verzí $V_1,\dots,V_q\subseteq B$, závislosti $(p,D)$ s $p\in B$, $D\subseteq B$, konfliktní dvojice $K$ a cílová množina $T\subseteq B$.
+
+    **Otázka:** existuje instalace $I\subseteq B$, $T\subseteq I$, v níž je z každé skupiny $V_i$ nejvýše jeden balíček, s každým $p\in I$ i aspoň jeden balíček z každé jeho závislosti $D$ a žádná konfliktní dvojice?
+  odkaz: un-14-2
+  prob: [Instalace balíčků]
+  makro: []
+  text: []
+
+- id: pojem-minesweeper
+  title: 'Problém $\prob{Minesweeper}$ (hledání min, konzistence)'
+  body: |
+    **Vstup:** mřížka $R\times S$, v níž jsou některá políčka odkrytá (bez miny) a nesou číslo $c(p)\in\{0,\dots,8\}$.
+
+    **Otázka:** lze do zakrytých políček rozmístit miny tak, aby každé číslo $c(p)$ bylo rovno počtu min mezi (až osmi) sousedy políčka $p$?
+  odkaz: un-14-3
+  prob: [Minesweeper]
+  makro: []
+  text: []
+
+- id: pojem-rozsazeni-hostu
+  title: 'Problém $\prob{Rozsazení hostů}$'
+  body: |
+    **Vstup:** hosté $H$, $|H|=n$, $k$ stolů po $c$ místech, dvojice nepřátel $N$, páry $P$ a pro každého hosta $g$ množina kamarádů $F(g)$.
+
+    **Otázka:** lze každého hosta posadit k jednomu stolu tak, aby u stolu bylo nejvýše $c$ hostů, nepřátelé neseděli spolu, páry seděly spolu a každý měl u stolu aspoň jednoho kamaráda?
+  odkaz: un-14-4
+  prob: [Rozsazení hostů]
+  makro: []
+  text: []
+
+- id: pojem-rozvrh-se-zavislostmi
+  title: 'Problém $\prob{Rozvrh se závislostmi}$'
+  body: |
+    **Vstup:** úlohy $J$ délky $1$, počet procesorů $m$, počet kroků $T$, pro každou úlohu okno $r_j\le d_j$ a závislosti $Z\subseteq J\times J$.
+
+    **Otázka:** lze každé úloze $j$ přidělit krok $\sigma(j)\in[r_j,d_j]$ tak, aby v žádném kroku neběželo víc než $m$ úloh a pro $(i,j)\in Z$ platilo $\sigma(i)<\sigma(j)$?
+  odkaz: un-14-6
+  prob: [Rozvrh se závislostmi]
+  makro: []
+  text: []
+
+- id: pojem-zhasni-svetla
+  title: 'Problém $\prob{Zhasni světla}$'
+  body: |
+    **Vstup:** graf $G=(V,E)$, množina rozsvícených vrcholů $L\subseteq V$ a číslo $k$; stisk vrcholu $v$ přepne světla v uzavřeném okolí $N[v]$.
+
+    **Otázka:** lze nejvýše $k$ stisky zhasnout všechna světla?
+  odkaz: un-14-7
+  prob: [Zhasni světla]
+  makro: []
+  text: []
+
+- id: pojem-prevoznik
+  title: 'Problém $\prob{Převozník}$'
+  body: |
+    **Vstup:** předměty $V$ na levém břehu, kapacita loďky $c$, konfliktní dvojice $K$ (nesmějí zůstat na břehu bez převozníka) a počet kroků $T$ zadaný unárně.
+
+    **Otázka:** lze všechny předměty dostat na pravý břeh nejvýše za $T$ kroků (krok = převozník přepluje s nejvýše $c$ předměty, nebo stojí)?
+  odkaz: un-14-8
+  prob: [Převozník]
   makro: []
   text: []
 

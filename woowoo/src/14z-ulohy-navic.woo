@@ -2,111 +2,89 @@
   label: ch-resice-sat-ulohy-navic
 
 
-Úlohy procvičují algoritmy a kódování z této kapitoly: unit propagation pro Hornovy formule (oddíl
-.reference:ch-resice-sat-horn-sat), DPLL a analýzu konfliktu v CDCL (oddíl .reference:ch-resice-sat-jak-funguji-sat-resice),
-formát DIMACS (oddíl .reference:ch-resice-sat-dimacs), kódování problémů do $\prob{SAT}$u se stavebními bloky (oddíl
-.reference:ch-resice-sat-redukce-do-sat a cvičení .reference:ch-resice-sat-cviceni-7) a Tseitinovu transformaci (oddíl
-.reference:ch-resice-sat-tseitinova-transformace). Pododdíl .reference:ch-resice-sat-ulohy-navic-sbirka přidává čtyři
-úlohy z cizí sbírky: kódování barvení, trojrozměrného párování, hamiltonovské kružnice a dlouhé kružnice do $\prob{SAT}$u
-v podobě, jakou čeká zápočtový test.
+Všechny úlohy jsou typu 3 zápočtového testu: „zformulujte problém jako $\prob{SAT}$“. Řeš je podle postupu
+.reference:ch-resice-sat-postup-kodovani (a oddílu .reference:ch-test-postup-ilp-sat): proměnné s významem, klauzule
+po skupinách „chceme $\to$ implikace $\to$ klauzule“, obě implikace, čtení řešení z modelu a velikost formule. Úlohy
+postupně přidávají modelovací triky: stavební bloky z oddílu .reference:ch-resice-sat-redukce-do-sat (úlohy 14.1, 14.5),
+implikaci s disjunkcí v závěru (14.2, 14.4, 14.6), omezení na konstantně mnoha proměnných (14.3), sekvenční čítač
+„nejvýše $k$“ z cvičení .reference:cv-7-4 (14.4, 14.6, 14.8, v bodech b) i 14.2 a 14.3, ve 14.7), paritu přes Tseitinovu transformaci (14.7, oddíl
+.reference:ch-resice-sat-tseitinova-transformace) a proměnné s časovým indexem pro plánování (14.6, 14.8). Pododdíl
+.reference:ch-resice-sat-ulohy-navic-sbirka přidává čtyři úlohy z cizí sbírky: kódování barvení, trojrozměrného
+párování, hamiltonovské kružnice a dlouhé kružnice.
 
 
 .Warning:
   title: 'Neoficiální úlohy'
 
-  Úlohy v tomto oddílu "nejsou".notion oficiální zadání předmětu. Jsou to procvičovací úlohy navíc k látce kapitoly;
-  každý běh algoritmu, každé kódování a každé číslo bylo ověřeno krátkým skriptem v Pythonu (simulace algoritmu,
-  hrubá síla přes všechna ohodnocení, porovnání kódování s přímým řešením úlohy, kontrola rezolučního důkazu krok
-  za krokem). Kódování v pododdílu .reference:ch-resice-sat-ulohy-navic-sbirka jsou porovnána s hrubou silou na všech
-  grafech do 5 vrcholů (u trojrozměrného párování na všech, resp. náhodných instancích s $q\le3$) pomocí malého řešiče
-  DPLL v Pythonu, včetně čtení řešení z modelu a počtů proměnných a klauzulí.
+  Úlohy v tomto oddílu "nejsou".notion oficiální zadání předmětu. Jsou to procvičovací úlohy navíc k látce kapitoly.
+  Každé kódování bylo porovnáno s hrubou silou skriptem v Pythonu: formule se vygenerovala pro stovky až tisíce
+  malých náhodných instancí, rozhodla řešičem (PySAT) a výsledek se porovnal s přímým prohledáním všech řešení úlohy;
+  porovnával se i počet modelů s počtem řešení, čtení řešení z modelu a počty proměnných a klauzulí podle vzorců.
+  Konkrétní instance v bodech c) jsou přepočítané stejně (včetně kroků unit propagation). Kódování v pododdílu
+  .reference:ch-resice-sat-ulohy-navic-sbirka jsou porovnána s hrubou silou na všech grafech do 5 vrcholů (u
+  trojrozměrného párování na všech, resp. náhodných instancích s $q\le3$) pomocí malého řešiče DPLL v Pythonu.
 
 
 .Procedure:
   title: 'Než začneš: co budeš potřebovat'
   label: ch-resice-sat-ulohy-navic-nez-zacnes
 
-  "Definice.".notion
+  "Definice a bloky.".notion
 
   .itemize:
 
     .item:
 
-      "Hornova klauzule".emphasize má nejvýše jeden kladný literál (definice .reference:ch-resice-sat-def-horn); unit
-      propagation ji rozhodne (algoritmus .reference:ch-resice-sat-alg-horn).
+      "CNF".notion (problém .reference:prob-sat): konjunkce klauzulí, klauzule je disjunkce literálů. Implikace
+      $A\land B\Rightarrow C\lor D$ je klauzule $(\lnot A\lor\lnot B\lor C\lor D)$; ekvivalence $a\Leftrightarrow b$
+      jsou dvě klauzule $(\lnot a\lor b)$, $(a\lor\lnot b)$.
 
     .item:
 
-      "DPLL".emphasize: unit propagation, větvení a návrat po konfliktu (definice .reference:ch-resice-sat-def-dpll).
-      "CDCL".emphasize: implikační graf s přiřazeními $x@k$
-      (definice .reference:ch-resice-sat-def-implikacni-graf-cdcl) a analýza konfliktu 1UIP
-      (postup .reference:ch-resice-sat-proc-1uip).
+      "Stavební bloky".notion (definice .reference:ch-resice-sat-def-bloky): „alespoň jedna“ = jedna klauzule
+      $(y_1\lor\dots\lor y_n)$, „nejvýše jedna“ = $\binom n2$ klauzulí $(\lnot y_i\lor\lnot y_j)$, „právě jedna“ = obojí.
 
     .item:
 
-      Stavební bloky: alespoň jedna (jedna klauzule), nejvýše jedna ($\binom n2$ klauzulí $\lnot y_i\lor\lnot y_j$),
-      právě jedna (definice .reference:ch-resice-sat-def-bloky).
+      "Nejvýše $k$".notion sekvenčním čítačem (cvičení .reference:cv-7-4): pro $1\le k<n$ přidá $k(n-1)$ nových
+      proměnných a $2nk+n-4k$ klauzulí. Funguje pro libovolné literály, takže „aspoň $k$ z $y_1,\dots,y_n$“ je
+      „nejvýše $n-k$ z $\lnot y_1,\dots,\lnot y_n$“. Zakázat všechny $(k+1)$-tice ($\binom n{k+1}$ klauzulí) smíš
+      jen tehdy, když je jich polynomiálně mnoho – je-li $n$ nebo $k$ omezené konstantou (blok „nejvýše jedna“ je
+      případ $k=1$); pro $k\approx n/2$ je to chyba.
 
     .item:
 
-      Tseitin: proměnná za každé hradlo a klauzule za ekvivalenci „hradlo $\Leftrightarrow$ jeho funkce“; výsledek je
-      ekvisplnitelný s původní formulí (věta .reference:ch-resice-sat-thm-tseitin). DIMACS: hlavička "p cnf".code,
-      klauzule končí nulou (oddíl .reference:ch-resice-sat-dimacs).
+      "Parita".notion (cvičení .reference:cv-7-3): hradlo $g\Leftrightarrow(u\oplus v)$ dávají čtyři klauzule
+      $(\lnot g\lor u\lor v)$, $(\lnot g\lor\lnot u\lor\lnot v)$, $(g\lor\lnot u\lor v)$, $(g\lor u\lor\lnot v)$;
+      XOR $n$ proměnných je řetěz takových hradel ($4(n-1)$ klauzulí), přímý zápis v CNF jich potřebuje $2^{n-1}$.
 
 
-  "Kuchařka – kódování do SAT (úlohy 14.5, 14.8–14.12).".notion Postupy .reference:ch-test-postup-ilp-sat
-  a .reference:ch-resice-sat-postup-kodovani.
+  "Kuchařka – kódování do SAT".notion (postupy .reference:ch-resice-sat-postup-kodovani
+  a .reference:ch-test-postup-ilp-sat):
 
   .enumerate:
 
     .item:
 
-      Proměnné s významem („$x_{v,c}=1$, právě když vrchol $v$ má barvu $c$“).
+      "Hlavička:".notion „Redukce: $X\redp\prob{SAT}$, instance $\mapsto$ formule $\varphi$“; triviální případy zvlášť.
 
     .item:
 
-      Klauzule po skupinách, každá s větou, co zajišťuje; používej stavební bloky.
+      "Proměnné s významem:".notion výběr ($x_p=1\iff p\in I$), přiřazení ($x_{g,t}$: host $g$ u stolu $t$), čas
+      ($b_{v,t}$: stav předmětu $v$ po $t$ krocích).
 
     .item:
 
-      Obě implikace: z řešení model, z modelu řešení; jak řešení z modelu přečíst.
+      "Omezení po skupinách:".notion věta česky $\to$ implikace $\to$ klauzule, s rozsahem indexů a počtem klauzulí.
 
     .item:
 
-      Velikost: počet proměnných a klauzulí; musí být polynomiální i při binárně zapsaném parametru.
+      "Závěr:".notion ($\Rightarrow$) z řešení model, ($\Leftarrow$) z modelu řešení; jak řešení z modelu přečíst;
+      počet proměnných a klauzulí, polynomiální ve velikosti vstupu.
 
 
-  "Kuchařka – ruční běh řešiče (úlohy 14.1–14.4).".notion
-
-  .enumerate:
-
-    .item:
-
-      Unit propagation: klauzule s jediným nepřiřazeným literálem a ostatními nepravdivými ho vynutí; opakuj, dokud
-      jde.
-
-    .item:
-
-      DPLL zapisuj do tabulky (rozhodnutí, propagace, konflikt, návrat) a kresli strom prohledávání.
-
-    .item:
-
-      CDCL: trail $x@k$, implikační graf; konfliktní klauzuli rezolvuj s důvody literálů poslední úrovně (od konce
-      trailu), dokud z ní nezbude jediný. Skoč na nejvyšší úroveň mezi ostatními literály naučené klauzule.
-
-
-  "Kuchařka – Tseitin a rezoluce (úlohy 14.6, 14.7).".notion
-
-  .enumerate:
-
-    .item:
-
-      Hradlo $g\Leftrightarrow(a\land b)$ dá klauzule $(\lnot g\lor a)$, $(\lnot g\lor b)$,
-      $(g\lor\lnot a\lor\lnot b)$; pro $\lor$ obdobně, nakonec jednotková klauzule s výstupem obvodu.
-
-    .item:
-
-      Rezoluce: z $(A\lor x)$ a $(B\lor\lnot x)$ plyne $(A\lor B)$; odvození prázdné klauzule dokazuje nesplnitelnost.
+  "Častá chyba:".notion podmínka, která není klauzule („$\sum x\le c$“, „$x_u\ne x_v$“, „počet je lichý“) – převeď ji
+  blokem, čítačem nebo Tseitinem.
 
 
 .Subsection Rozcvička
@@ -114,511 +92,497 @@ v podobě, jakou čeká zápočtový test.
 
 
 .Exercise:
-  title: 'Úloha 14.1 (Hornova formule a unit propagation)'
+  title: 'Úloha 14.1 (doplnění latinského čtverce)'
   label: un-14-1
+
+  "Latinský čtverec".notion řádu $n$ je tabulka $n\times n$ vyplněná čísly $1,\dots,n$ tak, že v každém řádku
+  i v každém sloupci je každé číslo právě jednou.
+
+
+  "Problém $\prob{Latin Square Completion}$.".notion
+
+
+  "Vstup:".notion číslo $n$ a částečně vyplněná tabulka $n\times n$, tj. množina $P$ trojic $(r,s,v)$ „na políčku
+  v řádku $r$ a sloupci $s$ je předepsané číslo $v$“.
+
+
+  "Otázka:".notion lze tabulku doplnit na latinský čtverec?
 
   .enumerate:
     type: a
 
     .item:
 
-      Které z klauzulí $(\lnot x\lor\lnot y\lor z)$, $(x\lor y)$, $(\lnot x\lor\lnot y\lor\lnot z)$, $(x)$,
-      $(\lnot x\lor y\lor z)$, $(\lnot u)$ jsou Hornovy? U Hornových určete tvar (fakt, pravidlo, omezující).
+      Navrhněte formuli v CNF, která je splnitelná právě tehdy, když doplnění existuje. Popište proměnné, klauzule
+      po skupinách, korektnost oběma směry, čtení řešení z modelu a počet proměnných a klauzulí.
 
     .item:
 
-      Spusťte algoritmus unit propagation pro Hornovy formule (algoritmus .reference:ch-resice-sat-alg-horn) na formuli
-      $\varphi=C_1\land\dots\land C_8$ s klauzulemi $C_1=(a)$, $C_2=(\lnot b\lor\lnot c\lor d)$, $C_3=(\lnot a\lor b)$,
-      $C_4=(\lnot a\lor c)$, $C_5=(\lnot d\lor\lnot e\lor\lnot f)$, $C_6=(\lnot d\lor e)$, $C_7=(\lnot g\lor f)$,
-      $C_8=(\lnot c\lor\lnot h)$. Klauzule procházejte opakovaně v pořadí $C_1,\dots,C_8$. Je $\varphi$ splnitelná?
+      Sudoku je latinský čtverec řádu $n=k^2$, ve kterém navíc každý z $n$ bloků $k\times k$ obsahuje každé číslo
+      právě jednou. Co je třeba do formule přidat?
 
     .item:
 
-      Pro které proměnné $x\in\{a,\dots,h\}$ je formule $\varphi\land(x)$ nesplnitelná? Zdůvodněte bez zkoušení
-      všech ohodnocení.
+      Pro $n=3$ rozhodněte pomocí unit propagation instance $P_1=\{(1,1,1),(2,2,2)\}$ a
+      $P_2=\{(1,1,1),(2,2,2),(3,3,1)\}$.
 
 
 .Solution:
+  label: red-un-14-1
 
-  "a) Hornovy klauzule.".notion Klauzule je Hornova, má-li "nejvýše jeden kladný".emphasize literál.
+  "Redukce:".notion $\prob{Latin Square Completion} \redp \prob{SAT}$, instance $(n,P)$ $\mapsto$ formule $\varphi_{n,P}$.
 
-  .table:
-    columns: 'lcl'
 
-    .row:
-      head: true
+  "Velikost vstupu.".notion Tabulka má $n^2$ políček, vstup má tedy velikost aspoň $n^2$; stačí formule polynomiální
+  v $n$.
 
-      klauzule
 
-      kladných literálů
+  "Krok 1 – proměnné.".notion $x_{r,s,v}$ pro $r,s,v\in\{1,\dots,n\}$: $x_{r,s,v}=1\iff$ „na políčku $(r,s)$ je číslo
+  $v$“. Celkem $n^3$ proměnných.
 
-      závěr
 
-    .row:
+  "Krok 2 – omezení.".notion
 
-      $(\lnot x\lor\lnot y\lor z)$
+  .enumerate:
 
-      1
+    .item:
 
-      Hornova, pravidlo $x\land y\Rightarrow z$
+      Chceme: na každém políčku je aspoň jedno číslo. Blok "alespoň jedna".emphasize:
+      $(x_{r,s,1}\lor\dots\lor x_{r,s,n})$ pro každé $r,s$. ($n^2$ klauzulí)
 
-    .row:
+    .item:
 
-      $(x\lor y)$
+      Chceme: na políčku nejvýše jedno číslo. $x_{r,s,v}\Rightarrow\lnot x_{r,s,w}$, blok "nejvýše jedna".emphasize:
+      $(\lnot x_{r,s,v}\lor\lnot x_{r,s,w})$ pro každé $r,s$ a $v<w$. ($n^2\binom n2$ klauzulí)
 
-      2
+    .item:
 
-      není Hornova
+      Chceme: v řádku je každé číslo nejvýše jednou: $(\lnot x_{r,s,v}\lor\lnot x_{r,t,v})$ pro každé $r,v$ a $s<t$.
+      ($n^2\binom n2$ klauzulí)
 
-    .row:
+    .item:
 
-      $(\lnot x\lor\lnot y\lor\lnot z)$
+      Chceme: ve sloupci je každé číslo nejvýše jednou: $(\lnot x_{r,s,v}\lor\lnot x_{q,s,v})$ pro každé $s,v$
+      a $r<q$. ($n^2\binom n2$ klauzulí)
 
-      0
+    .item:
 
-      Hornova, omezující $x\land y\land z\Rightarrow\bot$
+      Chceme: předepsaná čísla zůstanou. Jednotková klauzule $(x_{r,s,v})$ pro každé $(r,s,v)\in P$.
+      ($|P|$ klauzulí)
 
-    .row:
 
-      $(x)$
+  Klauzule „v řádku je každé číslo aspoň jednou“ psát nemusíme: řádek má $n$ políček, na každém je právě jedno
+  číslo (skupiny 1, 2) a žádné číslo se neopakuje (skupina 3), takže $n$ různých čísel z $\{1,\dots,n\}$ je každé
+  právě jednou. Pro sloupce totéž.
 
-      1
 
-      Hornova, fakt $\top\Rightarrow x$
+  "Krok 3 – formule.".notion $\varphi_{n,P}$ = konjunkce skupin 1–5.
 
-    .row:
 
-      $(\lnot x\lor y\lor z)$
-
-      2
-
-      není Hornova
-
-    .row:
-
-      $(\lnot u)$
-
-      0
-
-      Hornova, omezující $u\Rightarrow\bot$
-
-
-  "b) Běh algoritmu.".notion Všechny klauzule $\varphi$ jsou Hornovy (každá má nejvýše jeden kladný literál), algoritmus
-  tedy smíme použít. Jako implikace: $C_1$: fakt $a$; $C_2$: $b\land c\Rightarrow d$; $C_3$: $a\Rightarrow b$;
-  $C_4$: $a\Rightarrow c$; $C_5$: $d\land e\land f\Rightarrow\bot$; $C_6$: $d\Rightarrow e$; $C_7$: $g\Rightarrow f$;
-  $C_8$: $c\land h\Rightarrow\bot$. Začneme samými nulami a zvedáme jen vynucené proměnné:
-
-  .table:
-    columns: 'cclp{6.5cm}'
-
-    .row:
-      head: true
-
-      krok
-
-      průchod
-
-      $(a,b,c,d,e,f,g,h)$
-
-      co se stalo
-
-    .row:
-
-      0
-
-      –
-
-      $(0,0,0,0,0,0,0,0)$
-
-      start
-
-    .row:
-
-      1
-
-      1
-
-      $(1,0,0,0,0,0,0,0)$
-
-      fakt $C_1$: $a:=1$
-
-    .row:
-
-      ~
-
-      1
-
-      $(1,0,0,0,0,0,0,0)$
-
-      $C_2$ nevystřelí, $b=c=0$
-
-    .row:
-
-      2
-
-      1
-
-      $(1,1,0,0,0,0,0,0)$
-
-      $C_3$ ($a\Rightarrow b$): $b:=1$
-
-    .row:
-
-      3
-
-      1
-
-      $(1,1,1,0,0,0,0,0)$
-
-      $C_4$ ($a\Rightarrow c$): $c:=1$
-
-    .row:
-
-      4
-
-      2
-
-      $(1,1,1,1,0,0,0,0)$
-
-      teď vystřelí $C_2$ ($b\land c\Rightarrow d$): $d:=1$
-
-    .row:
-
-      5
-
-      2
-
-      $(1,1,1,1,1,0,0,0)$
-
-      $C_6$ ($d\Rightarrow e$): $e:=1$
-
-    .row:
-
-      ~
-
-      3
-
-      $(1,1,1,1,1,0,0,0)$
-
-      nic dalšího nevystřelí ($C_7$ má $g=0$) – konec cyklu
-
-
-  "Kontrola omezujících klauzulí:".notion $C_5$ má předpoklady $d=e=1$, ale $f=0$ – platí; $C_8$ má $c=1$, ale $h=0$ –
-  platí. Algoritmus vrátí $\tau=(1,1,1,1,1,0,0,0)$, formule je "splnitelná".notion. Dosazením: všech osm klauzulí je
-  splněno.
-
-
-  Je to dokonce "jediný".emphasize model: podle věty .reference:ch-resice-sat-thm-horn je $a=\dots=e=1$ v každém modelu;
-  pak $C_5$ vynutí $f=0$, $C_7$ vynutí $g=0$ a $C_8$ (s $c=1$) vynutí $h=0$. (Skriptem ověřeno přes všech $2^8$
-  ohodnocení: model je jediný.)
-
-
-  .centered:
-
-    !tikz:
-      filename: 14z-ulohy-navic-01
-      options: 'x=1cm,y=1cm'
-
-      \node[font=\small] (top) at (0,0) {$\top$};
-      \node[litT] (a) at (1.3,0) {$a$};
-      \node[litT] (b) at (2.7,1.1) {$b$};
-      \node[litT] (c) at (2.7,-1.1) {$c$};
-      \node[junc] (j1) at (3.7,0) {};
-      \node[litT] (d) at (4.8,0) {$d$};
-      \node[litT] (e) at (6.2,1.1) {$e$};
-      \node[lit] (f) at (6.2,-1.1) {$f$};
-      \node[lit] (g) at (4.8,-1.7) {$g$};
-      \node[junc] (j2) at (7.2,0) {};
-      \node[lit] (bot1) at (8.4,0) {$\bot$};
-      \node[lit] (h) at (2.7,-2.8) {$h$};
-      \node[junc] (j3) at (3.8,-2.4) {};
-      \node[lit] (bot2) at (5.1,-3.0) {$\bot$};
-      \draw[impT] (top)--node[above,font=\scriptsize]{$C_1$}(a);
-      \draw[impT] (a)--node[above left,font=\scriptsize]{$C_3$}(b);
-      \draw[impT] (a)--node[below left,font=\scriptsize]{$C_4$}(c);
-      \draw[impT,-] (b)--(j1); \draw[impT,-] (c)--(j1); \draw[impT] (j1)--node[above,font=\scriptsize]{$C_2$}(d);
-      \draw[impT] (d)--node[above left,font=\scriptsize]{$C_6$}(e);
-      \draw[imp,-] (d)--(j2); \draw[imp,-] (e)--(j2); \draw[imp,-] (f)--(j2);
-      \draw[imp] (j2)--node[above,font=\scriptsize]{$C_5$}(bot1);
-      \draw[imp] (g)--node[below right,font=\scriptsize]{$C_7$}(f);
-      \draw[imp,-] (c)--(j3); \draw[imp,-] (h)--(j3);
-      \draw[imp] (j3)--node[above right,font=\scriptsize]{$C_8$}(bot2);
-
-
-  Formule $\varphi$ jako síť pravidel (stejné značení jako na obrázku .reference:ch-resice-sat-fig-horn): zeleně
-  proměnné, které unit propagation zvedne na 1. "Všimni si:".emphasize do omezení $C_5$ už vedou šipky ze dvou
-  zelených proměnných ($d$, $e$) – stačí zapálit $f$ (přímo, nebo přes $g$) a omezení vystřelí. Do $C_8$ vede šipka
-  ze zelené $c$, chybí jen $h$.
-
-
-  "c) Které fakty formuli zabijí.".notion Označme $M=(1,1,1,1,1,0,0,0)$ výsledek z bodu b). Algoritmus na
-  $\varphi\land(x)$ zvedne nejdřív totéž co na $\varphi$ (všechna ta nastavení jsou vynucená i teď) a navíc $x$
-  a vše, co z $x$ plyne. Podle věty .reference:ch-resice-sat-thm-horn je odpověď algoritmu správná.
+  "Krok 4 – korektnost.".notion
 
   .itemize:
 
     .item:
 
-      $x\in\{a,b,c,d,e\}$: $x$ je v $M$ už 1, nic nového nevystřelí, $M$ zůstane modelem – "splnitelná".notion.
+      ($\Rightarrow$) Je-li $L$ latinský čtverec, který doplňuje $P$, položíme $x_{r,s,v}=1\iff L(r,s)=v$. Skupiny
+      1 a 2 platí, protože na každém políčku je právě jedno číslo, skupiny 3 a 4, protože se v řádku ani sloupci
+      číslo neopakuje, a skupina 5, protože $L$ souhlasí s $P$.
 
     .item:
 
-      $x=f$: $d=e=f=1$ poruší $C_5$ – "nesplnitelná".notion.
+      ($\Leftarrow$) V modelu má podle 1 a 2 každé políčko právě jedno $v$ s $x_{r,s,v}=1$; to je $L(r,s)$. Podle
+      3 a 4 se v řádku ani sloupci číslo neopakuje, tedy (úvaha výše) je každé právě jednou a $L$ je latinský
+      čtverec. Podle 5 souhlasí s $P$.
 
     .item:
 
-      $x=g$: $C_7$ zvedne $f:=1$ a opět je porušena $C_5$ – "nesplnitelná".notion.
+      "Čtení řešení:".notion na políčko $(r,s)$ napiš jediné $v$ s $x_{r,s,v}=1$.
 
     .item:
 
-      $x=h$: $c=h=1$ poruší $C_8$ – "nesplnitelná".notion.
+      Odporuje-li si už samotné $P$ (dvě čísla na jednom políčku, stejné číslo dvakrát v řádku), je formule
+      nesplnitelná automaticky – správně.
 
 
-  Odpověď: $x\in\{f,g,h\}$, tedy přesně proměnné, které jsou v jediném modelu rovny 0. (Všech osm formulí
-  $\varphi\land(x)$ ověřeno skriptem algoritmem i hrubou silou.)
+  "Velikost.".notion $n^3$ proměnných a $n^2+3n^2\binom n2+|P|=n^2+\tfrac32n^3(n-1)+|P|=O(n^4)$ klauzulí; pro $n=3$
+  je to $90+|P|$, pro $n=9$ už $8\,829+|P|$. Polynomiální.
+
+
+  "b) Sudoku.".notion Přidáme skupinu 6: v každém bloku je každé číslo nejvýše jednou, tj.
+  $(\lnot x_{r,s,v}\lor\lnot x_{r',s',v})$ pro každý blok, každé $v$ a každou dvojici různých políček $(r,s)\ne(r',s')$ téhož bloku. To je
+  $n\cdot n\binom n2$ klauzulí navíc (pro $n=9$: $2\,916$, celkem $11\,745+|P|$). Korektnost stejně jako výše; „aspoň
+  jednou v bloku“ plyne opět z holubníku. (Dvojice ležící zároveň v řádku a bloku se zapíšou dvakrát, což nevadí.)
+
+
+  "c) Instance $n=3$.".notion
+
+  .itemize:
+
+    .item:
+
+      $P_1$: jednotkové klauzule dají $x_{1,1,1}=x_{2,2,2}=1$ a skupiny 2–4 vynulují ostatní čísla na těchto
+      políčkách, jedničku ve zbytku řádku 1 a sloupce 1 a dvojku ve zbytku řádku 2 a sloupce 2. Na políčku
+      $(2,1)$ tedy nesmí být 1 (sloupec 1) ani 2 (řádek 2), klauzule skupiny 1 je jednotková: $x_{2,1,3}=1$.
+      Stejně $(1,2)$: ne 1 (řádek 1), ne 2 (sloupec 2), tedy $x_{1,2,3}=1$. Dál řádek 1 má 1 a 3, takže $(1,3)$ je 2;
+      řádek 2 má 3 a 2, takže $(2,3)$ je 1; sloupec 1 má 1 a 3, takže $(3,1)$ je 2; sloupec 2 má 3 a 2, takže $(3,2)$
+      je 1; a řádek 3 má 2 a 1, takže $(3,3)$ je 3. Bez větvení dostaneme model, doplnění "existuje".notion a je
+      jediné (obrázek níže vlevo).
+
+    .item:
+
+      $P_2$: jako výše $x_{2,1,3}=1$ a $x_{1,2,3}=1$. Na políčku $(2,3)$ nesmí být 1 (ve sloupci 3 je jednička
+      z $(3,3)$) ani 2 (řádek 2), takže $x_{2,3,3}=1$. Klauzule $(\lnot x_{2,1,3}\lor\lnot x_{2,3,3})$ skupiny 3 je
+      v konfliktu: v řádku 2 by byly dvě trojky. Formule je "nesplnitelná".notion bez jediného větvení, ačkoli
+      v $P_2$ žádné číslo není dvakrát v řádku ani ve sloupci. (Ve čtverci řádu 3 má diagonála buď tři stejná, nebo
+      tři různá čísla; $P_2$ chce na diagonále $1,2,1$.)
+
+
+  .centered:
+
+    !tikz:
+      filename: 14z-ulohy-navic-11
+      options: 'x=1cm,y=1cm'
+
+      \foreach \r/\s/\v/\g in {1/1/1/1,1/2/3/0,1/3/2/0,2/1/3/0,2/2/2/1,2/3/1/0,3/1/2/0,3/2/1/0,3/3/3/0} {
+        \ifnum\g=1 \node[font=\small\bfseries] at ({(\s-0.5)*0.9},{-(\r-0.5)*0.9}) {\v};
+        \else \node[font=\small,text=tT!70!black] at ({(\s-0.5)*0.9},{-(\r-0.5)*0.9}) {\v}; \fi}
+      \draw[black!55] (0,0) grid[step=0.9] (2.7,-2.7);
+      \node[font=\footnotesize] at (1.35,-3.15) {$P_1$: vše vynutí propagace};
+      \begin{scope}[xshift=4.5cm]
+        \fill[rej!15] (0,-0.9) rectangle (0.9,-1.8);
+        \fill[rej!15] (1.8,-0.9) rectangle (2.7,-1.8);
+        \foreach \r/\s/\v/\g in {1/1/1/1,2/2/2/1,3/3/1/1,1/2/3/0,2/1/3/0,2/3/3/0} {
+          \ifnum\g=1 \node[font=\small\bfseries] at ({(\s-0.5)*0.9},{-(\r-0.5)*0.9}) {\v};
+          \else \node[font=\small,text=tT!70!black] at ({(\s-0.5)*0.9},{-(\r-0.5)*0.9}) {\v}; \fi}
+        \draw[black!55] (0,0) grid[step=0.9] (2.7,-2.7);
+        \node[font=\footnotesize] at (1.35,-3.15) {$P_2$: dvě trojky v řádku 2};
+      \end{scope}
+
+
+  Tučně předepsaná čísla, zeleně čísla vynucená unit propagation. "Všimni si:".emphasize vpravo vynutí propagace
+  trojku na dvě políčka téhož řádku – konflikt bez větvení.
+
+
+  (Ověřeno skriptem: kódování porovnáno s výčtem všech latinských čtverců řádu 2, 3 a 4 (2, 12 a 576 čtverců) na
+  1 200 náhodných částečných tabulkách; pro $P=\emptyset$ je počet modelů roven počtu latinských čtverců, se
+  skupinou 6 počtu sudoku $4\times4$ (288); počty klauzulí podle vzorce; průběh propagace v bodě c) simulován.)
 
 
 .Exercise:
-  title: 'Úloha 14.2 (DIMACS: čtení, kontrola a blokující klauzule)'
+  title: 'Úloha 14.2 (instalace balíčků)'
   label: un-14-2
 
-  Je dán soubor ve formátu DIMACS:
+  Správce balíčků má nainstalovat software. Je dána množina balíčků $B$ (každá verze knihovny je samostatný balíček)
+  a k ní:
 
-  !codeblock:
-    language: text
+  .itemize:
 
-    c ukazka
-    p cnf 4 5
-    1 -2 0
-    2 3 0
-    -1 -3 4 0
-    -4 -2 0
-    -3 -4 0
-    2 -4 1 0
+    .item:
+
+      "verze".notion: skupiny $V_1,\dots,V_q\subseteq B$ (různé verze téhož programu); z každé skupiny smí být
+      nainstalován nejvýše jeden balíček;
+
+    .item:
+
+      "závislosti".notion: dvojice $(p,D)$ s $p\in B$, $D\subseteq B$ – je-li nainstalován $p$, musí být nainstalován
+      aspoň jeden balíček z $D$ (např. „aplikace potřebuje knihovnu $l_1$ nebo $l_2$“); jeden balíček může mít víc
+      závislostí;
+
+    .item:
+
+      "konflikty".notion: dvojice $\{p,q\}\in K$, které nesmějí být nainstalovány současně;
+
+    .item:
+
+      "cíl".notion: množina $T\subseteq B$ balíčků, které chce uživatel nainstalovat.
+
+
+  "Otázka:".notion existuje instalace $I\subseteq B$, $T\subseteq I$, splňující všechny podmínky?
 
   .enumerate:
     type: a
 
     .item:
 
-      Zapište formuli v proměnných $x_1,\dots,x_4$. Je hlavička v pořádku?
+      Navrhněte formuli v CNF, která je splnitelná právě tehdy, když taková instalace existuje (proměnné, klauzule
+      po skupinách, obě implikace, čtení řešení, velikost).
 
     .item:
 
-      Kolega tvrdí, že mu řešič vypsal "v 1 -2 3 -4 0".code. Může to být model?
+      Uživatel chce instalaci s "nejvýše $k$".notion balíčky. Doplňte formuli tak, aby zůstala polynomiální i pro
+      $k\approx|B|/2$, a popište, jak najít nejmenší instalaci opakovaným voláním řešiče.
 
     .item:
 
-      Řešič ve skutečnosti vypsal "s SATISFIABLE".code a "v -1 -2 3 -4 0".code. Ověřte, že je to model, a napište
-      v DIMACS klauzuli, která zakáže "právě tento".emphasize model. K čemu se taková klauzule hodí?
-
-    .item:
-
-      Kolik modelů formule má? Co vypíše řešič, když k ní přidáme klauzuli z bodu c)?
+      $B=\{a,g,l_1,l_2,c_1,c_2,n_1,n_2\}$, verze $\{c_1,c_2\}$ a $\{n_1,n_2\}$, závislosti $(a,\{g\})$,
+      $(a,\{l_1,l_2\})$, $(g,\{c_2\})$, $(l_1,\{c_1\})$, $(l_2,\{n_1,n_2\})$, konflikt $\{g,n_1\}$ a cíl $T=\{a\}$.
+      Vypište klauzule a rozhodněte instanci unit propagation. Kolik je přípustných instalací a kolik balíčků má
+      nejmenší z nich?
 
 
 .Solution:
+  label: red-un-14-2
 
-  "a) Formule.".notion Každý řádek je klauzule, kladné číslo $i$ je $x_i$, záporné $-i$ je $\lnot x_i$, nula ukončuje
-  klauzuli:
+  "Redukce:".notion $\prob{Instalace balíčků} \redp \prob{SAT}$, instance $(B,V_1,\dots,V_q,\text{závislosti},K,T)$
+  $\mapsto$ formule $\varphi$.
+
+
+  "Krok 1 – proměnné.".notion $x_p$ pro $p\in B$: $x_p=1\iff p\in I$ („balíček $p$ se nainstaluje“). Celkem $|B|$
+  proměnných.
+
+
+  "Krok 2 – omezení.".notion Značíme $Z$ počet závislostí.
+
+  .enumerate:
+
+    .item:
+
+      Chceme: závislost $(p,D)$ je splněna. Implikace s disjunkcí v závěru $x_p\Rightarrow\bigvee_{d\in D}x_d$,
+      klauzule $\bigl(\lnot x_p\lor\bigvee_{d\in D}x_d\bigr)$. ($Z$ klauzulí; pro $D=\emptyset$ vyjde $(\lnot x_p)$ –
+      balíček s nesplnitelnou závislostí nelze nainstalovat, správně.)
+
+    .item:
+
+      Chceme: konfliktní dvojice ne současně. $x_p\Rightarrow\lnot x_q$, klauzule $(\lnot x_p\lor\lnot x_q)$ pro
+      $\{p,q\}\in K$. ($|K|$ klauzulí)
+
+    .item:
+
+      Chceme: z každé skupiny verzí nejvýše jedna. Blok "nejvýše jedna".emphasize:
+      $(\lnot x_p\lor\lnot x_{p'})$ pro každé $i$ a $p\ne p'$ z $V_i$. ($\sum_i\binom{|V_i|}2$ klauzulí)
+
+    .item:
+
+      Chceme: cíl je nainstalován. $(x_t)$ pro $t\in T$. ($|T|$ klauzulí)
+
+
+  "Krok 3 – formule.".notion $\varphi$ = konjunkce skupin 1–4.
+
+
+  "Krok 4 – závěr.".notion
+
+  .itemize:
+
+    .item:
+
+      ($\Rightarrow$) Instalace $I$ splňuje podmínky: položíme $x_p=1\iff p\in I$. Klauzule skupiny 1 je splněna,
+      protože buď $p\notin I$, nebo je v $I$ některý balíček z $D$; skupiny 2–4 přímo z podmínek.
+
+    .item:
+
+      ($\Leftarrow$) Z modelu vezmeme $I=\{p: x_p=1\}$. Skupina 4 dává $T\subseteq I$, skupina 1 splněné závislosti,
+      2 žádný konflikt, 3 nejvýše jednu verzi z každé skupiny.
+
+    .item:
+
+      "Čtení řešení:".notion nainstaluj balíčky s $x_p=1$. Model může obsahovat i balíčky, které nikdo nepotřebuje;
+      otázka se ptá jen na existenci, minimalitu řeší bod b).
+
+    .item:
+
+      "Velikost:".notion $|B|$ proměnných a $Z+|K|+\sum_i\binom{|V_i|}2+|T|$ klauzulí; každá klauzule skupiny 1 je
+      dlouhá jako zápis závislosti. Polynomiální.
+
+
+  "(nad rámec přednášky)".emphasize Rozhodnout instalovatelnost je obecně NP-úplné, a proto některé správce balíčků
+  (např. knihovna libsolv v openSUSE nebo p2 v Eclipse) používají uvnitř řešič $\prob{SAT}$u.
+
+
+  "b) Nejvýše $k$ balíčků.".notion Přidáme blok "nejvýše $k$".emphasize z $x_p$, $p\in B$, sekvenčním čítačem
+  z cvičení .reference:cv-7-4: pro $1\le k<|B|$ je to $k(|B|-1)$ nových proměnných a $2|B|k+|B|-4k$ klauzulí (pro
+  $k=0$ klauzule $(\lnot x_p)$, pro $k\ge|B|$ nic). Zakázat všechny $(k+1)$-tice "nejde".emphasize: pro $k\approx|B|/2$
+  je jich exponenciálně mnoho. "Nejmenší instalace:".notion řešič voláme pro $k=0,1,2,\dots$, dokud formule není
+  splnitelná, nebo binárním vyhledáváním přes $k\in\{0,\dots,|B|\}$ s $O(\log|B|)$ voláními – stejně jako u největší
+  kliky v oddílu .reference:ch-resice-sat-nejvetsi-klika. Model pro nejmenší $k$ je nejmenší instalace.
+
+
+  "c) Instance.".notion Devět klauzulí:
 
   .equation:
 
-    \varphi=\underbrace{(x_1\lor\lnot x_2)}_{K_1}\land\underbrace{(x_2\lor x_3)}_{K_2}\land\underbrace{(\lnot x_1\lor\lnot x_3\lor x_4)}_{K_3}\land\underbrace{(\lnot x_4\lor\lnot x_2)}_{K_4}\land\underbrace{(\lnot x_3\lor\lnot x_4)}_{K_5}\land\underbrace{(x_2\lor\lnot x_4\lor x_1)}_{K_6}.
+    (\lnot a\lor g),\ (\lnot a\lor l_1\lor l_2),\ (\lnot g\lor c_2),\ (\lnot l_1\lor c_1),\ (\lnot l_2\lor n_1\lor n_2),\ (\lnot g\lor\lnot n_1),\ (\lnot c_1\lor\lnot c_2),\ (\lnot n_1\lor\lnot n_2),\ (a).
 
-  Hlavička "p cnf 4 5".code tvrdí 4 proměnné (správně, nejvyšší číslo je 4) a "5 klauzulí".emphasize – v souboru je ale
-  klauzulí "šest".notion. Správně je "p cnf 4 6".code. (Podle implementace řešič takový soubor odmítne jako chybný,
-  nebo jen vypíše varování – na nesoulad hlavičky s obsahem se spoléhat nedá.)
-
-
-  "b) Ohodnocení $(1,0,1,0)$.".notion V klauzuli $K_3=(\lnot x_1\lor\lnot x_3\lor x_4)$ dostaneme $0\lor0\lor0$ – je
-  nepravdivá. Model to "není".notion; řešič, který vypíše "s SATISFIABLE".code, takový řádek "v".code vypsat nemůže.
-
-
-  "c) Ohodnocení $(0,0,1,0)$.".notion Dosadíme do všech klauzulí: $K_1=(1\lor1)$, $K_2=(0\lor1)$, $K_3=(1\lor0\lor0)$,
-  $K_4=(1\lor1)$, $K_5=(0\lor1)$, $K_6=(0\lor1\lor0)$ – všechny pravdivé, je to model.
+  Unit propagation: $(a)$ dá $a=1$; $(\lnot a\lor g)$ dá $g=1$; $(\lnot g\lor c_2)$ dá $c_2=1$; $(\lnot c_1\lor\lnot c_2)$
+  dá $c_1=0$; $(\lnot l_1\lor c_1)$ dá $l_1=0$; $(\lnot a\lor l_1\lor l_2)$ dá $l_2=1$; $(\lnot g\lor\lnot n_1)$ dá
+  $n_1=0$; $(\lnot l_2\lor n_1\lor n_2)$ dá $n_2=1$. Všech osm proměnných je přiřazeno bez větvení a bez konfliktu,
+  takže formule je splnitelná a model je "jediný".emphasize: jediná přípustná instalace je $I=\{a,g,l_2,c_2,n_2\}$,
+  nejmenší má tedy 5 balíčků (s čítačem z bodu b) je formule pro $k=4$ nesplnitelná a pro $k=5$ splnitelná).
+  Kdyby navíc $l_2$ potřebovala $c_1$, dala by klauzule $(\lnot l_2\lor c_1)$ konflikt a instalace by neexistovala.
 
 
-  "Blokující klauzule".notion zneguje každý literál modelu: z "-1 -2 3 -4".code vznikne "1 2 -3 4 0".code, tedy
-  $(x_1\lor x_2\lor\lnot x_3\lor x_4)$. Je nepravdivá "jen".emphasize v ohodnocení $(0,0,1,0)$ (všechny její literály
-  musí být nepravdivé), takže z modelů zahodí právě tento jeden. Hlavička se změní na "p cnf 4 7".code. Použití:
-  řešič hledá jen "jeden".emphasize model; přidáním blokující klauzule a novým spuštěním zjistíme, zda existuje
-  "jiný".emphasize model (ověření jednoznačnosti, výčet všech modelů) "(nad rámec přednášky)".emphasize.
-
-
-  "d) Počet modelů.".notion Rozdělíme podle $x_2$ a dosadíme (je to přesně unit propagation):
-
-  .itemize:
-
-    .item:
-
-      $x_2=1$: $K_4$ dá $x_4=0$, $K_1$ dá $x_1=1$, pak $K_3=(\lnot x_1\lor\lnot x_3\lor x_4)$ dá $x_3=0$. Zbylé $K_2$,
-      $K_5$, $K_6$ jsou splněny. Model $(1,1,0,0)$.
-
-    .item:
-
-      $x_2=0$: $K_2$ dá $x_3=1$, $K_5$ dá $x_4=0$, $K_3$ dá $x_1=0$. $K_1$ (obsahuje $\lnot x_2$) a $K_6$ (obsahuje
-      $\lnot x_4$) jsou splněny. Model $(0,0,1,0)$.
-
-
-  V každé větvi je všechno vynucené, takže modely jsou "právě dva".notion. Po přidání blokující klauzule zbude
-  jediný: řešič vypíše "s SATISFIABLE".code a "v 1 2 -3 -4 0".code. Zablokujeme-li i ten ("-1 -2 3 4 0".code),
-  odpoví "s UNSATISFIABLE".code. (Ověřeno skriptem: načtení souboru, počet klauzulí, oba modely.)
+  (Ověřeno skriptem: kódování porovnáno s výčtem všech podmnožin $B$ na 3 000 náhodných instancích s nejvýše
+  7 balíčky, včetně počtu modelů a varianty s čítačem; v bodě c) propagace, počet modelů 1 a hranice $k=5$.)
 
 
 .Exercise:
-  title: 'Úloha 14.3 (DPLL krok za krokem)'
+  title: 'Úloha 14.3 (hledání min)'
   label: un-14-3
 
-  Spusťte DPLL (algoritmus .reference:ch-resice-sat-alg-dpll) na formuli s klauzulemi
-  $c_1=(\lnot a\lor b)$, $c_2=(\lnot a\lor c\lor d)$, $c_3=(a\lor b\lor\lnot d)$, $c_4=(\lnot c\lor d)$, $c_5=(a\lor b)$,
-  $c_6=(\lnot d\lor c)$, $c_7=(\lnot b\lor\lnot c\lor\lnot d)$. Větvěte vždy na první nepřiřazené proměnné v pořadí
-  $a,b,c,d$, nejdřív hodnotou 1.
+  Ve hře Hledání min je mřížka $R\times S$. Některá políčka jsou "odkrytá".notion: miny na nich nejsou a nesou
+  číslo $c(p)\in\{0,\dots,8\}$ – počet min mezi (až osmi) sousedními políčky, včetně diagonálních. Ostatní políčka
+  jsou zakrytá.
+
+
+  "Problém $\prob{Minesweeper}$ (konzistence).".notion
+
+
+  "Vstup:".notion rozměry $R,S$ a odkrytá políčka s čísly.
+
+
+  "Otázka:".notion lze do zakrytých políček rozmístit miny tak, aby všechna čísla souhlasila?
 
   .enumerate:
     type: a
 
     .item:
 
-      Zapište průběh do tabulky (rozhodnutí, unit propagation, konflikt) a nakreslete strom prohledávání.
+      Navrhněte formuli v CNF, která je splnitelná právě tehdy, když rozmístění existuje. Kolik klauzulí nejvýše
+      dá jedno odkryté číslo? Proč tu smíme zakazovat celé $(c+1)$-tice, ačkoli to u „nejvýše $k$“ obecně je chyba?
 
     .item:
 
-      Proč DPLL nikdy nevětví na proměnné $b$?
+      Hra navíc prozradí celkový počet min $M$. Doplňte formuli.
 
     .item:
 
-      Ověřte nalezený model a dokažte, že je jediný.
+      Mřížka $2\times4$: horní řádek je zakrytý (políčka $a,b,c,d$ zleva), dolní řádek je odkrytý s čísly
+      $1,2,2,1$. Vypište klauzule a rozhodněte, kde jsou miny. Co když $M=3$?
 
 
 .Solution:
+  label: red-un-14-3
 
-  "a) Průběh.".notion Na začátku nemá žádná klauzule jediný literál, unit propagation nic neudělá a větvíme na $a$.
-
-  .table:
-    columns: 'clll'
-
-    .row:
-      head: true
-
-      krok
-
-      rozhodnutí
-
-      unit propagation
-
-      výsledek
-
-    .row:
-
-      1
-
-      $a=1$
-
-      $c_1=(\lnot a\lor b)$: $b=1$
-
-      nic dalšího; $b$ přiřazeno, větvíme na $c$
-
-    .row:
-
-      2
-
-      $a=1,\ c=1$
-
-      $c_4=(\lnot c\lor d)$: $d=1$
-
-      $c_7=(\lnot b\lor\lnot c\lor\lnot d)$ konflikt $\Rightarrow$ zkus $c=0$
-
-    .row:
-
-      3
-
-      $a=1,\ c=0$
-
-      $c_2=(\lnot a\lor c\lor d)$: $d=1$
-
-      $c_6=(\lnot d\lor c)$ konflikt $\Rightarrow$ zpět, zkus $a=0$
-
-    .row:
-
-      4
-
-      $a=0$
-
-      $c_5=(a\lor b)$: $b=1$
-
-      nic dalšího; větvíme na $c$
-
-    .row:
-
-      5
-
-      $a=0,\ c=1$
-
-      $c_4$: $d=1$
-
-      $c_7$ konflikt $\Rightarrow$ zkus $c=0$
-
-    .row:
-
-      6
-
-      $a=0,\ c=0$
-
-      $c_6=(\lnot d\lor c)$: $d=0$
-
-      všechny klauzule splněny – "model".notion
+  "Redukce:".notion $\prob{Minesweeper} \redp \prob{SAT}$, mřížka s čísly $\mapsto$ formule $\varphi$.
 
 
-  .centered:
-
-    !tikz:
-      filename: 14z-ulohy-navic-02
-      options: 'x=1cm,y=1cm'
-
-      \node[dn] (a) at (0,0) {$a$};
-      \node[dn] (cl) at (-2.6,-1.6) {$c$};
-      \node[dn] (cr) at (2.6,-1.6) {$c$};
-      \node[dconf] (x2) at (-3.7,-3.2) {$\bot$};
-      \node[dconf] (x3) at (-1.5,-3.2) {$\bot$};
-      \node[dconf] (x5) at (1.5,-3.2) {$\bot$};
-      \node[dok] (ok) at (3.7,-3.2) {$\checkmark$};
-      \draw[e] (a)--node[dlab,above left]{$1$:\ $b{:=}1$ ($c_1$)}(cl);
-      \draw[e] (a)--node[dlab,above right]{$0$:\ $b{:=}1$ ($c_5$)}(cr);
-      \draw[e] (cl)--node[dlab,left]{$1$}(x2);
-      \draw[e] (cl)--node[dlab,right]{$0$}(x3);
-      \draw[e] (cr)--node[dlab,left]{$1$}(x5);
-      \draw[e] (cr)--node[dlab,right]{$0$}(ok);
-      \foreach \x/\t in {x2/{\textbf{krok 2}\\ $d{:=}1$ ($c_4$)\\ spor $c_7$},x3/{\textbf{krok 3}\\ $d{:=}1$ ($c_2$)\\ spor $c_6$},x5/{\textbf{krok 5}\\ $d{:=}1$ ($c_4$)\\ spor $c_7$},ok/{\textbf{krok 6}\\ $d{:=}0$ ($c_6$)\\ model}} {
-        \node[font=\footnotesize,align=center,below=1pt of \x] {\t};
-      }
+  "Krok 1 – proměnné.".notion $m_q$ pro každé zakryté políčko $q$: $m_q=1\iff$ „na $q$ je mina“. Pro odkryté
+  políčko $p$ značíme $N(p)$ množinu jeho "zakrytých".emphasize sousedů, $d=|N(p)|\le8$ a $c=c(p)$ (odkrytí
+  sousedé miny nemají, do čísla nepřispívají).
 
 
-  Strom prohledávání (hrana = rozhodnutí, u ní propagace; u listů propagace a porušená klauzule). "Všimni si:".emphasize
-  strom má jen 4 listy, i když ohodnocení je $2^4=16$ – unit propagation pokaždé přiřadí $b$ a $d$ sama.
+  "Krok 2 – omezení.".notion Pro každé odkryté $p$ chceme „mezi $N(p)$ je právě $c$ min“:
+
+  .enumerate:
+
+    .item:
+
+      Chceme: nejvýše $c$ min, tj. žádných $c+1$ sousedů není samé miny. Pro každou $(c+1)$-prvkovou $A\subseteq N(p)$
+      klauzule $\bigl(\bigvee_{q\in A}\lnot m_q\bigr)$. ($\binom d{c+1}$ klauzulí, pro $c\ge d$ žádná)
+
+    .item:
+
+      Chceme: aspoň $c$ min. Kdyby jich bylo méně, bylo by aspoň $d-c+1$ sousedů bez miny. Proto pro každou
+      $(d-c+1)$-prvkovou $A\subseteq N(p)$ klauzule $\bigl(\bigvee_{q\in A}m_q\bigr)$. ($\binom d{c-1}$ klauzulí, pro
+      $c=0$ žádná; je-li $c>d$, instance je zjevně nekonzistentní a vypíšeme pevnou nesplnitelnou formuli
+      $(z)\land(\lnot z)$.)
 
 
-  "b) Proč se nevětví na $b$.".notion Po rozhodnutí o $a$ je $b$ vždy vynucené: při $a=1$ klauzulí $c_1=(\lnot a\lor b)$,
-  při $a=0$ klauzulí $c_5=(a\lor b)$. Když DPLL hledá další proměnnou k větvení, $b$ už přiřazené je, takže přeskočí
-  na $c$. Podobně $d$ vždy vynutí $c_4$, $c_2$ nebo $c_6$.
+  "Proč smíme zakazovat $(c+1)$-tice.".notion Varování u kódování „nejvýše $k$“ (rámeček „Typické chyby u kódování“
+  za postupem .reference:ch-resice-sat-postup-kodovani) se týká $k$ a $n$ rostoucích se vstupem, kde je $\binom n{k+1}$ exponenciální. Tady je $d\le8$ "konstanta".emphasize:
+  jedno číslo dá $\binom d{c+1}+\binom d{c-1}\le\binom 85+\binom 83=112$ klauzulí (maximum pro $d=8$, $c=4$),
+  každou nejvýše o 8 literálech. Obecně: podmínku na konstantně mnoha proměnných smíme zapsat zákazem všech
+  špatných ohodnocení.
 
 
-  "c) Model a jednoznačnost.".notion Model $a=0$, $b=1$, $c=0$, $d=0$: $c_1,c_2$ obsahují $\lnot a$, $c_3,c_5$ obsahují
-  $b$, $c_4,c_7$ obsahují $\lnot c$, $c_6$ obsahuje $\lnot d$ – vše splněno. Jednoznačnost: $c_4$ a $c_6$ dohromady
-  říkají $c\Leftrightarrow d$.
+  "Krok 3 – formule.".notion $\varphi$ = konjunkce skupin 1 a 2 přes všechna odkrytá $p$.
+
+
+  "Krok 4 – závěr.".notion
 
   .itemize:
 
     .item:
 
-      $c=d=1$: $c_7$ vynutí $b=0$, $c_5$ pak $a=1$ a $c_1$ dá $b=1$ – spor.
+      ($\Rightarrow$) Rozmístění, se kterým souhlasí všechna čísla: $m_q=1$ právě na minách. Mezi $N(p)$ je přesně
+      $c$ min, takže žádná $(c+1)$-tice nejsou samé miny (skupina 1) a bez miny je jen $d-c$ sousedů, takže každá
+      $(d-c+1)$-tice minu obsahuje (skupina 2).
 
     .item:
 
-      $c=d=0$: $c_2$ vynutí $a=0$ a $c_5$ pak $b=1$ – jediná možnost.
+      ($\Leftarrow$) Miny dáme na $\{q: m_q=1\}$. Kdyby mezi $N(p)$ bylo aspoň $c+1$ min, porušíme klauzuli skupiny 1
+      pro $c+1$ z nich; kdyby jich bylo nejvýše $c-1$, je aspoň $d-c+1$ sousedů bez miny a porušíme skupinu 2. Je
+      jich tedy právě $c$ a číslo souhlasí.
+
+    .item:
+
+      "Čtení řešení:".notion miny jsou na zakrytých políčkách s $m_q=1$.
+
+    .item:
+
+      "Velikost:".notion nejvýše $RS$ proměnných a nejvýše $112\cdot RS$ klauzulí, tedy $O(RS)$.
 
 
-  (Průběh i jednoznačnost modelu ověřeny skriptem s implementací DPLL a hrubou silou přes 16 ohodnocení.)
+  "b) Celkem $M$ min.".notion Nechť $H$ je množina zakrytých políček, $h=|H|$. Chceme „právě $M$ z $m_q$, $q\in H$“:
+  "nejvýše $M$".emphasize sekvenčním čítačem nad $m_q$ (cvičení .reference:cv-7-4) a "aspoň $M$".emphasize jako
+  „nejvýše $h-M$ nepravdivých“, tj. druhý čítač nad literály $\lnot m_q$ (čítač funguje pro libovolné literály, má
+  vlastní pomocné proměnné). Dohromady nejvýše $h(h-1)$ nových proměnných a $O(h^2)$ klauzulí. Pro $M>h$ vypíšeme
+  nesplnitelnou formuli. Tady $h$ roste se vstupem, takže zákaz všech $(M+1)$-tic by byl chyba.
+
+
+  "c) Mřížka $2\times4$.".notion Zakrytí sousedé: $N=\{a,b\}$ pro číslo 1 vlevo, $\{a,b,c\}$ a $\{b,c,d\}$ pro obě
+  dvojky, $\{c,d\}$ pro 1 vpravo. Klauzule (skupina 1, pak 2):
+
+  .itemize:
+
+    .item:
+
+      první 1: $(\lnot a\lor\lnot b)$, $(a\lor b)$;
+
+    .item:
+
+      první 2: $(\lnot a\lor\lnot b\lor\lnot c)$, $(a\lor b)$, $(a\lor c)$, $(b\lor c)$;
+
+    .item:
+
+      druhá 2: $(\lnot b\lor\lnot c\lor\lnot d)$, $(b\lor c)$, $(b\lor d)$, $(c\lor d)$;
+
+    .item:
+
+      druhá 1: $(\lnot c\lor\lnot d)$, $(c\lor d)$.
+
+
+  Celkem 12 klauzulí (některé se opakují). Jednotková klauzule není žádná, propagace sama nic nedá; větvíme podle $a$:
+
+  .itemize:
+
+    .item:
+
+      $a=1$: $(\lnot a\lor\lnot b)$ dá $b=0$, pak $(b\lor c)$ dá $c=1$ a $(b\lor d)$ dá $d=1$ – klauzule $(\lnot c\lor\lnot d)$
+      je v konfliktu.
+
+    .item:
+
+      $a=0$: $(a\lor b)$ dá $b=1$, $(a\lor c)$ dá $c=1$, $(\lnot c\lor\lnot d)$ dá $d=0$. Všechny klauzule jsou splněné.
+
+
+  Rozmístění je "jediné".notion: miny na $b$ a $c$. S údajem $M=3$ je formule nesplnitelná (jediné rozmístění má
+  2 miny); s $M=2$ splnitelná.
+
+
+  .centered:
+
+    !tikz:
+      filename: 14z-ulohy-navic-12
+      options: 'x=1cm,y=1cm'
+
+      \foreach \s/\l/\mine in {1/a/0,2/b/1,3/c/1,4/d/0} {
+        \fill[black!12] ({(\s-1)*0.9},0) rectangle ++(0.9,0.9);
+        \ifnum\mine=1 \node[text=rej] at ({(\s-0.5)*0.9},0.45) {\faBomb}; \fi
+        \node[font=\scriptsize,anchor=north west,inner sep=1pt] at ({(\s-1)*0.9},0.9) {$\l$};
+      }
+      \foreach \s/\c in {1/1,2/2,3/2,4/1} {\node[font=\small\bfseries] at ({(\s-0.5)*0.9},-0.45) {\c};}
+      \draw[black!55] (0,-0.9) grid[step=0.9] (3.6,0.9);
+      \node[font=\footnotesize,anchor=west,align=left] at (4.0,0) {zakrytá políčka $a,b,c,d$ (šedě),\\ odkrytá čísla dole;\\ jediné řešení: miny na $b$, $c$};
+
+
+  Mřížka z bodu c) s jediným rozmístěním min. "Všimni si:".emphasize každé číslo vidí jen dvě nebo tři zakrytá
+  políčka, takže jeho klauzulí je jen pár.
+
+
+  (Ověřeno skriptem: kódování, včetně čítačů pro $M$, porovnáno s hrubou silou přes všechna rozmístění min na
+  2 500 náhodných mřížkách do $3\times4$, i počty modelů; maximum 112 klauzulí na číslo přepočteno; bod c) včetně
+  propagace v obou větvích.)
 
 
 .Subsection Na úrovni testu
@@ -626,200 +590,167 @@ v podobě, jakou čeká zápočtový test.
 
 
 .Exercise:
-  title: 'Úloha 14.4 (Analýza konfliktu v CDCL)'
+  title: 'Úloha 14.4 (rozsazení svatebních hostů)'
   label: un-14-4
 
-  Formule má klauzule $c_1=(\lnot a\lor p)$, $c_2=(\lnot c\lor q)$, $c_3=(\lnot d\lor e)$, $c_4=(\lnot e\lor\lnot p\lor f)$,
-  $c_5=(\lnot e\lor\lnot b\lor h)$, $c_6=(\lnot f\lor\lnot h)$, $c_7=(\lnot p\lor d\lor g)$. CDCL řešič postupně rozhodne
-  $a=1$, $b=1$, $c=1$, $d=1$ (úrovně 1 až 4) a po každém rozhodnutí provede unit propagation (klauzule v pořadí
-  $c_1,\dots,c_7$).
+  Na svatbě je $n$ hostů $H$ a $k$ stolů $1,\dots,k$, u každého je $c$ míst ($c<n$). Každý host sedí u právě jednoho
+  stolu a u stolu sedí nejvýše $c$ hostů. Dále:
+
+  .itemize:
+
+    .item:
+
+      dvojice "nepřátel".notion $N\subseteq\binom H2$ nesmějí sedět u stejného stolu;
+
+    .item:
+
+      "páry".notion $P\subseteq\binom H2$ musejí sedět u stejného stolu;
+
+    .item:
+
+      každý host $g$ musí mít u svého stolu aspoň jednoho "kamaráda".notion z množiny $F(g)\subseteq H$ (kamarádství
+      je symetrické).
+
 
   .enumerate:
     type: a
 
     .item:
 
-      Zapište trail se značením $x@k$ a nakreslete implikační graf v okamžiku konfliktu.
+      Navrhněte formuli v CNF, která je splnitelná právě tehdy, když rozsazení existuje (proměnné, klauzule po
+      skupinách, obě implikace, čtení řešení, velikost). Velikost musí být polynomiální i pro $c\approx n/2$.
 
     .item:
 
-      Proveďte analýzu konfliktu (postup .reference:ch-resice-sat-proc-1uip): kterou klauzuli se řešič naučí? Které
-      vrcholy jsou UIP a který je první?
+      Stoly jsou stejné, takže každé rozsazení má $k!$ „přečíslovaných“ kopií. Přidejte klauzuli, která tuto
+      symetrii zčásti odstraní, a zdůvodněte, že nezmění splnitelnost.
 
     .item:
 
-      Na kterou úroveň řešič skočí a co se tam propaguje?
-
-    .item:
-
-      Kdybychom rezolvovali až k samotným rozhodnutím, jakou klauzuli bychom dostali? Proč jsou obě naučené klauzule
-      důsledkem formule?
+      Hosté $A,\dots,F$, $k=2$ stoly po $c=3$ místech, pár $\{A,B\}$, nepřátelé $\{A,C\}$ a $\{D,F\}$, kamarádství
+      $AB$, $CD$, $DE$, $EF$, $BF$. Najděte všechna rozsazení a spočítejte proměnné a klauzule formule.
 
 
 .Solution:
+  label: red-un-14-4
 
-  "a) Trail.".notion
-
-  .table:
-    columns: 'clll'
-
-    .row:
-      head: true
-
-      úroveň
-
-      rozhodnutí
-
-      propagace
-
-      poznámka
-
-    .row:
-
-      1
-
-      $a=1$
-
-      $c_1$: $p=1$
-
-      $c_7=(\lnot p\lor d\lor g)$ má ještě dva volné literály
-
-    .row:
-
-      2
-
-      $b=1$
-
-      –
-
-      $c_5$ čeká na $e$
-
-    .row:
-
-      3
-
-      $c=1$
-
-      $c_2$: $q=1$
-
-      s konfliktem nesouvisí
-
-    .row:
-
-      4
-
-      $d=1$
-
-      $c_3$: $e=1$; $c_4$: $f=1$; $c_5$: $h=1$
-
-      $c_6=(\lnot f\lor\lnot h)$: "konflikt".notion
+  "Redukce:".notion $\prob{Rozsazení hostů} \redp \prob{SAT}$, instance $(H,k,c,N,P,F)$ $\mapsto$ formule $\varphi$.
 
 
-  Trail: $a@1,\ p@1,\ b@2,\ c@3,\ q@3,\ d@4,\ e@4,\ f@4,\ h@4$. Hrany implikačního grafu (podle definice
-  .reference:ch-resice-sat-def-implikacni-graf-cdcl): $a\to p$ ($c_1$), $c\to q$ ($c_2$), $d\to e$ ($c_3$),
-  $e\to f$ a $p\to f$ ($c_4$), $e\to h$ a $b\to h$ ($c_5$), $f\to\bot$ a $h\to\bot$ ($c_6$).
+  "Krok 1 – proměnné.".notion $x_{g,t}$ pro $g\in H$, $t\in\{1,\dots,k\}$: $x_{g,t}=1\iff$ „host $g$ sedí u stolu
+  $t$“ ($nk$ proměnných); k tomu pomocné proměnné čítačů ve skupině 6.
+
+
+  "Krok 2 – omezení.".notion
+
+  .enumerate:
+
+    .item:
+
+      Chceme: každý host sedí aspoň u jednoho stolu: $(x_{g,1}\lor\dots\lor x_{g,k})$ pro každé $g$. ($n$ klauzulí)
+
+    .item:
+
+      Chceme: nejvýše u jednoho stolu: $(\lnot x_{g,t}\lor\lnot x_{g,u})$ pro každé $g$ a $t<u$. ($n\binom k2$)
+
+    .item:
+
+      Chceme: nepřátelé ne u stejného stolu. $x_{g,t}\Rightarrow\lnot x_{h,t}$, klauzule
+      $(\lnot x_{g,t}\lor\lnot x_{h,t})$ pro $\{g,h\}\in N$ a každé $t$. ($k|N|$)
+
+    .item:
+
+      Chceme: pár u stejného stolu. Ekvivalence $x_{g,t}\Leftrightarrow x_{h,t}$, klauzule $(\lnot x_{g,t}\lor x_{h,t})$
+      a $(x_{g,t}\lor\lnot x_{h,t})$ pro $\{g,h\}\in P$ a každé $t$. ($2k|P|$)
+
+    .item:
+
+      Chceme: u stolu hosta $g$ sedí některý jeho kamarád. Implikace s disjunkcí v závěru
+      $x_{g,t}\Rightarrow\bigvee_{h\in F(g)}x_{h,t}$, klauzule $\bigl(\lnot x_{g,t}\lor\bigvee_{h\in F(g)}x_{h,t}\bigr)$
+      pro každé $g$ a $t$. ($nk$; pro $F(g)=\emptyset$ vyjde $(\lnot x_{g,t})$ pro všechna $t$ a se skupinou 1
+      spor – správně, host bez kamarádů posadit nelze.)
+
+    .item:
+
+      Chceme: u stolu nejvýše $c$ hostů. Blok "nejvýše $c$".emphasize z $x_{g_1,t},\dots,x_{g_n,t}$ sekvenčním čítačem
+      (cvičení .reference:cv-7-4), pro každý stůl s vlastními pomocnými proměnnými: $k\cdot c(n-1)$ proměnných
+      a $k(2nc+n-4c)$ klauzulí (pro $c=0$ klauzule $(\lnot x_{g,t})$).
+
+
+  "Krok 3 – formule.".notion $\varphi$ = konjunkce skupin 1–6.
+
+
+  "Krok 4 – závěr.".notion
+
+  .itemize:
+
+    .item:
+
+      ($\Rightarrow$) Rozsazení $\sigma:H\to\{1,\dots,k\}$: položíme $x_{g,t}=1\iff\sigma(g)=t$. Skupiny 1, 2 platí,
+      protože každý sedí u právě jednoho stolu; 3, 4, 5 přímo z podmínek; u každého stolu je nejvýše $c$ jedniček,
+      takže pomocné proměnné čítače lze doplnit (cvičení .reference:cv-7-4).
+
+    .item:
+
+      ($\Leftarrow$) Podle 1, 2 má každý host právě jeden stůl $\sigma(g)$. Podle 3 nesedí nepřátelé spolu, podle 4
+      sedí páry spolu, podle 5 má každý u stolu kamaráda (klauzule pro $t=\sigma(g)$) a podle 6 (vlastnost čítače)
+      sedí u stolu nejvýše $c$ hostů.
+
+    .item:
+
+      "Čtení řešení:".notion host $g$ sedí u jediného stolu $t$ s $x_{g,t}=1$.
+
+    .item:
+
+      "Velikost:".notion $nk+kc(n-1)$ proměnných a $n+n\binom k2+k|N|+2k|P|+nk+k(2nc+n-4c)$ klauzulí, tedy
+      $O(nk^2+k|N|+k|P|+nkc)$. Zakázat všechny $(c+1)$-tice hostů u stolu by dalo $k\binom n{c+1}$ klauzulí – pro
+      $c\approx n/2$ exponenciálně mnoho.
+
+
+  "b) Symetrie.".notion Přidáme $(x_{g_1,1})$: první host sedí u stolu 1. Splnitelnost se nezmění: má-li úloha
+  rozsazení, prohodíme čísla stolu 1 a stolu hosta $g_1$ – všechny stoly mají stejnou kapacitu a podmínky se na čísla
+  stolů neodkazují, takže dostaneme rozsazení, ve kterém $g_1$ sedí u stolu 1. Naopak každý model nové formule je
+  modelem staré. Řešič pak neprohledává $k$-krát totéž (úplné odstranění symetrie by potřebovalo víc klauzulí).
+
+
+  "c) Instance.".notion Úvahou: $A$ a $B$ sedí spolu (pár). Jediný kamarád $C$ je $D$, takže $C$ sedí s $D$, a protože
+  jsou $A$ a $C$ nepřátelé, sedí $C,D$ u druhého stolu než $A,B$. $F$ je nepřítel $D$, musí tedy k $A,B$ (kamaráda
+  $B$ tam má). $E$ zbude poslední místo u $C,D$ (kamaráda $D$ tam má). Kontrola: $A$ má $B$, $B$ má $A$ i $F$, $C$ i
+  $E$ mají $D$, $D$ má $C$ i $E$. Rozsazení je $\{A,B,F\}$, $\{C,D,E\}$ a jeho zrcadlo (prohozené stoly) – "dvě".notion
+  řešení; s klauzulí $(x_{A,1})$ z bodu b) jen první. Při $c=4$ by $E$ mohl sedět u kteréhokoli stolu (čtyři
+  rozsazení).
+
+
+  "Velikost formule:".notion $12$ proměnných $x_{g,t}$ a $2\cdot3\cdot5=30$ pomocných, celkem 42; klauzulí
+  $6+6+4+4+12+2\cdot30=92$ (skupiny 1–6 v tomto pořadí, čítač $2\cdot6\cdot3+6-12=30$ na stůl).
 
 
   .centered:
 
     !tikz:
-      filename: 14z-ulohy-navic-03
+      filename: 14z-ulohy-navic-13
       options: 'x=1cm,y=1cm'
 
-      \node[litD] (a) at (0,3.0) {$a@1$};
-      \node[lit] (p) at (1.9,3.0) {$p@1$};
-      \node[litD] (d) at (0,1.2) {$d@4$};
-      \node[lit,draw=intc!90!black,fill=intc!18,very thick] (e) at (1.9,1.2) {$e@4$};
-      \node[litD] (b) at (0,-0.6) {$b@2$};
-      \node[lit] (f) at (3.9,2.4) {$f@4$};
-      \node[lit] (h) at (3.9,0.2) {$h@4$};
-      \node[litX] (x) at (5.7,1.3) {$\bot$};
-      \node[litF] (c) at (0,-2.0) {$c@3$};
-      \node[litF] (q) at (1.9,-2.0) {$q@3$};
-      \draw[imp] (a)--node[above,font=\scriptsize]{$c_1$}(p);
-      \draw[imp] (d)--node[above,font=\scriptsize]{$c_3$}(e);
-      \draw[imp] (p)--node[above,font=\scriptsize,pos=0.25]{$c_4$}(f);
-      \draw[imp] (e)--node[above left,font=\scriptsize,pos=0.3]{$c_4$}(f);
-      \draw[imp] (e)--node[below left,font=\scriptsize,pos=0.3]{$c_5$}(h);
-      \draw[imp] (b)--node[below,font=\scriptsize,pos=0.6]{$c_5$}(h);
-      \draw[imp] (f)--node[above right,font=\scriptsize]{$c_6$}(x);
-      \draw[imp] (h)--node[below right,font=\scriptsize]{$c_6$}(x);
-      \draw[imp,black!35] (c)--node[above,font=\scriptsize]{$c_2$}(q);
-      \draw[very thick,dashed,rej] (2.9,3.7)--(2.9,-1.1) node[below,font=\scriptsize] {řez 1UIP};
+      \node[v] (A) at (0,1.1) {$A$}; \node[v] (B) at (1.4,1.1) {$B$}; \node[v] (F) at (0.7,0) {$F$};
+      \node[v] (C) at (4.0,1.1) {$C$}; \node[v] (D) at (5.4,1.1) {$D$}; \node[v] (E) at (4.7,0) {$E$};
+      \begin{scope}[on background layer]
+        \node[draw=defc,fill=defc!6,rounded corners=8pt,fit=(A)(B)(F),inner sep=7pt,label={[font=\footnotesize]above:stůl 1}] {};
+        \node[draw=defc,fill=defc!6,rounded corners=8pt,fit=(C)(D)(E),inner sep=7pt,label={[font=\footnotesize]above:stůl 2}] {};
+      \end{scope}
+      \draw[e,very thick] (A)--(B);
+      \draw[e] (B)--(F) (C)--(D) (D)--(E) (E)--(F);
+      \draw[rej,thick,dashed] (A) to[bend left=35] (C);
+      \draw[rej,thick,dashed] (F) to[bend right=30] (D);
+      \node[font=\scriptsize,anchor=west,align=left] at (6.3,0.55) {plná čára: kamarádi\\ tučně: pár $\{A,B\}$\\ \textcolor{rej}{čárkovaně: nepřátelé}};
 
 
-  Implikační graf v okamžiku konfliktu (žlutě rozhodnutí, šedě úroveň 3, která s konfliktem nesouvisí,
-  oranžově s tučným okrajem první UIP $e@4$). "Všimni si:".emphasize hrany přes čárkovaný řez vycházejí z $p$, $e$
-  a $b$ – jejich negace jsou literály naučené klauzule.
+  Rozsazení z bodu c). "Všimni si:".emphasize kamarádství $EF$ vede mezi stoly – nevadí, každý má u stolu jiného
+  kamaráda.
 
 
-  "b) Analýza konfliktu.".notion Konfliktní úroveň je 4. Rezolvujeme pozpátku po trailu, dokud klauzule obsahuje víc než
-  jeden literál z úrovně 4:
-
-  .table:
-    columns: 'lll'
-
-    .row:
-      head: true
-
-      klauzule
-
-      literály z úrovně 4
-
-      krok
-
-    .row:
-
-      $c_6=(\lnot f\lor\lnot h)$
-
-      $\lnot f,\ \lnot h$
-
-      dva $\Rightarrow$ rezolvuj podle $h$ (přiřazen naposledy, vynutila ho $c_5$)
-
-    .row:
-
-      $c_6\oplus c_5=(\lnot f\lor\lnot e\lor\lnot b)$
-
-      $\lnot f,\ \lnot e$
-
-      dva $\Rightarrow$ rezolvuj podle $f$ (vynutila ho $c_4$)
-
-    .row:
-
-      $\oplus\,c_4=(\lnot e\lor\lnot b\lor\lnot p)$
-
-      jen $\lnot e$
-
-      stop: "naučíme $(\lnot e\lor\lnot b\lor\lnot p)$".notion
-
-
-  "UIP".notion je vrchol úrovně 4, přes který vedou "všechny".emphasize cesty od rozhodnutí $d@4$ ke konfliktu. Cesty
-  jsou dvě: $d\to e\to f\to\bot$ a $d\to e\to h\to\bot$. Obě procházejí jen přes $d$ a $e$ ($f$ ani $h$ na obou
-  neleží), takže UIP jsou $d$ a $e$; "první".emphasize UIP (nejblíž konfliktu) je $e@4$. Řez těsně za ním odpovídá
-  naučené klauzuli: obsahuje negaci každého zdroje hrany přes řez ($\lnot e$, $\lnot b$, $\lnot p$).
-
-
-  "c) Skok zpět.".notion Literály naučené klauzule jsou z úrovní $4$ ($e$), $2$ ($b$) a $1$ ($p$). Skáčeme na
-  druhou nejvyšší, tedy na "úroveň 2".notion – úrovně 3 a 4 zrušíme (zapomeneme $c$, $q$, $d$, $e$, $f$, $h$) a
-  rozhodnutí $c$, které s konfliktem nesouvisí, přeskočíme. Na úrovni 2 platí $a=p=b=1$ a naučená klauzule je
-  jednotková:
-
-  .equation:
-
-    e:=0\ \text{(naučená)}\ \xrightarrow{\;c_3\;}\ d:=0\ \xrightarrow{\;c_7\;}\ g:=1,
-
-  vše na úrovni 2 a bez konfliktu. Řešič pak pokračuje dalším rozhodnutím. (Skript s rozhodnutími $c=1$, $f=1$
-  došel k modelu $a=b=c=f=g=p=q=1$, $d=e=h=0$.)
-
-
-  "d) Klauzule z rozhodnutí.".notion Rezolvujeme dál, dokud zůstávají propagované literály:
-  $(\lnot e\lor\lnot b\lor\lnot p)\oplus c_3=(\lnot d\lor\lnot b\lor\lnot p)$ (podle $e$) a dále
-  $\oplus\,c_1=(\lnot d\lor\lnot b\lor\lnot a)$ (podle $p$). Tato klauzule jen zakazuje konkrétní kombinaci
-  rozhodnutí $a=b=d=1$; klauzule 1UIP říká obecnější věc: „$e$, $b$ a $p$ nesmí platit zároveň“, ať se $e$ a $p$
-  dostanou na 1 jakkoli. Obě vznikly rezolucí z klauzulí formule a rezolventa platí v každém ohodnocení, které splňuje
-  oba předpoklady – obě jsou tedy "důsledkem".emphasize formule a jejich přidání nezmění množinu modelů. (Ověřeno
-  skriptem: simulace trailu a analýzy, výpočet UIP přes cesty grafu, a hrubou silou přes $2^{10}$ ohodnocení, že obě
-  klauzule z formule plynou.)
+  (Ověřeno skriptem: kódování porovnáno s výčtem všech rozsazení na 1 500 náhodných instancích do 6 hostů
+  a 3 stolů, včetně počtu modelů a počtů proměnných a klauzulí; v bodě c) obě rozsazení, varianta $c=4$ a jeden
+  model s klauzulí symetrie.)
 
 
 .Exercise:
@@ -996,191 +927,148 @@ v podobě, jakou čeká zápočtový test.
 
 
 .Exercise:
-  title: 'Úloha 14.6 (Tseitinova transformace konkrétní formule)'
+  title: 'Úloha 14.6 (rozvrh úloh se závislostmi)'
   label: un-14-6
 
-  Je dána formule $\varphi=\bigl((a\land b)\lor(\lnot a\land c)\bigr)\land\lnot(b\land d)$
-  („je-li $a$, pak $b$, jinak $c$; a navíc ne zároveň $b$ a $d$“).
+  Na $m$ stejných procesorech se má provést $n$ úloh $J$; každá trvá jeden časový krok. Kroky jsou $1,\dots,T$
+  (rozvrh se zadává tabulkou kroků, takže vstup má velikost aspoň $T$). V jednom kroku běží nejvýše $m$ úloh. Úloha
+  $j$ smí běžet nejdříve v kroku $r_j$ a nejpozději v kroku $d_j$ ($1\le r_j\le d_j\le T$). "Závislosti".notion
+  $Z\subseteq J\times J$: pro $(i,j)\in Z$ musí $i$ běžet v ostře dřívějším kroku než $j$.
+
+
+  "Otázka:".notion existuje rozvrh, tj. přiřazení kroku $\sigma(j)$ každé úloze splňující všechny podmínky?
 
   .enumerate:
     type: a
 
     .item:
 
-      Zakreslete $\varphi$ jako obvod, zaveďte proměnné hradel a napište Tseitinovu formuli $\psi$. Kolik má
-      proměnných a klauzulí?
+      Navrhněte formuli v CNF, která je splnitelná právě tehdy, když rozvrh existuje (proměnné, klauzule po
+      skupinách, obě implikace, čtení rozvrhu z modelu, velikost).
 
     .item:
 
-      Spočítejte hodnoty hradel pro vstup $a=0$, $b=1$, $c=1$, $d=1$. Rozšiřuje se tento vstup na model $\psi$?
+      Jak pomocí formule najít nejmenší $T$, pro které rozvrh existuje (bez oken, tj. $r_j=1$, $d_j=T$)? Jaké dolní
+      meze pro $T$ jsou vidět hned?
 
     .item:
 
-      Dokažte, že $\psi$ je s $\varphi$ ekvisplnitelná, a porovnejte počty modelů.
-
-    .item:
-
-      Spolužák vynechal klauzuli $(g_4\lor\lnot b\lor\lnot d)$ s tím, že $g_4$ stačí jen směr $g_4\Rightarrow b\land d$.
-      Ukažte, proč je to chyba.
+      $J=\{a,b,c,d,e,f\}$, $m=2$, bez oken, závislosti $a\to d$, $b\to d$, $c\to d$, $d\to e$. Rozhodněte úvahou
+      pro $T=3$ a $T=4$ a spočítejte proměnné a klauzule obou formulí.
 
 
 .Solution:
+  label: red-un-14-6
 
-  "Převod:".notion formule $\varphi$ $\mapsto$ ekvisplnitelná 3-CNF $\psi$ (Tseitinova transformace, věta
-  .reference:ch-resice-sat-thm-tseitin).
-
-
-  "a) Hradla a klauzule.".notion Každé hradlo AND/OR dostane novou proměnnou, negace je jen literál (žádná nová
-  proměnná). Klauzule hradla jsou obě implikace, stejně jako v oddílu .reference:ch-resice-sat-tseitin.
-
-  .table:
-    columns: 'lll'
-
-    .row:
-      head: true
-
-      hradlo
-
-      směr $\Rightarrow$
-
-      směr $\Leftarrow$
-
-    .row:
-
-      $g_1\leftrightarrow(a\land b)$
-
-      $(\lnot g_1\lor a)$, $(\lnot g_1\lor b)$
-
-      $(g_1\lor\lnot a\lor\lnot b)$
-
-    .row:
-
-      $g_2\leftrightarrow(\lnot a\land c)$
-
-      $(\lnot g_2\lor\lnot a)$, $(\lnot g_2\lor c)$
-
-      $(g_2\lor a\lor\lnot c)$
-
-    .row:
-
-      $g_3\leftrightarrow(g_1\lor g_2)$
-
-      $(\lnot g_3\lor g_1\lor g_2)$
-
-      $(\lnot g_1\lor g_3)$, $(\lnot g_2\lor g_3)$
-
-    .row:
-
-      $g_4\leftrightarrow(b\land d)$
-
-      $(\lnot g_4\lor b)$, $(\lnot g_4\lor d)$
-
-      $(g_4\lor\lnot b\lor\lnot d)$
-
-    .row:
-
-      $g_5\leftrightarrow(g_3\land\lnot g_4)$
-
-      $(\lnot g_5\lor g_3)$, $(\lnot g_5\lor\lnot g_4)$
-
-      $(g_5\lor\lnot g_3\lor g_4)$
-
-    .row:
-
-      výstup
-
-      $(g_5)$
-
-      ~
+  "Redukce:".notion $\prob{Rozvrh se závislostmi} \redp \prob{SAT}$, instance $(J,m,T,r,d,Z)$ $\mapsto$ formule
+  $\varphi_T$.
 
 
-  $\psi$ = konjunkce všech řádků. "Velikost:".notion $4+5=9$ proměnných, $5\cdot3+1=16$ klauzulí, každá s nejvýše
-  3 literály – je to 3-CNF.
+  "Krok 1 – proměnné.".notion $x_{j,t}$ pro $j\in J$, $t\in\{1,\dots,T\}$: $x_{j,t}=1\iff$ „úloha $j$ běží v kroku
+  $t$“ ($nT$ proměnných), k tomu pomocné proměnné čítačů.
 
 
-  .centered:
+  "Krok 2 – omezení.".notion
 
-    !tikz:
-      filename: 14z-ulohy-navic-05
-      options: 'x=1cm,y=1cm'
+  .enumerate:
 
-      \node[font=\small,anchor=east] (ia) at (0,3.0) {$a$};
-      \node[font=\small,anchor=east] (ib) at (0,2.2) {$b$};
-      \node[font=\small,anchor=east] (ic) at (0,1.2) {$c$};
-      \node[font=\small,anchor=east] (id) at (0,0.2) {$d$};
-      \node[gate] (g1) at (1.8,2.7) {$\land$};
-      \node[gate] (g2) at (1.8,1.5) {$\land$};
-      \node[gate] (g4) at (1.8,0.2) {$\land$};
-      \node[gate] (g3) at (3.6,2.1) {$\lor$};
-      \node[gate] (g5) at (5.4,1.2) {$\land$};
-      \node[font=\scriptsize,above=0pt of g1,defc] {$g_1$};
-      \node[font=\scriptsize,below=0pt of g2,defc] {$g_2$};
-      \node[font=\scriptsize,below=0pt of g4,defc] {$g_4$};
-      \node[font=\scriptsize,above=0pt of g3,defc] {$g_3$};
-      \node[font=\scriptsize,above=0pt of g5,defc] {$g_5$};
-      \draw[imp] (ia.east)--(g1.west|-0,2.9);
-      \draw[imp] (ib.east)--(g1.west|-0,2.5);
-      \draw[imp,rounded corners=2pt] (ia.east)++(0.25,0)|-(g2.west|-0,1.7) node[pos=0.75,above,font=\scriptsize]{$\lnot$};
-      \draw[imp] (ic.east)--(g2.west|-0,1.3);
-      \draw[imp,rounded corners=2pt] (ib.east)++(0.45,0)|-(g4.west|-0,0.4);
-      \draw[imp] (id.east)--(g4.west|-0,0.0);
-      \draw[imp] (g1.east)--(g3.west|-0,2.3);
-      \draw[imp] (g2.east)--(g3.west|-0,1.9);
-      \draw[imp] (g3.east)--(g5.west|-0,1.4);
-      \draw[imp] (g4.east)--node[below right,font=\scriptsize,pos=0.6]{$\lnot$}(g5.west|-0,1.0);
-      \draw[->,very thick,tT!80!black] (g5.east)--++(1.0,0) node[right,font=\small,black] {$=1$};
+    .item:
+
+      Chceme: úloha běží v nějakém kroku svého okna: $(x_{j,r_j}\lor x_{j,r_j+1}\lor\dots\lor x_{j,d_j})$ pro každé
+      $j$. ($n$ klauzulí)
+
+    .item:
+
+      Chceme: úloha běží nejvýše jednou: $(\lnot x_{j,t}\lor\lnot x_{j,u})$ pro každé $j$ a $t<u$. ($n\binom T2$)
+      Se skupinou 1 to znamená, že mimo okno je $x_{j,t}=0$.
+
+    .item:
+
+      Chceme: v kroku $t$ nejvýše $m$ úloh. Blok "nejvýše $m$".emphasize z $x_{1,t},\dots,x_{n,t}$ sekvenčním čítačem
+      (cvičení .reference:cv-7-4) pro každé $t$: $T\cdot m(n-1)$ proměnných a $T(2nm+n-4m)$ klauzulí (pro $m<n$;
+      pro $m\ge n$ nic).
+
+    .item:
+
+      Chceme: závislost $(i,j)$. Běží-li $j$ v kroku $t$, běžela $i$ v některém dřívějším:
+      $x_{j,t}\Rightarrow x_{i,1}\lor\dots\lor x_{i,t-1}$, klauzule $(\lnot x_{j,t}\lor x_{i,1}\lor\dots\lor x_{i,t-1})$
+      pro $t=1,\dots,T$ (pro $t=1$ je to $(\lnot x_{j,1})$). ($|Z|\cdot T$ klauzulí)
 
 
-  Obvod formule $\varphi$: pět hradel, dvě negace (u vstupu $a$ do $g_2$ a u $g_4$ do $g_5$) jsou jen negované
-  literály. "Všimni si:".emphasize hradlo $g_4$ vstupuje do výstupu "negovaně".emphasize – to bude důležité v bodě d).
+  Skupinu 4 lze psát i jako zákazy dvojic $(\lnot x_{i,u}\lor\lnot x_{j,t})$ pro $u\ge t$; díky skupinám 1 a 2 je to
+  totéž, jen s $O(T^2)$ klauzulemi na závislost.
 
 
-  "b) Vstup $(a,b,c,d)=(0,1,1,1)$.".notion Zdola nahoru: $g_1=0\land1=0$, $g_2=1\land1=1$, $g_3=0\lor1=1$,
-  $g_4=1\land1=1$, $g_5=1\land\lnot1=0$. Klauzule hradel tyto hodnoty vynutí unit propagation ($(\lnot g_1\lor a)$ dá
-  $g_1=0$, $(g_2\lor a\lor\lnot c)$ dá $g_2=1$, $(\lnot g_2\lor g_3)$ dá $g_3=1$, $(g_4\lor\lnot b\lor\lnot d)$ dá
-  $g_4=1$, $(\lnot g_5\lor\lnot g_4)$ dá $g_5=0$) a výstupní klauzule $(g_5)$ je pak v konfliktu. Vstup se na model
-  $\psi$ "nerozšíří".notion – správně, protože $\varphi(0,1,1,1)=0$ ($b\land d$ platí).
+  "Krok 3 – formule.".notion $\varphi_T$ = konjunkce skupin 1–4.
 
 
-  "c) Ekvisplnitelnost.".notion Klauzule každého hradla jsou jeho pravdivostní tabulka: jsou splněny, právě když má
-  proměnná hradla hodnotu, kterou hradlo ze svých vstupů spočítá (stejně jako v příkladu
-  .reference:ch-resice-sat-ex-tseitin-hradlo).
+  "Krok 4 – závěr.".notion
 
   .itemize:
 
     .item:
 
-      ($\Rightarrow$) Je-li $\varphi(a,b,c,d)=1$, spočítáme $g_1,\dots,g_5$ zdola nahoru; všechny klauzule hradel
-      platí a $g_5=\varphi(a,b,c,d)=1$, takže platí i $(g_5)$ – máme model $\psi$.
+      ($\Rightarrow$) Rozvrh $\sigma$: položíme $x_{j,t}=1\iff\sigma(j)=t$. Skupiny 1, 2 platí, protože $\sigma(j)$ je
+      jediný krok a leží v okně; v každém kroku je nejvýše $m$ jedniček, takže čítač lze doplnit; skupina 4 platí,
+      protože $\sigma(i)<\sigma(j)$.
 
     .item:
 
-      ($\Leftarrow$) V modelu $\psi$ je každá $g_i$ rovna hodnotě svého hradla, tedy $g_5=\varphi(a,b,c,d)$, a klauzule
-      $(g_5)$ dává $\varphi(a,b,c,d)=1$. Zúžení modelu na $a,b,c,d$ je model $\varphi$.
+      ($\Leftarrow$) Podle 1 a 2 má každá úloha právě jeden krok $\sigma(j)\in[r_j,d_j]$. Podle 3 běží v každém kroku
+      nejvýše $m$ úloh. Pro $(i,j)\in Z$ dá klauzule skupiny 4 s $t=\sigma(j)$ krok $u<\sigma(j)$ s $x_{i,u}=1$,
+      a protože $i$ běží jen jednou, je $\sigma(i)=u<\sigma(j)$.
+
+    .item:
+
+      "Čtení rozvrhu:".notion úloha $j$ běží v jediném kroku $t$ s $x_{j,t}=1$.
+
+    .item:
+
+      "Velikost:".notion $nT+Tm(n-1)$ proměnných a $n+n\binom T2+|Z|T+T(2nm+n-4m)$ klauzulí – polynomiální
+      v $n$, $T$ a $|Z|$.
 
 
-  Každý vstup má navíc "jediné".emphasize rozšíření hradel, takže modely si odpovídají 1:1. $\varphi$ má 5 modelů: pro
-  $a=1$ musí být $b=1$, tedy $d=0$ a $c$ libovolné – $(1,1,0,0)$, $(1,1,1,0)$; pro $a=0$ musí být $c=1$ a $(b,d)\neq(1,1)$
-  – $(0,0,1,0)$, $(0,0,1,1)$, $(0,1,1,0)$. Stejně tak $\psi$ má přesně 5 modelů.
+  "b) Nejmenší $T$.".notion Formuli $\varphi_T$ sestavíme a rozhodneme pro $T=1,2,\dots$ (nebo binárním
+  vyhledáváním); bez oken stačí $T\le n$ (úlohy lze pustit po jedné v topologickém pořadí závislostí; mají-li
+  závislosti cyklus, rozvrh neexistuje pro žádné $T$ a už $\varphi_n$ je nesplnitelná). Dolní meze:
+  $T\ge\lceil n/m\rceil$ (v kroku běží nejvýše $m$ úloh) a $T\ge$ počet úloh na nejdelším řetězci závislostí.
+  "(nad rámec přednášky)".emphasize Je-li $m$ součástí vstupu, je rozhodnutí NP-úplné (Ullman 1975), proto se takové
+  rozvrhy v praxi předávají řešičům.
 
 
-  "d) Vynechaná klauzule.".notion Bez $(g_4\lor\lnot b\lor\lnot d)$ zbudou pro $g_4$ jen $(\lnot g_4\lor b)$,
-  $(\lnot g_4\lor d)$, které hodnota $g_4=0$ splní "vždy".emphasize. Výstup potřebuje $\lnot g_4$, takže řešič může
-  $g_4=0$ zvolit i při $b=d=1$. Pro vstup $(0,1,1,1)$ z bodu b) pak $g_1=0$, $g_2=g_3=1$, $g_4=0$, $g_5=1$ splňuje
-  všech 15 zbylých klauzulí, ačkoli $\varphi(0,1,1,1)=0$: řešič by vrátil „řešení“, které podmínku $\lnot(b\land d)$
-  porušuje. Zkrácená formule má 8 modelů místo 5 (navíc vstupy $(0,1,1,1)$, $(1,1,0,1)$, $(1,1,1,1)$). Přidáme-li
-  k $\varphi$ ještě $(b)\land(d)$, je $\varphi$ nesplnitelná, ale zkrácená $\psi\land(b)\land(d)$ splnitelná – rozbije
-  se i ekvisplnitelnost. Hodnota $g_4$ se totiž do výstupu dostává přes negaci; pro takové hradlo je nutný právě
-  směr $b\land d\Rightarrow g_4$.
+  "c) Instance.".notion Obě dolní meze dávají 3: $\lceil6/2\rceil=3$ a nejdelší řetězec $a\to d\to e$ má tři úlohy.
+  Přesto "$T=3$ nejde".notion: $d$ musí běžet až po $a$, $b$ i $c$; ty tři se do jednoho kroku nevejdou ($m=2$),
+  zaberou aspoň dva kroky, takže $\sigma(d)\ge3$ a $\sigma(e)\ge4>3$. Formule $\varphi_3$ je nesplnitelná.
+  "$T=4$ jde".notion například krok 1: $a,b$; krok 2: $c,f$; krok 3: $d$; krok 4: $e$ (rozvrhů je celkem 18).
 
 
-  "Poznámka (nad rámec přednášky).".notion U hradel, která se do výstupu dostanou jen kladně, by naopak vynechání směru
-  $\Leftarrow$ nevadilo (například klauzule $(g_1\lor\lnot a\lor\lnot b)$; skript to potvrdil) – to je tzv.
-  Plaistedovo–Greenbaumovo kódování. Na papíře ale bezpečně pište obě implikace. Pro srovnání: roznásobením dostaneme
-  $(a\lor c)\land(\lnot a\lor b)\land(b\lor c)\land(\lnot b\lor\lnot d)$ – pouhé 4 klauzule. U malé formule je
-  Tseitin větší než přímá CNF; jeho výhoda je, že roste vždy lineárně (obrázek .reference:ch-resice-sat-fig-rust).
-  (Vše ověřeno skriptem přes všech $2^9$ ohodnocení: 16 klauzulí, 5 a 5 modelů, jediné rozšíření pro každý vstup,
-  8 modelů zkrácené formule, nejmenší ekvivalentní CNF $\varphi$ má 3 klauzule.)
+  "Velikost:".notion $T=3$: $18+3\cdot2\cdot5=48$ proměnných a $6+6\cdot3+4\cdot3+3\cdot22=102$ klauzulí;
+  $T=4$: $24+40=64$ proměnných a $6+6\cdot6+4\cdot4+4\cdot22=146$ klauzulí (čítač pro $n=6$, $m=2$ má $2\cdot6\cdot2+6-8=22$
+  klauzulí).
+
+
+  .centered:
+
+    !tikz:
+      filename: 14z-ulohy-navic-14
+      options: 'x=1cm,y=1cm'
+
+      \foreach \t in {1,...,4} {\node[font=\scriptsize] at ({\t*1.3-0.65},1.75) {krok \t};}
+      \node[font=\scriptsize,anchor=east] at (-0.1,1.1) {procesor 1};
+      \node[font=\scriptsize,anchor=east] at (-0.1,0.4) {procesor 2};
+      \foreach \t/\p/\j in {1/1/a,1/2/b,2/1/c,2/2/f,3/1/d,4/1/e} {
+        \node[gcellT,minimum width=11mm] at ({\t*1.3-0.65},{1.8-0.7*\p}) {$\j$};}
+      \foreach \t/\p in {3/2,4/2} {\node[gcell,minimum width=11mm] at ({\t*1.3-0.65},{1.8-0.7*\p}) {};}
+      \node[font=\scriptsize,anchor=west,align=left] at (5.5,0.75) {$a,b,c$ potřebují\\ dva kroky, $d$ nejdřív\\ ve 3., $e$ nejdřív ve 4.};
+
+
+  Rozvrh pro $T=4$. "Všimni si:".emphasize procesor 2 v krocích 3 a 4 stojí, protože $e$ čeká na $d$ – proto
+  nepomůže ani to, že úloh je jen $6=3\cdot m$.
+
+
+  (Ověřeno skriptem: kódování porovnáno s výčtem všech rozvrhů na 1 500 náhodných instancích (do 6 úloh,
+  $T\le4$, s okny i bez), včetně počtu modelů a počtů klauzulí; v bodě c) $\varphi_3$ nesplnitelná, $\varphi_4$
+  splnitelná, 18 rozvrhů.)
 
 
 .Subsection Těžší úlohy
@@ -1188,265 +1076,317 @@ v podobě, jakou čeká zápočtový test.
 
 
 .Exercise:
-  title: 'Úloha 14.7 (Holubník: kódování a důkaz rezolucí)'
+  title: 'Úloha 14.7 (zhasni světla nejvýše $k$ stisky)'
   label: un-14-7
 
-  Formule $\mathrm{PHP}_n$ říká „$n+1$ holubů lze rozmístit do $n$ děr tak, že je každý holub v nějaké díře a v žádné
-  díře nejsou dva“.
+  Hra Zhasni světla na grafu $G=(V,E)$, $n=|V|$, $m=|E|$: v každém vrcholu je světlo, na začátku svítí vrcholy
+  z množiny $L\subseteq V$. "Stisk".notion vrcholu $v$ přepne (rozsvítí $\leftrightarrow$ zhasne) světlo ve $v$
+  i ve všech jeho sousedech, tedy v uzavřeném okolí $N[v]=\{v\}\cup\{u:\{u,v\}\in E\}$.
+
+
+  "Otázka:".notion lze nejvýše $k$ stisky zhasnout všechna světla?
 
   .enumerate:
     type: a
 
     .item:
 
-      Zapište $\mathrm{PHP}_n$ jako CNF a spočítejte proměnné a klauzule v závislosti na $n$. Potřebujeme klauzule
-      „holub je nejvýše v jedné díře“?
+      Zdůvodněte, že stačí rozhodnout, "které".emphasize vrcholy stisknout (množina $S$). Kdy je vrchol $u$ na konci
+      zhasnutý?
 
     .item:
 
-      Pro $n=2$ (holubi 1, 2, 3, díry $A$, $B$) odvoďte rezolucí prázdnou klauzuli. Vysvětlete, proč to dokazuje
-      nesplnitelnost.
+      Navrhněte formuli v CNF, která je splnitelná právě tehdy, když odpověď je $\ANO$. Kolik klauzulí by měl přímý
+      zápis podmínky pro jeden vrchol? Použijte Tseitinovu transformaci tak, aby formule bez podmínky na $k$ měla
+      $O(n+m)$ klauzulí, a pak přidejte podmínku „nejvýše $k$ stisků“.
 
     .item:
 
-      Jak důkaz souvisí s během DPLL?
+      Hvězda $K_{1,3}$ (střed $s$, listy $1,2,3$), svítí všechna světla. Najděte všechna řešení a rozhodněte pro
+      $k=0$ a $k=1$. Co když na začátku svítí jen list 1?
 
 
 .Solution:
+  label: red-un-14-7
 
-  "a) Kódování.".notion Proměnné $p_{i,h}$ pro holuba $i\in\{1,\dots,n+1\}$ a díru $h\in\{1,\dots,n\}$:
-  $p_{i,h}=1\iff$ „holub $i$ sedí v díře $h$“.
+  "Redukce:".notion $\prob{Zhasni světla} \redp \prob{SAT}$, instance $(G,L,k)$ $\mapsto$ formule $\varphi$.
+
+
+  "a) Stačí množina.".notion Stisk přičte jedničku (modulo 2) ke stavům vrcholů v $N[v]$. Sčítání je komutativní,
+  takže pořadí stisků nehraje roli, a dvojí stisk téhož vrcholu se vyruší. Výsledek tedy závisí jen na množině $S$
+  vrcholů stisknutých lichým počtem krát, a nejméně stisků dá každý vrchol z $S$ stisknutý jednou. Vrchol $u$ se
+  přepne $|N[u]\cap S|$-krát, na konci nesvítí, právě když je $[u\in L]+|N[u]\cap S|$ sudé, tj.
+
+  .equation:
+
+    \bigoplus_{v\in N[u]}p_v\;=\;[u\in L],\qquad p_v=1\iff v\in S .
+
+
+  "b) Krok 1 – proměnné.".notion $p_v$ pro $v\in V$: $p_v=1\iff v\in S$ („vrchol $v$ stiskneme“). Pomocné proměnné
+  Tseitina a čítače níže.
+
+
+  "Přímý zápis nestačí.".notion Podmínka pro $u$ je parita $d=|N[u]|=\deg(u)+1$ proměnných. Ekvivalentní CNF bez
+  nových proměnných má podle cvičení .reference:cv-7-3 aspoň $2^{d-1}$ klauzulí – pro střed hvězdy s $n-1$ listy
+  $2^{n-1}$, exponenciálně mnoho.
+
+
+  "Krok 2 – omezení.".notion
+
+  .enumerate:
+
+    .item:
+
+      Chceme: parita pro vrchol $u$. Seřadíme $N[u]=(v_1,\dots,v_d)$ a zavedeme $q_{u,i}$ pro $i=2,\dots,d$ s významem
+      $q_{u,i}=p_{v_1}\oplus\dots\oplus p_{v_i}$ (a $q_{u,1}:=p_{v_1}$, bez nové proměnné). Hradlo
+      $q_{u,i}\Leftrightarrow(q_{u,i-1}\oplus p_{v_i})$ dají čtyři klauzule z cvičení .reference:cv-7-3:
+
+      .equation:
+
+        (\lnot q_{u,i}\lor q_{u,i-1}\lor p_{v_i}),\ (\lnot q_{u,i}\lor\lnot q_{u,i-1}\lor\lnot p_{v_i}),\ (q_{u,i}\lor\lnot q_{u,i-1}\lor p_{v_i}),\ (q_{u,i}\lor q_{u,i-1}\lor\lnot p_{v_i}).
+
+      Na konci jednotková klauzule $(q_{u,d})$, je-li $u\in L$, jinak $(\lnot q_{u,d})$. Pro $u$ je to $\deg(u)$
+      nových proměnných a $4\deg(u)+1$ klauzulí.
+
+    .item:
+
+      Chceme: nejvýše $k$ stisků. Blok "nejvýše $k$".emphasize z $p_{v_1},\dots,p_{v_n}$ sekvenčním čítačem (cvičení
+      .reference:cv-7-4): $k(n-1)$ proměnných a $2nk+n-4k$ klauzulí (pro $1\le k<n$; pro $k\ge n$ nic, pro $k=0$
+      klauzule $(\lnot p_v)$).
+
+
+  "Krok 3 – formule.".notion $\varphi$ = konjunkce skupin 1 (pro všechna $u$) a 2.
+
+
+  "Krok 4 – závěr.".notion
 
   .itemize:
 
     .item:
 
-      Každý holub v nějaké díře – blok "alespoň jedna".emphasize: $K_i=(p_{i,1}\lor\dots\lor p_{i,n})$, $n+1$ klauzulí.
+      Pro každé ohodnocení $p$ mají klauzule hradel jediné rozšíření na $q$ a v něm $q_{u,d}=\bigoplus_{v\in N[u]}p_v$
+      (Tseitin, věta .reference:ch-resice-sat-thm-tseitin; počítá se zdola, $q_{u,i}$ z $q_{u,i-1}$).
 
     .item:
 
-      V žádné díře dva holubi – blok "nejvýše jedna".emphasize: $(\lnot p_{i,h}\lor\lnot p_{j,h})$ pro každou díru $h$
-      a $i<j$, celkem $n\binom{n+1}2$ klauzulí.
+      ($\Rightarrow$) Zhasíná-li $S$, $|S|\le k$, všechna světla: $p_v=[v\in S]$, $q$ dopočítáme. Podle a) je
+      $q_{u,d}=[u\in L]$, takže platí koncové jednotkové klauzule; čítač lze doplnit, protože jedniček je nejvýše $k$.
 
+    .item:
 
-  "Velikost:".notion $n(n+1)$ proměnných a $(n+1)+n\binom{n+1}{2}=(n+1)+\frac{n^2(n+1)}{2}$ klauzulí; pro $n=2$:
-  6 proměnných a $3+6=9$ klauzulí. Klauzule „nejvýše jedna díra pro holuba“ "nepotřebujeme".notion: sedí-li holub
-  v modelu ve více dírách, necháme ho jen v jedné z nich – žádná díra tím druhého holuba nezíská. Formule s nimi
-  i bez nich jsou tedy ekvisplnitelné (stejná úvaha jako u Schurova problému v oddílu
-  .reference:ch-resice-sat-schur-promenne). Navíc je formule bez nich slabší (každý model formule s nimi je i jejím
-  modelem), takže nesplnitelnost slabší formule dává tím spíš nesplnitelnost silnější.
+      ($\Leftarrow$) V modelu je $q_{u,d}$ parita $N[u]$ a koncová klauzule říká, že se rovná $[u\in L]$ – podle a)
+      je $u$ na konci zhasnutý. Čítač dává $|S|\le k$ pro $S=\{v:p_v=1\}$.
 
+    .item:
 
-  "b) Rezoluce".notion "(nad rámec přednášky)".emphasize, připomenutí z oddílu .reference:ch-resice-sat-cdcl-analyza:
-  z $(X\lor x)$ a $(Y\lor\lnot x)$ odvodíme $(X\lor Y)$. Pravidlo je "korektní".emphasize: splňuje-li ohodnocení obě
-  klauzule, pak při $x=1$ musí platit $Y$ a při $x=0$ musí platit $X$, tedy platí $(X\lor Y)$. Prázdná klauzule $\square$
-  nemá žádný literál a není splněna žádným ohodnocením. Odvodíme-li ji, nemůže mít ani původní formule model – každý
-  model by splňoval všechny odvozené klauzule včetně $\square$.
+      "Čtení řešení:".notion stiskni vrcholy s $p_v=1$.
 
+    .item:
 
-  Klauzule pro $n=2$: $K_1=(p_{1A}\lor p_{1B})$, $K_2=(p_{2A}\lor p_{2B})$, $K_3=(p_{3A}\lor p_{3B})$ a pro díru $A$
-  $A_{12}=(\lnot p_{1A}\lor\lnot p_{2A})$, $A_{13}=(\lnot p_{1A}\lor\lnot p_{3A})$, $A_{23}=(\lnot p_{2A}\lor\lnot p_{3A})$,
-  pro díru $B$ obdobně $B_{12}$, $B_{13}$, $B_{23}$.
+      "Velikost:".notion $\sum_u\deg(u)=2m$ proměnných Tseitina a $4\cdot2m+n=8m+n$ klauzulí; s čítačem celkem
+      $n+2m+k(n-1)$ proměnných a $8m+n+2nk+n-4k$ klauzulí. Polynomiální.
 
-  .table:
-    columns: 'clll'
 
-    .row:
-      head: true
+  "Poznámka.".notion Bez podmínky na $k$ je to soustava lineárních rovnic nad $\mathrm{GF}(2)$, kterou vyřeší Gaussova
+  eliminace v polynomiálním čase ($\prob{XOR-SAT}$, oddíl .reference:ch-resice-sat-xor-sat). Těžké je až „nejvýše $k$“:
+  "(nad rámec přednášky)".emphasize najít řešení takové soustavy s nejvýše $k$ jedničkami je NP-úplné (Berlekamp,
+  McEliece, van Tilborg 1978).
 
-      krok
 
-      z klauzulí
+  "c) Hvězda, svítí vše.".notion Rovnice: střed $p_s\oplus p_1\oplus p_2\oplus p_3=1$, list $i$: $p_i\oplus p_s=1$.
+  Z listů $p_i=1\oplus p_s$; dosazením do rovnice středu
+  $p_s\oplus(1\oplus p_s)\oplus(1\oplus p_s)\oplus(1\oplus p_s)=1$, což platí vždy. Řešení jsou dvě: $p_s=1$ dá $S=\{s\}$, $p_s=0$ dá $S=\{1,2,3\}$. Pro $k=0$ je formule
+  nesplnitelná (světla svítí), pro $k=1$ splnitelná se $S=\{s\}$. Formule bez čítače má $4+6=10$ proměnných
+  a $8\cdot3+4=28$ klauzulí, s čítačem pro $k=1$ má 13 proměnných a 36 klauzulí.
 
-      podle
 
-      rezolventa
-
-    .row:
-
-      $R_1$
-
-      $B_{23}$, $K_2$
-
-      $p_{2B}$
-
-      $(p_{2A}\lor\lnot p_{3B})$
-
-    .row:
-
-      $R_2$
-
-      $R_1$, $K_3$
-
-      $p_{3B}$
-
-      $(p_{2A}\lor p_{3A})$
-
-    .row:
-
-      $R_3$
-
-      $R_2$, $A_{12}$
-
-      $p_{2A}$
-
-      $(\lnot p_{1A}\lor p_{3A})$
-
-    .row:
-
-      $R_4$
-
-      $R_3$, $A_{13}$
-
-      $p_{3A}$
-
-      $(\lnot p_{1A})$
-
-    .row:
-
-      $R_5$
-
-      $A_{23}$, $K_2$
-
-      $p_{2A}$
-
-      $(p_{2B}\lor\lnot p_{3A})$
-
-    .row:
-
-      $R_6$
-
-      $R_5$, $K_3$
-
-      $p_{3A}$
-
-      $(p_{2B}\lor p_{3B})$
-
-    .row:
-
-      $R_7$
-
-      $R_6$, $B_{12}$
-
-      $p_{2B}$
-
-      $(\lnot p_{1B}\lor p_{3B})$
-
-    .row:
-
-      $R_8$
-
-      $R_7$, $B_{13}$
-
-      $p_{3B}$
-
-      $(\lnot p_{1B})$
-
-    .row:
-
-      $R_9$
-
-      $R_8$, $K_1$
-
-      $p_{1B}$
-
-      $(p_{1A})$
-
-    .row:
-
-      $R_{10}$
-
-      $R_9$, $R_4$
-
-      $p_{1A}$
-
-      $\square$
-
-
-  Čtení: $R_2$ říká „holubi 2 a 3 nejsou oba v $B$, takže jeden z nich je v $A$“; $R_4=(\lnot p_{1A})$ „holub 1
-  nemůže do $A$, jinak by 2 a 3 museli oba do $B$“. Kroky $R_5$–$R_8$ jsou totéž se zaměněnými děrami, $R_9$ pošle
-  holuba 1 do $A$ a $R_{10}$ je spor. Formule $\mathrm{PHP}_2$ je tedy nesplnitelná. (Každý krok ověřen programem:
-  rezolvovaná proměnná je v jedné klauzuli kladně a ve druhé záporně, rezolventa není tautologie a poslední je
-  prázdná; hrubou silou navíc 0 modelů z $2^6$.)
+  "Svítí jen list 1.".notion Rovnice listů $p_1\oplus p_s=1$, $p_2\oplus p_s=0$, $p_3\oplus p_s=0$; jejich součet je
+  $p_1\oplus p_2\oplus p_3\oplus p_s=1$ (tři kopie $p_s$ dají $p_s$), kdežto rovnice středu chce
+  $p_s\oplus p_1\oplus p_2\oplus p_3=0$. Spor – světla nezhasneme žádným počtem stisků, formule je nesplnitelná pro
+  každé $k$.
 
 
   .centered:
 
     !tikz:
-      filename: 14z-ulohy-navic-06
-      options: 'x=1cm,y=1cm,rk/.style={draw=defc,thick,rounded corners=2pt,fill=white,font=\scriptsize,inner sep=2pt},rv/.style={draw=black!40,fill=black!6,rounded corners=2pt,font=\scriptsize,inner sep=2pt}'
+      filename: 14z-ulohy-navic-15
+      options: 'x=1cm,y=1cm'
 
-      \node[rv] (B23) at (2.5,5.0) {$B_{23}$};
-      \node[rk] (R1) at (2.5,4.0) {$p_{2A}\lor\lnot p_{3B}$};
-      \node[rk] (R2) at (2.5,3.0) {$p_{2A}\lor p_{3A}$};
-      \node[rk] (R3) at (2.5,2.0) {$\lnot p_{1A}\lor p_{3A}$};
-      \node[rk] (R4) at (2.5,1.0) {$\lnot p_{1A}$};
-      \foreach \n/\y/\t in {L1/4.5/K_2,L2/3.5/K_3,L3/2.5/A_{12},L4/1.5/A_{13}} {\node[rv] (\n) at (0.6,\y) {$\t$};}
-      \draw[imp] (B23)--(R1); \draw[imp] (R1)--(R2); \draw[imp] (R2)--(R3); \draw[imp] (R3)--(R4);
-      \draw[imp] (L1)--(R1); \draw[imp] (L2)--(R2); \draw[imp] (L3)--(R3); \draw[imp] (L4)--(R4);
-      \node[rv] (A23) at (7.0,5.0) {$A_{23}$};
-      \node[rk] (R5) at (7.0,4.0) {$p_{2B}\lor\lnot p_{3A}$};
-      \node[rk] (R6) at (7.0,3.0) {$p_{2B}\lor p_{3B}$};
-      \node[rk] (R7) at (7.0,2.0) {$\lnot p_{1B}\lor p_{3B}$};
-      \node[rk] (R8) at (7.0,1.0) {$\lnot p_{1B}$};
-      \node[rk] (R9) at (7.0,0.0) {$p_{1A}$};
-      \foreach \n/\y/\t in {P1/4.5/K_2,P2/3.5/K_3,P3/2.5/B_{12},P4/1.5/B_{13},P5/0.5/K_1} {\node[rv] (\n) at (8.9,\y) {$\t$};}
-      \draw[imp] (A23)--(R5); \draw[imp] (R5)--(R6); \draw[imp] (R6)--(R7); \draw[imp] (R7)--(R8); \draw[imp] (R8)--(R9);
-      \draw[imp] (P1)--(R5); \draw[imp] (P2)--(R6); \draw[imp] (P3)--(R7); \draw[imp] (P4)--(R8); \draw[imp] (P5)--(R9);
-      \node[litX,minimum size=7mm] (E) at (4.75,-0.9) {$\square$};
-      \draw[imp] (R4)--(E); \draw[imp] (R9)--(E);
-      \node[font=\scriptsize,align=center,text=black!70] at (2.5,-0.2) {větev $p_{1A}=1$};
-      \node[font=\scriptsize,align=center,text=black!70] at (8.6,-0.6) {větev $p_{1A}=0$};
+      \foreach \X/\tit/\pr in {0/{$S=\{s\}$}/s, 3.6/{$S=\{1,2,3\}$}/l} {
+        \begin{scope}[xshift=\X cm]
+          \coordinate (s) at (0,0);
+          \foreach \i/\a in {1/90,2/210,3/330} {\coordinate (l\i) at (\a:1.2);}
+          \draw[e] (s)--(l1) (s)--(l2) (s)--(l3);
+          \node[font=\footnotesize] at (0,-1.35) {\tit};
+        \end{scope}}
+      \node[vsel] at (0,0) {$s$};
+      \foreach \i/\a in {1/90,2/210,3/330} {\node[v,fill=hl!60] at (\a:1.2) {\i};}
+      \begin{scope}[xshift=3.6cm]
+        \node[v,fill=hl!60] at (0,0) {$s$};
+        \foreach \i/\a in {1/90,2/210,3/330} {\node[vsel] at (\a:1.2) {\i};}
+      \end{scope}
+      \begin{scope}[xshift=7.4cm,yshift=-1.0cm]
+        \foreach \r in {0,1,2} {\foreach \s in {0,1,2} {\node[v,fill=hl!60] (g\r\s) at (\s*0.8,\r*0.8) {};}}
+        \foreach \r in {0,1,2} {\draw[e] (g\r0)--(g\r1)--(g\r2); \draw[e] (g0\r)--(g1\r)--(g2\r);}
+        \foreach \r/\s in {0/0,0/2,1/1,2/0,2/2} {\node[vsel] at (\s*0.8,\r*0.8) {};}
+        \node[font=\footnotesize] at (0.8,-0.75) {mřížka $3\times3$: 5 stisků};
+      \end{scope}
 
 
-  Rezoluční důkaz jako graf: šedě původní klauzule, bíle rezolventy, každá rezolventa má dva předky. "Všimni si:".emphasize
-  levý řetěz je přesně větev $p_{1A}=1$ (propagace $p_{2A}=p_{3A}=0$, pak $p_{2B}=p_{3B}=1$, spor $B_{23}$), pravý
-  větev $p_{1A}=0$ (propagace $p_{1B}=1$, $p_{2B}=p_{3B}=0$, $p_{2A}=p_{3A}=1$, spor $A_{23}$).
+  Na začátku svítí všechny vrcholy; zvýrazněné vrcholy stiskneme, žluté ne. Vlevo obě řešení pro hvězdu; vpravo pro zajímavost mřížka $3\times3$,
+  kde svítí vše: jediné řešení stiskne rohy a střed, takže pro $k=4$ je formule nesplnitelná a pro $k=5$ splnitelná.
 
 
-  "c) Souvislost s DPLL.".notion DPLL s větvením na $p_{1A}$ narazí ve větvi $p_{1A}=1$ na konflikt v $B_{23}$ a ve větvi
-  $p_{1A}=0$ na konflikt v $A_{23}$ – jiné větvení není potřeba. Projdeme-li strom od konfliktních listů nahoru a
-  rezolvujeme konfliktní klauzuli s klauzulemi, které propagovaly (přesně jako při analýze konfliktu v CDCL), dostaneme
-  právě řetězy $R_1$–$R_4$ a $R_5$–$R_9$ a v kořeni $\square$. Neúspěšný běh DPLL je tedy rezoluční důkaz
-  nesplnitelnosti. "(nad rámec přednášky)".emphasize Naopak každý rezoluční důkaz $\mathrm{PHP}_n$ má exponenciálně
-  mnoho kroků (Haken 1985), a protože CDCL se učí jen rezolventy, potřebuje na holubník exponenciální čas – to je
-  slepá skvrna symetrie z oddílu .reference:ch-resice-sat-symetrie.
+  (Ověřeno skriptem: kódování porovnáno s výčtem všech množin $S$ na 2 000 náhodných grafech do 7 vrcholů,
+  s čítačem i bez, včetně počtu modelů a vzorců $n+2m$ proměnných a $8m+n$ klauzulí; hvězda a mřížka $3\times3$
+  přepočítány.)
 
 
 .Exercise:
-  title: 'Úloha 14.8 (Nejvýše jedna – binární kódování)'
+  title: 'Úloha 14.8 (převozník: plánování jako SAT)'
   label: un-14-8
 
-  Blok „nejvýše jedna z $x_1,\dots,x_n$“ jsme psali po dvojicích ($\binom n2$ klauzulí) a sekvenčně ($3n-4$ klauzulí,
-  $n-1$ nových proměnných, cvičení .reference:cv-7-4). "Binární kódování".notion "(nad rámec přednášky)".emphasize
-  zavede $m=\lceil\log_2 n\rceil$ nových proměnných $b_1,\dots,b_m$ („číslo vybrané proměnné ve dvojkové soustavě“).
-  Označme $\beta_j(i)$ $j$-tý bit čísla $i-1$ (od nejnižšího). Pro každé $i$ a $j$ přidáme klauzuli
-  $(\lnot x_i\lor b_j)$, je-li $\beta_j(i)=1$, a $(\lnot x_i\lor\lnot b_j)$, je-li $\beta_j(i)=0$.
+  Převozník má dostat předměty $V$, $|V|=n$, z levého břehu řeky na pravý. Loďka uveze převozníka a nejvýše $c$
+  předmětů a bez převozníka nepluje. Dvojice $\{u,v\}\in K$ ("konflikty".notion, např. vlk a koza, koza a zelí)
+  nesmějí zůstat na stejném břehu bez převozníka. Jeden "krok".notion je: převozník přepluje na druhý břeh a veze
+  s sebou nejvýše $c$ předmětů ze svého břehu, nebo zůstane stát (pak se nic nezmění). Počet kroků $T$ je zadán
+  unárně.
+
+
+  "Otázka:".notion lze všechny předměty dostat na pravý břeh nejvýše za $T$ kroků?
 
   .enumerate:
     type: a
 
     .item:
 
-      Vypište klauzule pro $n=5$.
+      Navrhněte formuli v CNF s proměnnými „kde je předmět $v$ po $t$ krocích“ a „kde je převozník po $t$
+      krocích“, $t=0,\dots,T$, která je splnitelná právě tehdy, když odpověď je $\ANO$. Uveďte klauzule po skupinách,
+      obě implikace, jak z modelu přečíst plán, a velikost.
 
     .item:
 
-      Dokažte: ohodnocení $x_1,\dots,x_n$ lze rozšířit na model, právě když je pravdivá nejvýše jedna z $x_i$.
+      Proč stačí požadovat cíl přesně v kroku $T$, když se otázka ptá na „nejvýše $T$“?
 
     .item:
 
-      Spočítejte nové proměnné a klauzule a porovnejte s kódováním po dvojicích a sekvenčním pro $n=5$ a $n=100$.
-
-    .item:
-
-      Vynutí unit propagation po nastavení $x_i=1$ hodnotu 0 všem ostatním $x_k$?
+      Vlk, koza a zelí ($c=1$, konflikty vlk–koza a koza–zelí): spočítejte proměnné a klauzule pro $T=6$ a $T=7$,
+      rozhodněte obě formule a přečtěte plán.
 
 
 .Solution:
+  label: red-un-14-8
 
-  "a) $n=5$.".notion $m=\lceil\log_2 5\rceil=3$. Kódy $i-1$ jako $(\beta_3\beta_2\beta_1)$: $x_1\mapsto000$, $x_2\mapsto001$,
-  $x_3\mapsto010$, $x_4\mapsto011$, $x_5\mapsto100$.
+  "Redukce:".notion $\prob{Převozník} \redp \prob{SAT}$, instance $(V,K,c,T)$ $\mapsto$ formule $\varphi_T$.
+
+
+  "Krok 1 – proměnné.".notion
+
+  .itemize:
+
+    .item:
+
+      $b_{v,t}$ pro $v\in V$, $t=0,\dots,T$: $b_{v,t}=1\iff$ „po $t$ krocích je $v$ na pravém břehu“;
+
+    .item:
+
+      $f_t$ pro $t=0,\dots,T$: $f_t=1\iff$ „po $t$ krocích je převozník na pravém břehu“;
+
+    .item:
+
+      $m_{v,t}$ pro $t=1,\dots,T$: „$v$ se v kroku $t$ vezl“ (pro kapacitu), k tomu pomocné proměnné čítačů.
+
+
+  "Krok 2 – omezení.".notion
+
+  .enumerate:
+
+    .item:
+
+      Chceme: začátek vlevo. $(\lnot f_0)$ a $(\lnot b_{v,0})$ pro každé $v$. ($n+1$ klauzulí)
+
+    .item:
+
+      Chceme: cíl vpravo. $(b_{v,T})$ pro každé $v$. ($n$)
+
+    .item:
+
+      Chceme: předmět se přesune jen s převozníkem. Přejde-li $v$ zleva doprava, stál převozník vlevo a přeplul:
+      $\lnot b_{v,t-1}\land b_{v,t}\Rightarrow\lnot f_{t-1}\land f_t$, tj. klauzule
+      $(b_{v,t-1}\lor\lnot b_{v,t}\lor\lnot f_{t-1})$ a $(b_{v,t-1}\lor\lnot b_{v,t}\lor f_t)$; zprava doleva symetricky
+      $(\lnot b_{v,t-1}\lor b_{v,t}\lor f_{t-1})$ a $(\lnot b_{v,t-1}\lor b_{v,t}\lor\lnot f_t)$. Pro každé $v$
+      a $t=1,\dots,T$. ($4nT$)
+
+    .item:
+
+      Chceme: v loďce nejvýše $c$ předmětů. Změnil-li $v$ břeh, vezl se: $(b_{v,t-1}\oplus b_{v,t})\Rightarrow m_{v,t}$,
+      klauzule $(\lnot b_{v,t-1}\lor b_{v,t}\lor m_{v,t})$ a $(b_{v,t-1}\lor\lnot b_{v,t}\lor m_{v,t})$ ($2nT$); a blok
+      "nejvýše $c$".emphasize z $m_{1,t},\dots,m_{n,t}$ sekvenčním čítačem (cvičení .reference:cv-7-4) pro každé $t$
+      ($T\cdot c(n-1)$ proměnných, $T(2nc+n-4c)$ klauzulí pro $1\le c<n$; pro $c\ge n$ nic, pro $c=0$ klauzule
+      $(\lnot m_{v,t})$). Opačnou implikaci nepotřebujeme: zbytečná jednička v $m$ podmínku jen zpřísní.
+
+    .item:
+
+      Chceme: konfliktní dvojice $\{u,v\}$ nezůstane bez dozoru, tj. neplatí $b_{u,t}=b_{v,t}\ne f_t$. Klauzule
+      $(\lnot b_{u,t}\lor\lnot b_{v,t}\lor f_t)$ (oba vpravo, převozník vlevo) a $(b_{u,t}\lor b_{v,t}\lor\lnot f_t)$
+      (oba vlevo, převozník vpravo) pro $t=0,\dots,T$. ($2|K|(T+1)$)
+
+
+  Stačí kontrolovat stavy po krocích: během plavby je bez dozoru břeh, ze kterého převozník odplul (předměty, které
+  zůstaly, se kontrolují v čase $t$), a břeh, kam pluje (ten byl bez dozoru už v čase $t-1$).
+
+
+  "Krok 3 – formule.".notion $\varphi_T$ = konjunkce skupin 1–5.
+
+
+  "Krok 4 – závěr.".notion
+
+  .itemize:
+
+    .item:
+
+      ($\Rightarrow$) Plán o nejvýše $T$ krocích doplníme čekáním na přesně $T$ kroků (bod b) a nastavíme $b$, $f$
+      podle stavů, $m_{v,t}=1$ právě pro předměty vezené v kroku $t$. Skupiny 1, 2 platí, 3 protože předměty se
+      vozí jen s převozníkem z jeho břehu, 4 protože jich je nejvýše $c$, 5 protože plán je bezpečný.
+
+    .item:
+
+      ($\Leftarrow$) Model dává posloupnost stavů. V kroku $t$ se podle 3 přesunuly jen předměty z břehu převozníka
+      spolu s ním (pokud převozník stál, nepřesunulo se nic), podle 4 nejvýše $c$ z nich, a podle 5 je každý stav
+      bezpečný. Podle 1 a 2 plán začíná vlevo a končí vpravo. Je to tedy plán s $T$ kroky, z nichž některé mohou
+      být čekání.
+
+    .item:
+
+      "Čtení plánu:".notion v kroku $t$ převozník přeplul, je-li $f_t\ne f_{t-1}$, a vezl předměty s
+      $b_{v,t}\ne b_{v,t-1}$.
+
+    .item:
+
+      "Velikost:".notion $(n+1)(T+1)+nT+Tc(n-1)$ proměnných a $(2n+1)+6nT+T(2nc+n-4c)+2|K|(T+1)$ klauzulí (pro
+      $1\le c<n$) – polynomiální v $n$, $T$ a $|K|$ (proto $T$ unárně).
+
+
+  "b) Proč přesně $T$.".notion Díky čekání: má-li plán méně kroků, přidáme na konec čekání. Stav se nezmění
+  a převozník zůstane, kde je, takže cíl i bezpečnost platí dál. Bez možnosti čekat by „nejvýše $T$“ chtělo
+  disjunkci cílů přes všechny časy $t\le T$ a navíc by se po dosažení cíle musela hlídat další plavba.
+
+
+  "c) Vlk $W$, koza $G$, zelí $C$.".notion $n=3$, $|K|=2$, $c=1$; čítač pro $n=3$, $c=1$ má 2 proměnné a $6+3-4=5$
+  klauzulí.
+
+  .itemize:
+
+    .item:
+
+      $T=7$: $4\cdot8+21+14=67$ proměnných a $7+126+35+32=200$ klauzulí; formule je "splnitelná".notion.
+
+    .item:
+
+      $T=6$: $4\cdot7+18+12=58$ proměnných a $7+108+30+28=173$ klauzulí; formule je "nesplnitelná".notion.
+
+
+  Plán přečtený z modelu pro $T=7$ (L = levý břeh, P = pravý, $*$ = převozník):
 
   .table:
     columns: 'clll'
@@ -1454,153 +1394,105 @@ v podobě, jakou čeká zápočtový test.
     .row:
       head: true
 
-      $i$
+      $t$
 
-      $b_1$
+      L
 
-      $b_2$
+      P
 
-      $b_3$
+      krok $t$
+
+    .row:
+
+      0
+
+      $*$ $W,G,C$
+
+      –
+
+      start
 
     .row:
 
       1
 
-      $(\lnot x_1\lor\lnot b_1)$
+      $W,C$
 
-      $(\lnot x_1\lor\lnot b_2)$
+      $*$ $G$
 
-      $(\lnot x_1\lor\lnot b_3)$
+      převeze kozu
 
     .row:
 
       2
 
-      $(\lnot x_2\lor b_1)$
+      $*$ $W,C$
 
-      $(\lnot x_2\lor\lnot b_2)$
+      $G$
 
-      $(\lnot x_2\lor\lnot b_3)$
+      vrátí se prázdný
 
     .row:
 
       3
 
-      $(\lnot x_3\lor\lnot b_1)$
+      $C$
 
-      $(\lnot x_3\lor b_2)$
+      $*$ $W,G$
 
-      $(\lnot x_3\lor\lnot b_3)$
+      převeze vlka
 
     .row:
 
       4
 
-      $(\lnot x_4\lor b_1)$
+      $*$ $G,C$
 
-      $(\lnot x_4\lor b_2)$
+      $W$
 
-      $(\lnot x_4\lor\lnot b_3)$
+      "vrátí se s kozou".emphasize
 
     .row:
 
       5
 
-      $(\lnot x_5\lor\lnot b_1)$
+      $G$
 
-      $(\lnot x_5\lor\lnot b_2)$
+      $*$ $W,C$
 
-      $(\lnot x_5\lor b_3)$
-
-
-  Jako implikace: $x_i\Rightarrow$ „bity $b$ tvoří číslo $i-1$“. Klauzule řádku $i$ jsou splněné, když $x_i=0$, nebo když
-  $(b_3b_2b_1)$ je přesně kód $i-1$.
-
-
-  "b) Korektnost.".notion
-
-  .itemize:
-
-    .item:
-
-      (nejvýše jedna $\Rightarrow$ rozšíření existuje) Jsou-li všechna $x_i=0$, platí každá klauzule díky $\lnot x_i$
-      a $b$ zvolíme libovolně. Je-li pravdivé jen $x_i$, položíme $b_j=\beta_j(i)$ pro všechna $j$: klauzule řádku $i$
-      platí díky literálu s $b_j$, klauzule ostatních řádků díky $\lnot x_k$.
-
-    .item:
-
-      (dvě pravdivé $\Rightarrow$ rozšíření neexistuje) Nechť $x_i=x_k=1$, $i\neq k$. Čísla $i-1\neq k-1$ jsou menší
-      než $2^m$, takže se ve dvojkovém zápisu o $m$ bitech liší v nějakém bitu $j$; bez újmy na obecnosti
-      $\beta_j(i)=1$, $\beta_j(k)=0$. Řádek $i$ obsahuje $(\lnot x_i\lor b_j)$, tedy $b_j=1$; řádek $k$ obsahuje
-      $(\lnot x_k\lor\lnot b_j)$, tedy $b_j=0$ – spor pro každou volbu $b$.
-
-
-  "c) Velikost.".notion Binární kódování má $m=\lceil\log_2 n\rceil$ nových proměnných a $n\lceil\log_2 n\rceil$ klauzulí
-  (pro $n\ge2$), každou se dvěma literály.
-
-  .table:
-    columns: 'lcccc'
-
-    .row:
-      head: true
-
-      kódování
-
-      $n=5$: nové prom.
-
-      $n=5$: klauzule
-
-      $n=100$: nové prom.
-
-      $n=100$: klauzule
+      převeze zelí
 
     .row:
 
-      po dvojicích
+      6
 
-      0
+      $*$ $G$
 
-      10
+      $W,C$
 
-      0
-
-      4 950
+      vrátí se prázdný
 
     .row:
-
-      sekvenční ($n-1$, $3n-4$)
-
-      4
-
-      11
-
-      99
-
-      296
-
-    .row:
-
-      binární ($\lceil\log_2n\rceil$, $n\lceil\log_2n\rceil$)
-
-      3
-
-      15
 
       7
 
-      700
+      –
+
+      $*$ $W,G,C$
+
+      převeze kozu
 
 
-  Binární kódování má nejméně nových proměnných, klauzulí má $O(n\log n)$ – víc než sekvenční $O(n)$, ale mnohem méně
-  než $\binom n2$. Pro malá $n$ vyhrává kódování po dvojicích (pro $n=5$ jen 10 klauzulí bez nových proměnných).
+  "Proč ne za 6 kroků.".notion Plavby doprava musí přenést tři předměty, každá nejvýše jeden; každý předmět vezený
+  zpět je třeba přenést znovu. Kdyby stačily tři plavby doprava a žádný předmět se nevezl zpět, první plavba musí
+  vézt kozu (jinak zůstane koza se zelím nebo s vlkem) a druhá vlka nebo zelí – po návratu prázdného převozníka
+  zůstane koza vpravo s jedním z nich, spor. Plaveb doprava je tedy aspoň čtyři, mezi nimi aspoň tři zpět, celkem
+  aspoň 7 kroků. Řešič to potvrdí nesplnitelností $\varphi_6$.
 
 
-  "d) Unit propagation.".notion Ano. Po $x_i=1$ jsou všechny klauzule řádku $i$ jednotkové a nastaví
-  $b_j:=\beta_j(i)$ pro všechna $j$. Pro $k\neq i$ existuje bit $j$, kde se kódy liší, a klauzule řádku $k$ pro tento
-  bit má literál s $b_j$ nepravdivý – zbývá v ní jen $\lnot x_k$, takže propagace dá $x_k:=0$. Například pro $n=5$
-  a $x_3=1$: $b=(b_1,b_2,b_3)=(0,1,0)$; $x_1$ odpadne klauzulí $(\lnot x_1\lor\lnot b_2)$, $x_2$ klauzulí
-  $(\lnot x_2\lor b_1)$, $x_4$ klauzulí $(\lnot x_4\lor b_1)$, $x_5$ klauzulí $(\lnot x_5\lor b_3)$. (Skriptem ověřeno
-  pro $n=2,\dots,12$: korektnost přes všechna ohodnocení $x$ i $b$, počet klauzulí $nm$ a propagace z každého $x_i=1$.)
+  (Ověřeno skriptem: formule porovnána s prohledáním stavového prostoru do šířky na 400 náhodných instancích
+  ($n\le4$, náhodné konflikty, $0\le c\le n$) pro všechna $T$ od 0 do optima $+1$, včetně vzorců pro počty proměnných
+  a klauzulí; vlk–koza–zelí: optimum 7 kroků, plán výše je model řešiče.)
 
 
 .Subsection Úlohy z jiných sbírek

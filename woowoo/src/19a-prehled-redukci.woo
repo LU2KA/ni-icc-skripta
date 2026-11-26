@@ -538,6 +538,22 @@ s voláním orákula (oddíl .reference:ch-graf-redukce-s-orakulem-a-vycisliteln
 
   .row:
 
+    "$\prob{Set Cover}$: nejmenší pokrytí $\to$ rozhodnutí (s orákulem)"#red-un-4-2
+
+    velikost optima binárním vyhledáváním, pak množiny po jedné vyškrtávej, dokud orákulum potvrzuje pokrytí stejné velikosti
+
+    4.2
+
+  .row:
+
+    "$\prob{nejdelší společná podposloupnost}$: nalezení $\to$ rozhodnutí (s orákulem)"#red-un-4-5
+
+    délku $k^*$ binárním vyhledáváním, pak škrtej písmena nejkratšího slova, dokud podposloupnost délky $k^*$ pořád existuje
+
+    4.5
+
+  .row:
+
     "rozklad na prvočinitele $\to$ $\prob{FACT}$ (s orákulem)"#red-un-4-6
 
     nejmenší dělitel binárním vyhledáváním, vydělit a opakovat
@@ -546,11 +562,43 @@ s voláním orákula (oddíl .reference:ch-graf-redukce-s-orakulem-a-vycisliteln
 
   .row:
 
+    "$\prob{Bin Packing}$: nejmenší počet košů $\to$ rozhodnutí (s orákulem)"#red-un-4-7
+
+    počet košů $k^*$ binárním vyhledáváním, pak slepuj dvojice předmětů, dokud se vše pořád vejde do $k^*$ košů
+
+    4.7
+
+  .row:
+
     "$\prob{Graph Isomorphism}$: nalezení izomorfismu $\to$ rozhodnutí (s orákulem)"#red-un-4-9
 
     přiřazení $u_j\mapsto v_j$ vynutí kliky různých velikostí přilepené k oběma vrcholům
 
     4.9
+
+  .row:
+
+    "$\prob{UNP}\redp\prob{UNP}_{\ge2}$"#red-un-5-2
+
+    dvě kopie stroje $M$, první krok si jednu vybere – každá přijímající větev se zdvojí; $k\mapsto k+1$
+
+    5.2
+
+  .row:
+
+    "$\prob{UNP}$: nalezení přijímající větve $\to$ rozhodnutí (s orákulem)"#red-un-5-3
+
+    větev stav krok po kroku: začátek výpočtu vnuť stroji a zeptej se, zda pořád přijme
+
+    5.3
+
+  .row:
+
+    "$\prob{UNP}\redp\prob{UNP}_2$"#red-un-5-4
+
+    každý krok $M$ rozlož na $L=\max(1,\lceil\log_2 d\rceil)$ kroků, které vybírají cestu v binárním stromu; $k\mapsto kL$
+
+    5.4
 
   .row:
 
@@ -575,6 +623,94 @@ s voláním orákula (oddíl .reference:ch-graf-redukce-s-orakulem-a-vycisliteln
     pevný stroj, který zastaví právě na ANO-instancích; NP-těžký problém mimo $\NP$
 
     5.8
+
+  .row:
+
+    "$\prob{SAT}\redp\prob{Formula-SAT}$"#red-un-6-1
+
+    identita: formule v CNF je speciální případ obecné formule
+
+    6.1
+
+  .row:
+
+    "$\prob{SAT}\redp\prob{Non-Equivalence}$"#red-un-6-2
+
+    porovnej s nesplnitelnou formulí $\psi_0=(x_1)\land(\lnot x_1)$
+
+    6.2
+
+  .row:
+
+    "$\prob{SAT}\redp\prob{MAX-SAT}$"#red-un-6-3
+
+    práh $k=m$: splnit všechny klauzule
+
+    6.3
+
+  .row:
+
+    "$\prob{SAT}\redp\prob{Half-SAT}$"#red-un-6-4
+
+    ke každé $x_i$ nová $y_i$ s $y_i=\lnot x_i$ – jedniček je vždy přesně polovina
+
+    6.4
+
+  .row:
+
+    "$\prob{SAT}\redp\prob{Another-SAT}$"#red-un-6-5
+
+    ke každé klauzuli přidej $y$ a vynuť $y\Rightarrow\lnot x_i$; ohodnocení $y=1$, $x=0$ je splňující zadarmo
+
+    6.5
+
+  .row:
+
+    "$\prob{SAT}\redp\prob{Min-Ones SAT}$"#red-un-6-6
+
+    práh $k=n$: omezení počtu jedniček nic neubere
+
+    6.6
+
+  .row:
+
+    "$\prob{Min-Ones SAT}$: nejlepší ohodnocení $\to$ rozhodnutí (s orákulem)"#red-un-6-6
+
+    optimum $k^*$ binárním vyhledáváním, pak proměnné zkusmo nastavuj na $0$, dokud orákulum potvrzuje $k^*$ jedniček
+
+    6.6
+
+  .row:
+
+    "$\prob{SAT}\redp\prob{Dlaždičkování}$"#red-un-6-7
+
+    sloupec = proměnná (svislé hrany nesou hodnotu), řádek = klauzule (boční hrany nesou „už splněna“), pravý okraj chce „splněna“
+
+    6.7
+
+  .row:
+
+    "$\prob{Pozitivní NAE-3-SAT}\redp\prob{Set Splitting}$"#red-un-7-1
+
+    přestrojení: prvky jsou proměnné, množiny klauzule, barvy hodnoty
+
+    7.1
+
+  .row:
+
+    "$\prob{NAE-3-SAT}\redp\prob{Flip-SAT}$"#red-un-7-2
+
+    identita: NAE-ohodnocení je přesně takové, které splní formuli i po překlopení
+
+    7.2
+
+  .row:
+
+    "$\prob{NAE-3-SAT}$: nalezení ohodnocení $\to$ rozhodnutí (s orákulem)"#red-un-7-3
+
+    $x_1=0$ ze symetrie, ostatní proměnné porovnávej s $x_1$ klauzulemi „$x_i=x_1$“ a „$x_i\neq x_1$“
+
+    7.3
 
   .row:
 
@@ -610,6 +746,14 @@ s voláním orákula (oddíl .reference:ch-graf-redukce-s-orakulem-a-vycisliteln
 
   .row:
 
+    "$\prob{3-SAT}\redp\prob{MAX-2-SAT}$"#red-un-7-8
+
+    gadget z 10 klauzulí za klauzuli: splněná klauzule dovolí 7 splněných, nesplněná nejvýše 6; $k=7m$
+
+    7.8
+
+  .row:
+
     "$\prob{SAT}$: nalezení ohodnocení $\to$ rozhodnutí (s orákulem)"#red-un-7-9
 
     dosazuj proměnné jednu po druhé; NE pro $x=1$ znamená, že projde $x=0$; nejvýš $n+1$ dotazů
@@ -631,6 +775,30 @@ s voláním orákula (oddíl .reference:ch-graf-redukce-s-orakulem-a-vycisliteln
     každý výskyt vlastní kopie, kopie spojí cyklus implikací (konstrukce z úlohy 7.6)
 
     7.11
+
+  .row:
+
+    "$\prob{VC}\redp\prob{Partial VC}$"#red-un-8-1
+
+    $t=|E|$: pokrýt aspoň všechny hrany
+
+    8.1
+
+  .row:
+
+    "$\prob{3-SAT}\redp\prob{Clique}$"#red-un-8-2
+
+    vrchol za výskyt literálu, hrany mezi neopačnými literály různých klauzulí, $k=m$
+
+    8.2
+
+  .row:
+
+    "$\prob{Dense Subgraph}$: nejhustší $k$-tice $\to$ rozhodnutí (s orákulem)"#red-un-8-3
+
+    optimum $l^*$ binárním vyhledáváním, pak vrcholy zkusmo mazej, dokud zbytek obsahuje $k$ vrcholů s $l^*$ hranami
+
+    8.3
 
   .row:
 
@@ -666,6 +834,14 @@ s voláním orákula (oddíl .reference:ch-graf-redukce-s-orakulem-a-vycisliteln
 
   .row:
 
+    "$\prob{IS}\redp\prob{Triangle-free IS}$"#red-un-8-8
+
+    každou hranu dvakrát podrozděl; $k\mapsto k+|E|$
+
+    8.8
+
+  .row:
+
     "$\prob{IS}$: největší množina $\to$ rozhodnutí (s orákulem)"#red-un-8-9
 
     $\alpha$ binárním vyhledáváním; $v$ vezmi, má-li $G-N[v]$ nezávislou množinu velikosti $k-1$
@@ -679,6 +855,30 @@ s voláním orákula (oddíl .reference:ch-graf-redukce-s-orakulem-a-vycisliteln
     hrany jako dvouprvkové množiny; transpozice systému množin
 
     8.10
+
+  .row:
+
+    "$\prob{3-Coloring}\redp\prob{Max 3-Cut}$"#red-un-9-1
+
+    $k=|E|$: přeříznout všechny hrany znamená obarvit třemi barvami
+
+    9.1
+
+  .row:
+
+    "$\prob{3-Coloring}\redp\prob{Přidělení kanálů}$"#red-un-9-2
+
+    $k=5$, barva $i$ je kanál $2i-1$; zpět $c(v)=\lceil f(v)/2\rceil$
+
+    9.2
+
+  .row:
+
+    "$\prob{MaxCut}\redp\prob{Exact Cut}$"#red-un-9-3
+
+    přidej $m$ samostatných hran, každou lze přeříznout, nebo ne; $k\mapsto k+m$
+
+    9.3
 
   .row:
 
@@ -698,6 +898,14 @@ s voláním orákula (oddíl .reference:ch-graf-redukce-s-orakulem-a-vycisliteln
 
   .row:
 
+    "$\prob{MaxCut}$: maximální řez $\to$ rozhodnutí váženého $\prob{MaxCut}$ (s orákulem)"#red-un-9-6
+
+    velikost $k^*$ binárním vyhledáváním, pak vrcholy zkusmo slučuj s $v_1$ (váhy hran se sečtou), dokud maximum zůstává $k^*$
+
+    9.6
+
+  .row:
+
     "$\prob{MaxCut}\redp\prob{Max Bisection}$"#red-un-9-7
 
     $n$ izolovaných vrcholů vyrovná velikosti stran
@@ -711,6 +919,30 @@ s voláním orákula (oddíl .reference:ch-graf-redukce-s-orakulem-a-vycisliteln
     doplněk grafu: řezy v $G$ a $\overline G$ dají dohromady $h^2$
 
     9.7
+
+  .row:
+
+    "$\prob{3-Coloring}\redp\prob{3-Coloring}$ se stupni $\le4$"#red-un-9-8
+
+    vrchol stupně $d$ nahraď řetězem $d$ gadgetů (hrana a tři terminály), který vynutí stejnou barvu všech $d$ kopií
+
+    9.8
+
+  .row:
+
+    "$\prob{X3C}$: nalezení pokrytí $\to$ rozhodnutí (s orákulem)"#red-un-10-1
+
+    množiny po jedné vyškrtávej, dokud orákulum potvrzuje, že pokrytí ze zbylých jde pořád složit
+
+    10.1
+
+  .row:
+
+    "$\prob{1-in-3 SAT}\redp\prob{2-in-4 SAT}$"#red-un-10-2
+
+    ke každé klauzuli přidej literál $z$ jedné nové proměnné; je-li $z=0$, překlop celé ohodnocení
+
+    10.2
 
   .row:
 
@@ -754,6 +986,14 @@ s voláním orákula (oddíl .reference:ch-graf-redukce-s-orakulem-a-vycisliteln
 
   .row:
 
+    "$\prob{X3C}\redp\prob{Partition into Triangles}$"#red-un-10-8
+
+    za trojici gadget z 9 vrcholů: vybraná trojice pokryje $x,y,z$ trojúhelníky s dvojicemi $a_i$, jinak se gadget rozdělí sám
+
+    10.8
+
+  .row:
+
     "$\prob{3-SAT}\redp\prob{X3C}$"#red-un-10-9
 
     ozubená kola pro proměnné, dvojice prvků pro klauzule, $m(n-1)$ úklidových dvojic
@@ -794,6 +1034,14 @@ s voláním orákula (oddíl .reference:ch-graf-redukce-s-orakulem-a-vycisliteln
 
   .row:
 
+    "$\prob{Partition}$: nalezení rozdělení $\to$ rozhodnutí (s orákulem)"#red-un-11-6
+
+    čísla zkusmo slučuj s blokem, který obsahuje $a_1$; zůstane-li odpověď $\ANO$, jsou ve stejné skupině
+
+    11.6
+
+  .row:
+
     "$\prob{Partition}\redp\prob{Bin Packing}$ ($q=2$)"#red-un-11-7
 
     dva koše kapacity $S/2$; jen slabá NP-těžkost
@@ -802,9 +1050,17 @@ s voláním orákula (oddíl .reference:ch-graf-redukce-s-orakulem-a-vycisliteln
 
   .row:
 
-    "$\prob{1-in-3 SAT}\redp\prob{Subset Sum}$ (základ 3)"#red-un-11-8
+    "$\prob{Partition}\redp\prob{Rozvrh s okny}$"#red-un-11-8
 
-    u klauzule sečteme nejvýše 3 jedničky, takže stačí základ 4, a po rozboru přenosů i 3
+    čísla jsou úlohy s oknem $[0,S+1)$, zarážka délky 1 v čase $S/2$ rozdělí čas na dvě poloviny
+
+    11.8
+
+  .row:
+
+    "$\prob{3-Partition}\redp\prob{Rozvrh s okny}$"#red-un-11-8
+
+    $q-1$ zarážek rozdělí čas na $q$ přihrádek délky $B$; čísla zůstanou malá, proto silná NP-těžkost
 
     11.8
 
@@ -890,11 +1146,67 @@ s voláním orákula (oddíl .reference:ch-graf-redukce-s-orakulem-a-vycisliteln
 
   .row:
 
+    "$\prob{Latin Square Completion}\redp\prob{SAT}$"#red-un-14-1
+
+    $x_{r,s,v}$, „právě jedno“ číslo na políčku, v řádku i ve sloupci; předvyplněná políčka jednotkovými klauzulemi
+
+    14.1
+
+  .row:
+
+    "$\prob{Instalace balíčků}\redp\prob{SAT}$"#red-un-14-2
+
+    $x_p$; závislost $x_p\Rightarrow\bigvee_{q\in D}x_q$, z verzí „nejvýše jeden“, konflikt $(\lnot x_p\lor\lnot x_q)$
+
+    14.2
+
+  .row:
+
+    "$\prob{Minesweeper}\redp\prob{SAT}$"#red-un-14-3
+
+    $m_q$; „právě $c$ min“ mezi nejvýše 8 sousedy: zakaž každých $c+1$ min a každých $d-c+1$ prázdných
+
+    14.3
+
+  .row:
+
+    "$\prob{Rozsazení hostů}\redp\prob{SAT}$"#red-un-14-4
+
+    $x_{g,t}$, „právě jeden“ stůl za hosta, kapacita sekvenčním čítačem, kamarád $x_{g,t}\Rightarrow\bigvee_{f\in F(g)}x_{f,t}$
+
+    14.4
+
+  .row:
+
     "$\prob{Queens Completion}\redp\prob{SAT}$"#red-un-14-5
 
     proměnná za políčko; řádky a sloupce „právě jedna“, diagonály „nejvýše jedna“
 
     14.5
+
+  .row:
+
+    "$\prob{Rozvrh se závislostmi}\redp\prob{SAT}$"#red-un-14-6
+
+    $x_{j,t}$, „právě jeden“ krok v okně, nejvýše $m$ úloh v kroku čítačem, závislost $x_{j,t}\Rightarrow\bigvee_{s<t}x_{i,s}$
+
+    14.6
+
+  .row:
+
+    "$\prob{Zhasni světla}\redp\prob{SAT}$"#red-un-14-7
+
+    $p_v$ = stisk; parita stisků v $N[u]$ řetězem XOR přes Tseitinovu transformaci, „nejvýše $k$“ čítačem
+
+    14.7
+
+  .row:
+
+    "$\prob{Převozník}\redp\prob{SAT}$"#red-un-14-8
+
+    polohy předmětů $b_{v,t}$ a převozníka $f_t$ v čase $t$; břeh se mění jen s převozníkem, kapacita čítačem
+
+    14.8
 
   .row:
 

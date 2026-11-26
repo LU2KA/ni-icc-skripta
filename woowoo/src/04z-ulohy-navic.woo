@@ -2,23 +2,30 @@
   label: ch-np-ulohy-navic
 
 
-Úlohy procvičují práci s nedeterministickým strojem (strom výpočtu, Guess & Verify, oddíly
-.reference:ch-np-od-determinismu-k-nedeterminismu a .reference:ch-np-jak-navrhovat-nedeterministicke-stroje),
-certifikátovou definici $\NP$ (oddíl .reference:ch-np-od-hadani-k-overovani-certifikaty), vztah $\NP\subseteq\EXP$
-(oddíl .reference:ch-np-tridy-nedeterministicke-casove-slozitosti) a důsledky případné rovnosti $\PP=\NP$
-(oddíl .reference:ch-np-problem-p-vs-np). Pododdíl .reference:ch-np-ulohy-navic-sbirka přidává úlohu z jiné sbírky:
-hledání izomorfismu grafů pomocí orákula pro rozhodovací verzi.
+Úlohy procvičují dva typy úloh zápočtového testu, které patří k této kapitole: návrh nedeterministického stroje
+metodou Guess & Verify (úloha 1 testu, oddíly .reference:ch-np-guess-verify-jak-ndts-pouzivat
+a .reference:ch-np-jak-navrhovat-nedeterministicke-stroje) a self-redukci, tedy nalezení řešení pomocí orákula
+pro rozhodovací verzi (úloha 2 testu, postup .reference:ch-test-postup-self-redukce). K tomu certifikátová definice
+$\NP$ (oddíl .reference:ch-np-od-hadani-k-overovani-certifikaty). Pododdíl .reference:ch-np-ulohy-navic-sbirka
+přidává úlohu z jiné sbírky: hledání izomorfismu grafů pomocí orákula pro rozhodovací verzi. Části úloh 4.1 b),
+4.4 d) a 4.8 b) o deterministickém stroji s logaritmickým prostorem patří k úloze 1 testu, ale stroj se vstupní
+páskou jen pro čtení a třídu $\LL$ zavádí až kapitola .reference:ch-prostor; k jejich řešení stačí rámeček
+o prostoru v postupu .reference:ch-test-postup-ts.
 
 
 .Warning:
   title: 'Neoficiální úlohy'
 
-  Úlohy v tomto oddílu "nejsou".notion oficiální zadání předmětu. Jsou to procvičovací úlohy navíc k látce kapitoly;
-  stroje z úloh 4.1 a 4.4 jsou odsimulované na všech vstupech do délky 12, resp. 9, verifikátory a algoritmy
-  porovnané programem s hrubou silou na malých instancích a všechna čísla spočítaná programem; čisté důkazy
-  (uzávěrové vlastnosti, dolní mez v úloze 4.7) jsou ověřené jen na malých případech. U úlohy 4.9 jsme tvrzení
-  o značkách porovnali s hrubou silou (všechny bijekce) na 400 náhodných dvojicích grafů do 5 vrcholů a celý
-  algoritmus spustili na 300 náhodných dvojicích izomorfních grafů do 6 vrcholů; průběh v části c) spočítal skript.
+  Úlohy v tomto oddílu "nejsou".notion oficiální zadání předmětu. Jsou to procvičovací úlohy navíc k látce kapitoly.
+  Stroje z úloh 4.1, 4.4 a 4.8 jsou naprogramované a odsimulované (všechny větve) na všech vstupech do délky 11,
+  9, resp. 12, včetně meze na délku větví. Algoritmy s orákulem z úloh 4.2, 4.5 a 4.7 běžely se simulovaným
+  orákulem (hrubou silou) na 1500–3000 náhodných malých instancích a výsledky jsme porovnali s optimem; průběhy
+  v příkladech a všechna čísla spočítal program. Certifikáty z úlohy 4.3 a algoritmus z úlohy 4.6 jsou porovnané
+  s hrubou silou na malých instancích. U úlohy 4.9 jsme tvrzení o značkách porovnali s hrubou silou (všechny
+  bijekce) na 400 náhodných dvojicích grafů do 5 vrcholů a celý algoritmus spustili na 300 náhodných dvojicích
+  izomorfních grafů do 6 vrcholů; průběh v části c) spočítal skript.
+  Deterministické algoritmy s logaritmickým prostorem z úloh 4.1, 4.4 a 4.8 jsou naprogramované jen s čítači
+  a porovnané s definicí jazyka na všech slovech do délky 10, 9, resp. 14.
 
 
 .Procedure:
@@ -43,30 +50,32 @@ hledání izomorfismu grafů pomocí orákula pro rozhodovací verzi.
 
       "Certifikát".emphasize: $L\in\NP$, právě když existuje polynomiální verifikátor $V$ a polynom $p$, že
       $x\in L\iff\exists c$, $|c|\le p(|x|)$: $V(x,c)$ přijme (definice .reference:def-nphat,
-      věta .reference:thm-np-eq).
+      věta .reference:thm-np-eq). $\coNP=\{L:\overline L\in\NP\}$ (definice .reference:def-conp).
 
     .item:
 
-      $\coNP=\{L:\overline L\in\NP\}$ (definice .reference:def-conp). $\NP\subseteq\EXP$: deterministický stroj projde
-      všechny větve, resp. všechny certifikáty (lemma .reference:lem-np-exp).
+      "Orákulum".emphasize pro rozhodovací verzi odpoví na libovolnou instanci $\ANO$/$\NE$ jedním dotazem. Hodnotu
+      optima najde binární vyhledávání (důsledek .reference:cor-binsearch), řešení samo-redukovatelnost (oddíl
+      .reference:ch-ts-od-optima-k-reseni-samo-redukovatelnost, cvičení .reference:cv-2-4 a .reference:cv-2-5).
 
 
-  "Kuchařka – návrh NDTS (úlohy 4.1, 4.4).".notion Postup .reference:ch-test-postup-ts a
+  "Kuchařka – návrh NDTS (úlohy 4.1, 4.4, 4.8).".notion Postup .reference:ch-test-postup-ts a
   oddíl .reference:ch-np-jak-navrhovat-nedeterministicke-stroje.
 
   .enumerate:
 
     .item:
 
-      Guess: co stroj hádá (pozici, číslo, část slova) a ve které fázi.
+      Guess: co stroj hádá (kterou podmínku ověří, pozici, část slova) a ve které fázi.
 
     .item:
 
-      Verify: jak uhodnuté deterministicky ověří.
+      Verify: jak uhodnuté deterministicky ověří; pořadí písmen a tvar vstupu hlídají stavy.
 
     .item:
 
-      Každá větev skončí do $T(n)$ kroků; hádání má omezenou délku (např. hlava se při něm posouvá doprava).
+      Každá větev skončí do $T(n)$ kroků; nejsnáz, když se hlava 1 v každém kroku posune doprava a stojí jen
+      v několika málo krocích (hádání, konec).
 
     .item:
 
@@ -74,7 +83,13 @@ hledání izomorfismu grafů pomocí orákula pro rozhodovací verzi.
       posloupnost voleb přijímající větve.
 
 
-  "Kuchařka – $L\in\NP$ certifikátem (úlohy 4.3, 4.5, 4.6 a), 4.7, 4.8).".notion
+  "Deterministická část s logaritmickým prostorem (úlohy 4.1 b), 4.4 d), 4.8 b)).".notion Místo hádání vyzkoušej
+  všechny možnosti postupně (všechna $i$, obě podmínky). Na pracovní pásce smí být jen konstantně mnoho binárních
+  čítačů a ukazatelů do vstupu, každý nejvýše $n$, tedy $O(\log n)$ buněk (definice .reference:def-lnl, rámeček
+  o prostoru v postupu .reference:ch-test-postup-ts); tvar vstupu kontroluje stav.
+
+
+  "Kuchařka – $L\in\NP$ certifikátem (úlohy 4.3, 4.6 a)).".notion
 
   .enumerate:
 
@@ -96,7 +111,7 @@ hledání izomorfismu grafů pomocí orákula pro rozhodovací verzi.
       „největší je právě“ přirozený krátký certifikát nemají.
 
 
-  "Kuchařka – self-redukce (úlohy 4.6 b), c), 4.9).".notion Postup .reference:ch-test-postup-self-redukce.
+  "Kuchařka – self-redukce (úlohy 4.2, 4.5, 4.6 b), c), 4.7, 4.9).".notion Postup .reference:ch-test-postup-self-redukce.
 
   .enumerate:
 
@@ -106,17 +121,18 @@ hledání izomorfismu grafů pomocí orákula pro rozhodovací verzi.
 
     .item:
 
-      Číselnou hodnotu (např. nejmenšího dělitele) najdi binárním vyhledáváním přes práh; dotazů je tolik, kolik má
-      číslo bitů.
+      Hodnotu optima (počet množin, délku, počet košů, nejmenší dělitel) najdi binárním vyhledáváním přes práh;
+      dotazů je tolik, kolik má rozsah hodnot bitů.
 
     .item:
 
-      Řešení stav po částech: každou volbu zakóduj do dotazované instance a orákulem ověř, že řešení s ní stále
-      existuje.
+      Řešení stav po částech: něco vyškrtni (množinu, písmeno) nebo slep (dva předměty do jednoho) a orákulem
+      ověř, že optimum zůstalo dosažitelné. Při $\ANO$ změnu ponech, při $\NE$ ji vrať.
 
     .item:
 
-      Počet a velikost dotazů napiš jako funkci $n$ (resp. počtu bitů $N$).
+      Korektnost: invariant „aktuální instance má řešení s optimální hodnotou“ a argument „kdyby na konci zbylo
+      něco navíc, orákulum by to při testu dovolilo vyškrtnout“. Počet a velikost dotazů napiš jako funkci $n$.
 
 
 .Subsection Rozcvička
@@ -124,231 +140,341 @@ hledání izomorfismu grafů pomocí orákula pro rozhodovací verzi.
 
 
 .Exercise:
-  title: 'Úloha 4.1 (strom výpočtu malého NDTS)'
+  title: 'Úloha 4.1 (NDTS: $i=j$ nebo $j=k$)'
   label: un-4-1
 
-  Jednopáskový NDTS $M$ se vstupní abecedou $\Sigma=\{a,b\}$ a stavy $q_0,q_1,q_2,\qA,\qR$ má přechodovou relaci
-  danou tabulkou ($x$ je libovolný symbol z $\{a,b\}$). Každá situace, která v tabulce není, vede jedním krokem
-  do $\qR$ (symbol se nemění, hlava stojí).
+  Uvažujte jazyk
 
-  .table:
-    columns: 'ccl'
+  .equation:
 
-    .row:
-      head: true
+    L=\{\,a^ib^jc^k \mid i,j,k\ge0,\ i=j \text{ nebo } j=k\,\}.
 
-      stav
-
-      čte
-
-      možná pokračování
-
-    .row:
-
-      $q_0$
-
-      $a$
-
-      $(q_0,a,\Rgt)$
-
-    .row:
-
-      $q_0$
-
-      $b$
-
-      volba 1: $(q_0,b,\Rgt)$, volba 2: $(q_1,b,\Rgt)$
-
-    .row:
-
-      $q_1$
-
-      $x$
-
-      $(q_2,x,\Rgt)$
-
-    .row:
-
-      $q_2$
-
-      $a$
-
-      $(\qA,a,\Stay)$
+  Např. $aabbc\in L$, $abbcc\in L$, $\varepsilon\in L$, $c\in L$, $aabbbc\notin L$, $b\notin L$, $acb\notin L$.
 
   .enumerate:
     type: a
 
     .item:
 
-      Nakreslete strom výpočtu $M$ na vstupu $babba$. Přijme $M$ toto slovo?
+      Popište "nedeterministický dvoupáskový".notion Turingův stroj, který rozhoduje $L$ tak, že "každá".notion
+      větev jeho výpočtu na vstupu délky $n$ skončí po nejvýše $n+2$ krocích. Řekněte, kde stroj hádá, uveďte
+      význam stavů a zdůvodněte správnost i odhad.
 
     .item:
 
-      Zapište certifikát přijímající větve jako posloupnost voleb (obr. .reference:fig-np-certifikat-log).
-
-    .item:
-
-      Jaký jazyk $M$ rozhoduje? Dokažte to.
-
-    .item:
-
-      Kolik listů má strom výpočtu na vstupu $w$ a jak dlouhá je nejdelší větev? Plyne odtud $L(M)\in\NP$?
+      Popište "deterministický".notion Turingův stroj se vstupní páskou pouze pro čtení, který rozhoduje $L$
+      s "pracovním prostorem".notion $O(\log n)$. Zdůvodněte odhad prostoru.
+      "(Formální přechodovou funkci nepožadujeme.)".emphasize
 
 
 .Solution:
 
-  "a) Strom.".notion Konfiguraci zapisujeme jako dvojici (stav, pozice hlavy); pozice $1$ až $5$ nesou
-  $b,a,b,b,a$, na pozici $6$ je $\blank$. Větví se jen v $q_0$ nad symbolem $b$, tedy na pozicích $1$, $3$ a $4$.
+  "a) Nedeterministický stroj, každá větev nejvýše $n+2$ kroků".notion
+
+
+  "Myšlenka (Guess & Verify).".notion V prvním kroku stroj uhodne, "kterou".emphasize rovnost ověří. Každá z obou
+  větví je pak deterministická a jedním průchodem porovná dva bloky jako stroj pro $a^nb^n$ z cvičení
+  .reference:cv-1-2: za písmena prvního bloku píše značky na pásku 2, za písmena druhého bloku hlavou 2 couvá.
+  První zapsaná značka je $Z$ („dno“), další $X$. Druhý blok má správnou délku, právě když na jeho konci hlava 2
+  čte $Z$.
+
+
+  "Stavy a přechody".notion ($s$ je libovolný symbol, nevypsané situace vedou do $\qR$):
+
+  .description:
+
+    .ditem:
+      bullet: '$q_0$ (počáteční, hádání):'
+
+      $(s,\blank)$: "nedeterministicky".notion do $S_1$ („$i=j$“), nebo do $S_2$ („$j=k$“); hlavy stojí. Jediné
+      nedeterministické místo.
+
+    .ditem:
+      bullet: '$S_1$:'
+
+      začátek větve $i=j$. $(a,\blank)$: zapiš $Z$, hlavy $\Rgt\Rgt$, do $A_1$. $(c,\blank)$: $i=j=0$, do $C_1$
+      (hlava 1 $\Rgt$). $(\blank,\blank)$: prázdné slovo, přijmi. $(b,\blank)$: $j>0=i$, zamítni.
+
+    .ditem:
+      bullet: '$A_1$:'
+
+      čte blok $a$, na pásce 2 je $ZX^{i'-1}$. $(a,\blank)$: zapiš $X$, hlavy $\Rgt\Rgt$. $(b,\blank)$: hlavy
+      $\Rgt\Lft$, do $B_1$. Na $c$ nebo $\blank$ zamítne ($i>0=j$).
+
+    .ditem:
+      bullet: '$B_1$:'
+
+      čte blok $b$; po $t$ přečtených $b$ stojí hlava 2 na pozici $i-t$ (pozice 0 nese $Z$). $(b,X)$, $(b,Z)$:
+      hlavy $\Rgt\Lft$. $(c,Z)$: $j=i$, do $C_1$ (hlava 1 $\Rgt$, hlava 2 stojí). $(\blank,Z)$: $j=i$ a $k=0$, přijmi. Cokoli jiného – $(b,\blank)$,
+      konec bloku nad $X$ nebo nad $\blank$, písmeno $a$ – zamítne.
+
+    .ditem:
+      bullet: '$C_1$:'
+
+      dočte blok $c$ (hlava 2 stojí); na $\blank$ přijme, na $a$ nebo $b$ zamítne.
+
+    .ditem:
+      bullet: '$S_2$, $A_2$, $B_2$:'
+
+      větev $j=k$: totéž o písmeno posunuté. $S_2$ přeskakuje $a$ (hlava 2 stojí), na prvním $b$ zapíše $Z$ a jde
+      do $A_2$, na $\blank$ přijme ($j=k=0$), na $c$ zamítne ($k>0=j$). $A_2$ píše $X$ za $b$ a na prvním $c$
+      přejde do $B_2$ (hlavy $\Rgt\Lft$); $B_2$ couvá za každé $c$ a přijme na $(\blank,Z)$.
+
+  Celkem 8 stavů (bez $\qA$, $\qR$) a 31 přechodů.
 
 
   .centered:
 
     !tikz:
       filename: 04z-ulohy-navic-01
-      options: 'x=1cm,y=1cm'
+      options: 'node distance=4mm and 6mm'
 
-      \tmtape{-2.1}{1.45}{b,a,b,b,a,_}{0}
-      \foreach \i in {1,...,6} {\node[font=\tiny,gr] at ({-2.1+(\i-1)*0.7+0.35},2.0) {\i};}
-      \node[font=\scriptsize\sffamily,gr] at (-5.0,0.55) {krok};
-      \foreach \t in {0,...,6} {\node[font=\scriptsize,gr] at (-5.0,-\t*0.95) {\t};}
-      \node[chNPconf] (s1) at (0,0) {$q_0$, 1};
-      \node[chNPconf] (s2) at (0,-0.95) {$q_0$, 2};
-      \node[chNPconf] (s3) at (0,-1.9) {$q_0$, 3};
-      \node[chNPconf] (s4) at (0,-2.85) {$q_0$, 4};
-      \node[chNPconf] (s5) at (0,-3.8) {$q_0$, 5};
-      \node[chNPconf] (s6) at (0,-4.75) {$q_0$, 6};
-      \node[chNPrej] (r0) at (0,-5.7) {\qR};
-      \node[chNPconf] (a2) at (-2.8,-0.95) {$q_1$, 2};
-      \node[chNPconf] (a3) at (-2.8,-1.9) {$q_2$, 3};
-      \node[chNPrej] (aR) at (-2.8,-2.85) {\qR};
-      \node[chNPconf] (b4) at (2.8,-2.85) {$q_1$, 4};
-      \node[chNPconf] (b5) at (2.8,-3.8) {$q_2$, 5};
-      \node[chNPacc] (bA) at (2.8,-4.75) {\qA};
-      \node[chNPconf] (c5) at (-2.8,-3.8) {$q_1$, 5};
-      \node[chNPconf] (c6) at (-2.8,-4.75) {$q_2$, 6};
-      \node[chNPrej] (cR) at (-2.8,-5.7) {\qR};
-      \draw[chNPg] (s1) -- node[lab,right]{1} (s2);
-      \draw[chNPg] (s2) -- (s3);
-      \draw[chNPe] (s3) -- node[lab,right]{1} (s4);
-      \draw[chNPe] (s4) -- node[lab,right]{1} (s5);
-      \draw[chNPe] (s5) -- (s6);
-      \draw[chNPe] (s6) -- (r0);
-      \draw[chNPe] (s1) -- node[lab,above left]{2} (a2);
-      \draw[chNPe] (a2) -- (a3);
-      \draw[chNPe] (a3) -- (aR);
-      \draw[chNPg] (s3) -- node[lab,above right]{2} (b4);
-      \draw[chNPg] (b4) -- (b5);
-      \draw[chNPg] (b5) -- (bA);
-      \draw[chNPe] (s4) -- node[lab,above left]{2} (c5);
-      \draw[chNPe] (c5) -- (c6);
-      \draw[chNPe] (c6) -- (cR);
-      \node[note,anchor=west] at (-2.3,-2.85) {čte $b$};
-      \node[note,anchor=west] at (3.3,-4.75) {čte $a$};
-      \node[note,anchor=west] at (-2.3,-5.7) {čte $\blank$};
-      \node[note,anchor=west] at (0.45,-5.7) {konec slova};
+      \node[blokd] (r) {$q_0$\\ \footnotesize vstup $aabbc$};
+      \node[blokd,below left=8mm and 4mm of r,text width=46mm] (b1) {větev 1 („$i=j$“): $Z,X$ za $aa$,\\ couvání za $bb$ $\Rightarrow$ hlava 2 na $Z$};
+      \node[blokd,below right=8mm and 4mm of r,text width=46mm] (b2) {větev 2 („$j=k$“): přeskočí $aa$,\\ $Z,X$ za $bb$, couvnutí za $c$};
+      \node[bloka,below=of b1,text width=46mm] (a1) {$C_1$ dočte $c$, na $\blank$ \qA\\ \footnotesize 7 kroků};
+      \node[blokr,below=of b2,text width=46mm] (a2) {konec slova nad $X$: $j=2\ne1=k$, \qR\\ \footnotesize 7 kroků};
+      \draw[flow] (r) -- node[lab,above left]{volba 1} (b1);
+      \draw[flow] (r) -- node[lab,above right]{volba 2} (b2);
+      \draw[flow] (b1) -- (a1);
+      \draw[flow] (b2) -- (a2);
 
 
-  Strom výpočtu na vstupu $babba$. Volba 1 = „zůstaň v $q_0$“, volba 2 = „přejdi do $q_1$“. "Všimni si:".emphasize
-  ze čtyř větví končí tři v $\qR$ a jedna (zelená) v $\qA$, takže $M$ slovo $babba$ "přijme".notion.
+  Strom výpočtu na $aabbc$ ($n=5$) má jen dvě větve. Přijme větev 1, proto $aabbc\in L$; obě mají $n+2=7$ kroků.
 
 
-  Větve podrobně: volba 2 na pozici 1 vede do $q_2$ nad pozicí 3, kde je $b$ $\Rightarrow$ $\qR$ (3 kroky). Volba 2 na
-  pozici 3 vede do $q_2$ nad pozicí 5, kde je $a$ $\Rightarrow$ $\qA$ (5 kroků). Volba 2 na pozici 4 vede do $q_2$ nad
-  pozicí 6, kde je $\blank$ $\Rightarrow$ $\qR$ (6 kroků). Bez volby 2 dojde $q_0$ na $\blank$ $\Rightarrow$ $\qR$ (6 kroků).
+  "Správnost.".notion ($x\in L\Rightarrow$ přijme) Je-li $x=a^ib^jc^k$ s $i=j$, přijme větev 1: $S_1$/$A_1$ zapíší
+  $i$ značek (pozice $0,\dots,i-1$, na pozici 0 je $Z$), $B_1$ po $j=i$ písmenech $b$ stojí na pozici 0 nad $Z$
+  a $C_1$ dočte $c^k$. Pro $i=j=0$ přejde $S_1$ rovnou do $C_1$ nebo přijme. Pro $j=k$ symetricky větev 2.
+  (Přijme $\Rightarrow x\in L$) Přijímající větev prošla stavy v pořadí, které vynucuje tvar $a^*b^*c^*$. Ve větvi 1
+  přijetí nastane jen nad $Z$ na konci bloku $b$ (nebo bez jediného $a$ i $b$), tedy po $j$ písmenech $b$ je hlava 2
+  na pozici $i-j=0$, a $i=j$; ve větvi 2 stejně $j=k$.
 
 
-  "b) Certifikát.".notion Přijímající větev se větví dvakrát: na pozici 1 volí 1, na pozici 3 volí 2, tedy
-  $c=\langle 1,2\rangle$. Verifikátor simuluje $M$ a v každém větvení vezme další číslo z $c$; po 5 krocích je v $\qA$.
+  "Čas.".notion Hádání je jeden krok, v němž hlavy stojí. Každý další krok kromě posledního posune hlavu 1 doprava
+  (také v $C_1$ a v $S_2$ nad $a$) a za pozici $n$ se hlava 1 nedostane, protože na $\blank$ každý stav končí.
+  Proto má každá větev nejvýše $1+n+1=n+2$ kroků. Certifikát je jediný bit (číslo větve), takže $L$ je dokonce
+  v $\PP$ – deterministický stroj prostě zkusí obě větve za sebou.
 
 
-  "c) Jazyk.".notion Tvrdíme $L(M)=\{w\in\{a,b\}^*:\ \exists i\ \ w_i=b\ \wedge\ w_{i+2}=a\}$, tj. slova tvaru
-  $u\,b\,x\,a\,v$ s $x\in\{a,b\}$.
-
-  .itemize:
-
-    .item:
-
-      ($\Rightarrow$) Přijímající větev musí skončit přechodem $(q_2,a)\to\qA$. Do $q_2$ se stroj dostane jen z $q_1$
-      a do $q_1$ jen volbou 2 v $q_0$ nad nějakým $b$ na pozici $i$. Hlava se pak posune na $i+1$ (v $q_1$ musí číst
-      $a$ nebo $b$, jinak $\qR$) a na $i+2$, kde v $q_2$ čte $a$. Tedy $w_i=b$ a $w_{i+2}=a$.
-
-    .item:
-
-      ($\Leftarrow$) Je-li $w_i=b$ a $w_{i+2}=a$, vezmeme větev, která na pozicích $1,\dots,i-1$ zůstává v $q_0$
-      (v $q_0$ se nad $a$ i $b$ jde doprava, nad $b$ volbou 1) a na pozici $i$ zvolí 2. Pak $q_1$ přečte
-      $w_{i+1}\in\{a,b\}$, $q_2$ přečte $w_{i+2}=a$ a stroj přijme.
-
-  Každá větev skončí v $\qA$ nebo $\qR$ (viz d), takže $M$ jazyk "rozhoduje".emphasize.
-
-
-  "d) Velikost stromu.".notion Větví se jen v $q_0$ nad $b$ a volba 2 větev ukončí nejpozději po dalších dvou krocích,
-  takže strom má přesně $\#_b(w)+1$ listů (jedna větev za každé $b$, kde odbočí, a jedna, která neodbočí nikdy).
-  Hlava se v každém kroku kromě posledního posune doprava a za pozici $n+1$ se nedostane (na $\blank$ každý stav
-  končí). Větev proto má nejvýše $n+1$ kroků; na $babba$ je to $6$. $M$ pracuje v čase $n+1$, tedy
-  $L(M)\in\NTIME(n)\subseteq\NP$. (Jazyk je dokonce regulární, a tedy v $\PP$ – nedeterminismus tu jen zkracuje popis.)
+  "b) Deterministický stroj s logaritmickým prostorem".notion Hádat není co: obě rovnosti lze spočítat.
+  (1) Prvním průchodem zkontroluje stroj stavem tvar $a^*b^*c^*$. (2) Druhým průchodem spočítá binární čítače
+  $I=\#_a$, $J=\#_b$, $K=\#_c$ na pracovní pásce. (3) Přijme, právě když $I=J$ nebo $J=K$ (porovnání bit po bitu).
+  Tři čítače s hodnotami nejvýše $n$ zabírají $3\lceil\log_2(n+1)\rceil+O(1)=O(\log n)$ buněk; kontrola tvaru
+  prostor nepotřebuje. (Ověřeno proti definici na všech slovech do délky 10.)
 
 
 .Exercise:
-  title: 'Úloha 4.2 ($\NP\subseteq\EXP$ s konkrétními čísly)'
+  title: 'Úloha 4.2 (nejmenší pokrytí množinami z orákula)'
   label: un-4-2
 
-  NDTS $M$ rozhoduje jazyk $L$ v čase $T(n)=2n^2$ a v každé situaci má nejvýše $d=3$ pokračování.
+  Problém $\prob{Set Cover}$:
 
-  .enumerate:
-    type: a
 
-    .item:
+  "Vstup:".notion konečná množina $U$, podmnožiny $S_1,\dots,S_m\subseteq U$ a číslo $k$.
 
-      Kolik nejvýše listů a kolik nejvýše uzlů má strom výpočtu na vstupu délky $n=5$?
 
-    .item:
+  "Otázka:".notion lze vybrat nejvýše $k$ z množin $S_1,\dots,S_m$ tak, aby jejich sjednocení bylo celé $U$?
 
-      Odhadněte čas deterministické simulace z důkazu lemmatu .reference:lem-np-exp a dokažte $L\in\DTIME(2^{n^3})$.
 
-    .item:
-
-      Popište tutéž simulaci jako zkoušení všech certifikátů (věta .reference:thm-np-eq). Co se vyčísluje a kolik
-      toho je?
-
-    .item:
-
-      Co dává stejný argument pro jazyk z $\NTIME(2^n)$? Plyne z něj $\NEXP\subseteq\EXP$?
+  Máte k dispozici orákulum pro tuto rozhodovací verzi. Navrhněte algoritmus, který pomocí orákula najde
+  "nejmenší".notion pokrytí (co nejméně množin se sjednocením $U$), nebo oznámí, že žádné pokrytí neexistuje.
+  Zdůvodněte správnost a odhadněte počet dotazů. Algoritmus proveďte pro $U=\{1,\dots,6\}$ a $S_1=\{1,2,3\}$,
+  $S_2=\{3,4\}$, $S_3=\{4,5,6\}$, $S_4=\{1,4\}$, $S_5=\{2,5\}$, $S_6=\{3,6\}$.
 
 
 .Solution:
+  label: red-un-4-2
 
-  "a)".notion Každá větev má nejvýše $T(5)=50$ kroků a v každém kroku se větví nejvýše na $3$ části. Strom má tedy
-  hloubku nejvýše $50$ a nejvýše $3^{50}\approx 7{,}18\cdot10^{23}$ listů; uzlů je nejvýše
-  $1+3+\dots+3^{50}=\frac{3^{51}-1}{2}\approx 1{,}08\cdot10^{24}$. Výška stromu (čas NDTS) je přitom jen $50$.
-
-
-  "b)".notion Deterministický stroj $M'$ si na pomocné pásce drží slovo voleb délky $T(n)$ nad $\{1,2,3\}$ a pro každé
-  takové slovo odsimuluje $M$ od kořene (to je $O(T(n))$ kroků) a pak slovo zvětší o jedna jako číslo v trojkové
-  soustavě (taky $O(T(n))$). Najde-li list v $\qA$, přijme, jinak po vyčerpání všech slov zamítne. Slov je $3^{T(n)}$,
-  proto
-
-  .equation:
-
-    T_{M'}(n)=O\bigl(T(n)\cdot 3^{T(n)}\bigr)=O\bigl(2n^2\cdot 3^{2n^2}\bigr).
-
-  Zbývá porovnat s $2^{n^3}$. Logaritmus odhadu je
-  $\log_2\bigl(2n^2\cdot3^{2n^2}\bigr)=1+2\log_2 n+2n^2\log_2 3$. Pro $n\ge2$ je $1+2\log_2 n\le n^2$ a
-  $2\log_2 3<3{,}17$, takže výraz je menší než $4{,}17\,n^2\le n^3$ pro $n\ge5$. Pro $n=4$ přímo:
-  $1+4+32\log_2 3\approx 55{,}7\le 64$. Pro $n\le3$ je vstupů konečně mnoho a jejich čas schová konstanta v $O$.
-  Tedy $T_{M'}(n)=O(2^{n^3})$ a $L\in\DTIME(2^{n^3})\subseteq\EXP$. Pro představu: při $n=5$ je
-  $2n^2\cdot3^{2n^2}\approx3{,}59\cdot10^{25}$, zatímco $2^{125}\approx4{,}25\cdot10^{37}$.
+  "Redukce s orákulem:".notion $\prob{Set Cover}$ – nejmenší pokrytí $\to$ $\prob{Set Cover}$ – rozhodovací verze.
+  Jak: velikost optima binárním vyhledáváním, pak množiny po jedné vyškrtáváme, dokud orákulum potvrzuje, že
+  pokrytí této velikosti ze zbylých množin pořád jde složit.
 
 
-  "c)".notion Certifikát je posloupnost voleb podél přijímající větve: slovo $c\in\{1,2,3\}^{\le 2n^2}$. Verifikátor
-  $V(x,c)$ simuluje $M$ a v každém větvení poslechne další symbol $c$, celkem $O(n^2)$ kroků. Deterministický algoritmus
-  projde všech $3^{2n^2}$ slov délky přesně $2n^2$ (kratší větev použije jen začátek slova) a spustí na ně $V$; čas je
-  $O(n^2\cdot3^{2n^2})$, tentýž jako v b). Strom má polynomiální "výšku".emphasize, ale exponenciálně mnoho listů –
-  proto tímto způsobem $\NP\subseteq\PP$ nedostaneme.
+  Značení: $O(R;\,k)$ je odpověď orákula na univerzum $U$, množiny s indexy z $R\subseteq\{1,\dots,m\}$ a číslo $k$.
 
 
-  "d)".notion Pro $M$ v čase $c\cdot2^n$ vyjde stejně $O\bigl(c\,2^n\cdot d^{\,c\,2^n}\bigr)=2^{O(2^n)}$ – "dvojnásobně".emphasize
-  exponenciální čas. Argument dá jen $\NEXP\subseteq\bigcup_k\DTIME\bigl(2^{2^{n^k}}\bigr)$, ne $\NEXP\subseteq\EXP$.
-  Zda $\EXP=\NEXP$, se neví "(nad rámec přednášky)".emphasize; známe jen $\EXP\subseteq\NEXP$ (obr. .reference:fig-np-inkluze-trid).
+  "Algoritmus.".notion
+
+  .enumerate:
+
+    .item:
+
+      Zeptej se $O(\{1,\dots,m\};\,m)$. Při $\NE$ nepokryjí $U$ ani všechny množiny dohromady – pokrytí neexistuje,
+      konec.
+
+    .item:
+
+      "Velikost optima.".notion Odpověď $O(\{1,\dots,m\};\,k)$ je monotónní v $k$ ($\NE$ pro $k<k^*$, $\ANO$ pro
+      $k\ge k^*$). Binární vyhledávání na $[\mathit{lo},\mathit{hi}]=[0,m]$: pro
+      $\mathit{mid}=\lfloor(\mathit{lo}+\mathit{hi})/2\rfloor$ při $\ANO$ polož $\mathit{hi}=\mathit{mid}$, jinak
+      $\mathit{lo}=\mathit{mid}+1$. Skončí při $\mathit{lo}=\mathit{hi}=k^*$.
+
+    .item:
+
+      "Vyškrtávání.".notion $R:=\{1,\dots,m\}$. Pro $i=1,\dots,m$, dokud $|R|>k^*$: zeptej se $O(R\setminus\{i\};\,k^*)$;
+      při $\ANO$ polož $R:=R\setminus\{i\}$, při $\NE$ množinu $S_i$ ponech.
+
+    .item:
+
+      Vydej množiny s indexy z $R$.
+
+
+  "Invariant:".notion množiny s indexy z $R$ obsahují pokrytí $U$ o nejvýše $k^*$ množinách. Na začátku kroku 3
+  platí díky volbě $k^*$, krok $\ANO$ ho zachová podle odpovědi orákula a krok $\NE$ nic nemění.
+
+
+  "Proč na konci $R$ je nejmenší pokrytí.".notion Nechť $C\subseteq R$ je pokrytí z invariantu pro výsledné $R$.
+  Má aspoň $k^*$ množin (menší pokrytí neexistuje), tedy přesně $k^*$. Skončil-li cyklus podmínkou $|R|=k^*$, je
+  $R=C$. Jinak byla otestována všechna $i$: kdyby existoval index $j\in R\setminus C$, byla při jeho testu tehdejší
+  množina $R'$ nadmnožinou výsledné $R$ (indexy jen ubývají), takže $C\subseteq R'\setminus\{j\}$ a orákulum by
+  odpovědělo $\ANO$ – $S_j$ by byla vyškrtnutá. Spor, tedy $R=C$ a výsledek je pokrytí o $k^*$ množinách.
+
+
+  "Počet dotazů:".notion nejvýše $1+\lceil\log_2(m+1)\rceil+m$. Každý dotaz se ptá na podsystém vstupních množin
+  a číslo nejvýše $m$, takže je nejvýše o $O(\log m)$ bitů delší než vstup.
+
+
+  "Průběh pro zadanou instanci".notion ($k^*=2$, 10 dotazů, mez $1+3+6=10$):
+
+  .table:
+    columns: 'rllll'
+
+    .row:
+      head: true
+
+      dotaz
+
+      množiny
+
+      $k$
+
+      odpověď
+
+      akce
+
+    .row:
+
+      1
+
+      $S_1,\dots,S_6$
+
+      6
+
+      $\ANO$
+
+      pokrytí existuje
+
+    .row:
+
+      2
+
+      $S_1,\dots,S_6$
+
+      3
+
+      $\ANO$
+
+      $\mathit{hi}=3$
+
+    .row:
+
+      3
+
+      $S_1,\dots,S_6$
+
+      1
+
+      $\NE$
+
+      $\mathit{lo}=2$
+
+    .row:
+
+      4
+
+      $S_1,\dots,S_6$
+
+      2
+
+      $\ANO$
+
+      $\mathit{hi}=2$, tedy $k^*=2$
+
+    .row:
+
+      5
+
+      $S_2,S_3,S_4,S_5,S_6$
+
+      2
+
+      $\NE$
+
+      $S_1$ ponech
+
+    .row:
+
+      6
+
+      $S_1,S_3,S_4,S_5,S_6$
+
+      2
+
+      $\ANO$
+
+      $S_2$ vyškrtni
+
+    .row:
+
+      7
+
+      $S_1,S_4,S_5,S_6$
+
+      2
+
+      $\NE$
+
+      $S_3$ ponech
+
+    .row:
+
+      8
+
+      $S_1,S_3,S_5,S_6$
+
+      2
+
+      $\ANO$
+
+      $S_4$ vyškrtni
+
+    .row:
+
+      9
+
+      $S_1,S_3,S_6$
+
+      2
+
+      $\ANO$
+
+      $S_5$ vyškrtni
+
+    .row:
+
+      10
+
+      $S_1,S_3$
+
+      2
+
+      $\ANO$
+
+      $S_6$ vyškrtni, $|R|=2$
+
+  Výsledek: $S_1\cup S_3=\{1,2,3\}\cup\{4,5,6\}=U$. Jednou množinou $U$ pokrýt nejde (dotaz 3), takže je pokrytí
+  nejmenší.
 
 
 .Subsection Na úrovni testu
@@ -534,7 +660,7 @@ hledání izomorfismu grafů pomocí orákula pro rozhodovací verzi.
     .item:
 
       Sestrojte dvoupáskový NDTS, který $L$ rozhoduje a jehož každá větev na vstupu délky $n$ skončí po nejvýše
-      $n+2$ krocích. Popište fáze, význam stavů a přechody.
+      $n+2$ krocích. Řekněte, kde stroj hádá, a popište fáze, význam stavů a přechody.
 
     .item:
 
@@ -543,6 +669,12 @@ hledání izomorfismu grafů pomocí orákula pro rozhodovací verzi.
     .item:
 
       Co je certifikátem ve smyslu definice .reference:def-nphat a jak je dlouhý?
+
+    .item:
+
+      Popište "deterministický".notion Turingův stroj se vstupní páskou pouze pro čtení, který rozhoduje $L$
+      s "pracovním prostorem".notion $O(\log n)$. Zdůvodněte odhad prostoru.
+      "(Formální přechodovou funkci nepožadujeme.)".emphasize
 
 
 .Solution:
@@ -698,94 +830,211 @@ hledání izomorfismu grafů pomocí orákula pro rozhodovací verzi.
   deterministicky v polynomiálním čase – $L\in\PP$; nedeterminismus zde jen zjednodušuje návrh stroje.
 
 
+  "d) Deterministický stroj s logaritmickým prostorem".notion Místo hádání vyzkoušíme všechna $i$ postupně.
+
+
+  .enumerate:
+
+    .item:
+
+      Prvním průchodem zkontroluj stavem tvar $1^*\#\{a,b\}^*$ a spočítej binárně $k$ (počet jedniček)
+      a $m=|w|$.
+
+    .item:
+
+      Pro $i=1,\dots,m-k$: přesuň hlavu na $w_i$ (pozice $k+1+i$, odpočítáním pomocného čítače od začátku
+      vstupu), zapamatuj si $w_i$ ve stavu, přesuň hlavu na $w_{i+k}$ a porovnej. Při shodě přijmi.
+
+    .item:
+
+      Když žádné $i$ neprojde (i když $m\le k$), zamítni.
+
+
+  Na pracovní pásce jsou čísla $k$, $m$, $i$ a pomocný čítač pozice, všechna nejvýše $n$: celkem
+  $4\lceil\log_2(n+1)\rceil+O(1)=O(\log n)$ buněk; symbol $w_i$ se nese ve stavu. Tedy $L\in\LL$.
+  (Ověřeno proti definici na všech slovech nad $\{1,\#,a,b\}$ do délky 9.)
+
+
 .Exercise:
-  title: 'Úloha 4.5 (uzávěrové vlastnosti $\NP$)'
+  title: 'Úloha 4.5 (nejdelší společná podposloupnost z orákula)'
   label: un-4-5
 
-  Nechť $L_1,L_2\in\NP$.
+  Rozhodovací verze problému $\prob{nejdelší společné podposloupnosti}$ je jazyk z cvičení .reference:cv-2-2:
+  vstupem je $1^k\#w_1\#\cdots\#w_m$ s binárními slovy $w_1,\dots,w_m$ a otázkou, zda existuje slovo délky $k$,
+  které je podposloupností (vznikne vynecháním některých písmen) všech slov $w_1,\dots,w_m$. Máte k dispozici
+  orákulum pro tuto rozhodovací verzi.
 
   .enumerate:
     type: a
 
     .item:
 
-      Dokažte, že $L_1\cup L_2\in\NP$ a $L_1\cap L_2\in\NP$.
+      Navrhněte algoritmus, který pomocí orákula "najde".notion nejdelší společnou podposloupnost slov
+      $w_1,\dots,w_m$. Zdůvodněte správnost a odhadněte počet dotazů vzhledem k $\ell=\min_i|w_i|$.
 
     .item:
 
-      Dokažte, že zřetězení $L_1L_2=\{uv:\ u\in L_1,\ v\in L_2\}$ je v $\NP$.
-
-    .item:
-
-      Pro $L_1=\{$binární zápisy složených čísel bez vedoucích nul$\}$ a
-      $L_2=\{v\in\{0,1\}^*:\ \exists i\ \ v_i=v_{i+2}\}$ uveďte certifikát pro $1111010\in L_1L_2$.
-
-    .item:
-
-      Proč stejný postup nedává uzavřenost $\NP$ na doplněk? Dokažte, že kdyby $\PP=\NP$, pak $\NP=\coNP$, kde
-      $\coNP=\{L:\ \overline L\in\NP\}$ (definice .reference:def-conp).
+      Proveďte algoritmus pro $w_1=010110$, $w_2=100101$, $w_3=011010$.
 
 
 .Solution:
+  label: red-un-4-5
 
-  Podle věty .reference:thm-np-eq pracujeme s verifikátory: $V_1$, $V_2$ s polynomy $p_1$, $p_2$ (bez újmy na
-  obecnosti neklesajícími), $x\in L_t\iff\exists c\ |c|\le p_t(|x|)\wedge V_t(x,c)$ přijme. Dvojici certifikátů
-  zapíšeme jako $c_1\#c_2$ (abecedu certifikátů rozšíříme o oddělovač).
-
-
-  "a) Sjednocení.".notion Certifikát pro $x\in L_1\cup L_2$ je dvojice $(t,c)$, kde $t\in\{1,2\}$ říká, do kterého jazyka
-  $x$ patří, a $c$ je certifikát pro $x\in L_t$. Verifikátor spustí $V_t(x,c)$. Délka $1+\max(p_1,p_2)(|x|)$,
-  čas $\max$ obou verifikátorů. Je-li $x\in L_1\cup L_2$, vhodné $(t,c)$ existuje; přijme-li $V$, pak $V_t(x,c)$
-  přijal, tedy $x\in L_t$. (Pohledem NDTS: první krok nedeterministicky vybere, který z obou strojů pustit.)
+  "Redukce s orákulem:".notion $\prob{nejdelší společná podposloupnost}$ – nalezení $\to$ rozhodovací verze.
+  Jak: délku $k^*$ najdeme binárním vyhledáváním, pak z nejkratšího slova vyškrtáváme písmena, dokud orákulum
+  potvrzuje, že společná podposloupnost délky $k^*$ pořád existuje. Co zbude, je hledané slovo.
 
 
-  "Průnik.".notion Certifikát je dvojice $c_1\#c_2$, verifikátor přijme, pokud přijmou $V_1(x,c_1)$ i $V_2(x,c_2)$.
-  Délka $p_1(|x|)+p_2(|x|)+1$, čas součet obou. $x\in L_1\cap L_2$ $\iff$ existují $c_1$ i $c_2$ $\iff$ existuje
-  dvojice, kterou verifikátor přijme.
+  Značení: $O(k;\,u_1,\dots,u_m)$ je odpověď orákula na vstup $1^k\#u_1\#\cdots\#u_m$. Bez újmy na obecnosti je
+  $w_1$ nejkratší (jinak slova přeuspořádáme), tedy $|w_1|=\ell$.
 
 
-  "b) Zřetězení.".notion Certifikát pro $x$ (délky $n$) je trojice $(j,c_1,c_2)$: místo řezu $j\in\{0,\dots,n\}$
-  zapsané binárně a certifikáty pro $u=x_1\cdots x_j$ a $v=x_{j+1}\cdots x_n$. Verifikátor zkontroluje
-  $0\le j\le n$, rozdělí $x$ a spustí $V_1(u,c_1)$ a $V_2(v,c_2)$.
+  "a) Algoritmus.".notion
 
-  .itemize:
+  .enumerate:
 
     .item:
 
-      Délka: $O(\log n)+p_1(j)+p_2(n-j)\le O(\log n)+p_1(n)+p_2(n)$ – polynomiální (zde je potřeba, že $p_t$ jsou
-      neklesající).
+      "Délka.".notion Společná podposloupnost délky 0 (prázdné slovo) existuje vždy a delší než $\ell$ být nemůže.
+      Odpověď $O(k;\,w_1,\dots,w_m)$ je monotónní v $k$ (vynecháním písmene z podposloupnosti délky $k$ vznikne
+      podposloupnost délky $k-1$). Binární vyhledávání na $[\mathit{lo},\mathit{hi}]=[0,\ell]$ s invariantem
+      „$\mathit{lo}$ je $\ANO$, $\mathit{hi}+1$ je $\NE$“: pro $\mathit{mid}=\lceil(\mathit{lo}+\mathit{hi})/2\rceil$
+      při $\ANO$ polož $\mathit{lo}=\mathit{mid}$, jinak $\mathit{hi}=\mathit{mid}-1$. Skončí při
+      $\mathit{lo}=\mathit{hi}=k^*$.
 
     .item:
 
-      Čas: $O(n)$ na rozdělení a nejvýše $q_1(n)+q_2(n)$ na oba verifikátory ($q_t$ jsou jejich časové polynomy,
-      opět neklesající).
+      "Vyškrtávání.".notion $u:=w_1$, ukazatel na první písmeno. Dokud $|u|>k^*$: nechť $u'$ vznikne z $u$
+      vynecháním písmene pod ukazatelem. Při $O(k^*;\,u',w_2,\dots,w_m)=\ANO$ polož $u:=u'$ (ukazatel zůstane na
+      stejném místě, je tam další písmeno), při $\NE$ posuň ukazatel o písmeno dál.
 
     .item:
 
-      ($\Rightarrow$) $x=uv$ s $u\in L_1$, $v\in L_2$: zvolíme $j=|u|$ a certifikáty obou částí, verifikátor přijme.
-
-    .item:
-
-      ($\Leftarrow$) Přijme-li verifikátor $(j,c_1,c_2)$, pak $V_1$ přijal $u=x_1\cdots x_j$ a $V_2$ přijal zbytek,
-      takže $u\in L_1$, $v\in L_2$ a $x=uv\in L_1L_2$.
+      Vydej $u$.
 
 
-  "c) Konkrétně.".notion Řez $j=4$: $u=1111$ je $15=3\cdot5$, certifikát $d=3$; $v=010$ má $v_1=v_3=0$, certifikát
-  $i=1$. Celkem $(4,\,3,\,1)$. Jiný řez nefunguje: pro $j\le3$ je $u$ z čísel $\{1,3,7\}$ nebo prázdné, pro
-  $j\ge5$ je $v\in\{10,0,\varepsilon\}$ moc krátké.
+  "Invariant:".notion $u$ je podposloupnost $w_1$ a slova $u,w_2,\dots,w_m$ mají společnou podposloupnost délky
+  $k^*$. Na začátku platí podle volby $k^*$, krok $\ANO$ ho zachová podle odpovědi orákula, krok $\NE$ nic nemění.
 
 
-  "d) Doplněk.".notion Certifikát dokazuje, že "existuje".emphasize přijímající větev; pro $x\in\overline{L_1}$ bychom
-  potřebovali dokázat, že "žádný".emphasize certifikát neexistuje, a to výše uvedené konstrukce nedělají. Prohodit $\qA$
-  a $\qR$ v NDTS nepomůže: stroj s větvemi $\qA,\qR$ přijme $x$ před prohozením i po něm (asymetrie přijímání,
-  oddíl .reference:ch-np-asymetrie-prijimani). Zda je $\NP$ uzavřená na doplněk, se neví.
+  "Proč algoritmus skončí s $|u|=k^*$.".notion Předpokládejme, že ukazatel přejel celé $u$ a pořád $|u|>k^*$. Podle
+  invariantu existuje společná podposloupnost $s$ délky $k^*$ slov $u,w_2,\dots,w_m$; zvolme jedno její umístění
+  v $u$. Protože $|u|>|s|$, některé písmeno $u$ v tomto umístění nepoužijeme. Když na ně ukazoval ukazatel,
+  bylo tehdejší slovo $u_{\text{tehdy}}$ nadposloupností výsledného $u$ (písmena jen ubývají) a po vynechání
+  tohoto písmene pořád obsahovalo $s$. Orákulum by tedy odpovědělo $\ANO$ a písmeno by bylo vyškrtnuté – spor.
+  Cyklus proto skončí podmínkou $|u|=k^*$. Pak je $s$ podposloupnost $u$ stejné délky, tedy $s=u$, a $u$ je
+  společná podposloupnost všech $w_i$ délky $k^*$, tj. nejdelší.
 
 
-  "Kdyby $\PP=\NP$.".notion $\PP$ je uzavřená na doplněk: DTS, který $L$ rozhoduje v polynomiálním čase, na každém
-  vstupu skončí v $\qA$ nebo $\qR$; po prohození těchto dvou stavů rozhoduje $\overline L$ ve stejném čase. Je-li
-  $\PP=\NP$ a $L\in\NP$, pak $L\in\PP$, tedy $\overline L\in\PP=\NP$ a $L\in\coNP$; to je $\NP\subseteq\coNP$.
-  Naopak $L\in\coNP$ znamená $\overline L\in\NP=\PP$, tedy $L\in\PP=\NP$; to je $\coNP\subseteq\NP$. Proto
-  $\NP=\coNP$. Obměnou: kdo dokáže $\NP\neq\coNP$, dokázal i $\PP\neq\NP$.
+  "Počet dotazů:".notion binární vyhledávání $\lceil\log_2(\ell+1)\rceil$, vyškrtávání nejvýše $\ell$ (každý dotaz buď
+  písmeno vyškrtne, nebo posune ukazatel). Celkem nejvýše $\lceil\log_2(\ell+1)\rceil+\ell$ dotazů. Každý dotaz
+  je nejvýše o $\ell+1$ symbolů delší než vstup (přibude $1^{k}\#$ s $k\le\ell$, slova se jen zkracují).
+
+
+  "b) Průběh".notion ($\ell=6$, $k^*=4$, 7 dotazů, mez $3+6=9$):
+
+  .table:
+    columns: 'rllll'
+
+    .row:
+      head: true
+
+      dotaz
+
+      $k$
+
+      $u$ (místo $w_1$)
+
+      odpověď
+
+      akce
+
+    .row:
+
+      1
+
+      3
+
+      $010110$
+
+      $\ANO$
+
+      $\mathit{lo}=3$
+
+    .row:
+
+      2
+
+      5
+
+      $010110$
+
+      $\NE$
+
+      $\mathit{hi}=4$
+
+    .row:
+
+      3
+
+      4
+
+      $010110$
+
+      $\ANO$
+
+      $\mathit{lo}=4$, tedy $k^*=4$
+
+    .row:
+
+      4
+
+      4
+
+      $10110$
+
+      $\ANO$
+
+      první $0$ vyškrtni
+
+    .row:
+
+      5
+
+      4
+
+      $0110$
+
+      $\NE$
+
+      $1$ ponech, ukazatel dál
+
+    .row:
+
+      6
+
+      4
+
+      $1110$
+
+      $\NE$
+
+      $0$ ponech, ukazatel dál
+
+    .row:
+
+      7
+
+      4
+
+      $1010$
+
+      $\ANO$
+
+      $1$ vyškrtni, $|u|=4$, konec
+
+  Výsledek $u=1010$: je podposloupností $010110$ (pozice $2,3,5,6$), $100101$ (pozice $1,2,4,5$) i $011010$
+  (pozice $2,4,5,6$) a delší společná podposloupnost podle dotazu 2 není.
 
 
 .Exercise:
@@ -962,176 +1211,335 @@ hledání izomorfismu grafů pomocí orákula pro rozhodovací verzi.
 
 
 .Exercise:
-  title: 'Úloha 4.7 (DNF-SAT je snadný, CNF-SAT ne)'
+  title: 'Úloha 4.7 (rozmístění do košů z orákula)'
   label: un-4-7
 
-  Formule v "DNF".notion je disjunkce "termů".emphasize, term je konjunkce literálů. $\prob{DNF-SAT}$: je daná formule
-  v DNF splnitelná?
+  Problém $\prob{Bin Packing}$:
+
+
+  "Vstup:".notion velikosti předmětů $s_1,\dots,s_n\in\N$, kapacita koše $C$ a číslo $k$ (vše binárně).
+
+
+  "Otázka:".notion lze předměty rozdělit do nejvýše $k$ košů tak, aby součet velikostí v každém koši byl
+  nejvýše $C$?
+
+
+  Máte k dispozici orákulum pro tuto rozhodovací verzi.
 
   .enumerate:
     type: a
 
     .item:
 
-      Dokažte $\prob{DNF-SAT}\in\PP$.
+      Navrhněte algoritmus, který pomocí orákula najde rozmístění předmětů do "nejmenšího".notion možného počtu košů
+      (pro každý předmět řekne, do kterého koše patří), nebo oznámí, že rozmístění neexistuje. Zdůvodněte
+      správnost a odhadněte počet dotazů.
+      "Nápověda: ptejte se na upravené instance, třeba se dvěma předměty slepenými v jeden.".emphasize
 
     .item:
 
-      Každou formuli v CNF lze roznásobením (distributivitou) převést na ekvivalentní formuli v DNF. Proč z toho
-      neplyne $\prob{SAT}\in\PP$? Dokažte, že pro
-      $\varphi_n=(x_1\vee y_1)\wedge(x_2\vee y_2)\wedge\dots\wedge(x_n\vee y_n)$ má "každá".emphasize ekvivalentní formule
-      v DNF alespoň $2^n$ termů.
-
-    .item:
-
-      Shrňte, které ze čtyř problémů „splnitelnost / tautologie“ × „CNF / DNF“ jsou v $\PP$ a které těžké.
+      Proveďte algoritmus pro $s=(4,8,1,4,2,1)$ a $C=10$.
 
 
 .Solution:
+  label: red-un-4-7
 
-  "a)".notion Disjunkce je splnitelná, právě když je splnitelný některý term. Term $\ell_1\wedge\dots\wedge\ell_r$ je
-  splnitelný, právě když neobsahuje dvojici $x$, $\neg x$: pak položíme každý jeho literál na 1 (proměnné jsou různé,
-  takže to jde) a ostatní proměnné libovolně; obsahuje-li $x$ i $\neg x$, je vždy nepravdivý. Algoritmus projde termy
-  a v každém porovná dvojice literálů: čas $O(|\psi|^2)$, po setřídění i $O(|\psi|\log|\psi|)$. Splňující ohodnocení
-  rovnou vyčteme z nalezeného termu.
-
-
-  "b) Proč to nepomůže.".notion Převod by musel být "polynomiální".emphasize. Roznásobením $\varphi_n$ dostaneme jeden term
-  za každou volbu jednoho literálu z každé závorky, tj. $2^n$ termů, zatímco $\varphi_n$ má jen $2n$ výskytů literálů.
-  Ukážeme, že žádná chytřejší DNF nepomůže.
+  "Redukce s orákulem:".notion $\prob{Bin Packing}$ – rozmístění do nejmenšího počtu košů $\to$ $\prob{Bin Packing}$ –
+  rozhodovací verze. Jak: počet košů $k^*$ binárním vyhledáváním, pak slepujeme dvojice předmětů, dokud orákulum
+  potvrzuje, že se vše vejde do $k^*$ košů; slepené skupiny jsou koše.
 
 
-  "Dolní mez.".notion Nechť $\psi$ je DNF ekvivalentní s $\varphi_n$. Uvažujme $2^n$ ohodnocení $\alpha_S$, která
-  z každé dvojice $\{x_i,y_i\}$ dají hodnotu 1 "právě jedné".emphasize proměnné (a té druhé 0); všechna splňují $\varphi_n$,
-  tedy i $\psi$. Pro každé $\alpha_S$ zvolme term $t$ formule $\psi$, který je při $\alpha_S$ pravdivý. Tvrdíme, že
-  kladné literály termu $t$ jsou přesně proměnné, které jsou v $\alpha_S$ rovny 1:
+  "Skupiny.".notion Algoritmus udržuje rozklad předmětů do "skupin".emphasize (na začátku je každý předmět sám).
+  Skupina $G$ se v dotazu chová jako jediný předmět velikosti $s(G)=\sum_{i\in G}s_i$; „slepit“ dvě skupiny znamená
+  nahradit je jedinou. Značení: $O(\text{skupiny};\,k)$ je odpověď orákula na instanci, jejíž předměty jsou
+  skupiny, s kapacitou $C$ a číslem $k$.
 
-  .itemize:
+
+  "a) Algoritmus.".notion
+
+  .enumerate:
 
     .item:
 
-      Kladný literál proměnné s hodnotou 0 v $t$ není, jinak by $t$ při $\alpha_S$ nebyl pravdivý.
+      Pro $n=0$ není co rozmisťovat. Jinak se zeptej $O(\{1\},\dots,\{n\};\,n)$. Při $\NE$ je některé $s_i>C$
+      (jinak stačí každému předmětu vlastní koš) – rozmístění neexistuje, konec.
 
     .item:
 
-      Nechť proměnná $z$ s $\alpha_S(z)=1$ (z dvojice $i$) v $t$ kladně není. Negovaně tam není taky ($t$ je při
-      $\alpha_S$ pravdivý), takže v $t$ vůbec není. Ohodnocení $\alpha'$, které vznikne z $\alpha_S$ změnou $z$ na 0,
-      pak $t$ splňuje, tedy $\psi(\alpha')=1$. Jenže v $\alpha'$ je celá dvojice $i$ nulová a $\varphi_n(\alpha')=0$ – spor
-      s ekvivalencí.
+      "Počet košů.".notion Binární vyhledávání na $[1,n]$ (odpověď je monotónní v $k$) jako v úloze 4.2 dá $k^*$.
 
-  Term tedy „pozná“ svoje $\alpha_S$: různá $\alpha_S$ mají různé množiny proměnných s hodnotou 1, proto jeden term
-  nemůže být zvolen pro dvě různá $\alpha_S$. Termů je aspoň $2^n$. Každý z nich má navíc aspoň $n$ literálů, takže
-  $|\psi|\ge n\cdot2^n$ – exponenciálně více než $|\varphi_n|$. Převod CNF $\to$ DNF tedy obecně polynomiální být
-  nemůže a $\prob{DNF-SAT}\in\PP$ touto cestou o $\prob{SAT}$ nic neříká.
+    .item:
+
+      "Slepování.".notion Pro dvojice $(i,j)$, $1\le i<j\le n$, v lexikografickém pořadí, dokud je skupin víc než
+      $k^*$: leží-li $i$ a $j$ v různých skupinách $G$ a $H$, zeptej se na instanci, v níž jsou $G$ a $H$
+      slepené (ostatní skupiny beze změny), s číslem $k^*$. Při $\ANO$ skupiny slep, při $\NE$ nech.
+
+    .item:
+
+      Vydej skupiny; každá skupina je jeden koš.
 
 
-  "c) Přehled.".notion
+  "Invariant:".notion aktuální skupiny (jako předměty) se vejdou do $k^*$ košů. Na začátku kroku 3 platí podle
+  volby $k^*$, krok $\ANO$ ho zachová podle odpovědi orákula, krok $\NE$ nic nemění.
+
+
+  "Proč je na konci přesně $k^*$ skupin.".notion Nechť na konci zbylo $r>k^*$ skupin (cyklus prošel všechny
+  dvojice). Podle invariantu existuje rozmístění $P$ těchto skupin do $k^*$ košů; podle Dirichletova principu
+  leží v některém koši dvě skupiny $G$ a $H$. Vezměme $i\in G$, $j\in H$, $i<j$. Když se testovala dvojice
+  $(i,j)$, ležely $i$ a $j$ ve skupinách $G'\subseteq G$ a $H'\subseteq H$ (skupiny jen rostou), a ty byly různé.
+  Instanci se slepenými $G'$ a $H'$ rozmístí stejné $P$: každá tehdejší skupina je částí některé výsledné
+  skupiny, tedy leží celá v jednom koši $P$, a $G'\cup H'$ leží v koši s $G$ a $H$. Orákulum by tedy odpovědělo
+  $\ANO$ a $i$, $j$ by skončily v jedné skupině – spor. Je tedy $r\le k^*$. Každá skupina se vejde do jednoho koše
+  ($s(G)\le C$, jinak by invariant neplatil), takže skupiny tvoří rozmístění do $r$ košů, a z minimality $k^*$ je
+  $r=k^*$.
+
+
+  "Počet dotazů:".notion nejvýše $1+\lceil\log_2 n\rceil+\binom n2=O(n^2)$. Každý dotaz je instance s nejvýše $n$
+  předměty, jejichž velikosti jsou součty vstupních čísel (o nejvýše $\lceil\log_2 n\rceil$ bitů delší), tedy
+  polynomiálně velká.
+
+
+  "b) Průběh".notion ($n=6$, součet velikostí 20, $k^*=2$; 12 dotazů, mez $1+3+15=19$):
 
   .table:
-    columns: 'lp{5.5cm}p{5.5cm}'
+    columns: 'rlllll'
 
     .row:
       head: true
 
-      ~
+      dotaz
 
-      splnitelnost
+      dvojice
 
-      tautologie
+      předměty v dotazu
 
-    .row:
+      $k$
 
-      CNF
+      odpověď
 
-      $\prob{SAT}$: v $\NP$, NP-úplný (kapitola .reference:ch-cook)
-
-      v $\PP$: každá klauzule obsahuje $x$ i $\neg x$ ("úloha 4.3"#un-4-3)
+      akce
 
     .row:
 
-      DNF
+      1
 
-      v $\PP$: některý term neobsahuje $x$ i $\neg x$ (část a)
+      –
 
-      v $\coNP$; $\psi$ je tautologie $\iff$ CNF $\neg\psi$ je nesplnitelná
+      $4,8,1,4,2,1$
 
-  Obě snadné buňky jsou „lokální“ (stačí se dívat na jednu klauzuli nebo jeden term), obě těžké chtějí kombinovat
-  všechny klauzule (termy) dohromady. Negace (De Morgan) převádí CNF na DNF stejné délky a naopak a $\psi$ je
-  tautologie, právě když $\neg\psi$ není splnitelná. Proto je $\prob{CNF-TAUT}$ v podstatě doplněk $\prob{DNF-SAT}$
-  a $\prob{DNF-TAUT}$ doplněk $\prob{SAT}$ – tabulka je středově souměrná (snadné buňky leží na jedné
-  úhlopříčce, těžké na druhé).
+      6
+
+      $\ANO$
+
+      rozmístění existuje
+
+    .row:
+
+      2
+
+      –
+
+      $4,8,1,4,2,1$
+
+      3
+
+      $\ANO$
+
+      $\mathit{hi}=3$
+
+    .row:
+
+      3
+
+      –
+
+      $4,8,1,4,2,1$
+
+      2
+
+      $\ANO$
+
+      $\mathit{hi}=2$
+
+    .row:
+
+      4
+
+      –
+
+      $4,8,1,4,2,1$
+
+      1
+
+      $\NE$
+
+      $\mathit{lo}=2$, tedy $k^*=2$
+
+    .row:
+
+      5
+
+      $(1,2)$
+
+      $\mathbf{12},1,4,2,1$
+
+      2
+
+      $\NE$
+
+      nelepit ($12>C$)
+
+    .row:
+
+      6
+
+      $(1,3)$
+
+      $\mathbf{5},8,4,2,1$
+
+      2
+
+      $\ANO$
+
+      $G_1=\{1,3\}$
+
+    .row:
+
+      7
+
+      $(1,4)$
+
+      $\mathbf{9},8,2,1$
+
+      2
+
+      $\ANO$
+
+      $G_1=\{1,3,4\}$
+
+    .row:
+
+      8
+
+      $(1,5)$
+
+      $\mathbf{11},8,1$
+
+      2
+
+      $\NE$
+
+      nelepit
+
+    .row:
+
+      9
+
+      $(1,6)$
+
+      $\mathbf{10},8,2$
+
+      2
+
+      $\ANO$
+
+      $G_1=\{1,3,4,6\}$
+
+    .row:
+
+      10
+
+      $(2,3)$
+
+      $\mathbf{18},2$
+
+      2
+
+      $\NE$
+
+      nelepit
+
+    .row:
+
+      11
+
+      $(2,4)$
+
+      $\mathbf{18},2$
+
+      2
+
+      $\NE$
+
+      tytéž skupiny jako v dotazu 10
+
+    .row:
+
+      12
+
+      $(2,5)$
+
+      $\mathbf{10},10$
+
+      2
+
+      $\ANO$
+
+      $G_2=\{2,5\}$, skupiny jsou 2, konec
+
+  Tučně je slepená skupina. Výsledek: koš 1 obsahuje předměty 1, 3, 4, 6 ($4+1+4+1=10$), koš 2 předměty 2 a 5
+  ($8+2=10$). Dotaz 11 se ptá na stejnou instanci jako dotaz 10; algoritmus si může pamatovat odmítnuté dvojice
+  skupin a takový dotaz vynechat – na mezi $O(n^2)$ to nic nemění.
 
 
 .Exercise:
-  title: 'Úloha 4.8 (uzavřenost $\NP$ na Kleeneho hvězdičku)'
+  title: 'Úloha 4.8 (NDTS pro slova, která nejsou čtverce)'
   label: un-4-8
 
-  Pro jazyk $L$ je $L^*=\{u_1u_2\cdots u_r:\ r\ge0,\ u_1,\dots,u_r\in L\}$ (pro $r=0$ prázdné slovo $\varepsilon$).
+  Uvažujte jazyk slov, která nejsou zdvojením jiného slova (doplněk jazyka z typové úlohy .reference:typ-1-4):
+
+  .equation:
+
+    L=\{\,w\in\{a,b\}^* \mid w\neq uu \text{ pro každé } u\in\{a,b\}^*\,\}.
+
+  Např. $a\in L$, $aab\in L$, $abba\in L$, $ab\in L$, ale $\varepsilon\notin L$, $aa\notin L$, $abab\notin L$.
 
   .enumerate:
     type: a
 
     .item:
 
-      Dokažte: je-li $L\in\NP$, pak $L^*\in\NP$. Popište certifikát, jeho délku a verifikátor a dokažte obě implikace.
+      Popište "nedeterministický dvoupáskový".notion Turingův stroj, který rozhoduje $L$ tak, že každá větev
+      výpočtu na vstupu délky $n$ skončí po nejvýše $n+1$ krocích. Řekněte, kde stroj hádá, a zdůvodněte
+      správnost i odhad. "Nápověda: počítadlo nemusí být řada značek – stačí poloha hlavy 2.".emphasize
 
     .item:
 
-      Proč nevadí, že počet kousků $r$ není shora omezen? Proč deterministický algoritmus „vyzkoušej všechny
-      rozklady“ polynomiální není?
-
-    .item:
-
-      Pro $L=\{$binární zápisy složených čísel bez vedoucích nul$\}$ rozhodněte, zda $w=1001111$ patří do $L$
-      a do $L^*$, a uveďte certifikát.
+      Popište "deterministický".notion Turingův stroj se vstupní páskou pouze pro čtení, který rozhoduje $L$
+      s "pracovním prostorem".notion $O(\log n)$. Zdůvodněte odhad prostoru.
+      "(Formální přechodovou funkci nepožadujeme.)".emphasize
 
 
 .Solution:
 
-  Nechť $V$ je polynomiální verifikátor pro $L$ s polynomem $p$ pro délku certifikátu a $q$ pro čas, obojí
-  neklesající.
+  "a) Nedeterministický stroj, každá větev nejvýše $n+1$ kroků".notion
 
 
-  "a) Certifikát.".notion Pro slovo $x$ délky $n$ je certifikát
+  "Pozorování.".notion Slovo $w=w_1\cdots w_n$ sudé délky je tvaru $uu$, právě když $w_i=w_{i+n/2}$ pro všechna
+  $i\le n/2$. Proto $w\in L$, právě když $n$ je liché, nebo existují pozice $i<j$ s $w_i\neq w_j$ a $j-i=n/2$.
+
+
+  "Jak ověřit $j-i=n/2$ bez znalosti $n$.".notion Pozice $i$ a $j$ rozdělí slovo na předponu $1,\dots,i-1$
+  ($P=i-1$ symbolů), prostředek $i,\dots,j-1$ ($D=j-i$ symbolů) a příponu $j,\dots,n$ ($S=n-j+1$ symbolů).
+  Protože $n=P+D+S$, platí
 
   .equation:
 
-    c=\bigl(\,r;\ j_1<j_2<\dots<j_{r-1};\ c_1,\dots,c_r\,\bigr),
+    j-i=\frac n2 \iff 2D=P+D+S \iff D=P+S.
 
-  kde $j_0=0$, $j_r=n$, kousky $u_s=x_{j_{s-1}+1}\cdots x_{j_s}$ jsou "neprázdné".emphasize a $c_s$ je certifikát
-  pro $u_s\in L$. Pro $x=\varepsilon$ je certifikát prázdný ($r=0$).
-
-  .itemize:
-
-    .item:
-
-      "Délka:".notion kousky jsou neprázdné, takže $r\le n$; řezy zaberou $O(n\log n)$ bitů a certifikáty
-      $\sum_s p(|u_s|)\le n\cdot p(n)$. Celkem polynomiálně.
-
-    .item:
-
-      "Verifikátor:".notion pro $x\neq\varepsilon$ zkontroluje $1\le r\le n$ a $0<j_1<\dots<j_{r-1}<n$, rozřeže $x$ a pro každé $s$ spustí $V(u_s,c_s)$;
-      přijme, přijmou-li všechny. Čas $O(n\log n)+\sum_s q(|u_s|)\le O(n\log n)+n\cdot q(n)$.
-
-    .item:
-
-      ($x\in L^*\Rightarrow$ přijme) Nechť $x=u_1\cdots u_r$, $u_s\in L$. Prázdné kousky (mohou být jen, je-li
-      $\varepsilon\in L$) vynecháme, slovo to nezmění. Zbylé neprázdné kousky určují řezy a ke každému existuje
-      certifikát $c_s$ s $|c_s|\le p(|u_s|)$; verifikátor přijme.
-
-    .item:
-
-      (přijme $\Rightarrow x\in L^*$) Přijal-li verifikátor, každé $V(u_s,c_s)$ přijalo, tedy $u_s\in L$, a
-      $x=u_1\cdots u_r\in L^*$. Pro $x=\varepsilon$ platí $\varepsilon\in L^*$ vždy.
-
-  "Pohled NDTS:".notion stroj čte $x$ a za každým symbolem se nedeterministicky rozhodne „tady řez / dál“; každý kousek
-  pak ověří fází Guess & Verify stroje pro $L$.
-
-
-  "b)".notion Počet kousků je omezen délkou slova ($r\le n$), protože prázdné kousky nikdy nejsou potřeba – to je
-  důvod, proč certifikát vyjde polynomiální. Deterministické zkoušení všech rozkladů ale polynomiální není: rozkladů
-  slova délky $n$ na neprázdné kousky je $2^{n-1}$ (za každou z $n-1$ mezer se rozhodneme, zda řezat), a i kdyby $L\in\PP$,
-  přímočaré zkoušení trvá exponenciálně dlouho. Nedeterministický stroj tyto volby „uhodne“ za $n-1$ kroků.
+  Hlava 2 slouží jako počítadlo: za každý symbol předpony a přípony udělá krok doprava, za každý symbol prostředku
+  krok doleva. Na konci stojí na pozici $P+S-D$, tedy na startovní buňce, právě když $D=P+S$. Startovní buňku si
+  stroj v prvním kroku označí symbolem $\#$.
 
 
   .centered:
@@ -1139,22 +1547,96 @@ hledání izomorfismu grafů pomocí orákula pro rozhodovací verzi.
     !tikz:
       filename: 04z-ulohy-navic-03
 
-      \tmtape{0}{0}{1,0,0,1,1,1,1}{0}
-      \foreach \i in {1,...,7} {\node[font=\tiny,gr] at ({(\i-1)*0.7+0.35},0.55) {\i};}
-      \draw[rej,very thick,dashed] (2.1,0.75) -- (2.1,-0.75);
-      \node[font=\scriptsize,rej,anchor=south] at (2.1,0.75) {řez $j_1=3$};
-      \draw[decorate,decoration={brace,mirror,amplitude=5pt},thick] (0.05,-0.5) -- (2.05,-0.5)
-         node[midway,below=7pt,font=\small,align=center] {$u_1=4$\\ \footnotesize $d=2$};
-      \draw[decorate,decoration={brace,mirror,amplitude=5pt},thick] (2.15,-0.5) -- (4.85,-0.5)
-         node[midway,below=7pt,font=\small,align=center] {$u_2=15$\\ \footnotesize $d=3$};
-      \node[blokr,font=\small,anchor=west] at (5.6,0.25) {$1001111_2=79$ je prvočíslo: $w\notin L$};
-      \node[bloka,font=\small,anchor=west] at (5.6,-1.05) {$w=u_1u_2\in L^*$, certifikát $(2;\,3;\,2,\,3)$};
+      \tmtape{0}{0}{a,b,b,a,_}{0}
+      \foreach \i in {1,...,4} {\node[font=\tiny,gr] at ({(\i-1)*0.7},0.55) {\i};}
+      \draw[decorate,decoration={brace,amplitude=4pt,mirror},thick] (-0.3,-0.45) -- (1.03,-0.45)
+        node[midway,below=5pt,font=\scriptsize,align=center]{prostředek $D=2$\\ hlava 2 $\Lft\Lft$};
+      \draw[decorate,decoration={brace,amplitude=4pt,mirror},thick] (1.07,-0.45) -- (2.4,-0.45)
+        node[midway,below=5pt,font=\scriptsize,align=center]{přípona $S=2$\\ hlava 2 $\Rgt\Rgt$};
+      \node[font=\scriptsize,acc!70!black] at (0,0.95) {$i=1$};
+      \node[font=\scriptsize,acc!70!black] at (1.4,0.95) {$j=3$};
+      \node[note,anchor=west,text width=60mm,align=left] at (3.3,0) {$w_1=a\neq b=w_3$; hlava 2 skončí na pozici $0+2-2=0$, čte $\#$ $\Rightarrow$ \qA\ po $n+1=5$ krocích};
 
 
-  "c)".notion $1001111_2=79$ je prvočíslo, takže $w\notin L$ (verifikátor pro $L$ žádného dělitele nedostane).
-  Rozklad $w=100\cdot1111$ ale dává $4=2\cdot2$ a $15=3\cdot5$, oba kousky jsou v $L$ a $w\in L^*$; certifikát je
-  $(r=2;\ j_1=3;\ c_1=2,\ c_2=3)$. "Všimni si:".emphasize je to jediný vhodný rozklad – např. $1001\cdot111$ dá
-  $9$ a $7$, ale $7$ je prvočíslo; řez před nulou nejde, protože kousek nesmí začínat nulou.
+  Přijímající větev na $abba$: předpona je prázdná, prostředek $w_1w_2$, přípona $w_3w_4$.
+
+
+  "Stavy a přechody".notion ($x,z\in\{a,b\}$; hlava 1 jde v každém z nich doprava; nevypsané situace, mimo jiné
+  $\blank$ pod hlavou 1 ve stavech $q_0$, $P$, $M_z$ a $O_0$, vedou do $\qR$):
+
+  .description:
+
+    .ditem:
+      bullet: '$q_0$ (počáteční):'
+
+      čte $w_1=x$ a zapíše na pásku 2 symbol $\#$. Tři volby: do $O_1$ (hlava 2 stojí; větev „$n$ je liché“), do $P$
+      (hlava 2 $\Rgt$; $w_1$ patří do předpony), nebo do $M_x$ (hlava 2 $\Lft$; $i=1$). Na $\blank$ (prázdné slovo
+      $=\varepsilon\varepsilon$) zamítne.
+
+    .ditem:
+      bullet: '$O_1$, $O_0$:'
+
+      parita počtu přečtených symbolů ($O_1$ liché, $O_0$ sudé), hlava 2 stojí. $O_1$ na $\blank$ přijme.
+
+    .ditem:
+      bullet: '$P$ (předpona):'
+
+      na $x$ buď zůstane v $P$ (hlava 2 $\Rgt$), nebo uhodne $i$ = tato pozice a přejde do $M_x$ (hlava 2 $\Lft$).
+
+    .ditem:
+      bullet: '$M_z$ (prostředek, $z=w_i$):'
+
+      na $x$ buď zůstane v $M_z$ (hlava 2 $\Lft$), nebo, je-li $x\neq z$, uhodne $j$ = tato pozice a přejde do $K$
+      (hlava 2 $\Rgt$).
+
+    .ditem:
+      bullet: '$K$ (přípona):'
+
+      na $x$ hlava 2 $\Rgt$. Na $\blank$ přijme, čte-li hlava 2 symbol $\#$, jinak zamítne.
+
+  Hlava 2 čte vždy $\blank$ nebo $\#$ a přechody (kromě posledního v $K$) na tom nezávisí. Stavů je 7, přechodů 41.
+
+
+  "Správnost.".notion ($w\in L\Rightarrow$ přijme) Je-li $n$ liché, přijme větev $q_0\to O_1\to O_0\to\cdots$, která
+  po $n$ symbolech skončí v $O_1$. Jinak existují $i<j$ s $w_i\neq w_j$ a $j-i=n/2$. Větev, která zůstane
+  v $P$ na pozicích $1,\dots,i-1$, na pozici $i$ přejde do $M_{w_i}$, na pozici $j$ do $K$ a dočte slovo, pohne
+  hlavou 2 o $P$ doprava, o $D$ doleva a o $S$ doprava. Protože $D=P+S$, stojí na konci na buňce s $\#$ a přijme.
+
+  (Přijme $\Rightarrow w\in L$) Přijímá-li větev přes $O_1$, je $n$ liché. Jinak prošla stavy $P$ (případně
+  žádným), $M_z$ a $K$: vstoupila do $M_z$ na nějaké pozici $i$ se $z=w_i$ a do $K$ na pozici $j>i$ s $w_j\neq z$.
+  Na konci čte hlava 2 symbol $\#$, a ten leží jen na startovní buňce, takže $P+S-D=0$, tedy $j-i=n/2$ a $w$ není
+  čtverec.
+
+
+  "Čas.".notion Každý přechod kromě posledního posune hlavu 1 doprava a za pozici $n+1$ se hlava 1 nedostane
+  (na $\blank$ každý stav končí). Každá větev má tedy nejvýše $n+1$ kroků (ověřeno simulací všech větví na všech
+  slovech do délky 12). Certifikátem je „liché“ nebo dvojice $(i,j)$, tedy $O(\log n)$ bitů; $L$ leží i v $\PP$
+  a nedeterminismus zde jen zjednodušuje návrh.
+
+
+  "b) Deterministický stroj s logaritmickým prostorem".notion Podle pozorování z části a) stačí porovnat
+  dvojice pozic vzdálené o $n/2$.
+
+
+  .enumerate:
+
+    .item:
+
+      Spočítej binárně $n$. Je-li $n$ liché, přijmi. Jinak $h=n/2$ (posun binárního zápisu o bit doprava).
+
+    .item:
+
+      Pro $i=1,\dots,h$: přesuň hlavu na pozici $i$, zapamatuj si $w_i$ ve stavu, přesuň hlavu na pozici
+      $i+h$ a porovnej. Při neshodě přijmi (slovo není čtverec).
+
+    .item:
+
+      Shodují-li se všechny dvojice (to platí i pro $n=0$), je $w=uu$: zamítni.
+
+
+  Na pracovní pásce jsou čísla $n$, $h$, $i$ a pomocný čítač pro přesun hlavy, každé nejvýše $n$: celkem
+  $O(\log n)$ buněk. Stejný algoritmus s opačnou odpovědí rozhoduje jazyk $\{uu\}$ z typové úlohy
+  .reference:typ-1-4 v logaritmickém prostoru. (Ověřeno proti definici na všech slovech do délky 14.)
 
 
 .Subsection Úlohy z jiných sbírek

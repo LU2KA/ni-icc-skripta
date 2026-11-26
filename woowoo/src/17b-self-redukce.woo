@@ -48,8 +48,16 @@
   .ditem:
     bullet: 'Úlohy navíc:'
 
-    "úloha 4.6"#un-4-6 – rozklad čísla na prvočinitele pomocí rozhodovací verze (binární vyhledávání nejmenšího
-    dělitele, počet dotazů polynomiální v délce zápisu čísla). Ze sbírky: "7.9"#un-7-9 (splňující ohodnocení dosazováním),
+    oddíly „Úlohy navíc“ kapitol .reference:ch-np až .reference:ch-cisla mají každý aspoň jednu self-redukci ve
+    formátu úlohy 2 testu. Optimum binárním vyhledáváním a pak „vyškrtávání“: "úloha 4.2"#un-4-2 (nejmenší pokrytí
+    množinami), "4.5"#un-4-5 (nejdelší společná podposloupnost, škrtají se písmena), "4.7"#un-4-7 (rozmístění do
+    nejmenšího počtu košů, slepují se dvojice předmětů), "6.6"#un-6-6 (ohodnocení s nejméně jedničkami),
+    "8.3"#un-8-3 (nejhustší podgraf na $k$ vrcholech), "9.6"#un-9-6 (maximální řez, vrcholy se slučují pomocí
+    vah). Bez optimalizace: "5.3"#un-5-3 (přijímající větev nedeterministického stroje krok po kroku), "7.3"#un-7-3
+    ($\prob{NAE-3-SAT}$, kde nejde dosazovat – proměnné se porovnávají s $x_1$), "10.1"#un-10-1 (exaktní pokrytí
+    trojicemi) a "11.6"#un-11-6 (rozdělení na poloviny, čísla se slučují do bloků). "Úloha 4.6"#un-4-6 – rozklad
+    čísla na prvočinitele pomocí rozhodovací verze (binární vyhledávání nejmenšího dělitele, počet dotazů
+    polynomiální v délce zápisu čísla). Ze sbírky: "7.9"#un-7-9 (splňující ohodnocení dosazováním),
     "8.9"#un-8-9 (největší nezávislá množina), "11.9"#un-11-9 (hamiltonovská kružnice, vynucení hrany rozdělením) a
     těžší "4.9"#un-4-9 (izomorfismus grafů, značky z klik).
 

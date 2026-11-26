@@ -54,10 +54,17 @@ například mimo jiné požadavek na čas, prostor, (ne)determinismus.“ (6 bod
   .ditem:
     bullet: 'Úlohy navíc:'
 
-    oddíl .reference:ch-ts-ulohy-navic – "úloha 1.4"#un-1-4 (stejně $a$ jako $b$ na jedné pásce), "1.5"#un-1-5
-    (dvě pásky), "1.6"#un-1-6 (mocniny dvojky), "1.8"#un-1-8 (čas $O(n\log n)$ na jedné pásce); nedeterministický
-    stroj v "úloze 4.4"#un-4-4; stroje v logaritmickém prostoru v "úlohách 12.4"#un-12-4 a "12.7"#un-12-7. Ze sbírky (pododdíl .reference:ch-ts-ulohy-navic-sbirka): "1.9"#un-1-9 až "1.11"#un-1-11 (jedna páska,
-    odškrtávání), "1.12"#un-1-12 (sčítání na více páskách v lineárním čase), "1.13"#un-1-13 (kopírování) a těžší
+    oddíl .reference:ch-ts-ulohy-navic – všech osm úloh je ve formátu úlohy 1 testu: "úloha 1.1"#un-1-1
+    ($a^ib^jc^i$ na jedné pásce v čase $O(n^2)$ a na dvou páskách), "1.2"#un-1-2 (podslovo: nedeterministicky na
+    dvou páskách), "1.3"#un-1-3 ($a^ib^jc^id^j$ na dvou páskách), "1.4"#un-1-4 (stejně $a$, $b$ i $c$ na jedné
+    pásce, na dvou páskách a v logaritmickém prostoru), "1.5"#un-1-5 ($a^ib^j$ s $i\neq j$ na dvou páskách),
+    "1.6"#un-1-6 (mocniny dvojky na jedné pásce), "1.7"#un-1-7 (druhé mocniny na dvou páskách v lineárním čase),
+    "1.8"#un-1-8 (stejně $a$ jako $b$ na jedné pásce v čase $O(n\log n)$); úlohy 1.2–1.7 mají navíc část
+    v logaritmickém prostoru. Nedeterministické stroje (a k nim deterministický stroj v logaritmickém prostoru)
+    v "úlohách 4.1"#un-4-1 ($i=j$ nebo $j=k$), "4.4"#un-4-4 (stejný symbol ve vzdálenosti $k$) a "4.8"#un-4-8
+    (slova, která nejsou čtverce); stroje v logaritmickém prostoru v "úlohách 12.4"#un-12-4 a "12.7"#un-12-7.
+    Ze sbírky (pododdíl .reference:ch-ts-ulohy-navic-sbirka): "1.9"#un-1-9 až "1.11"#un-1-11 (jedna páska,
+    odškrtávání; části „ve stylu testu“ se dvěma páskami a v logaritmickém prostoru), "1.12"#un-1-12 (sčítání na více páskách v lineárním čase), "1.13"#un-1-13 (kopírování) a těžší
     "1.14"#un-1-14 až "1.17"#un-1-17 (převody zápisu čísla, prvočísla, simulace pásek, krok na místě).
 
 

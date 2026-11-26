@@ -70,10 +70,14 @@ v oddílu .reference:ch-test-postup-np.
   .ditem:
     bullet: 'Úlohy navíc:'
 
-    krátké redukce k procvičení jsou v oddílech „Úlohy navíc“ kapitol .reference:ch-sat ("7.4"#un-7-4 až
-    "7.7"#un-7-7), .reference:ch-is ("8.4"#un-8-4 až "8.7"#un-8-7), .reference:ch-zoo ("9.4"#un-9-4,
-    "9.5"#un-9-5, "9.7"#un-9-7), .reference:ch-x3c ("10.3"#un-10-3 až "10.7"#un-10-7) a .reference:ch-cisla
-    ("11.3"#un-11-3 až "11.5"#un-11-5, "11.7"#un-11-7, "11.8"#un-11-8); jednovětý trik ke každé z nich je
+    krátké redukce k procvičení jsou v oddílech „Úlohy navíc“ kapitol .reference:ch-redukce ("5.2"#un-5-2,
+    "5.4"#un-5-4, "5.6"#un-5-6 až "5.8"#un-5-8, vše z $\prob{UNP}$), .reference:ch-cook ("6.1"#un-6-1 až
+    "6.7"#un-6-7, vše ze $\prob{SAT}$), .reference:ch-sat ("7.1"#un-7-1, "7.2"#un-7-2, "7.4"#un-7-4 až
+    "7.8"#un-7-8), .reference:ch-is ("8.1"#un-8-1, "8.2"#un-8-2 – $\prob{3-SAT}\redp\prob{Clique}$ přímo,
+    "8.4"#un-8-4 až "8.8"#un-8-8), .reference:ch-zoo ("9.1"#un-9-1 až "9.5"#un-9-5, "9.7"#un-9-7, "9.8"#un-9-8),
+    .reference:ch-x3c ("10.2"#un-10-2 až "10.8"#un-10-8) a .reference:ch-cisla ("11.3"#un-11-3 až "11.5"#un-11-5,
+    "11.7"#un-11-7 a "11.8"#un-11-8 – rozvrh s časovými okny z $\prob{Partition}$ a silně z $\prob{3-Partition}$);
+    jednovětý trik ke každé z nich je
     v oddílu .reference:ch-graf-redukce-z-uloh-navic. Ze sbírky: "7.10"#un-7-10, "7.11"#un-7-11, "8.10"#un-8-10,
     "10.9"#un-10-9, "10.10"#un-10-10 a "11.10"#un-11-10 až "11.16"#un-11-16 (HC/HP/UHP, TSP, 0/1 ILP, batoh,
     Subset Sum a Partition, rozvrh na $m$ strojů, kostra s omezeným stupněm).

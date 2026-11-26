@@ -2,17 +2,19 @@
   label: ch-zoo-ulohy-navic
 
 
-Úlohy procvičují barvení, řezy a plánování agentů: spustit konstrukci z kapitoly na malé instanci, napsat
-celou redukci v šesti krocích a rozebrat, co musí gadget zaručit. Opírají se o oddíly .reference:ch-zoo-3-coloring,
-.reference:ch-zoo-maxcut a .reference:ch-zoo-mapf-hledani-cest-pro-vice-agentu a o cvičení .reference:sec-cv4.
+Úlohy jsou ve stylu testu a cvičení .reference:sec-cv4: sedm důkazů NP-úplnosti problémů kolem barvení a řezů
+(typ 4 testu) a jedna self-redukce s orákulem pro $\prob{MaxCut}$ (typ 2). Opírají se o oddíly
+.reference:ch-zoo-3-coloring a .reference:ch-zoo-maxcut a o redukce z cvičení .reference:sec-cv4. Úlohy jdou zhruba od
+lehčích k těžším.
 
 
 .Warning:
   title: 'Neoficiální úlohy'
 
   Úlohy v tomto oddílu "nejsou".notion oficiální zadání předmětu. Jsou to procvičovací úlohy navíc k látce kapitoly;
-  všechna čísla a redukce jsme ověřili skripty: redukce hrubou silou na všech grafech do 6 vrcholů (u bisekcí do 5,
-  resp. 6 vrcholů), gadgety výčtem všech obarvení a úlohu s agenty prohledáním všech společných pozic agentů.
+  všechny redukce jsme ověřili skripty hrubou silou oběma směry, s odpověďmi $\ANO$ i $\NE$: na všech grafech do 5
+  vrcholů a na stovkách náhodných grafů se 6–8 vrcholy (u bisekcí na všech grafech do 5, resp. 6 vrcholů).
+  Self-redukci z úlohy 9.6 jsme pustili se simulovaným orákulem na stovkách grafů do 7 vrcholů.
 
 
 .Procedure:
@@ -26,32 +28,29 @@ celou redukci v šesti krocích a rozebrat, co musí gadget zaručit. Opírají 
     .item:
 
       "$k$-obarvení".emphasize: každý vrchol dostane jednu z $k$ barev a sousedé mají různé barvy; $\prob{3-Coloring}$
-      (problém .reference:prob-3col).
-
-    .item:
-
-      $\prob{3-SAT}\redp\prob{3-Coloring}$ (redukce .reference:red-3col): paleta $T,F,B$, literály $x_i,\lnot x_i$
-      spojené navzájem i s $B$, za klauzuli „prasátko“; lemma .reference:lem-trojuhelnik: stejné barvy vstupů vynutí
-      tutéž barvu výstupu, různé dovolí libovolnou.
+      (problém .reference:prob-3col) je NP-úplný (věta .reference:thm-3sat3col). "2-obarvení".emphasize je snadné:
+      obarvi jeden vrchol, jeho sousedy prohledáváním do šířky opačnou barvou atd.; spor nastane, právě když má graf
+      lichou kružnici. Graf je 2-obarvitelný, právě když je "bipartitní".emphasize.
 
     .item:
 
       $\prob{MaxCut}$: rozdělení $V=A\cup B$, při kterém má aspoň $k$ hran konce v různých částech
-      (problém .reference:prob-maxcut); vážená verze a redukce .reference:red-wmaxcut.
+      (problém .reference:prob-maxcut); je NP-úplný i bez vah (redukce .reference:red-maxcut). Ve vážené verzi
+      (redukce .reference:red-wmaxcut) se místo počtu přeříznutých hran sčítají jejich váhy.
 
     .item:
 
-      $\prob{MAPF}$: agenti v každém kroku stojí, nebo přejdou na souseda, bez srážek a bez výměny po hraně; stihnou
-      do cílů za $\ell$ kroků (problém .reference:prob-mapf)? Gadget pro křížení: lemma .reference:lem-krizeni.
+      "Stupeň".emphasize vrcholu je počet jeho sousedů. Gadget, ve kterém vrcholy sousedí s oběma konci jedné hrany,
+      vynutí stejnou barvu (lemma .reference:lem-trojuhelnik používá podobnou úvahu pro trojúhelník).
 
 
-  "Kuchařka – NP-úplnost (úlohy 9.4, 9.5, 9.7).".notion Postup .reference:ch-test-postup-np.
+  "Kuchařka – NP-úplnost (úlohy 9.1–9.5, 9.7, 9.8).".notion Postup .reference:ch-test-postup-np.
 
   .enumerate:
 
     .item:
 
-      $Q\in\NP$: certifikát je obarvení, rozdělení nebo bisekce.
+      $Q\in\NP$: certifikát je obarvení, rozdělení nebo přidělení; ověří se jedním průchodem hran.
 
     .item:
 
@@ -59,8 +58,9 @@ celou redukci v šesti krocích a rozebrat, co musí gadget zaručit. Opírají 
 
     .item:
 
-      Typické úpravy: nový vrchol spojený se všemi (musí dostat vlastní barvu), doplněk grafu (barevná třída je
-      nezávislá množina, v doplňku klika), přidání izolovaných vrcholů (vyrovná velikosti částí).
+      Typické úpravy: stejný graf s jiným prahem ($k=m$, $k=5$ kanálů), nový vrchol spojený se všemi (musí dostat
+      vlastní barvu), doplněk grafu (barevná třída je nezávislá množina, v doplňku klika), výplň izolovanými vrcholy
+      nebo samostatnými hranami (dorovná velikost nebo počet), kopie vrcholu s gadgetem, který vynutí stejnou barvu.
 
     .item:
 
@@ -68,38 +68,22 @@ celou redukci v šesti krocích a rozebrat, co musí gadget zaručit. Opírají 
       jsi zamýšlel.
 
 
-  "Kuchařka – konstrukce na malé instanci (úlohy 9.1, 9.3, 9.8).".notion
+  "Kuchařka – self-redukce (úloha 9.6).".notion Postup .reference:ch-test-postup-self-redukce.
 
   .enumerate:
 
     .item:
 
-      Spočítej vrcholy a hrany přesně podle konstrukce (paleta, gadgety proměnných, gadgety klauzulí).
+      U optimalizační úlohy nejdřív zjisti hodnotu optima binárním vyhledáváním (logaritmicky mnoho dotazů).
 
     .item:
 
-      Barvi postupně: paleta, literály podle ohodnocení, nakonec gadgety; u každého vrcholu zdůvodni, proč barva je
-      vynucená, nebo kolik možností zbývá.
+      Část řešení zakóduj do instance (u řezu: dva vrcholy, které mají být na stejné straně, slouč do jednoho) a
+      orákulem hlídej, že optimum zůstalo stejné.
 
     .item:
 
-      U řezu sečti váhy přeříznutých hran a porovnej s prahem. Horní mez: v každé liché kružnici zůstane aspoň jedna
-      hrana nepřeříznutá.
-
-
-  "Kuchařka – algoritmus a plán (úlohy 9.2, 9.6).".notion
-
-  .enumerate:
-
-    .item:
-
-      2-barvení: obarvi start, sousedy prohledáváním do šířky opačnou barvou; konflikt znamená lichou kružnici. Čas
-      $O(n+m)$.
-
-    .item:
-
-      MAPF: dolní mez makespanu je vzdálenost agenta do cíle; dva protijdoucí agenti se v chodbě minou, jen když jeden
-      uhne mimo cestu druhého.
+      Napiš invariant, zdůvodni, proč je výstup správný, a spočítej dotazy i velikost dotazů.
 
 
 .Subsection Rozcvička
@@ -107,386 +91,179 @@ celou redukci v šesti krocích a rozebrat, co musí gadget zaručit. Opírají 
 
 
 .Exercise:
-  title: 'Úloha 9.1 (prasátko na konkrétní formuli)'
+  title: 'Úloha 9.1 (řez na tři části)'
   label: un-9-1
 
-  Je dána formule $\Phi=(x_1\vee x_2\vee\neg x_3)\wedge(\neg x_1\vee\neg x_2\vee x_3)$ a graf $G_\Phi$ z redukce
-  "$\prob{3-SAT} \redp \prob{3-Coloring}$"#red-3col (uši prasátka klauzule $C_j$ jsou v pořadí literálů
-  $\ell_1,\ell_2,\ell_3$, jak jsou napsané).
+  Problém $\prob{Max 3-Cut}$. "Vstup:".notion graf $G=(V,E)$ a číslo $k$. "Otázka:".notion lze $V$ rozdělit na
+  tři disjunktní části $V_1,V_2,V_3$ (některá smí být prázdná) tak, aby aspoň $k$ hran mělo konce v různých částech?
 
-  .enumerate:
-    type: a
 
-    .item:
-
-      Kolik vrcholů a kolik hran má $G_\Phi$?
-
-    .item:
-
-      Obarvěte paletu barvami $T,F,B$ a vrcholy literálů podle ohodnocení $\sigma_1$: $x_1=1$, $x_2=0$, $x_3=0$.
-      Najděte "všechna".emphasize dobarvení obou prasátek. Kolik 3-obarvení $G_\Phi$ tedy rozšiřuje toto obarvení
-      palety a literálů?
-
-    .item:
-
-      Totéž pro $\sigma_2$: $x_1=0$, $x_2=0$, $x_3=1$. Plyne z výsledku, že $G_\Phi$ není 3-obarvitelný?
+  Dokažte, že $\prob{Max 3-Cut}$ je NP-úplný. "Nápověda: převádějte z problému 3-Coloring.".emphasize
 
 
 .Solution:
+  label: red-un-9-1
 
-  "a) Velikost.".notion $n=3$ proměnné, $m=2$ klauzule. Vrcholů je $3+2n+6m=3+6+12=21$ (paleta, dva na proměnnou,
-  šest na klauzuli). Hrany: paleta $3$; každá proměnná $3$ (hrana $x_i\neg x_i$ a dvě hrany do $B$); každé prasátko
-  $12$ – deset hran $\ell_1a,\ \ell_2b,\ ab,\ ac,\ bc,\ cd,\ \ell_3e,\ de,\ do,\ eo$ a dvě hrany $oB$, $oF$. Celkem
-  $3+3n+12m=3+9+24=36$ hran.
+  "Redukce:".notion $\prob{3-Coloring} \redp \prob{Max 3-Cut}$, instance $G=(V,E)$ $\mapsto$ $(G,\ k=|E|)$.
 
 
-  "b) Ohodnocení $\sigma_1$.".notion Literály: $x_1=T$, $\neg x_1=F$, $x_2=F$, $\neg x_2=T$, $x_3=F$, $\neg x_3=T$.
-  Uši prasátka $C_1=(x_1\vee x_2\vee\neg x_3)$ mají barvy $(T,F,T)$, uši $C_2=(\neg x_1\vee\neg x_2\vee x_3)$ barvy
-  $(F,T,F)$. V obou prasátkách je $o=T$, protože $o$ sousedí s $B$ i $F$. Dobarvení zapisujeme jako
-  $(a,b,c,d,e)$.
-
-  .itemize:
-
-    .item:
-
-      $C_1$, uši $(T,F,T)$. Vrchol $e$ sousedí s $o=T$ a s $\ell_3=T$, tedy $e\in\{F,B\}$, a $d$ sousedí s $o=T$ a s $e$,
-      tedy $d$ je ta druhá z barev $F,B$. Horní trojúhelník má různé vstupy, takže podle lemmatu
-      .reference:lem-trojuhelnik smí mít $c$ libovolnou barvu: $c=T$ vynutí $b=B$ ($b\neq F,T$) a $a=F$;
-      $c=F$ vynutí $a=B$ ($a\neq T,F$) a $b=T$; $c=B$ vynutí $a=F$ a $b=T$. Ještě musí platit $c\neq d$:
-      pro $(d,e)=(F,B)$ projde $c\in\{T,B\}$, pro $(d,e)=(B,F)$ projde $c\in\{T,F\}$. Dobarvení jsou "čtyři".notion:
-      $(F,B,T,F,B)$, $(F,T,B,F,B)$, $(F,B,T,B,F)$, $(B,T,F,B,F)$.
-
-    .item:
-
-      $C_2$, uši $(F,T,F)$. Teď $e$ sousedí s $o=T$ a $\ell_3=F$, tedy $e=B$, a $d$ sousedí s $T$ a $B$, tedy $d=F$.
-      Proto $c\neq F$: $c=T$ dá $a=B$, $b=F$; $c=B$ dá $a=T$, $b=F$. Dobarvení jsou "dvě".notion: $(B,F,T,F,B)$ a
-      $(T,F,B,F,B)$.
-
-  Prasátka spolu nesousedí (spojují je jen paleta a vrcholy literálů, které jsou pevně obarvené), dobarvujeme je
-  tedy nezávisle: obarvení palety a literálů podle $\sigma_1$ rozšiřuje $4\cdot2=8$ různých 3-obarvení $G_\Phi$.
+  "1. $\prob{Max 3-Cut}$ je v $\NP$.".notion Certifikát je rozdělení, tj. číslo části $p(v)\in\{1,2,3\}$ pro každý
+  vrchol. Projdeme hrany, spočítáme ty s $p(u)\neq p(v)$ a porovnáme s $k$, čas $O(n+m)$.
 
 
-  .centered:
-
-    !tikz:
-      filename: 09z-ulohy-navic-01
-      options: 'scale=1.25'
-
-      \begin{scope}
-        \chZpig{T}{F}{T}{F}{B}{T}{F}{B}{T}
-        \node[font=\scriptsize,above=1pt] at (l1.north) {$x_1$};
-        \node[font=\scriptsize,above=1pt] at (l2.north) {$x_2$};
-        \node[font=\scriptsize,above=1pt] at (l3.north) {$\neg x_3$};
-        \node[font=\tiny,left=1pt] at (a.west) {$a$};
-        \node[font=\tiny,right=1pt] at (b.east) {$b$};
-        \node[font=\tiny,left=1pt] at (c.west) {$c$};
-        \node[font=\tiny,left=1pt] at (d.west) {$d$};
-        \node[font=\tiny,right=1pt] at (e.east) {$e$};
-        \node[font=\tiny,below=1pt] at (o.south) {$o$};
-        \node[font=\small] at (1.3,-0.55) {$C_1$: uši $T,F,T$};
-      \end{scope}
-      \begin{scope}[xshift=4.2cm]
-        \chZpig{F}{T}{F}{T}{F}{B}{F}{B}{T}
-        \node[font=\scriptsize,above=1pt] at (l1.north) {$\neg x_1$};
-        \node[font=\scriptsize,above=1pt] at (l2.north) {$\neg x_2$};
-        \node[font=\scriptsize,above=1pt] at (l3.north) {$x_3$};
-        \node[font=\tiny,left=1pt] at (a.west) {$a$};
-        \node[font=\tiny,right=1pt] at (b.east) {$b$};
-        \node[font=\tiny,left=1pt] at (c.west) {$c$};
-        \node[font=\tiny,left=1pt] at (d.west) {$d$};
-        \node[font=\tiny,right=1pt] at (e.east) {$e$};
-        \node[font=\tiny,below=1pt] at (o.south) {$o$};
-        \node[font=\small] at (1.3,-0.55) {$C_2$: uši $F,T,F$};
-      \end{scope}
-      \node[font=\scriptsize,anchor=west] at (7.6,2.0) {\textcolor{tT}{$\bullet$}\,$T$};
-      \node[font=\scriptsize,anchor=west] at (7.6,1.6) {\textcolor{tF}{$\bullet$}\,$F$};
-      \node[font=\scriptsize,anchor=west] at (7.6,1.2) {\textcolor{tB}{$\bullet$}\,$B$};
+  "2. Konstrukce.".notion Graf ponecháme a za práh vezmeme počet všech hran: $k=m=|E|$.
 
 
-  Jedno ze čtyř dobarvení $C_1$, totiž $(F,B,T,F,B)$, a jedno ze dvou dobarvení $C_2$, totiž $(T,F,B,F,B)$, při
-  $\sigma_1$. Výstup $o$ je v obou prasátkách $T$.
+  "3. Polynomialita.".notion Výstup je kopie vstupu a jedno číslo, čas $O(n+m)$.
 
 
-  "c) Ohodnocení $\sigma_2$.".notion Uši $C_1$ dostanou $x_1=F$, $x_2=F$, $\neg x_3=F$ – samé $F$. Pak $a,b$ sousedí
-  s ušima barvy $F$, takže $\{a,b\}=\{T,B\}$ a $c=F$ (lemma o trojúhelníku, část 1). Dále $e$ sousedí s $o=T$ a
-  $\ell_3=F$, tedy $e=B$, a $d$ sousedí s $e=B$ a $o=T$, tedy $d=F$. Hrana $cd$ spojuje dvě $F$ – spor, prasátko
-  $C_1$ "nelze".emphasize dobarvit (prasátko $C_2$ s ušima $T,T,T$ by dobarvit šlo).
+  "4. ($\Rightarrow$)".notion Nechť $c\colon V\to\{1,2,3\}$ je 3-obarvení $G$. Položíme $V_i=c^{-1}(i)$. Každá hrana
+  spojuje vrcholy různých barev, má tedy konce v různých částech: přeříznuté jsou všechny $m=k$ hrany.
 
 
-  Z toho "neplyne".notion, že $G_\Phi$ není 3-obarvitelný. Ukázali jsme jen, že žádné 3-obarvení nemá literály
-  obarvené podle $\sigma_2$ – to odpovídá tomu, že $\sigma_2$ nesplňuje $C_1$. Podle věty .reference:thm-3sat3col
-  je $G_\Phi$ 3-obarvitelný, právě když "nějaké".emphasize ohodnocení splňuje $\Phi$; $\sigma_1$ takové je, a podle
-  bodu b) je $G_\Phi$ 3-obarvitelný.
+  "5. ($\Leftarrow$)".notion Nechť rozdělení $V_1,V_2,V_3$ přeřízne aspoň $k=m$ hran, tedy všechny. Položíme $c(v)=i$
+  pro $v\in V_i$. Žádná hrana nemá oba konce v téže části, takže $c$ je 3-obarvení $G$.
+
+
+  "6. Závěr.".notion $\prob{3-Coloring}$ je NP-úplný (věta .reference:thm-3sat3col), tedy $\prob{Max 3-Cut}$ je
+  NP-těžký a podle bodu 1 NP-úplný.
+
+
+  "Proč to stejně nejde pro dvě části.".notion Stejná úvaha dává $\prob{2-Coloring}\redp\prob{MaxCut}$: graf je
+  2-obarvitelný, právě když má řez se všemi $m$ hranami. To je ale redukce ze snadného problému (2-obarvení najde
+  prohledávání do šířky) a o těžkosti $\prob{MaxCut}$ nic neříká. Proto přednáška převádí na $\prob{MaxCut}$ až
+  z $\prob{NAE-3-SAT}$ (redukce .reference:red-wmaxcut). U tří částí je práh $k=m$ „zakódované 3-obarvení“ a těžkost
+  přenese už sama identita.
 
 
 .Exercise:
-  title: 'Úloha 9.2 (2-barvení je v P)'
+  title: 'Úloha 9.2 (přidělení kanálů)'
   label: un-9-2
 
-  Problém $\prob{2-Coloring}$: lze vrcholy grafu $G$ obarvit dvěma barvami tak, aby žádná hrana nespojovala dva
-  vrcholy stejné barvy?
+  Je dán graf $G=(V,E)$ (vrcholy jsou vysílače, hrana spojuje vysílače, které by se mohly rušit) a číslo $k$. Lze
+  každému vysílači přidělit kanál $f(v)\in\{1,\dots,k\}$ tak, aby se kanály sousedních vysílačů lišily
+  "aspoň o 2".notion, tj. $|f(u)-f(v)|\ge2$ pro každou hranu $\{u,v\}\in E$?
 
   .enumerate:
     type: a
 
     .item:
 
-      Navrhněte pro $\prob{2-Coloring}$ polynomiální algoritmus, dokažte jeho správnost a odhadněte čas.
+      Dokažte, že problém je NP-úplný. "Nápověda: převádějte z problému 3-Coloring s $k=5$.".emphasize
 
     .item:
 
-      Spusťte ho na grafech $G_1$ a $G_2$ na vrcholech $a,\dots,h$. Oba obsahují kružnici $a,b,c,d,e,f$ (hrany
-      $ab,bc,cd,de,ef,fa$) a hrany $ag$, $gh$; navíc $G_1$ má hranu $hd$ a $G_2$ hranu $hc$. Začněte ve vrcholu $a$
-      a sousedy procházejte abecedně. Pro odpověď $\NE$ najděte lichou kružnici.
+      Pro která pevná $k$ je problém v $\PP$?
+
+  (Zápis téhož problému jako SAT procvičuje typová úloha .reference:typ-3-3.)
 
 
 .Solution:
+  label: red-un-9-2
 
-  "a) Algoritmus.".notion Pro každou komponentu souvislosti zvolíme vrchol $r$ a prohledáním do šířky (BFS)
-  spočteme vzdálenosti $\dist(r,v)$ všech jejích vrcholů. Vrchol obarvíme barvou 1, je-li $\dist(r,v)$ sudá, a
-  barvou 2, je-li lichá. Pak projdeme všechny hrany: spojuje-li některá dva vrcholy stejné barvy, odpovíme $\NE$,
-  jinak $\ANO$ (a obarvení vypíšeme).
+  "Redukce:".notion $\prob{3-Coloring} \redp \prob{Přidělení kanálů}$, instance $G$ $\mapsto$ $(G,\ k=5)$.
 
 
-  "Čas.".notion BFS na seznamech sousedů trvá $O(n+m)$ pro všechny komponenty dohromady a kontrola hran $O(m)$.
-  Vstup (graf zadaný seznamem vrcholů a hran) má délku aspoň $n+m$, algoritmus je tedy lineární v délce vstupu.
+  "a) 1. Problém je v $\NP$.".notion Certifikát je přidělení $f\colon V\to\{1,\dots,k\}$. Pro každou hranu ověříme
+  $|f(u)-f(v)|\ge2$, čas $O(n+m)$ operací s čísly nejvýše $k$.
 
 
-  "Správnost.".notion
+  "2. Konstrukce.".notion Graf ponecháme a položíme $k=5$.
+
+
+  "3. Polynomialita.".notion Kopie vstupu a jedno číslo, čas $O(n+m)$.
+
+
+  "4. ($\Rightarrow$)".notion Nechť $c\colon V\to\{1,2,3\}$ je 3-obarvení $G$. Barvu $i$ převedeme na kanál $2i-1$:
+  $f(v)=2c(v)-1\in\{1,3,5\}$. Pro hranu $\{u,v\}$ je $c(u)\neq c(v)$, a tedy $|f(u)-f(v)|=2|c(u)-c(v)|\ge2$.
+
+
+  "5. ($\Leftarrow$)".notion Nechť $f\colon V\to\{1,\dots,5\}$ je přípustné přidělení. Kanály spárujeme do barev:
+  $c(v)=\lceil f(v)/2\rceil$, tj. kanály $1,2$ dají barvu 1, kanály $3,4$ barvu 2 a kanál $5$ barvu 3. Kdyby hrana
+  $\{u,v\}$ měla $c(u)=c(v)=i$, ležely by $f(u),f(v)$ v dvojici $\{2i-1,2i\}$ a lišily by se nejvýše o 1 – spor
+  s přípustností. Proto je $c$ 3-obarvení $G$.
+
+
+  "6. Závěr.".notion $\prob{3-Coloring}$ je NP-úplný, tedy přidělení kanálů je NP-těžké a podle bodu 1 NP-úplné.
+
+
+  "b) Pevné $k$.".notion Body 4 a 5 fungují pro libovolné $k$: kanál $2i-1$ pro barvu $i\le\lceil k/2\rceil$ je nejvýše
+  $2\lceil k/2\rceil-1\le k$ a párování $c(v)=\lceil f(v)/2\rceil$ dá barvy $1,\dots,\lceil k/2\rceil$. Přidělení
+  s $k$ kanály tedy existuje, právě když je $G$ obarvitelný $\lceil k/2\rceil$ barvami.
 
   .itemize:
 
     .item:
 
-      Odpoví-li $\ANO$, prošla kontrola každé hrany, takže vypsané obarvení je platné 2-obarvení.
+      $k\in\{1,2\}$: jedna barva, tedy $\ANO$, právě když $G$ nemá žádnou hranu – v $\PP$.
 
     .item:
 
-      Nechť je $G$ 2-obarvitelný a $\chi$ je libovolné jeho 2-obarvení. Vezměme vrchol $v$ v komponentě vrcholu $r$
-      a nejkratší cestu $r=v_0,v_1,\dots,v_d=v$, $d=\dist(r,v)$. Podél cesty se barvy $\chi$ střídají, takže
-      $\chi(v)=\chi(r)$, právě když je $d$ sudé. Obarvení z BFS se tedy v každé komponentě shoduje s $\chi$ (až na
-      prohození barev), je to platné obarvení a kontrola žádnou hranu neodmítne – algoritmus odpoví $\ANO$.
+      $k\in\{3,4\}$: dvě barvy, tedy test bipartitnosti prohledáváním do šířky – v $\PP$.
 
-  Algoritmus tedy odpoví $\ANO$, právě když je $G$ 2-obarvitelný, a $\prob{2-Coloring}\in\PP$.
+    .item:
 
+      $k\ge5$: $\lceil k/2\rceil\ge3$ barev. Zobrazení $G\mapsto(G,k)$ je redukce
+      $\lceil k/2\rceil\text{-}\prob{Coloring}\redp\prob{Přidělení kanálů}$ (pro $k=5$ je to a), pro $k=6$ totéž
+      se třemi barvami) a barvení pevným počtem aspoň tří barev je NP-úplné (úloha .reference:un-9-4). Problém je
+      NP-úplný.
 
-  "Certifikát pro $\NE$.".notion Spojuje-li hrana $uv$ vrcholy stejné parity, vezmeme cesty ve stromu BFS z $u$
-  a z $v$ do jejich nejbližšího společného předka $w$. Mají délky $\dist(r,u)-\dist(r,w)$ a
-  $\dist(r,v)-\dist(r,w)$, kromě $w$ jsou disjunktní, a spolu s hranou $uv$ dají kružnici délky
-  $\dist(r,u)+\dist(r,v)-2\dist(r,w)+1$, což je liché číslo. Lichou kružnici dvěma barvami obarvit nelze (barvy
-  by se musely střídat), takže odpověď $\NE$ je správná i s důkazem.
-
-
-  "b) Graf $G_1$.".notion BFS z $a$: vzdálenost 0 má $a$; vzdálenost 1 mají $b,f,g$; vzdálenost 2 mají $c$ (z $b$),
-  $e$ (z $f$), $h$ (z $g$); vzdálenost 3 má $d$ (z $c$). Barva 1 (sudé): $\{a,c,e,h\}$, barva 2 (liché):
-  $\{b,d,f,g\}$. Všech devět hran $ab,bc,cd,de,ef,fa,ag,gh,hd$ spojuje sudý vrchol s lichým, odpověď je $\ANO$.
-
-
-  "Graf $G_2$.".notion Vzdálenosti vyjdou stejně (i tady $h$ objevíme z $g$ a $d$ z $c$). Hrana $hc$ ale spojuje dva
-  vrcholy se vzdáleností 2, odpověď je $\NE$. Strom BFS: $h\to g\to a$ a $c\to b\to a$, společný předek je $a$, a lichá
-  kružnice je $a,g,h,c,b,a$ délky $2+2+1=5$.
-
-
-  .centered:
-
-    !tikz:
-      filename: 09z-ulohy-navic-02
-      options: 'sideA/.style={fill=defc!30},sideB/.style={fill=intc!45}'
-
-      \foreach \t/\x in {0/0,1/1.8,2/3.6,3/5.4} {\node[font=\scriptsize,gr] at (\x,2.0) {vzdál. \t};}
-      \node[v,sideA] (a) at (0,0) {$a$};
-      \node[v,sideB] (b) at (1.8,1.2) {$b$};
-      \node[v,sideB] (g) at (1.8,0) {$g$};
-      \node[v,sideB] (f) at (1.8,-1.2) {$f$};
-      \node[v,sideA] (c) at (3.6,1.2) {$c$};
-      \node[v,sideA] (h) at (3.6,0) {$h$};
-      \node[v,sideA] (e) at (3.6,-1.2) {$e$};
-      \node[v,sideB] (d) at (5.4,0) {$d$};
-      \draw[e] (a)--(f) (f)--(e) (e)--(d) (c)--(d);
-      \draw[esel] (a)--(b) (b)--(c) (a)--(g) (g)--(h);
-      \draw[rej,line width=2pt] (h)--(c);
-      \node[rej,font=\scriptsize,anchor=east] at (3.45,0.6) {$hc$: obě vzdál. 2};
-      \node[font=\scriptsize,anchor=west] at (6.2,0.4) {\tikz\node[v,sideA,minimum size=3mm]{};\ sudá vzdálenost};
-      \node[font=\scriptsize,anchor=west] at (6.2,-0.1) {\tikz\node[v,sideB,minimum size=3mm]{};\ lichá vzdálenost};
-      \node[font=\scriptsize,anchor=west,acc!80!black] at (6.2,-0.6) {lichá kružnice $a,g,h,c,b$};
-
-
-  Graf $G_2$ nakreslený po vrstvách BFS z $a$. Všechny hrany kromě $hc$ vedou mezi sousedními vrstvami. Hrana $hc$
-  uvnitř vrstvy 2 uzavírá se stromovými cestami (zeleně) lichou kružnici.
-
-
-  "Poznámka.".notion Proto řetěz redukcí $k\text{-}\prob{Coloring}\redp(k+1)\text{-}\prob{Coloring}$ z úlohy
-  .reference:un-9-4 začíná až u $k=3$: 2-barvení je snadné, 3-barvení NP-úplné.
+  Pokud $\PP\neq\NP$, je problém v $\PP$ přesně pro $k\le4$. (Skript potvrdil ekvivalenci s $\lceil k/2\rceil$-obarvením
+  pro $k=1,\dots,6$ na všech grafech do 5 vrcholů.)
 
 
 .Exercise:
-  title: 'Úloha 9.3 (MaxCut ručně a váhy z NAE)'
+  title: 'Úloha 9.3 (řez s přesně $k$ hranami)'
   label: un-9-3
 
-  .enumerate:
-    type: a
+  Problém $\prob{Exact Cut}$. "Vstup:".notion graf $G=(V,E)$ a číslo $k$. "Otázka:".notion existuje rozdělení
+  $V=A\cup B$, které přeřízne "přesně".emphasize $k$ hran?
 
-    .item:
 
-      "Hranol".emphasize má vrcholy $a,b,c,a',b',c'$, trojúhelníky $abc$ a $a'b'c'$ a hrany $aa'$, $bb'$, $cc'$
-      (9 hran). Najděte maximální řez a dokažte, že větší neexistuje.
-
-    .item:
-
-      Pro $\Phi=(x_1\vee x_2\vee x_3)\wedge(x_1\vee x_2\vee\neg x_3)\wedge(\neg x_1\vee\neg x_2\vee x_3)$ sestrojte
-      vážený graf z redukce "$\prob{NAE-3-SAT} \redp \prob{(vážený) MaxCut}$"#red-wmaxcut: všechny hrany s vahami a
-      práh. Z NAE-ohodnocení $x_1=1$, $x_2=0$, $x_3=0$ sestrojte řez a ověřte, že práh dosáhne.
+  Dokažte, že $\prob{Exact Cut}$ je NP-úplný. Proč nestačí identita $(G,k)\mapsto(G,k)$ z problému $\prob{MaxCut}$?
 
 
 .Solution:
+  label: red-un-9-3
 
-  "a) Horní mez.".notion Trojúhelníky $abc$ a $a'b'c'$ jsou hranově disjunktní liché kružnice. Z trojúhelníku lze
-  přeříznout nejvýše 2 hrany: kdyby byly přeříznuté všechny tři, střídaly by se strany po kružnici délky 3, což
-  nejde. Spojovací hrany $aa',bb',cc'$ dají nejvýše 3. Každý řez má tedy nejvýše $2+2+3=7$ hran.
+  "Redukce:".notion $\prob{MaxCut} \redp \prob{Exact Cut}$, instance $(G,k)$ $\mapsto$ $(G',\ k+m)$, kde $G'$ je $G$
+  s $m=|E|$ přidanými samostatnými hranami.
 
 
-  "Řez velikosti 7.".notion $A=\{a,b',c'\}$, $B=\{b,c,a'\}$. Přeříznuté jsou $ab$, $ac$ (z prvního trojúhelníku),
-  $a'b'$, $a'c'$ (z druhého) a všechny tři spojovací hrany. Nepřeříznuté jsou jen $bc$ a $b'c'$. Maximální řez má
-  "velikost 7".notion.
+  "1. $\prob{Exact Cut}$ je v $\NP$.".notion Certifikát je rozdělení $(A,B)$; spočítáme přeříznuté hrany a porovnáme
+  s $k$, čas $O(n+m)$.
 
 
-  .centered:
+  "2. Konstrukce.".notion K $G=(V,E)$ přidáme $2m$ nových vrcholů $p_1,q_1,\dots,p_m,q_m$ a $m$ nových hran
+  $\{p_i,q_i\}$ (párování, nové hrany nemají společné vrcholy s ničím jiným). Práh je $k'=k+m$.
 
-    !tikz:
-      filename: 09z-ulohy-navic-03
-      options: 'sideA/.style={fill=defc!30},sideB/.style={fill=intc!45}'
 
-      \node[v,sideA] (a) at (0,2.3) {$a$};
-      \node[v,sideB] (b) at (-2.0,-1.1) {$b$};
-      \node[v,sideB] (c) at (2.0,-1.1) {$c$};
-      \node[v,sideB] (a2) at (0,0.95) {$a'$};
-      \node[v,sideA] (b2) at (-0.8,-0.35) {$b'$};
-      \node[v,sideA] (c2) at (0.8,-0.35) {$c'$};
-      \draw[black!30,thick] (b)--(c) (b2)--(c2);
-      \draw[rej,very thick] (a)--(b) (a)--(c) (a2)--(b2) (a2)--(c2) (a)--(a2) (b)--(b2) (c)--(c2);
-      \node[rej,font=\small] at (3.6,0.6) {řez $=7$};
-      \node[font=\scriptsize,anchor=west] at (3.0,-0.2) {\tikz\node[v,sideA,minimum size=3mm]{};\ = $A$};
-      \node[font=\scriptsize,anchor=west] at (3.0,-0.7) {\tikz\node[v,sideB,minimum size=3mm]{};\ = $B$};
+  "3. Polynomialita.".notion $G'$ má $n+2m$ vrcholů a $2m$ hran, sestrojíme ho v čase $O(n+m)$.
 
 
-  Maximální řez hranolu. Z každého trojúhelníku zůstane jedna hrana nepřeříznutá (šedě), víc to nejde.
+  "Pozorování.".notion Hranu $\{p_i,q_i\}$ přeřízneme, nebo ne, nezávisle na zbytku grafu: stačí dát $p_i$ a $q_i$ na
+  různé, nebo na stejnou stranu. Rozdělení $G'$ je tedy rozdělení $G$ a k tomu libovolný počet $j\in\{0,\dots,m\}$
+  přeříznutých nových hran.
 
 
-  "b) Konstrukce.".notion $n=3$, $m=3$, takže hrany proměnných $x_i\bar x_i$ mají váhu $2m=6$ a práh je
-  $2mn+2m=18+6=24$. Trojúhelníky klauzulí: $C_1$ na $x_1,x_2,x_3$, $C_2$ na $x_1,x_2,\bar x_3$, $C_3$ na
-  $\bar x_1,\bar x_2,x_3$. Dvojice $x_1x_2$ je v $C_1$ i $C_2$, váhy se sčítají.
+  "4. ($\Rightarrow$)".notion Nechť řez $(A,B)$ grafu $G$ přeřízne $c\ge k$ hran; zároveň $c\le m$. Položme
+  $j=k+m-c$. Z $c\le m$ plyne $j\ge k\ge0$ a z $c\ge k$ plyne $j\le m$. Přeřízneme přesně $j$ nových hran a
+  dostaneme rozdělení $G'$ s $c+j=k+m$ přeříznutými hranami.
 
-  .table:
-    columns: 'lccc'
 
-    .row:
-      head: true
+  "5. ($\Leftarrow$)".notion Nechť rozdělení $G'$ přeřízne přesně $k+m$ hran, z toho $j\le m$ nových. Na vrcholech $V$
+  pak přeřízne $c=k+m-j\ge k$ hran $G$ – to je řez grafu $G$ s aspoň $k$ hranami. (Je-li $k>m$, má $G'$ jen $2m<k+m$
+  hran a obě instance mají odpověď $\NE$; zvláštní případ ošetřovat nemusíme.)
 
-      hrana
 
-      váha
+  "6. Závěr.".notion $\prob{MaxCut}$ je NP-úplný (i bez vah, redukce .reference:red-maxcut), tedy $\prob{Exact Cut}$
+  je NP-těžký a podle bodu 1 NP-úplný.
 
-      strany při $x_1=1,x_2=x_3=0$
 
-      přeříznuta
-
-    .row:
-
-      $x_1\bar x_1$, $x_2\bar x_2$, $x_3\bar x_3$
-
-      $6$ každá
-
-      $A$ / $B$
-
-      ano, $18$
-
-    .row:
-
-      $x_1x_2$ ($C_1$, $C_2$)
-
-      $2$
-
-      $A$ / $B$
-
-      ano, $2$
-
-    .row:
-
-      $x_1x_3$ ($C_1$)
-
-      $1$
-
-      $A$ / $B$
-
-      ano, $1$
-
-    .row:
-
-      $x_2x_3$ ($C_1$)
-
-      $1$
-
-      $B$ / $B$
-
-      ne
-
-    .row:
-
-      $x_1\bar x_3$ ($C_2$)
-
-      $1$
-
-      $A$ / $A$
-
-      ne
-
-    .row:
-
-      $x_2\bar x_3$ ($C_2$)
-
-      $1$
-
-      $B$ / $A$
-
-      ano, $1$
-
-    .row:
-
-      $\bar x_1\bar x_2$ ($C_3$)
-
-      $1$
-
-      $B$ / $A$
-
-      ano, $1$
-
-    .row:
-
-      $\bar x_1x_3$ ($C_3$)
-
-      $1$
-
-      $B$ / $B$
-
-      ne
-
-    .row:
-
-      $\bar x_2x_3$ ($C_3$)
-
-      $1$
-
-      $A$ / $B$
-
-      ano, $1$
-
-
-  "Řez.".notion Strana $A$ = pravdivé literály $\{x_1,\bar x_2,\bar x_3\}$, strana $B=\{\bar x_1,x_2,x_3\}$. Hrany
-  proměnných dají $18$, hrany klauzulí $2+1+1+1+1=6$, celkem $24$ – práh je dosažen. Po klauzulích: $C_1$ má
-  přeříznuté $x_1x_2$, $x_1x_3$, $C_2$ hrany $x_1x_2$, $x_2\bar x_3$ a $C_3$ hrany $\bar x_1\bar x_2$, $\bar x_2x_3$ –
-  každá klauzule přispěje přesně 2, jak říká věta .reference:thm-naemaxcut. Naopak z řezu čteme $x_i=1$, právě když
-  $x_i\in A$. (Skript potvrdil, že maximální řez má váhu přesně $24$ a že NAE-ohodnocení jsou právě čtyři – ta
-  s $x_1\neq x_2$.)
+  "Proč ne identita.".notion Graf může mít řez s aspoň $k$ hranami a přitom žádný s přesně $k$. Trojúhelník $K_3$ má
+  jen řezy velikosti 0 (vše na jedné straně) a 2 (jeden vrchol proti dvěma): $(K_3,1)$ je pro $\prob{MaxCut}$ $\ANO$, pro
+  $\prob{Exact Cut}$ $\NE$. Samostatné hrany slouží jako „drobné“: řez, který je příliš velký, dorovnají na přesný
+  počet.
 
 
 .Subsection Na úrovni testu
@@ -539,7 +316,7 @@ celou redukci v šesti krocích a rozebrat, co musí gadget zaručit. Opírají 
   "Proč ne $\prob{2-Coloring}$.".notion Redukce $1\text{-}\prob{Coloring}\redp\prob{2-Coloring}$ je správná, ale
   $1\text{-}\prob{Coloring}$ („nemá $G$ žádnou hranu?“) je v $\PP$. Redukce ze snadného problému o těžkosti nic
   neříká – těžkost se přenáší jen "z".emphasize problému, o kterém ji už víme. A $\prob{2-Coloring}$ je v $\PP$
-  (úloha .reference:un-9-2), takže by NP-úplný mohl být jen při $\PP=\NP$.
+  (prohledávání do šířky), takže by NP-úplný mohl být jen při $\PP=\NP$.
 
 
   "Pozor na rovinnost".notion "(nad rámec přednášky)".emphasize. Pro $\prob{Planar 3-Coloring}$ by stejný trik dával
@@ -596,7 +373,7 @@ celou redukci v šesti krocích a rozebrat, co musí gadget zaručit. Opírají 
   .centered:
 
     !tikz:
-      filename: 09z-ulohy-navic-04
+      filename: 09z-ulohy-navic-01
 
       \begin{scope}
         \node[v,fill=chZo] (a) at (0,1.4) {$a$};
@@ -625,146 +402,185 @@ celou redukci v šesti krocích a rozebrat, co musí gadget zaručit. Opírají 
   „Domeček“ $G$ (čtverec $abcd$ se střechou $e$) a jeho doplněk $\overline G$ s hranami $ac,bd,ce,de$. Barevné třídy
   $\{a,c\}$, $\{b,d\}$, $\{e\}$ jsou v $G$ nezávislé a v $\overline G$ jsou to kliky (tlustě). "Všimni si:".emphasize
   totéž zobrazení funguje i obráceně, $\prob{Clique Cover}$ a barvení doplňku jsou jeden a týž problém. Proto je
-  $\prob{Clique Cover}$ s $k=2$ v $\PP$: stačí otestovat, zda je $\overline G$ 2-obarvitelný (úloha .reference:un-9-2).
+  $\prob{Clique Cover}$ s $k=2$ v $\PP$: stačí otestovat prohledáváním do šířky, zda je $\overline G$ 2-obarvitelný.
 
 
 .Exercise:
-  title: 'Úloha 9.6 (dva agenti v chodbě)'
+  title: 'Úloha 9.6 (maximální řez pomocí orákula)'
   label: un-9-6
 
-  Graf je cesta $a-b-c-d-e$ a vrchol $p$ („výklenek“) spojený jen s $c$. Agent 1 jde z $a$ do $e$, agent 2 z $e$
-  do $a$. Pravidla jsou jako v definici .reference:prob-mapf: v každém kroku agent stojí, nebo přejde na souseda;
-  dva agenti nesmí stát na stejném vrcholu ani si vyměnit místa po hraně; vstoupit na vrchol, který jiný agent
-  v tomtéž kroku opouští, se smí (tak se pohybuje i blokátor v gadgetu klauzule).
+  Máte k dispozici orákulum, které pro graf $H$ s kladnými celočíselnými vahami hran a číslo $k$ v jednom kroku
+  odpoví, zda má $H$ "řez váhy alespoň $k$".notion (rozhodovací verze váženého $\prob{MaxCut}$). Je dán graf
+  $G=(V,E)$ bez vah, $n=|V|$, $m=|E|$.
 
   .enumerate:
     type: a
 
     .item:
 
-      Určete nejmenší makespan $\ell$ a dokažte, že menší nestačí.
+      Pomocí orákula "najděte".notion maximální řez grafu $G$, tj. rozdělení $V=A\cup B$ s největším počtem
+      přeříznutých hran.
 
     .item:
 
-      Ukažte, že bez výklenku $p$ neexistuje plán pro žádné $\ell$.
-
-    .item:
-
-      Bez výklenku, ale ve variantě se swapy (výměna po hraně povolena): jaký je nejmenší makespan?
+      Zdůvodněte správnost a odhadněte počet dotazů vzhledem k $n$ a $m$. Proč se hodí orákulum pro "vážený".emphasize
+      problém?
 
 
 .Solution:
+  label: red-un-9-6
 
-  "Pořadí na cestě.".notion Dokud oba agenti stojí na cestě $a,\dots,e$, očíslujme vrcholy $1,\dots,5$ a sledujme
-  rozdíl $\delta=\mathrm{poz}_2-\mathrm{poz}_1$. Na začátku je $\delta=4$, v cíli $\delta=-4$. Za krok se každá pozice
-  změní nejvýše o 1, takže $\delta$ nejvýše o 2. Hodnota $\delta=0$ je kolize na vrcholu. Ze kladných hodnot do
-  záporných se tedy jde jen skokem z $\delta=1$ na $\delta=-1$: agenti stojí vedle sebe a oba přejdou na místo toho
-  druhého – to je výměna po hraně, zakázaná.
-
-
-  "b)".notion Bez výklenku stojí agenti stále na cestě a podle pozorování se nikdy nevymění. Plán neexistuje pro
-  žádné $\ell$: agenti si v chodbě navzájem blokují cestu.
+  "Redukce s orákulem:".notion $\prob{MaxCut}$ – nalezení maximálního řezu $\to$ vážený $\prob{MaxCut}$ – rozhodovací
+  verze. Jak: binárním vyhledáváním zjistíme velikost $k^*$ maximálního řezu, pak vrcholy po jednom zkoušíme sloučit
+  s pevným vrcholem $v_1$ a orákulem hlídáme, že maximum zůstalo $k^*$.
 
 
-  "a) Dolní mez.".notion Podle pozorování musí některý agent někdy vstoupit do $p$ (jinak by se nevyměnili). Ten agent
-  ujde ze startu do $p$ aspoň $\dist(a,p)=\dist(e,p)=3$ kroků a z $p$ do cíle dalších aspoň $3$. Makespan je tedy aspoň
-  $6$, i když oba mají do cíle vzdálenost jen $4$.
+  Značení: $O(H,k)$ je odpověď orákula; graf $G$ bereme jako vážený s vahami 1. "Sloučení".emphasize vrcholu $v$
+  do vrcholu $s$: hrana $\{s,v\}$ zmizí, každá hrana $\{v,u\}$ se stane hranou $\{s,u\}$, a vzniknou-li tak dvě hrany
+  $\{s,u\}$, nahradíme je jednou hranou se součtem vah. Výsledný graf značíme $H/\{s,v\}$.
 
 
-  "Plán s makespanem 6.".notion Agent 2 uhne do výklenku, agent 1 dvakrát počká:
+  "Tvrzení.".notion Řezy grafu $H/\{s,v\}$ odpovídají vzájemně jednoznačně řezům grafu $H$, v nichž jsou $s$ a $v$ na
+  stejné straně, a mají stejnou váhu. Je-li totiž $v$ na straně $s$, je hrana $\{v,u\}$ přeříznutá, právě když je
+  přeříznutá $\{s,u\}$ – sečtení vah to přesně započítá – a hrana $\{s,v\}$ přeříznutá není.
+
+
+  "a) Algoritmus.".notion
+
+  .enumerate:
+
+    .item:
+
+      "Hodnota optima.".notion Maximální řez má velikost v intervalu $[0,m]$. Binárním vyhledáváním: dokud $lo<hi$,
+      polož $k=\lceil(lo+hi)/2\rceil$ a zeptej se $O(G,k)$; při $\ANO$ polož $lo:=k$, jinak $hi:=k-1$. Začíná se
+      $lo=0$, $hi=m$; výsledek je $k^*:=lo$.
+
+    .item:
+
+      "Slučování.".notion $H:=G$, $s:=v_1$, $A:=\{v_1\}$, $B:=\emptyset$. Pro $v=v_2,\dots,v_n$ se zeptej
+      $O(H/\{s,v\},\,k^*)$. Při $\ANO$ polož $H:=H/\{s,v\}$ a $A:=A\cup\{v\}$, při $\NE$ polož $B:=B\cup\{v\}$.
+
+    .item:
+
+      Vydej rozdělení $(A,B)$.
+
+
+  "b) Invariant.".notion Vrchol $s$ zastupuje všechny vrcholy množiny $A$. Podle tvrzení jsou řezy grafu $H$ právě
+  řezy grafu $G$, v nichž je celé $A$ na jedné straně, a mají stejnou váhu; žádný proto nemá víc než $k^*$. Navíc $H$
+  má řez váhy $k^*$: na začátku je $H=G$ a krok s odpovědí $\ANO$ to zaručí odpovědí orákula.
+
+
+  "Proč je $(A,B)$ maximální řez.".notion Podle invariantu má výsledný graf $H$ řez váhy $k^*$; $s$ je v něm na jedné
+  straně. Vezměme $v\in B$. Když jsme $v$ testovali, měl tehdejší graf $H_v$ odpověď $\NE$, tedy podle tvrzení žádný
+  jeho řez s $v$ na straně $s$ nemá váhu $k^*$. Výsledný $H$ vznikl z $H_v$ jen dalším slučováním do $s$, jeho řezy jsou
+  tedy řezy $H_v$. Kdyby byl $v$ v optimálním řezu výsledného $H$ na straně $s$, byl by to řez $H_v$ váhy $k^*$ s $v$ na
+  straně $s$ – spor. Všechny vrcholy $B$ jsou tedy na druhé straně než $s$ a optimální řez výsledného $H$ je přesně
+  $(A,B)$. Jeho váha je $k^*$, což je podle kroku 1 největší možný řez $G$.
+
+
+  "Počet dotazů.".notion Binární vyhledávání na $m+1$ hodnotách: $\lceil\log_2(m+1)\rceil$ dotazů; slučování: $n-1$
+  dotazů. Celkem $\lceil\log_2(m+1)\rceil+n-1=O(n+\log m)$. Každý dotazovaný graf má nejvýše $n$ vrcholů a $m$ hran a
+  váhy jsou nejvýše $m$, takže dotazy mají polynomiální velikost.
+
+
+  "Proč vážený problém.".notion Řešením je rozdělení "všech".emphasize vrcholů, nejde tedy jen vyškrtávat části vstupu
+  jako u $\prob{Subset Sum}$ (typová úloha .reference:typ-2-4). Částečné řešení „$v$ je na straně $v_1$“ zakódujeme
+  sloučením, a tím vzniknou rovnoběžné hrany, tedy váhy. Orákulum, které váhy umí, takové dotazy zodpoví přímo.
+  Stačilo by i orákulum bez vah: dotaz $(H,k)$ převedeme redukcí .reference:red-maxcut na $(H',\ k+2W)$, kde $W\le m$
+  je součet vah; $H'$ má nejvýše $n+2m$ vrcholů a $3m$ hran, takže dotazy zůstanou polynomiálně velké.
+
+
+  "Příklad.".notion „Domeček“ s vrcholy $a,b,c,d,e$ a hranami $ab,bc,cd,da,ea,eb$ ($m=6$), $v_1=a$.
 
   .table:
-    columns: 'lccccccc'
+    columns: 'lll'
 
     .row:
       head: true
 
-      krok
+      dotaz
 
-      0
+      odpověď
 
-      1
-
-      2
-
-      3
-
-      4
-
-      5
-
-      6
+      akce
 
     .row:
 
-      agent 1
+      $O(G,3)$, $O(G,5)$, $O(G,6)$
 
-      $a$
+      $\ANO$, $\ANO$, $\NE$
 
-      $a$
-
-      $b$
-
-      $c$
-
-      $d$
-
-      $d$
-
-      $e$
+      $k^*=5$
 
     .row:
 
-      agent 2
+      sloučit $b$: hrany $ac$, $ad$, $cd$ (váha 1), $ae$ (2)
 
-      $e$
+      $\NE$ (max. 4)
 
-      $d$
+      $b\in B$
 
-      $c$
+    .row:
 
-      $p$
+      sloučit $c$: hrany $ab$ (2), $ad$ (2), $ae$ (1), $be$ (1)
 
-      $c$
+      $\ANO$ (max. 5)
 
-      $b$
+      $c\in A$
 
-      $a$
+    .row:
 
+      sloučit $d$: hrany $ab$ (2), $ae$ (1), $be$ (1)
 
-  V žádném kroku nestojí oba na stejném vrcholu a nikdy si nevymění místa. V kroku 3 vstoupí agent 1 na $c$, které
-  agent 2 právě opouští do $p$, a v kroku 4 se agent 2 vrací na $c$, které právě opouští agent 1 – to pravidla
-  dovolují. Nejmenší makespan je "6".notion. (Skript prohledal všechny dvojice pozic: optimum je 6; kdyby se
-  na právě opouštěný vrchol vstupovat nesmělo, bylo by 8.)
+      $\NE$ (max. 3)
+
+      $d\in B$
+
+    .row:
+
+      sloučit $e$: hrany $ab$ (3), $ad$ (2)
+
+      $\ANO$ (max. 5)
+
+      $e\in A$
+
+  Výsledek $A=\{a,c,e\}$, $B=\{b,d\}$ po $3+4=7$ dotazech; přeříznuté jsou hrany $ab,bc,cd,da,eb$. (Sloučený vrchol
+  dál značíme $a$.)
 
 
   .centered:
 
     !tikz:
-      filename: 09z-ulohy-navic-05
+      filename: 09z-ulohy-navic-02
+      options: 'sideA/.style={fill=defc!30},sideB/.style={fill=intc!45}'
 
-      \foreach \n/\x in {a/0,b/1.5,c/3,d/4.5,e/6} {\node[v] (\n) at (\x,0) {$\n$};}
-      \node[v,fill=black!8] (p) at (3,-1.4) {$p$};
-      \draw[e] (a)--(b)--(c)--(d)--(e) (c)--(p);
-      \node[chZag,fill=defc!40] at (0,0.7) {1};
-      \node[chZag,fill=intc!50] at (6,0.7) {2};
-      \draw[->,thick,defc] (0.3,0.85) to[bend left=12] node[above,font=\scriptsize]{agent 1: $a\to e$} (5.7,0.85);
-      \draw[->,thick,intc,rounded corners=3pt] (5.8,-0.35) -- (3.3,-0.35) -- (3.3,-1.1);
-      \draw[->,thick,intc,rounded corners=3pt] (2.7,-1.1) -- (2.7,-0.35) -- (0.2,-0.35);
-      \node[font=\scriptsize,intc!80!black,anchor=west] at (3.5,-1.25) {agent 2 uhne do $p$ (krok 3)};
+      \begin{scope}
+        \node[v,sideA] (a) at (0,1.4) {$a$};
+        \node[v,sideB] (b) at (1.6,1.4) {$b$};
+        \node[v,sideA] (c) at (1.6,0) {$c$};
+        \node[v,sideB] (d) at (0,0) {$d$};
+        \node[v,sideA] (e) at (0.8,2.5) {$e$};
+        \draw[black!30,thick] (e)--(a);
+        \draw[rej,very thick] (a)--(b) (b)--(c) (c)--(d) (d)--(a) (e)--(b);
+        \node[font=\small] at (0.8,-0.8) {$G$: řez $\{a,c,e\}$ / $\{b,d\}$ $=5$};
+      \end{scope}
+      \draw[flow] (2.6,1.2)--(3.8,1.2);
+      \begin{scope}[xshift=5.2cm]
+        \node[v,sideA,minimum size=9mm] (s) at (0,0.9) {$a$};
+        \node[v,sideB] (b) at (2.2,1.7) {$b$};
+        \node[v,sideB] (d) at (2.2,0.1) {$d$};
+        \draw[rej,very thick] (s) -- node[wt]{3} (b);
+        \draw[rej,very thick] (s) -- node[wt]{2} (d);
+        \node[font=\scriptsize,gr] at (0,1.65) {$=\{a,c,e\}$};
+        \node[font=\small] at (1.1,-0.8) {výsledný $H$: jediný řez váhy $5$};
+      \end{scope}
+      \node[font=\scriptsize,anchor=west] at (8.4,1.3) {\tikz\node[v,sideA,minimum size=3mm]{};\ = $A$};
+      \node[font=\scriptsize,anchor=west] at (8.4,0.8) {\tikz\node[v,sideB,minimum size=3mm]{};\ = $B$};
 
 
-  Chodba s výklenkem. Agenti se mohou minout jen tak, že jeden uhne do $p$; ta zajížďka stojí dva kroky navíc.
-
-
-  "c) Se swapy.".notion Oba mají vzdálenost 4, takže $\ell\ge4$. Při $\ell=4$ nesmí žádný čekat ani uhnout a jdou po
-  jediných nejkratších cestách $a,b,c,d,e$ a $e,d,c,b,a$: v kroku 2 stojí oba na $c$ – kolize. Tedy $\ell\ge5$. Plán
-  pro $\ell=5$: agent 1 jde $a,a,b,c,d,e$, agent 2 jde $e,d,c,b,a,a$; mezi kroky 2 a 3 si vymění místa po hraně $bc$,
-  což varianta se swapy dovoluje. Nejmenší makespan je "5".notion.
-
-
-  "Poučení.".notion Vzdálenosti dávají jen dolní mez. Skutečný makespan určují místa, kde se agenti umí vyhnout. Na tom
-  stojí i redukce .reference:red-mapf: agenti s nulovou rezervou kolidují přesně na portech.
+  Vlevo nalezený maximální řez domečku, vpravo graf $H$ po sloučení $c$ a $e$ do $a$: hrany $bc$ a $eb$ se přidaly
+  k hraně $ab$ (váha 3), hrana $cd$ k hraně $ad$ (váha 2). "Všimni si:".emphasize řez $\{a,c\}$ / $\{b,d,e\}$ je také
+  maximální, ale slučování si vybere jeden z nich.
 
 
 .Subsection Těžší úlohy
@@ -833,7 +649,7 @@ celou redukci v šesti krocích a rozebrat, co musí gadget zaručit. Opírají 
   .centered:
 
     !tikz:
-      filename: 09z-ulohy-navic-06
+      filename: 09z-ulohy-navic-03
       options: 'sideA/.style={fill=defc!30},sideB/.style={fill=intc!45}'
 
       \begin{scope}
@@ -890,169 +706,118 @@ celou redukci v šesti krocích a rozebrat, co musí gadget zaručit. Opírají 
 
 
 .Exercise:
-  title: 'Úloha 9.8 (co musí umět gadget pro křížení)'
+  title: 'Úloha 9.8 (3-barvení grafů se stupněm nejvýše 4)'
   label: un-9-8
 
-  Gadget pro křížení z lemmatu .reference:lem-krizeni má 13 vrcholů: střed $o$, kosočtverec $k_1$ (nahoře), $k_2$
-  (vpravo), $k_3$ (dole), $k_4$ (vlevo), rohy $r_1,r_2,r_3,r_4$ a terminály $x$ (vlevo), $y$ (nahoře), $x'$ (vpravo),
-  $y'$ (dole). Hrany: $ok_1,ok_2,ok_3,ok_4$; kružnice $k_1k_2k_3k_4$; $yk_1$, $x'k_2$, $y'k_3$, $xk_4$; roh $r_1$ sousedí
-  s $y,x,k_1$, roh $r_2$ s $y,x',k_2$, roh $r_3$ s $x',y',k_3$ a roh $r_4$ s $x,y',k_4$ (celkem 24 hran).
+  Dokažte, že $\prob{3-Coloring}$ zůstane NP-úplný, i když má každý vrchol vstupního grafu "stupeň nejvýše 4".notion.
 
-  .enumerate:
-    type: a
 
-    .item:
-
-      Dokažte lemma úplně: v každém 3-obarvení je $x=x'$ a $y=y'$ (barvy), a každé obarvení terminálů s $x=x'$,
-      $y=y'$ (pro $x=y$ i pro $x\neq y$) jde doplnit. Kolik má gadget 3-obarvení?
-
-    .item:
-
-      K čemu redukce "$\prob{3-Coloring} \redp \prob{Planar 3-Coloring}$"#red-planar potřebuje kterou vlastnost?
-      Ukažte příkladem, že redukce by byla chybná, kdyby gadget šel doplnit jen pro $x\neq y$.
-
-    .item:
-
-      Kolik vrcholů a hran má výsledný graf $G'$, má-li $G$ $n$ vrcholů, $m$ hran a nakreslení s $c$ kříženími?
+  "Nápověda:".emphasize vrchol stupně $d$ nahraďte $d$ kopiemi, každou pro jednu jeho hranu. Stejnou barvu kopií
+  vynuťte gadgetem: hrana $\{x,y\}$ a tři vrcholy, z nichž každý sousedí s $x$ i s $y$.
 
 
 .Solution:
+  label: red-un-9-8
 
-  "a) Krok 1: kolo.".notion Barvu středu $o$ nazvěme $1$. Vrcholy $k_1,\dots,k_4$ sousedí s $o$, mají tedy barvy ze
-  zbylých dvou a kružnice $k_1k_2k_3k_4$ se jimi musí obarvit střídavě: $k_1=k_3=:a$, $k_2=k_4=:b$, kde $1,a,b$ jsou
-  tři různé barvy.
-
-
-  "Krok 2: terminály.".notion $x$ sousedí s $k_4=b$, tedy $x\in\{1,a\}$; stejně $x'$ (soused $k_2=b$) $x'\in\{1,a\}$.
-  $y$ sousedí s $k_1=a$, tedy $y\in\{1,b\}$; stejně $y'\in\{1,b\}$. Označme $X=[x=1]$, $Y=[y=1]$, $X'=[x'=1]$,
-  $Y'=[y'=1]$ (pravdivostní hodnoty).
+  "Redukce:".notion $\prob{3-Coloring} \redp \prob{3-Coloring}$ se stupni nejvýše 4, instance $G$ $\mapsto$ $G'$, kde
+  každý vrchol stupně $d\ge1$ nahradí řetěz $d$ gadgetů s $d$ kopiemi.
 
 
-  "Krok 3: rohy.".notion
+  "1. V $\NP$.".notion Je to speciální případ $\prob{3-Coloring}$: certifikát je obarvení, ověříme hrany v čase
+  $O(n+m)$ (a stupně vstupu spočítáme také v lineárním čase).
+
+
+  "Gadget.".notion Hrana $\{x,y\}$ a tři "terminály".emphasize $t_1,t_2,t_3$, každý spojený s $x$ i s $y$ (7 hran).
+  V každém 3-obarvení mají $x$ a $y$ dvě různé barvy a každý terminál musí mít tu třetí:
+  "všechny tři terminály mají stejnou barvu".notion. Naopak pro libovolnou barvu $c$ terminálů lze $x,y$ obarvit zbylými dvěma barvami. Vrcholy $x,y$
+  mají v gadgetu stupeň 4, terminály stupeň 2.
+
+
+  "2. Konstrukce.".notion Vrchol $v$ stupně $0$ ponecháme. Vrchol $v$ se sousedy $u_1,\dots,u_d$, $d\ge1$, nahradíme
+  vrcholy
 
   .itemize:
 
     .item:
 
-      $r_1$ sousedí s $k_1=a$, tedy $r_1\in\{1,b\}$, a nesmí mít barvu $x$ ani $y$. Barva chybí, právě když $x=1$ a
-      $y=b$. Proto platí $X\Rightarrow Y$.
+      $e_{v,1},\dots,e_{v,d}$ – kopie $v$; kopie $e_{v,i}$ „patří“ hraně $\{v,u_i\}$,
 
     .item:
 
-      $r_2$ sousedí s $k_2=b$, tedy $r_2\in\{1,a\}\setminus\{y,x'\}$. Barva chybí, právě když $y=1$ a $x'=a$:
-      $Y\Rightarrow X'$.
+      $s_{v,1},\dots,s_{v,d+1}$ – spojky řetězu,
 
     .item:
 
-      $r_3$ sousedí s $k_3=a$, tedy $r_3\in\{1,b\}\setminus\{x',y'\}$. Barva chybí, právě když $x'=1$ a $y'=b$:
-      $X'\Rightarrow Y'$.
+      $x_{v,i},y_{v,i}$ pro $i=1,\dots,d$ – gadget $i$ s terminály $s_{v,i}$, $e_{v,i}$, $s_{v,i+1}$.
 
-    .item:
-
-      $r_4$ sousedí s $k_4=b$, tedy $r_4\in\{1,a\}\setminus\{x,y'\}$. Barva chybí, právě když $y'=1$ a $x=a$:
-      $Y'\Rightarrow X$.
-
-  Implikace tvoří kruh $X\Rightarrow Y\Rightarrow X'\Rightarrow Y'\Rightarrow X$, takže $X=Y=X'=Y'$. Buď jsou všechny
-  pravdivé, a pak $x=y=x'=y'=1$; nebo všechny nepravdivé, a pak $x=x'=a$ a $y=y'=b$. V obou případech $x=x'$ a $y=y'$.
+  Za každou hranu $\{u,v\}$ grafu $G$ přidáme jednu hranu mezi kopií $v$, která patří této hraně, a kopií $u$, která
+  patří této hraně.
 
 
   .centered:
 
     !tikz:
-      filename: 09z-ulohy-navic-07
-      options: 'scale=1.05'
+      filename: 09z-ulohy-navic-04
+      options: 'x=1cm,y=1cm,term/.style={v,fill=defc!30,minimum size=6mm,font=\scriptsize},gx/.style={v,fill=intc!45,minimum size=5mm,font=\scriptsize},gy/.style={v,fill=acc!30,minimum size=5mm,font=\scriptsize}'
 
-      \foreach \n/\p/\f/\t in {o/{(0,0)}/chZo/o, k1/{(0,1.3)}/chZc/k_1, k2/{(1.3,0)}/chZp/k_2, k3/{(0,-1.3)}/chZc/k_3,
-          k4/{(-1.3,0)}/chZp/k_4, r1/{(-1.3,1.3)}/white/r_1, r2/{(1.3,1.3)}/white/r_2, r3/{(1.3,-1.3)}/white/r_3,
-          r4/{(-1.3,-1.3)}/white/r_4, y/{(0,3.0)}/white/y, x/{(-3.0,0)}/white/x, xp/{(3.0,0)}/white/x', yp/{(0,-3.0)}/white/y'}
-        {\node[v,fill=\f,font=\scriptsize] (\n) at \p {$\t$};}
-      \foreach \u/\w in {o/k1,o/k2,o/k3,o/k4,k1/k2,k2/k3,k3/k4,k4/k1,r1/y,r1/x,r1/k1,r2/y,r2/xp,r2/k2,
-          r3/xp,r3/yp,r3/k3,r4/x,r4/yp,r4/k4,y/k1,x/k4,xp/k2,yp/k3}
-        {\draw[e] (\u)--(\w);}
-      \node[font=\scriptsize,above=1pt] at (y.north) {$\{1,b\}$};
-      \node[font=\scriptsize,below=1pt] at (yp.south) {$\{1,b\}$};
-      \node[font=\scriptsize,left=1pt] at (x.west) {$\{1,a\}$};
-      \node[font=\scriptsize,right=1pt] at (xp.east) {$\{1,a\}$};
-      \begin{scope}[xshift=7.6cm]
-        \node[blokd] (X) at (0,1.2) {$X$};
-        \node[blokd] (Y) at (2.4,1.2) {$Y$};
-        \node[blokd] (Xp) at (2.4,-1.2) {$X'$};
-        \node[blokd] (Yp) at (0,-1.2) {$Y'$};
-        \draw[flow] (X)--node[above,font=\scriptsize]{$r_1$}(Y);
-        \draw[flow] (Y)--node[right,font=\scriptsize]{$r_2$}(Xp);
-        \draw[flow] (Xp)--node[below,font=\scriptsize]{$r_3$}(Yp);
-        \draw[flow] (Yp)--node[left,font=\scriptsize]{$r_4$}(X);
-        \node[font=\scriptsize,align=center] at (1.2,-2.4) {$X=[x=1]$, $Y=[y=1]$,\\ $X'=[x'=1]$, $Y'=[y'=1]$};
-        \node[font=\scriptsize,align=left,anchor=west] at (-0.6,2.6) {\tikz\node[v,fill=chZo,minimum size=3mm]{};\ $1$
-          \quad \tikz\node[v,fill=chZc,minimum size=3mm]{};\ $a$ \quad \tikz\node[v,fill=chZp,minimum size=3mm]{};\ $b$};
-      \end{scope}
+      \foreach \i in {1,2,3} {
+        \pgfmathsetmacro{\cx}{3*\i-1.5}
+        \node[gx] (x\i) at (\cx-0.5,1.0) {$x_\i$};
+        \node[gy] (y\i) at (\cx+0.5,1.0) {$y_\i$};
+        \node[term] (e\i) at (\cx,-0.9) {$e_\i$};
+      }
+      \foreach \j in {1,2,3,4} {\node[term] (s\j) at (3*\j-3,0) {$s_\j$};}
+      \foreach \i/\j in {1/2,2/3,3/4} {
+        \draw[e] (x\i)--(y\i);
+        \draw[e] (s\i)--(x\i) (s\i)--(y\i) (s\j)--(x\i) (s\j)--(y\i) (e\i)--(x\i) (e\i)--(y\i);
+      }
+      \foreach \i in {1,2,3} {
+        \pgfmathsetmacro{\cx}{3*\i-1.5}
+        \node[v,minimum size=5mm,font=\scriptsize,dashed] (u\i) at (\cx,-2.3) {};
+        \draw[e,dashed] (e\i)--(u\i);
+        \node[font=\scriptsize,anchor=west] at (\cx+0.3,-2.3) {kopie $u_\i$};
+      }
+      \node[font=\small,anchor=west] at (9.6,0.9) {gadget $i$: $x_i y_i$ + terminály};
+      \node[font=\small,anchor=west] at (9.6,0.4) {$s_i$, $e_i$, $s_{i+1}$};
+      \node[font=\small,anchor=west] at (9.6,-0.4) {\tikz\node[v,fill=defc!30,minimum size=3mm]{};\ barva $v$};
 
 
-  Vlevo gadget s vynucenými barvami kola a možnými barvami terminálů. Vpravo kruh implikací: každý roh dá jednu
-  implikaci, dohromady vynutí $X=Y=X'=Y'$.
+  Vrchol $v$ stupně 3 se sousedy $u_1,u_2,u_3$ (indexy $v$ vynecháváme). Terminály (modře) mají v každém 3-obarvení
+  stejnou barvu, $x_i$ a $y_i$ zbylé dvě. Stupně: $x_i,y_i$ mají 4, vnitřní spojky $s_2,s_3$ mají 4 (dva gadgety),
+  krajní spojky 2 a kopie $e_i$ mají $2+1=3$.
 
 
-  "Krok 4: doplnění.".notion Nechť jsou dány barvy terminálů s $x=x'$ a $y=y'$.
-
-  .itemize:
-
-    .item:
-
-      $x=y$: středu dáme barvu $x$ (tedy $1:=x$), $a,b$ jsou zbylé dvě barvy v libovolném pořadí. Rohy jsou vynucené:
-      $r_1=b$, $r_2=a$, $r_3=b$, $r_4=a$ (roh $r_1$ sousedí s $1,1,a$, roh $r_2$ s $1,1,b$ atd.). Všechny hrany jsou
-      v pořádku.
-
-    .item:
-
-      $x\neq y$: položíme $a:=x$, $b:=y$ a středu dáme třetí barvu $1$. Každý roh sousedí s jedním $a$ a jedním $b$
-      (např. $r_1$ s $x=a$, $y=b$, $k_1=a$), dostane tedy barvu $1$. Rohy spolu ani se středem nesousedí.
-
-  "Počet.".notion Pro $x=y$: 3 volby barvy $x$ a 2 pořadí $a,b$, zbytek vynucený – 6 obarvení. Pro $x\neq y$: 6 uspořádaných
-  dvojic barev, zbytek vynucený – 6 obarvení. Celkem "12".notion, tj. až na permutaci barev ($3!=6$) právě dvě obarvení
-  z obr. .reference:fig-krizeni. (Výčet všech $3^{13}$ obarvení skriptem dal také 12 a potvrdil kruh implikací.)
+  "Stupně.".notion $x_{v,i},y_{v,i}$: 4; spojka $s_{v,i}$ leží v nejvýše dvou gadgetech: nejvýše 4; kopie $e_{v,i}$ leží
+  v jednom gadgetu a má jednu hranu ven: 3; izolovaný vrchol: 0. Graf $G'$ má tedy všechny stupně nejvýše 4.
 
 
-  "b) Role vlastností.".notion Na hraně $uv$, která kříží jiné hrany, je $u$ terminál $x$ prvního gadgetu a $v$ je
-  spojen hranou s terminálem $x'$ posledního.
-
-  .itemize:
-
-    .item:
-
-      "Vynucení $x=x'$, $y=y'$".notion potřebuje směr ($\Leftarrow$): z 3-obarvení $G'$ čteme obarvení $G$. Barva $u$ se
-      po řetězu přenese do $x'$ posledního gadgetu, a hrana $x'v$ tak vynutí $\mathrm{barva}(u)\neq\mathrm{barva}(v)$.
-      Bez vynucení by se podmínka hrany $uv$ ztratila a $G'$ by mohl být obarvitelný, i když $G$ není.
-
-    .item:
-
-      "Doplnitelnost pro všechna taková obarvení terminálů".notion potřebuje směr ($\Rightarrow$): z 3-obarvení $G$
-      stavíme obarvení $G'$. Terminály $x$ a $y$ jednoho gadgetu leží na dvou "různých".emphasize hranách $uv$ a $wz$,
-      jejichž konce spolu v $G$ nemusí nijak souviset – v obarvení $G$ může být $u=w$ i $u\neq w$ a gadget musí jít
-      doplnit v obou případech.
-
-    .item:
-
-      "Rovinnost a pořadí terminálů $x,y,x',y'$ na vnější stěně".notion zaručí, že gadget lze vložit místo bodu křížení
-      tak, aby čtyři kusy hran přicházely zleva, shora, zprava a zdola bez nového křížení – $G'$ je rovinný.
-
-  "Protipříklad.".notion Kdyby gadget šel doplnit jen pro $x\neq y$, přidal by každý gadget navíc podmínku
-  $\mathrm{barva}(u)\neq\mathrm{barva}(w)$. Vezměme $G$ s vrcholy $u,v,w,z,p,q$ a hranami $pq$, $up$, $uq$, $wp$, $wq$,
-  $uv$, $wz$, nakreslený tak, že se $uv$ a $wz$ kříží. $G$ je 3-obarvitelný ($p,q$ dostanou dvě barvy, $u$ i $w$ třetí,
-  $v,z$ cokoli jiného), ale v každém jeho 3-obarvení je $\mathrm{barva}(u)=\mathrm{barva}(w)$ – oba se liší od $p$ i
-  $q$. Takový $G'$ by 3-obarvitelný nebyl: redukce by zobrazila $\ANO$-instanci na $\NE$-instanci. (Skript: $G$ má 24
-  3-obarvení, ve všech je $u=w$.)
+  "3. Polynomialita.".notion Vrchol stupně $d\ge1$ dá $d+(d+1)+2d=4d+1$ vrcholů a $7d$ hran, k tomu jedna hrana za
+  každou hranu $G$. Protože $\sum_v d_v=2m$, má $G'$ nejvýše $8m+n$ vrcholů a přesně $14m+m=15m$ hran; sestrojíme ho
+  v čase $O(n+m)$.
 
 
-  "c) Velikost $G'$.".notion Každé křížení přinese gadget s 9 vnitřními vrcholy ($o$, $k_1,\dots,k_4$, $r_1,\dots,r_4$) a
-  4 terminály. Na každé z obou křížících se hran je jeden terminál „bližší“ – původní vrchol nebo vzdálený terminál
-  předchozího gadgetu v řetězu – a jeden „vzdálený“, nový. Nové vrcholy jsou tedy $9+2=11$ na křížení. Každá křížená
-  hrana zmizí a místo ní přibude jedna hrana od vzdáleného terminálu posledního gadgetu k druhému konci; k tomu 24 hran
-  každého gadgetu. Proto
+  "4. ($\Rightarrow$)".notion Nechť $c$ je 3-obarvení $G$. Všem kopiím a spojkám vrcholu $v$ dáme barvu $c(v)$ a
+  v každém jeho gadgetu dostanou $x_{v,i},y_{v,i}$ zbylé dvě barvy. Hrany gadgetů jsou v pořádku (terminál má jinou
+  barvu než $x$ i $y$, ty se liší navzájem). Hrana mezi kopií $u$ a kopií $v$ spojuje barvy $c(u)\neq c(v)$, protože
+  $\{u,v\}\in E$. Je to 3-obarvení $G'$.
 
-  .equation:
 
-    |V(G')|=n+11c,\qquad |E(G')|=m+24c.
+  "5. ($\Leftarrow$)".notion Nechť $c'$ je 3-obarvení $G'$. V gadgetu $i$ vrcholu $v$ mají terminály $s_{v,i}$, $e_{v,i}$,
+  $s_{v,i+1}$ stejnou barvu. Sousední gadgety sdílejí spojku, takže barva se přenese po celém řetězu: všechny kopie a
+  spojky vrcholu $v$ mají jednu barvu, označme ji $c(v)$ (izolovaný vrchol si barvu nechá). Pro hranu $\{u,v\}\in E$
+  vede v $G'$ hrana mezi kopií $u$ a kopií $v$, takže $c(u)\neq c(v)$. Funkce $c$ je 3-obarvení $G$.
 
-  Pro obr. .reference:fig-krizeni-retez ($n=6$, $m=3$, $c=2$) vyjde $28$ vrcholů a $51$ hran (ověřeno sestrojením
-  grafu). Dvě hrany se v nakreslení úsečkami kříží nejvýše jednou, takže $c\le\binom m2\le m^2$ a $G'$ má polynomiální
-  velikost.
+
+  "6. Závěr.".notion $\prob{3-Coloring}$ je NP-úplný (věta .reference:thm-3sat3col), tedy je NP-úplný i na grafech se
+  stupni nejvýše 4.
+
+
+  "Proč ne obyčejný řetěz.".notion Přirozený pokus je spojit kopie $e_1,e_2,\dots$ za sebou „kosočtverci“ (hrana $xy$
+  a dva konce spojené s oběma): to také vynutí stejné barvy, ale vnitřní kopie by pak měla $2+2$ hrany v kosočtvercích
+  a $1$ hranu ven, tedy stupeň 5. Třetí terminál v gadgetu odděluje „kopie s hranou ven“ ($e_i$, stupeň 3) od „článků
+  řetězu“ ($s_i$, stupeň 4).
+
+
+  "Poznámka".notion "(nad rámec přednášky)".emphasize. Pro stupeň nejvýše 3 už 3-barvení těžké není: podle Brooksovy
+  věty je souvislý graf s maximálním stupněm 3 obarvitelný třemi barvami, kromě $K_4$. Stačí tedy hledat komponentu
+  $K_4$. Hranice mezi $\PP$ a NP-úplností leží mezi stupněm 3 a 4.

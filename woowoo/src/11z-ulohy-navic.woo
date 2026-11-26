@@ -2,24 +2,25 @@
   label: ch-cisla-ulohy-navic
 
 
-Úlohy procvičují látku celé kapitoly: hamiltonovské cesty a kružnice (oddíl .reference:ch-cisla-hamiltonovska-cesta),
-tři modelovací vzory ILP (oddíl .reference:ch-cisla-ilp) a hlavně číselné problémy – dynamické programování, redukce
-s „vyrovnávacím“ číslem, unární a binární zápis a rozdíl mezi slabou a silnou NP-úplností (oddíly
-.reference:ch-cisla-ciselne-problemy a .reference:sec-podezrele). Pododdíl .reference:ch-cisla-ulohy-navic-sbirka
-přidává osm úloh ze sbírky jiného předmětu: self-redukci hamiltonovské kružnice, redukce mezi hamiltonovskými
-problémy a důkazy NP-úplnosti $\prob{TSP}$, 0/1 celočíselného programování, batohu, rozvrhování a kostry
-s omezeným stupněm.
+Úlohy jsou ve stylu testu a cvičení .reference:sec-cv5 a pokrývají látku celé kapitoly: důkazy NP-úplnosti
+číselných a grafových problémů (typ 4 testu, oddíly .reference:ch-cisla-hamiltonovska-cesta a
+.reference:ch-cisla-ciselne-problemy), self-redukci s orákulem pro $\prob{Partition}$ (typ 2), model ILP (typ 3,
+oddíl .reference:ch-cisla-ilp) a dynamické programování jako na cvičení. Úloha 11.8 navíc procvičuje rozdíl mezi
+slabou a silnou NP-úplností. Pododdíl .reference:ch-cisla-ulohy-navic-sbirka přidává osm úloh ze sbírky jiného
+předmětu: self-redukci hamiltonovské kružnice, redukce mezi hamiltonovskými problémy a důkazy NP-úplnosti
+$\prob{TSP}$, 0/1 celočíselného programování, batohu, rozvrhování a kostry s omezeným stupněm.
 
 
 .Warning:
   title: 'Neoficiální úlohy'
 
   Úlohy v tomto oddílu "nejsou".notion oficiální zadání předmětu. Jsou to procvičovací úlohy navíc k látce kapitoly;
-  všechny tabulky, počty a protipříklady jsou spočítané programem a každá redukce i každý algoritmus byly ověřeny
-  hrubou silou na všech malých instancích (u hamiltonovských problémů na všech grafech s nejvýše 6 vrcholy),
-  doplněných o tisíce náhodných instancí. Úlohy 11.9–11.16 ze sbírky jsou ověřené stejně: hamiltonovské redukce,
-  self-redukce a kostry na všech grafech s nejvýše 5 vrcholy a stovkách náhodných grafů s 6–7 vrcholy, číselné
-  redukce a model $\prob{0-1 ILP}$ na tisících náhodných malých instancí, vždy s odpověďmi $\ANO$ i $\NE$.
+  všechny tabulky, počty a příklady jsou spočítané programem a každá redukce, self-redukce, model ILP i algoritmus byly
+  ověřeny hrubou silou na malých instancích (u hamiltonovských problémů na všech grafech s nejvýše 6 vrcholy,
+  u číselných problémů na tisících náhodných instancí, model ILP z úlohy 11.2 řešičem proti hrubé síle), vždy
+  s odpověďmi $\ANO$ i $\NE$. Úlohy 11.9–11.16 ze sbírky jsou ověřené stejně: hamiltonovské redukce, self-redukce
+  a kostry na všech grafech s nejvýše 5 vrcholy a stovkách náhodných grafů s 6–7 vrcholy, číselné redukce a model
+  $\prob{0-1 ILP}$ na tisících náhodných malých instancí.
 
 
 .Procedure:
@@ -58,26 +59,27 @@ s omezeným stupněm.
       (.reference:red-ilpsat), jedna z možností (.reference:red-ilpcol).
 
 
-  "Kuchařka – NP-úplnost číselného problému (úlohy 11.4, 11.5, 11.13–11.15).".notion
+  "Kuchařka – NP-úplnost číselného problému (úlohy 11.4, 11.5, 11.7 c), 11.8, 11.13–11.15).".notion
   Postup .reference:ch-test-postup-np a oddíl .reference:ch-cisla-jak-poznat-podezrelou-redukci.
 
   .enumerate:
 
     .item:
 
-      $Q\in\NP$ a zdroj $\prob{Subset Sum}$ nebo $\prob{Partition}$.
+      $Q\in\NP$ a zdroj $\prob{Subset Sum}$ nebo $\prob{Partition}$; pro silnou NP-těžkost $\prob{3-Partition}$.
 
     .item:
 
-      Přidej jedno nebo dvě „vyrovnávací“ čísla spočítaná ze součtu $S$ a cíle $T$.
+      Přidej jedno nebo dvě „vyrovnávací“ čísla (úlohy, předměty) spočítaná ze součtu $S$ a cíle $T$.
 
     .item:
 
-      Čísla zůstávají binárně; velikost výstupu je polynomiální v počtu "bitů".emphasize vstupu.
+      Čísla zůstávají binárně; velikost výstupu je polynomiální v počtu "bitů".emphasize vstupu. Silnou NP-těžkost
+      dokazuje jen redukce, která čísla zvětší nejvýše polynomiálně vzhledem k jejich hodnotě.
 
     .item:
 
-      Obě implikace: rozeber, do které skupiny padne vyrovnávací číslo.
+      Obě implikace: rozeber, kam padne vyrovnávací číslo, a využij, že součet nenechá žádnou rezervu.
 
 
   "Kuchařka – NP-úplnost grafového problému (úlohy 11.3, 11.10, 11.11, 11.16).".notion
@@ -98,23 +100,32 @@ s omezeným stupněm.
       Obě implikace; u ($\Leftarrow$) ukaž, že přidané vrcholy nedovolí „podvádět“.
 
 
-  "Kuchařka – self-redukce, DP a ILP (úlohy 11.1, 11.2, 11.7, 11.9, 11.12).".notion
+  "Kuchařka – self-redukce (úlohy 11.6, 11.9).".notion Postup .reference:ch-test-postup-self-redukce.
 
   .enumerate:
 
     .item:
 
-      Self-redukce (postup .reference:ch-test-postup-self-redukce): smaž hranu; má-li graf dál hamiltonovskou
-      kružnici, nech ji smazanou, jinak ji vrať.
+      Část řešení zakóduj do instance: smaž hranu (kružnice), nebo slouč dvě čísla do jednoho (budou ve stejné
+      skupině). Orákulem hlídej, že řešení dál existuje.
+
+    .item:
+
+      Invariant, proč výstup je řešení, a počet i velikost dotazů.
+
+
+  "Kuchařka – ILP a dynamické programování (úlohy 11.1, 11.2, 11.7, 11.12).".notion
+
+  .enumerate:
+
+    .item:
+
+      ILP (postup .reference:ch-test-postup-ilp-sat): proměnné s významem, omezení po skupinách s tím, co
+      zajišťují, účelová funkce, obě strany korespondence a velikost modelu.
 
     .item:
 
       DP: tabulka podle prefixu čísel a dosažitelného součtu (u více skupin součtů víc); řešení zpětným průchodem.
-
-    .item:
-
-      ILP (postup .reference:ch-test-postup-ilp-sat): proměnné s významem, omezení po skupinách, obě strany
-      korespondence.
 
 
 .Subsection Rozcvička
@@ -246,121 +257,109 @@ s omezeným stupněm.
 
 
 .Exercise:
-  title: 'Úloha 11.2 (tři modelovací vzory ILP)'
+  title: 'Úloha 11.2 (balíky do dodávek jako ILP)'
   label: un-11-2
 
-  Graf $G$ („býk“) má vrcholy $1,\dots,5$ a hrany $\{1,2\},\{1,3\},\{2,3\},\{2,4\},\{3,5\}$.
-
-
-  .centered:
-
-    !tikz:
-      filename: 11z-ulohy-navic-02
-      options: 'x=1cm,y=1cm'
-
-      \node[v] (1) at (0,1.2) {1}; \node[v] (2) at (-0.9,0) {2}; \node[v] (3) at (0.9,0) {3};
-      \node[v] (4) at (-2.1,-0.7) {4}; \node[v] (5) at (2.1,-0.7) {5};
-      \draw[e] (1)--(2) (1)--(3) (2)--(3) (2)--(4) (3)--(5);
-
-
-  Graf $G$: trojúhelník $1,2,3$ s „rohy“ $4$ a $5$.
+  Přepravní firma má $n$ balíků s kladnými hmotnostmi $s_1,\dots,s_n\in\N$ a dostatek stejných dodávek
+  s nosností $C\in\N$. Každý balík pojede "právě jednou".notion dodávkou a náklad žádné dodávky nesmí přesáhnout $C$.
 
   .enumerate:
     type: a
 
     .item:
 
-      Napište binární ILP, které je přípustné, právě když má $G$ nezávislou množinu velikosti alespoň 3. Najděte
-      všechna jeho přípustná řešení.
+      Formulujte jako celočíselný lineární program úlohu "minimalizovat počet použitých dodávek".notion. Uveďte
+      proměnné a jejich význam, omezení (u každé skupiny, co zajišťuje), účelovou funkci a velikost programu.
 
     .item:
 
-      Napište ILP pro formuli
-      $\Phi=(\lnot y_1\lor\lnot y_2\lor y_3)\land(y_1\lor\lnot y_3)\land(y_2\lor y_3)\land(\lnot y_1\lor y_2)$
-      a najděte všechna jeho řešení.
+      Navíc je dána množina $K$ "konfliktních dvojic".notion balíků $\{i,k\}$, které nesmí jet stejnou dodávkou.
+      Upravte model.
 
     .item:
 
-      Napište ILP, které je přípustné, právě když je $G$ 3-obarvitelný. Kolik má proměnných a omezení a kolik
-      přípustných řešení? Napište totéž pro dvě barvy a dokažte přímo z nerovnic, že přípustné není.
+      Ověřte model na balících $4,4,3,3,2$ a $C=8$, bez konfliktů a s konfliktem mezi oběma balíky o hmotnosti 4.
 
 
 .Solution:
 
-  "a) Výběr podmnožiny.".notion Stejný vzor jako u "$\prob{Vertex Cover}\redp\prob{ILP}$"#red-ilpvc, jen
-  s obrácenými nerovnicemi: $x_v=1$ znamená „$v$ je v množině“, hranová nerovnice říká, že vybrán je nejvýš jeden
-  konec hrany.
-
-  .gather:
-
-    x_1+x_2\le1,\quad x_1+x_3\le1,\quad x_2+x_3\le1,\quad x_2+x_4\le1,\quad x_3+x_5\le1,\\
-    x_1+x_2+x_3+x_4+x_5\ge3,\qquad x_v\in\{0,1\}.
-
-  Pět proměnných a šest omezení. Přípustná řešení: sečtením tří nerovnic trojúhelníku dostaneme
-  $2(x_1+x_2+x_3)\le3$, a protože jde o celá čísla, $x_1+x_2+x_3\le1$. Aby byl celkový součet aspoň 3, musí být
-  $x_4=x_5=1$ a $x_1+x_2+x_3=1$. Z $x_2+x_4\le1$ plyne $x_2=0$, z $x_3+x_5\le1$ plyne $x_3=0$, tedy $x_1=1$.
-  Jediné přípustné řešení je $x=(1,0,0,1,1)$, tj. nezávislá množina $\{1,4,5\}$ (a jiná velikosti 3 v $G$ není).
+  "Pozorování.".notion Stačí $n$ dodávek: je-li $s_i\le C$ pro všechna $i$, pojede každý balík zvlášť. Dodávky proto
+  očíslujeme $j=1,\dots,n$. (Má-li některý balík $s_i>C$, úloha řešení nemá a model níže je nepřípustný, jak má být.)
 
 
-  "b) Logika.".notion Stejně jako v "$\prob{3-SAT}\redp\prob{ILP}$"#red-ilpsat: $y_i\in\{0,1\}$, literál
-  $\lnot y_i$ je $1-y_i$, klauzule je „součet literálů $\ge1$“:
+  "a) Proměnné.".notion
 
-  .align:
+  .itemize:
 
-    (\lnot y_1\lor\lnot y_2\lor y_3)&:\ (1-y_1)+(1-y_2)+y_3\ge1 &&\iff -y_1-y_2+y_3\ge-1,\\
-    (y_1\lor\lnot y_3)&:\ y_1+(1-y_3)\ge1 &&\iff y_1-y_3\ge0,\\
-    (y_2\lor y_3)&:\ y_2+y_3\ge1,\\
-    (\lnot y_1\lor y_2)&:\ (1-y_1)+y_2\ge1 &&\iff y_2-y_1\ge0.
+    .item:
 
-  Řešení: z 2. a 4. nerovnice $y_3\le y_1\le y_2$. Pro $y_1=0$ je $y_3=0$ a ze 3. nerovnice $y_2=1$; první platí
-  ($-1\ge-1$). Pro $y_1=1$ je $y_2=1$ a první nerovnice dá $-2+y_3\ge-1$, tedy $y_3=1$. ILP má právě dvě řešení
-  $(y_1,y_2,y_3)=(0,1,0)$ a $(1,1,1)$ – to jsou přesně dvě splňující ohodnocení $\Phi$.
+      $x_{i,j}\in\{0,1\}$ pro balík $i$ a dodávku $j$: $x_{i,j}=1$, právě když balík $i$ jede dodávkou $j$;
+
+    .item:
+
+      $y_j\in\{0,1\}$ pro dodávku $j$: $y_j=1$, právě když se dodávka $j$ použije.
 
 
-  "c) Více možností.".notion Jako v "$\prob{3-Coloring}\redp\prob{ILP}$"#red-ilpcol: $x_{v,c}\in\{0,1\}$ pro
-  $v\in\{1,\dots,5\}$, $c\in\{R,G,B\}$,
+  "Omezení.".notion
+
+  .enumerate:
+
+    .item:
+
+      "Každý balík jede právě jednou dodávkou:".notion $\displaystyle\sum_{j=1}^{n}x_{i,j}=1$ pro každé $i$ (vzor
+      „jedna z možností“ jako u barvení, redukce .reference:red-ilpcol).
+
+    .item:
+
+      "Nosnost, a jen použité dodávky:".notion $\displaystyle\sum_{i=1}^{n}s_i\,x_{i,j}\le C\,y_j$ pro každé $j$. Pro
+      $y_j=1$ je to nosnost, pro $y_j=0$ musí být levá strana $0$, takže nepoužitá dodávka nic neveze (hmotnosti jsou
+      kladné).
+
+
+  "Účelová funkce:".notion $\min\ \sum_{j=1}^{n}y_j$.
+
+
+  "Správnost.".notion ($\Rightarrow$) Rozdělení balíků do $d$ dodávek, které nepřetíží žádnou, dá přípustné řešení
+  s hodnotou $d$: dodávky očíslujeme $1,\dots,d$, položíme $x_{i,j}=1$ podle rozdělení a $y_j=1$ právě pro $j\le d$.
+  ($\Leftarrow$) Z přípustného řešení přečteme rozdělení: balík $i$ jede tou dodávkou $j$, kde $x_{i,j}=1$ (právě jedna
+  podle omezení 1); podle omezení 2 jezdí jen dodávky s $y_j=1$ a nejsou přetížené. Použitých dodávek je nejvýše
+  $\sum_j y_j$, minimalizace pak stlačí $\sum_j y_j$ přesně na jejich počet. Optima se tedy shodují.
+
+
+  "Velikost.".notion $n^2+n$ proměnných a $n+n=2n$ omezení (bez podmínek oboru $\{0,1\}$).
+
+
+  "Volitelné zlepšení.".notion Dodávky jsou zaměnitelné, takže každé řešení má mnoho kopií lišících se jen očíslováním.
+  Omezení $y_j\ge y_{j+1}$ ($j=1,\dots,n-1$) optimum nezmění (použité dodávky lze přečíslovat na $1,\dots,d$) a řešiči
+  ušetří práci; není ale nutné.
+
+
+  "b) Konflikty.".notion Pro každou dvojici $\{i,k\}\in K$ a každou dodávku $j$ přidáme
 
   .equation:
 
-    x_{v,R}+x_{v,G}+x_{v,B}=1\ \ (v=1,\dots,5),\qquad x_{u,c}+x_{v,c}\le1\ \ (\{u,v\}\in E,\ c\in\{R,G,B\}).
+    x_{i,j}+x_{k,j}\le 1 .
 
-  To je $5\cdot3=15$ proměnných a $5+5\cdot3=20$ omezení. Přípustná řešení odpovídají vzájemně jednoznačně
-  obarvením ($x_{v,c}=1$ $\iff$ $v$ má barvu $c$): trojúhelník $1,2,3$ obarvíme $3!=6$ způsoby, vrchol 4 má dvě
-  barvy různé od barvy vrcholu 2, vrchol 5 dvě barvy různé od barvy 3 – celkem $6\cdot2\cdot2=24$ řešení.
-
-
-  Pro barvy $\{R,G\}$: 10 proměnných, rovnice $x_{v,R}+x_{v,G}=1$ a nerovnice $x_{u,c}+x_{v,c}\le1$ pro
-  $c\in\{R,G\}$ (celkem $5+10=15$ omezení). Pro pevnou barvu $c$ sečteme tři nerovnice trojúhelníku:
-  $2(x_{1,c}+x_{2,c}+x_{3,c})\le3$, tedy (celá čísla) $x_{1,c}+x_{2,c}+x_{3,c}\le1$. Sečtením přes $c\in\{R,G\}$
-  vyjde $\sum_{v=1}^{3}(x_{v,R}+x_{v,G})\le2$, ale z rovnic je tento součet roven 3. Spor – ILP přípustné není a $G$
-  není 2-obarvitelný (obsahuje trojúhelník).
+  Nejvýše jeden z balíků $i,k$ tedy jede dodávkou $j$ – stejná nerovnice jako „konce hrany nemají stejnou barvu“
+  v redukci .reference:red-ilpcol. Přibude $|K|\cdot n$ omezení; korespondence z a) platí beze změny, jen přípustná
+  rozdělení jsou navíc ta bez konfliktních dvojic ve stejné dodávce.
 
 
-  .centered:
-
-    !tikz:
-      filename: 11z-ulohy-navic-03
-      options: 'x=1cm,y=1cm'
-
-      \node[v] (1) at (0,1.2) {1}; \node[v] (2) at (-0.9,0) {2}; \node[v] (3) at (0.9,0) {3};
-      \node[v] (4) at (-2.1,-0.7) {4}; \node[v] (5) at (2.1,-0.7) {5};
-      \draw[e] (1)--(2) (1)--(3) (2)--(3) (2)--(4) (3)--(5);
-      \node[vsel] at (1) {1}; \node[vsel] at (4) {4}; \node[vsel] at (5) {5};
-      \node[font=\scriptsize,align=center] at (0,-1.4) {a) $x=(1,0,0,1,1)$:\\ nezávislá množina $\{1,4,5\}$};
-      \begin{scope}[xshift=6.2cm]
-        \node[v,fill=tF!35] (1) at (0,1.2) {1}; \node[v,fill=tT!35] (2) at (-0.9,0) {2}; \node[v,fill=tB!35] (3) at (0.9,0) {3};
-        \node[v,fill=tF!35] (4) at (-2.1,-0.7) {4}; \node[v,fill=tF!35] (5) at (2.1,-0.7) {5};
-        \draw[e] (1)--(2) (1)--(3) (2)--(3) (2)--(4) (3)--(5);
-        \node[font=\scriptsize,tF!80!black] at (0.45,1.55) {$R$}; \node[font=\scriptsize,tT!70!black] at (-1.3,0.3) {$G$};
-        \node[font=\scriptsize,tB!80!black] at (1.3,0.3) {$B$}; \node[font=\scriptsize,tF!80!black] at (-2.1,-1.15) {$R$};
-        \node[font=\scriptsize,tF!80!black] at (2.1,-1.15) {$R$};
-        \node[font=\scriptsize,align=center] at (0,-1.4) {c) jedno z 24 řešení:\\ $x_{1,R}=x_{2,G}=x_{3,B}=x_{4,R}=x_{5,R}=1$};
-      \end{scope}
+  "c) Příklad.".notion Celková hmotnost je $16=2\cdot8$, takže jsou potřeba aspoň dvě dodávky. Bez konfliktů stačí:
+  $\{4,4\}$ a $\{3,3,2\}$, optimum $2$ (např. $x_{1,1}=x_{2,1}=1$, $x_{3,2}=x_{4,2}=x_{5,2}=1$, $y_1=y_2=1$). S konfliktem
+  mezi balíky 1 a 2 by při dvou dodávkách musely být obě plné (součet $16$), a dodávka s balíkem 1 by potřebovala
+  doplnit $4$ z balíků $3,3,2$ – to nejde. Optimum je $3$, např. $\{4,3\}$, $\{4,3\}$, $\{2\}$. (Obě optima jsme
+  ověřili řešičem ILP na modelu i hrubou silou přes všechna rozdělení.)
 
 
-  Vlevo jediné řešení ILP z části a), vpravo jedno přípustné řešení ILP z části c). "Všimni si:".emphasize
-  v obou důkazech nepřípustnosti (a) jiné množiny, c) dvě barvy) je klíčový krok „$2s\le3$, tedy $s\le1$“ – ten
-  platí jen pro celá čísla. Pro reálné $x$ by šlo $x_{1,c}=x_{2,c}=x_{3,c}=\tfrac12$.
+  "Poznámka.".notion Rozhodovací verze této úlohy je $\prob{Bin Packing}$ (problém .reference:prob-binpacking), který je
+  silně NP-úplný (redukce .reference:red-binpacking). Polynomiální algoritmus tedy nečekáme a ILP s řešičem je rozumná
+  cesta (podrobněji kapitola .reference:ch-resice-ilp).
+
+
+  "Srovnání s ukázkovým testem.".notion Model má stejnou kostru jako úloha .reference:ut-3 (zkoušky do termínů
+  s konflikty). Liší se kapacitou (tam se počítají zkoušky v termínu, tady se sčítají hmotnosti, proto koeficienty
+  $s_i$ v omezení 2) a tím, že počet dodávek není daný – stačí jich $n$.
 
 
 .Subsection Na úrovni testu
@@ -607,68 +606,153 @@ s omezeným stupněm.
 
 
 .Exercise:
-  title: 'Úloha 11.6 (unární zápis: dvě chyby v jednom „důkazu“)'
+  title: 'Úloha 11.6 (rozdělení na poloviny pomocí orákula)'
   label: un-11-6
 
-  $\prob{Unary Subset Sum}$ je $\prob{Subset Sum}$, v němž jsou čísla $a_1,\dots,a_n$ i cíl $T$ zapsaná
-  "unárně".emphasize (číslo $a$ jako $1^a$, čísla oddělená znakem #). Student píše:
-
-
-  „(A) $\prob{Unary Subset Sum}\redp\prob{Subset Sum}$: čísla přepíšu z unárního zápisu do binárního, to zvládnu
-  v polynomiálním čase a odpověď se nezmění. Protože $\prob{Subset Sum}$ je NP-úplný, je $\prob{Unary Subset Sum}$
-  NP-těžký. (B) Pro jistotu i obráceně, $\prob{Subset Sum}\redp\prob{Unary Subset Sum}$: binární čísla přepíšu
-  unárně; ekvivalence je zřejmá, čísla se nemění.“
+  Máte k dispozici orákulum, které pro zadaná kladná celá čísla $b_1,\dots,b_r$ v jednom kroku odpoví, zda je lze
+  "rozdělit do dvou skupin se stejným součtem".notion (problém $\prob{Partition}$, definice .reference:prob-partition).
 
   .enumerate:
     type: a
 
     .item:
 
-      Najděte chybu v (A) i v (B).
+      Pomocí orákula "najděte".notion pro čísla $a_1,\dots,a_n$ rozdělení indexů na $A\cup B$ se
+      $\sum_{i\in A}a_i=\sum_{i\in B}a_i$, nebo oznamte, že neexistuje. Dokažte správnost a odhadněte počet dotazů.
 
     .item:
 
-      Rozhodněte, zda $\prob{Unary Subset Sum}\in\PP$, a odhadněte čas vůči délce vstupu.
+      Proč nefunguje postup z typové úlohy .reference:typ-2-4 (čísla po jednom vyškrtávat)?
 
     .item:
 
-      Co by plynulo, kdyby (B) byla polynomiální redukce?
-
-    .item:
-
-      Je v $\PP$ unárně zapsaný $\prob{3-Partition}$?
+      Spusťte postup na čísla $5,3,4,2,6,4$.
 
 
 .Solution:
+  label: red-un-11-6
 
-  "a) Chyba v (A): směr.".notion Redukce $A\redp B$ říká, že $A$ je "nejvýš".emphasize tak těžký jako $B$: algoritmus
-  pro $B$ dá algoritmus pro $A$. (A) je správná polynomiální redukce, dokazuje ale jen, že $\prob{Unary Subset Sum}$
-  není těžší než $\prob{Subset Sum}$ (a že je v $\NP$). Pro NP-těžkost musíme převádět známý NP-těžký problém
-  "na".emphasize nový problém, tedy $\prob{Subset Sum}\redp\prob{Unary Subset Sum}$ – a o to se pokouší (B).
-
-
-  "Chyba v (B): velikost výstupu.".notion Směr i ekvivalence jsou v pořádku, ale převod není polynomiální. Číslo s $k$
-  bity má hodnotu až $2^k-1$, unárně tedy až $2^k-1$ znaků; výstup má délku aspoň $T+\sum_i a_i$, což je vůči délce
-  vstupu v nejhorším případě exponenciální. Konkrétně pro instance z redukce "$\prob{1-in-3 SAT}\redp\prob{Subset Sum}$"#red-subsetsum: v příkladu
-  .reference:ex-ssex zabírají čísla dohromady 51 bitů, unárně $687+341=1028$ jedniček; pro formuli s $n=m=10$ má cíl
-  $T=11\ldots1_4$ jen 39 bitů, ale unárně $T\approx3{,}7\cdot10^{11}$ jedniček.
+  "Redukce s orákulem:".notion $\prob{Partition}$ – nalezení rozdělení $\to$ $\prob{Partition}$ – rozhodovací verze. Jak:
+  čísla po jednom zkoušíme sečíst s „blokem“, který obsahuje $a_1$; zůstane-li odpověď $\ANO$, budou ve stejné
+  skupině.
 
 
-  "b) $\prob{Unary Subset Sum}\in\PP$.".notion Použijeme DP z věty .reference:thm-ssdp s tabulkou $(n+1)\times(T+1)$.
-  Označme $N$ délku vstupu. Každé číslo zabírá aspoň tolik znaků, kolik je jeho hodnota, takže
-  $N\ge n+\sum_i a_i+T$, a tedy $n\le N$ i $T\le N$. Tabulka má $O(N^2)$ políček, každé v $O(1)$: čas $O(N^2)$,
-  polynomiální. Pseudopolynomiální algoritmus je pro unární vstup polynomiální (definice .reference:def-pseudopoly).
+  Značení: $O(b_1,\dots,b_r)$ je odpověď orákula. Seznam čísel, v němž je $b$ součet čísel $a_i$ s indexy v množině
+  $A$ a zbylá čísla jsou jednotlivá $a_i$, nazveme "stažená instance".emphasize.
 
 
-  "c) Důsledek.".notion Kdyby (B) byla polynomiální redukce, složením s algoritmem z b) bychom rozhodli
-  $\prob{Subset Sum}$ v polynomiálním čase, a protože je NP-úplný, platilo by $\PP=\NP$. Redukci (B) proto nelze
-  „opravit“, pokud $\PP\neq\NP$. Je to stejná situace jako u $\prob{Exact Path (DAG)}$ v oddílu .reference:sec-podezrele.
+  "Tvrzení.".notion Rozdělení stažené instance odpovídají vzájemně jednoznačně rozdělením čísel $a_1,\dots,a_n$,
+  v nichž jsou všechny indexy z $A$ ve stejné skupině (číslo $b$ je jejich součet a skupina se součtem se nemění).
 
 
-  "d) Unární $\prob{3-Partition}$.".notion Ne (pokud $\PP\neq\NP$): podle věty .reference:thm-3partsilne je
-  $\prob{3-Partition}$ "silně".emphasize NP-úplný, tedy NP-úplný i s čísly zapsanými unárně. Pseudopolynomiální
-  algoritmus pro něj neexistuje (pokud $\PP\neq\NP$) – v tom je rozdíl mezi slabě NP-úplnými
-  ($\prob{Subset Sum}$, $\prob{Partition}$, $\prob{Knapsack}$) a silně NP-úplnými problémy (definice .reference:def-silne).
+  "a) Algoritmus.".notion
+
+  .enumerate:
+
+    .item:
+
+      Zeptej se $O(a_1,\dots,a_n)$. Při $\NE$ rozdělení neexistuje – konec.
+
+    .item:
+
+      $A:=\{1\}$, $b:=a_1$, $B:=\emptyset$. Pro $i=2,\dots,n$: zeptej se na staženou instanci, v níž je $a_i$ přičteno
+      k $b$, tj. na čísla $b+a_i$ a $a_j$ pro $j\notin A\cup\{i\}$. Při $\ANO$ polož $A:=A\cup\{i\}$, $b:=b+a_i$; při
+      $\NE$ polož $B:=B\cup\{i\}$.
+
+    .item:
+
+      Vydej $(A,B)$.
+
+
+  "Invariant:".notion stažená instance s blokem $A$ (čísla $b$ a $a_j$, $j\notin A$) má rozdělení. Na začátku je to
+  vstup a platí podle prvního dotazu; krok s $\ANO$ ho zachová podle odpovědi orákula, krok s $\NE$ staženou instanci
+  nemění.
+
+
+  "Proč je výstup rozdělení.".notion Podle invariantu má výsledná stažená instance rozdělení; číslo $b$ je v něm
+  v jedné skupině. Vezměme $i\in B$. Když jsme $i$ testovali, měla tehdejší stažená instance (s blokem $A_i\subseteq A$)
+  odpověď $\NE$ po přičtení $a_i$: podle tvrzení žádné rozdělení čísel $a_1,\dots,a_n$ nemá $A_i\cup\{i\}$ v jedné
+  skupině. Rozdělení výsledné instance je rozdělení čísel $a_1,\dots,a_n$ s celým $A\supseteq A_i$ v jedné skupině,
+  takže $i$ musí být v druhé. To platí pro každé $i\in B$, výsledné rozdělení je tedy přesně $A$ proti $B$ a obě
+  skupiny mají stejný součet.
+
+
+  "Počet dotazů:".notion $1+(n-1)=n$. Každý dotaz má nejvýše $n$ čísel, každé nejvýše $S=\sum_i a_i$, tedy s nejvýše
+  o $\lceil\log_2 n\rceil$ bitů víc než vstupní čísla – dotazy jsou polynomiálně velké. (Zlepšení: jakmile je
+  $b=S/2$, patří všechna zbylá čísla do $B$ bez dalších dotazů.)
+
+
+  "b) Proč nevyškrtávat.".notion U $\prob{Subset Sum}$ je cíl $T$ pevný a vyškrtnutím čísla, které v řešení není, se
+  odpověď nezmění. $\prob{Partition}$ cíl nemá, je to vždy „polovina součtu“, a ta se vyškrtnutím posune. Zbytek po
+  vyškrtnutí jednoho čísla má navíc často lichý součet a odpověď $\NE$, i když původní rozdělení existuje (v příkladu
+  níže: bez čísla $5$ zbude součet $19$). Vyškrtávání proto nic neříká; místo toho kódujeme do instance, že dvě čísla
+  jsou ve stejné skupině – sečtením.
+
+
+  "c) Běh.".notion Čísla $5,3,4,2,6,4$, součet $S=24$, polovina $12$.
+
+  .table:
+    columns: 'lll'
+
+    .row:
+      head: true
+
+      dotaz
+
+      odpověď
+
+      akce
+
+    .row:
+
+      $O(5,3,4,2,6,4)$
+
+      $\ANO$
+
+      rozdělení existuje
+
+    .row:
+
+      $O(8,4,2,6,4)$ ($5+3$)
+
+      $\ANO$
+
+      $A=\{5,3\}$, $b=8$
+
+    .row:
+
+      $O(12,2,6,4)$ ($8+4$)
+
+      $\ANO$
+
+      $A=\{5,3,4\}$, $b=12$
+
+    .row:
+
+      $O(14,6,4)$ ($12+2$)
+
+      $\NE$
+
+      $2\in B$
+
+    .row:
+
+      $O(18,2,4)$ ($12+6$)
+
+      $\NE$
+
+      $6\in B$
+
+    .row:
+
+      $O(16,2,6)$ ($12+4$)
+
+      $\NE$
+
+      $4\in B$
+
+  Výsledek $A=\{5,3,4\}$, $B=\{2,6,4\}$, oba součty $12$, po $6$ dotazech. Se zlepšením z a) by stačily první tři
+  dotazy: po třetím je $b=12=S/2$.
 
 
 .Subsection Těžší úlohy
@@ -762,100 +846,126 @@ s omezeným stupněm.
 
 
 .Exercise:
-  title: 'Úloha 11.8 (proč základ 4? číslice a přenosy)'
+  title: 'Úloha 11.8 (rozvrh s časovými okny)'
   label: un-11-8
 
-  V redukci "$\prob{1-in-3 SAT}\redp\prob{Subset Sum}$"#red-subsetsum zapisujeme čísla v soustavě o základu 4.
-  Číslice jsou seřazené jako v příkladu .reference:ex-ssex: nejvyšší řády patří proměnným $x_1,\dots,x_n$, pak
-  klauzulím $C_1,\dots,C_m$; nejnižší řád je $C_m$. Předpokládejme, že každá klauzule obsahuje tři různé proměnné.
+  Problém $\prob{Rozvrh s okny}$. "Vstup:".notion $n$ úloh; úloha $j$ má délku $p_j\ge1$, čas uvolnění $r_j$ a termín
+  $d_j$ (přirozená čísla zapsaná binárně). "Otázka:".notion lze úlohy rozvrhnout na "jeden".emphasize stroj, tj. zvolit
+  začátky $\sigma_j$ s $r_j\le\sigma_j$ a $\sigma_j+p_j\le d_j$, aby se žádné dva intervaly $[\sigma_j,\sigma_j+p_j)$
+  nepřekrývaly? (Úloha běží bez přerušení.)
 
   .enumerate:
     type: a
 
     .item:
 
-      Student použije základ 2 („číslice jsou stejně jen 0 a 1“). Najděte formuli, pro kterou je vyrobená instance
-      $\prob{Subset Sum}$ $\ANO$, ale formule není 1-in-3 splnitelná. "Nápověda:".emphasize stačí dvě klauzule
-      nad třemi proměnnými.
+      Dokažte, že problém je NP-úplný. "Nápověda:".emphasize převádějte z $\prob{Partition}$; čísla jsou úlohy a jedna
+      úloha navíc rozdělí čas na dvě poloviny.
 
     .item:
 
-      Dokažte, že se základem 3 je redukce korektní, i když v číslici klauzule může vyjít součet 3 a přenos do
-      vyššího řádu tedy nastat může.
-
-    .item:
-
-      Je redukce se základem 3 polynomiální?
+      Dokažte, že je dokonce "silně".emphasize NP-těžký (definice .reference:def-silne). "Nápověda:".emphasize převádějte
+      z $\prob{3-Partition}$.
 
 
 .Solution:
   label: red-un-11-8
 
-  "Redukce:".notion $\prob{1-in-3 SAT} \redp \prob{Subset Sum}$ se základem 3, formule $\Phi$ $\mapsto$ čísla
-  $v_i,\bar v_i$ a cíl $T=11\ldots1_3$ ($n+m$ jedniček).
+  "Redukce:".notion a) $\prob{Partition} \redp \prob{Rozvrh s okny}$, čísla $a_1,\dots,a_n$ se součtem $S$ $\mapsto$
+  úlohy $(p,r,d)=(a_i,0,S+1)$ a „zarážka“ $(1,\ S/2,\ S/2+1)$; b) $\prob{3-Partition} \redp \prob{Rozvrh s okny}$,
+  $(a_1,\dots,a_{3q};\ B)$ $\mapsto$ úlohy $(a_i,0,H)$ a $q-1$ zarážek, $H=q(B+1)-1$.
 
 
-  "a) Protipříklad pro základ 2.".notion $\Phi=(x_1\lor x_2\lor x_3)\land(\lnot x_1\lor\lnot x_2\lor\lnot x_3)$.
-  Číslice v pořadí $x_1x_2x_3C_1C_2$:
+  "a) 1. Problém je v $\NP$.".notion Certifikát jsou začátky $\sigma_j$; každý je nejvýše $\max_j d_j$, má tedy
+  polynomiálně mnoho bitů. Ověříme $r_j\le\sigma_j$, $\sigma_j+p_j\le d_j$ a po seřazení podle $\sigma_j$, že každá úloha
+  skončí nejpozději v začátku následující: čas $O(n\log n)$ operací s binárními čísly.
 
-  .equation:
 
-    v_1=10010,\ \ \bar v_1=10001,\ \ v_2=01010,\ \ \bar v_2=01001,\ \ v_3=00110,\ \ \bar v_3=00101,\ \ T=11111.
+  "2. Konstrukce.".notion Je-li $S$ liché, vydáme pevnou $\NE$-instanci (jedna úloha s $p=1$, $r=0$, $d=0$). Jinak
+  úlohy $1,\dots,n$ s $p_i=a_i$, $r_i=0$, $d_i=S+1$ a zarážku $z$ s $p_z=1$, $r_z=S/2$, $d_z=S/2+1$.
 
-  Vezmeme $\bar v_1,\bar v_2,\bar v_3$ (ohodnocení „vše FALSE“). Součty ve sloupcích jsou $1,1,1,0,3$. Ve dvojkové
-  soustavě: sloupec $C_2$ dá $3=1+2$, tedy číslici 1 a přenos 1; sloupec $C_1$ pak dá $0+1=1$. Výsledek je
-  $11111_2=T$. Číselně $\bar v_1=10001_2=17$, $\bar v_2=01001_2=9$, $\bar v_3=00101_2=5$ a $17+9+5=31=11111_2$.
+
+  "3. Polynomialita.".notion $n+1$ úloh, čísla nejvýše $S+1$, tedy o $O(\log n)$ bitů delší než vstupní; jedno
+  sčítání a dělení dvěma.
+
+
+  "Klíčové pozorování.".notion Všechny úlohy musí běžet v intervalu $[0,S+1]$ délky $S+1$ a jejich celková délka je
+  také $S+1$. Stroj tedy v žádném rozvrhu nestojí: interval je úlohami zaplněný beze zbytku. Zarážka může běžet jen
+  v $[S/2,\ S/2+1)$.
+
+
+  "4. ($\Rightarrow$)".notion Nechť $\sum_{i\in I}a_i=S/2=\sum_{i\notin I}a_i$. Úlohy z $I$ pustíme za sebou od času $0$
+  (skončí v $S/2$), pak zarážku v $[S/2,S/2+1)$ a pak úlohy mimo $I$ za sebou (skončí v $S/2+1+S/2=S+1$). Všechna
+  okna jsou dodržena.
+
+
+  "5. ($\Leftarrow$)".notion Nechť existuje rozvrh. Zarážka zabírá $[S/2,S/2+1)$ a ostatní úlohy se s ní nepřekrývají,
+  každá tedy celá proběhne buď před $S/2$, nebo po $S/2+1$. Podle pozorování je interval $[0,S/2)$ zaplněný beze
+  zbytku úlohami, které běží před zarážkou; jejich délky mají součet $S/2$. Tyto úlohy tvoří jednu skupinu, ostatní
+  druhou – obě mají součet $S/2$.
+
+
+  "6. Závěr.".notion $\prob{Partition}$ je NP-úplný, tedy $\prob{Rozvrh s okny}$ je NP-těžký a podle bodu 1 NP-úplný.
 
 
   .centered:
 
     !tikz:
-      filename: 11z-ulohy-navic-06
-      options: 'x=0.9cm,y=0.62cm'
+      filename: 11z-ulohy-navic-02
+      options: 'x=0.62cm,y=1cm'
 
-      \foreach \c/\l in {1/x_1,2/x_2,3/x_3,4/C_1,5/C_2} \node[font=\scriptsize,gr] at (\c,0.9) {$\l$};
-      \foreach \r/\lab/\d in {1/{$\bar v_1$}/{1,0,0,0,1}, 2/{$\bar v_2$}/{0,1,0,0,1}, 3/{$\bar v_3$}/{0,0,1,0,1}} {
-        \node[font=\small,anchor=east] at (0.4,-\r+1) {\lab};
-        \foreach \x [count=\c] in \d \node[font=\small] at (\c,-\r+1) {$\x$};
-      }
-      \draw[thick] (0.5,-2.5)--(5.5,-2.5);
-      \node[font=\scriptsize,anchor=east] at (0.4,-3.1) {součty sloupců};
-      \foreach \x [count=\c] in {1,1,1,0,3} \node[font=\small] at (\c,-3.1) {$\x$};
-      \node[font=\scriptsize,anchor=east] at (0.4,-4.9) {základ 2};
-      \foreach \x [count=\c] in {1,1,1,1,1} \node[font=\small,acc!80!black] at (\c,-4.9) {$\mathbf{\x}$};
-      \draw[->,thick,rej] (5,-3.45) to[bend left=50] node[below,font=\scriptsize]{přenos 1} (4,-3.45);
-      \draw[rej,thick] (3.6,-3.4) rectangle (5.4,-2.8);
-      \node[font=\scriptsize,anchor=west,align=left] at (6.0,-2.9) {$C_2$: $3=1+2$ $\to$ číslice 1, přenos 1;\\ $C_1$: $0+1=1$};
-      \node[font=\scriptsize,anchor=west,align=left] at (6.0,-4.9) {součet $=11111_2=T$, ale $C_1$ nemá\\ žádný a $C_2$ tři pravdivé literály};
-
-
-  Sčítání pod sebou ve dvojkové soustavě. "Všimni si:".emphasize nadbytečná jednička z $C_2$ se „přestěhuje“ do
-  $C_1$, kde chybí – číslice se nesčítají nezávisle.
+      % a=(3,5,2,4), S=14, zarážka [7,8), horizont 15
+      \def\job#1#2#3#4{\draw[thick,fill=#4,rounded corners=1pt] (#1,-0.32) rectangle (#1+#2,0.32);
+        \node[font=\small] at (#1+#2/2,0) {#3};}
+      \job{0}{3}{$3$}{acc!25}
+      \job{3}{4}{$4$}{acc!25}
+      \job{7}{1}{$z$}{rej!35}
+      \job{8}{5}{$5$}{defc!12}
+      \job{13}{2}{$2$}{defc!12}
+      \draw[thick,black!60] (0,-0.6)--(15.4,-0.6);
+      \foreach \t in {0,3,7,8,13,15} {\draw[black!60] (\t,-0.6)--(\t,-0.7); \node[font=\scriptsize] at (\t,-0.95) {$\t$};}
+      \draw[rej,very thick,dashed] (15,-0.6)--(15,0.75) node[above,font=\scriptsize]{$S+1=15$};
+      \draw[rej,dashed] (7,0.35)--(7,0.75) node[above,font=\scriptsize]{$S/2$};
+      \draw[decorate,decoration={brace,amplitude=4pt},acc!70!black] (0,0.5)--(6.9,0.5) node[midway,above=4pt,font=\scriptsize]{součet $7$};
+      \draw[decorate,decoration={brace,amplitude=4pt},defc] (8.1,0.5)--(15,0.5) node[midway,above=4pt,font=\scriptsize]{součet $7$};
 
 
-  Formule přitom 1-in-3 splnitelná není: $C_1$ vyžaduje právě jednu pravdivou proměnnou z $x_1,x_2,x_3$, ale pak
-  jsou v $C_2$ pravdivé dva literály (negace dvou nepravdivých proměnných). Instance $\prob{Subset Sum}$ je $\ANO$,
-  formule $\NE$ – implikace ($\Leftarrow$) selže.
+  Příklad: $\prob{Partition}$ pro $3,5,2,4$ ($S=14$) a rozvrh z bodu 4 pro rozdělení $\{3,4\}$, $\{5,2\}$. Zarážka $z$
+  smí běžet jen v $[7,8)$. "Všimni si:".emphasize celková délka $15$ se rovná délce okna $[0,15]$, takže stroj nikde
+  nestojí a před zarážkou musí být přesně součet $7$.
 
 
-  "b) Základ 3 funguje.".notion ($\Rightarrow$) beze změny: pro 1-in-3 splňující ohodnocení má každý sloupec součet
-  přesně 1, nikde nevznikne přenos a součet je $T$. ($\Leftarrow$) Nechť mají vybraná čísla součet $T$. Označme
-  $s_d$ součet sloupce $d$ (počet vybraných čísel s jedničkou v řádu $d$). Ve sloupci proměnné je $s_d\le2$, ve
-  sloupci klauzule $s_d\le3$ (tři literály). Projdeme řády od nejnižšího a indukcí ukážeme, že do každého řádu přichází
-  přenos 0 a $s_d=1$. Do nejnižšího řádu přenos nepřichází. Přichází-li do řádu $d$ přenos 0, je číslice výsledku
-  $s_d \bmod 3$ a musí být 1 (cíl má samé jedničky). Z hodnot $0,1,2,3$ dává zbytek 1 jen $s_d=1$ (další kandidát by
-  byl až 4). Pak je přenos do vyššího řádu $\lfloor 1/3\rfloor=0$. Každý sloupec má tedy součet přesně 1 a dál platí
-  důkaz z kapitoly: ve sloupci $x_i$ je vybráno právě jedno z $v_i,\bar v_i$ (ohodnocení) a ve sloupci $C_j$ je právě
-  jeden pravdivý literál.
+  "b) Silná NP-těžkost.".notion Redukce a) to nedokazuje: $\prob{Partition}$ je jen slabě NP-úplný a čísla $S/2$, $S+1$
+  mohou být exponenciálně velká vůči počtu bitů. Převedeme proto ze "silně".emphasize NP-úplného $\prob{3-Partition}$
+  (věta .reference:thm-3partsilne): $3q$ čísel se součtem $qB$, každé ostře mezi $B/4$ a $B/2$.
 
 
-  "Proč základ 2 selže.".notion Tam dává zbytek 1 i součet $s_d=3$, a s přenosem 1 pak vyšší řád projde i se součtem
-  0 – to je protipříklad z a). Obecně je redukce korektní pro každý základ $b\ge3$. Základ 4 z přednášky je zvolený
-  tak, aby přenos nenastal vůbec ($3<4$), a důkaz je proto kratší.
+  "Konstrukce.".notion Horizont $H=q(B+1)-1$. Úlohy $i=1,\dots,3q$ s $p_i=a_i$, $r_i=0$, $d_i=H$ a zarážky
+  $z_1,\dots,z_{q-1}$, kde $z_j$ má $p=1$, $r=j(B+1)-1$, $d=j(B+1)$. Zarážky zabírají časy $[B,B+1)$, $[2B+1,2B+2)$, …
+  a mezi nimi zbude $q$ „oken“ délky přesně $B$.
 
 
-  "c) Velikost.".notion Každé číslo má $n+m$ číslic v základu 3, tedy nejvýš $\lceil(n+m)\log_2 3\rceil$ bitů; $2n$ čísel a
-  cíl dají $O(n(n+m))$ bitů. Základ je konstanta, takže polynomiální je redukce pro každý pevný základ.
+  "($\Rightarrow$)".notion Trojice se součtem $B$ pustíme po jedné do oken; každé okno zaplní přesně.
+
+
+  "($\Leftarrow$)".notion Celková délka je $qB+(q-1)=H$, takže stroj opět nestojí a každé okno délky $B$ je zaplněné
+  úlohami, které v něm celé běží (žádná nepřesahuje přes zarážku). Úlohy v jednom okně mají součet $B$; protože každé
+  číslo je ostře mezi $B/4$ a $B/2$, jsou to přesně tři čísla (dvě dají méně než $B$, čtyři více). Okna dávají
+  rozdělení na $q$ trojic se součtem $B$.
+
+
+  "Proč silně.".notion Největší číslo výstupu je $H=q(B+1)-1$, tedy polynomiální vzhledem k počtu čísel a jejich
+  "hodnotám".emphasize. Jsou-li čísla instance $\prob{3-Partition}$ zapsaná unárně, je i výstup s čísly zapsanými unárně
+  polynomiálně velký, takže $\prob{Rozvrh s okny}$ zůstane NP-těžký i při unárním zápisu – je silně NP-úplný a
+  pseudopolynomiální algoritmus pro něj neexistuje (pokud $\PP\neq\NP$). Redukce a) by to nedokázala: vychází
+  ze slabě NP-úplného problému, a $\prob{Partition}$ s unárně zapsanými čísly je v $\PP$ (DP z věty
+  .reference:thm-ssdp). Je to stejný rozdíl jako mezi
+  "$\prob{Partition}\redp\prob{Bin Packing}$ se dvěma koši"#red-un-11-7 a redukcí
+  "$\prob{3-Partition}\redp\prob{Bin Packing}$"#red-binpacking.
+
+
+  "Poznámka.".notion Bez časů uvolnění a termínů (všechna $r_j=0$, $d_j=D$) je problém triviální: stačí $\sum_j p_j\le D$.
+  Těžkost je celá v oknech, která „rozsekají“ čas na části, jež se musí přesně zaplnit.
 
 
 .Subsection Úlohy z jiných sbírek

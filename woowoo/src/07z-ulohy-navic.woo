@@ -2,20 +2,23 @@
   label: ch-sat-ulohy-navic
 
 
-Úlohy procvičují redukce mezi variantami SATu: rozsekávání a doplňování klauzulí pomocnými proměnnými
-(oddíl .reference:ch-sat-sat-3-sat), symetrii NAE a pólovou proměnnou (oddíl .reference:ch-sat-nae-3-sat-not-all-equal).
-Úloha 7.8 ukazuje, proč stejné triky nedají NP-těžkost $\prob{2-SAT}$u. Pododdíl .reference:ch-sat-ulohy-navic-sbirka
-přidává tři úlohy z jiné sbírky: self-redukci SATu dosazováním, $\prob{SAT}\redp\prob{3-SAT}$ v testové podobě
-a 3-SAT s nejvýše třemi klauzulemi na proměnnou.
+Úlohy jsou psané ve stylu zápočtového testu. Většina jsou důkazy NP-úplnosti variant SATu (typ 4 testu) z problémů
+této kapitoly: $\prob{SAT}$, $\prob{3-SAT}$, $\prob{NAE-3-SAT}$ a pozitivního $\prob{NAE-3-SAT}$ (oddíly
+.reference:ch-sat-sat-3-sat a .reference:ch-sat-nae-3-sat-not-all-equal). Úloha 7.3 je self-redukce (typ 2) pro
+$\prob{NAE-3-SAT}$, kde nejde dosazovat hodnoty. Úloha 7.8 ukazuje, že $\prob{2-SAT}$ je sice v $\PP$, ale jeho
+optimalizační verze $\prob{MAX-2-SAT}$ je NP-úplná. Pododdíl .reference:ch-sat-ulohy-navic-sbirka přidává tři
+úlohy z jiné sbírky: self-redukci SATu dosazováním, $\prob{SAT}\redp\prob{3-SAT}$ v testové podobě a 3-SAT s nejvýše třemi klauzulemi
+na proměnnou.
 
 
 .Warning:
   title: 'Neoficiální úlohy'
 
   Úlohy v tomto oddílu "nejsou".notion oficiální zadání předmětu. Jsou to procvičovací úlohy navíc k látce kapitoly;
-  každou konstrukci jsme naprogramovali a ekvivalenci splnitelnosti ověřili hrubou silou na tisících malých náhodných
-  formulí (s kladnými i zápornými odpověďmi), konkrétní ohodnocení a počty dosazením. Důkazy v úloze 7.8 a poznámka
-  o Hallově větě v úloze 7.6 jsou navíc jen ručně odvozené a ověřené na příkladech.
+  každou konstrukci jsme naprogramovali a ekvivalenci splnitelnosti ověřili hrubou silou na stovkách až tisících
+  malých náhodných formulí (s kladnými i zápornými odpověďmi), konkrétní ohodnocení a počty dosazením. Gadget z úlohy
+  7.8 jsme prověřili na všech osmi kombinacích hodnot literálů, algoritmus z úlohy 7.3 na 2000 náhodných formulích
+  (orákulum nahrazené hrubou silou). Poznámka o Hallově větě v úloze 7.6 je jen ručně odvozená a ověřená na příkladech.
   U úloh 7.9–7.11 jsme stejně ověřili algoritmus s orákulem (3000 náhodných formulí, orákulum nahrazené hrubou silou),
   obě redukce (tisíce náhodných formulí; u 7.11 i to, že každá proměnná leží nejvýše ve třech klauzulích), algoritmus
   z úlohy 7.11 b) (20 000 náhodných formulí) a průběh příkladu v úloze 7.9 b).
@@ -47,56 +50,36 @@ a 3-SAT s nejvýše třemi klauzulemi na proměnnou.
 
     .item:
 
-      $\prob{3-SAT}\redp\prob{NAE-3-SAT}$: pólová proměnná $z$ do každé klauzule, pak rozseknutí 4-klauzule pomocnou
-      proměnnou $w$ (oddíl .reference:ch-sat-3-sat-nae-3-sat). $\prob{2-SAT}$ je v $\PP$
+      Pozitivní $\prob{NAE-3-SAT}$ (bez negací) je NP-úplný (redukce .reference:red-poznae). $\prob{3-SAT}\redp\prob{NAE-3-SAT}$
+      pólovou proměnnou (oddíl .reference:ch-sat-3-sat-nae-3-sat). $\prob{2-SAT}$ je v $\PP$
       (oddíl .reference:ch-prostor-2-sat-je-v-p).
 
 
-  "Kuchařka – redukce na konkrétní formuli (úlohy 7.1–7.3).".notion
+  "Kuchařka – NP-úplnost varianty SATu (úlohy 7.1, 7.2, 7.4–7.8, 7.10, 7.11).".notion Postup .reference:ch-test-postup-np.
 
   .enumerate:
 
     .item:
 
-      Konstrukci aplikuj klauzuli po klauzuli, s novými pomocnými proměnnými pro každou klauzuli.
+      $Q\in\NP$: certifikát je ohodnocení (u $\prob{Double-SAT}$ dvě různá), u rozdělení množin obarvení.
 
     .item:
 
-      Spočítej proměnné a klauzule, konkrétně i obecně pro $n$ proměnných a $m$ klauzulí.
+      Zdroj $\prob{SAT}$, $\prob{3-SAT}$ nebo (pozitivní) $\prob{NAE-3-SAT}$ a hlavička redukce.
 
     .item:
 
-      ($\Rightarrow$) Pomocné proměnné nastav podle důkazu (u rozsekání podle toho, kde leží pravdivý literál).
-
-    .item:
-
-      ($\Leftarrow$) Zúžení na původní proměnné splňuje původní formuli; u NAE nejdřív otoč všechny hodnoty, je-li pól
-      $z=1$.
-
-
-  "Kuchařka – NP-úplnost varianty SATu (úlohy 7.4–7.7, 7.10, 7.11).".notion Postup .reference:ch-test-postup-np.
-
-  .enumerate:
-
-    .item:
-
-      $Q\in\NP$: certifikát je ohodnocení (u $\prob{Double-SAT}$ dvě různá).
-
-    .item:
-
-      Zdroj $\prob{SAT}$ nebo $\prob{3-SAT}$ a hlavička redukce.
-
-    .item:
-
-      Lokální úprava: doplnění klauzule novými proměnnými, rozsekání, nebo kopie proměnné $x_1,\dots,x_r$ s kruhem
-      implikací $x_1\Rightarrow x_2\Rightarrow\dots\Rightarrow x_r\Rightarrow x_1$.
+      Vzory: "přestrojení".emphasize (tentýž problém jinými slovy, úlohy 7.1, 7.2); lokální úprava klauzulí (doplnění
+      novými proměnnými, rozsekání, stín $x'=\lnot x$, kopie proměnné s kruhem implikací
+      $x_1\Rightarrow x_2\Rightarrow\dots\Rightarrow x_r\Rightarrow x_1$); "gadget s počítáním".emphasize (úloha 7.8:
+      místo „splněno/nesplněno“ se počítají splněné klauzule).
 
     .item:
 
       ($\Rightarrow$) rozšiř ohodnocení na nové proměnné; ($\Leftarrow$) zúž ho na původní; velikost výstupu.
 
 
-  "Kuchařka – self-redukce SATu (úloha 7.9).".notion Postup .reference:ch-test-postup-self-redukce.
+  "Kuchařka – self-redukce (úlohy 7.3, 7.9).".notion Postup .reference:ch-test-postup-self-redukce.
 
   .enumerate:
 
@@ -106,8 +89,13 @@ a 3-SAT s nejvýše třemi klauzulemi na proměnnou.
 
     .item:
 
-      Pro $i=1,\dots,n$: dosaď $x_i=1$ (splněné klauzule smaž, literál $\lnot x_i$ vyškrtni) a zeptej se; při $\NE$
-      dosaď místo toho $x_i=0$. Pohlídej prázdnou klauzuli a formuli bez klauzulí.
+      U SATu pro $i=1,\dots,n$ zafixuj $x_i=1$ (dosazením nebo jednotkovou klauzulí) a zeptej se; při $\NE$ zafixuj
+      $x_i=0$.
+
+    .item:
+
+      U NAE hodnotu vynutit nejde (symetrie), fixuje se jen "vztah".emphasize $x_i=x_1$ nebo $x_i\neq x_1$
+      klauzulemi s opakovaným literálem; $x_1=0$ zvolíme volně.
 
     .item:
 
@@ -119,484 +107,286 @@ a 3-SAT s nejvýše třemi klauzulemi na proměnnou.
 
 
 .Exercise:
-  title: 'Úloha 7.1 (rozsekání dlouhých klauzulí)'
+  title: 'Úloha 7.1 (rozdělení do dvou skupin)'
   label: un-7-1
 
-  Je dána formule v CNF
+  Problém $\prob{Set Splitting}$:
 
-  .equation:
 
-    \varphi=\underbrace{(x_1\lor\lnot x_2\lor x_3\lor\lnot x_4\lor x_5)}_{C_1}\land\underbrace{(\lnot x_1\lor x_4)}_{C_2}
-    \land\underbrace{(x_2)}_{C_3}\land\underbrace{(\lnot x_3\lor x_4\lor\lnot x_5\lor x_1)}_{C_4}.
+  "Vstup:".notion konečná množina $U$ a systém jejích podmnožin $S_1,\dots,S_r$.
+
+
+  "Otázka:".notion lze prvky $U$ obarvit dvěma barvami (červenou a modrou) tak, aby žádná z množin $S_j$ nebyla
+  jednobarevná, tj. aby každá $S_j$ obsahovala červený i modrý prvek?
 
   .enumerate:
     type: a
 
     .item:
 
-      Proveďte redukci $\prob{SAT}\redp\prob{3-SAT}$ z oddílu .reference:ch-sat-sat-3-sat. Pomocné proměnné
-      klauzule $C_1$ značte $a_1,a_2,\dots$, klauzule $C_4$ značte $b_1,\dots$. Kolik klauzulí a proměnných má
-      výsledná formule $\varphi'$?
+      Dokažte, že $\prob{Set Splitting}$ je NP-úplný. "Nápověda: převádějte z pozitivního NAE-3-SAT.".emphasize
 
     .item:
 
-      Ohodnocení $h$: $x_1=0$, $x_2=1$, $x_3=1$, $x_4=0$, $x_5=0$ splňuje $\varphi$. Rozšiřte ho podle důkazu
-      lemmatu .reference:lem-3satkor na pomocné proměnné tak, aby splňovalo $\varphi'$.
-
-    .item:
-
-      Ohodnocení $g$: $x_1=1$, $x_2=1$, $x_3=0$, $x_4=1$, $x_5=1$, $a_1=0$, $a_2=1$, $b_1=0$ splňuje $\varphi'$.
-      Ověřte to a přečtěte z $g$ splňující ohodnocení $\varphi$. Jsou hodnoty pomocných proměnných v $g$ ty, které
-      by dal postup z bodu b)?
-
-    .item:
-
-      Proč musí mít každá dlouhá klauzule "vlastní".emphasize pomocné proměnné? Ukažte to na formuli
-      $\psi=(x_1\lor x_2\lor x_3\lor x_4)\land(x_3\lor x_4\lor x_5\lor x_6)\land(\lnot x_3)\land(\lnot x_4)$, ve které
-      by obě dlouhé klauzule použily touž pomocnou proměnnou $z$.
+      Ukažte, že má-li každá množina $S_j$ nejvýše dva prvky, je problém v $\PP$.
 
 
 .Solution:
+  label: red-un-7-1
 
-  "Redukce:".notion $\prob{SAT} \redp \prob{3-SAT}$, formule $\varphi$ v CNF $\mapsto$ formule $\varphi'$ v 3-CNF
-  (krátké klauzule doplníme opakováním literálu, dlouhé rozsekneme).
-
-
-  "a)".notion Klauzule zpracujeme každou zvlášť.
-
-  .itemize:
-
-    .item:
-
-      $C_1$ má $k=5$ literálů: vznikne $k-2=3$ klauzulí s $k-3=2$ novými proměnnými,
-      $(x_1\lor\lnot x_2\lor a_1)\land(\lnot a_1\lor x_3\lor a_2)\land(\lnot a_2\lor\lnot x_4\lor x_5)$.
-
-    .item:
-
-      $C_2$ má 2 literály: $(\lnot x_1\lor x_4\lor x_4)$.
-
-    .item:
-
-      $C_3$ má 1 literál: $(x_2\lor x_2\lor x_2)$.
-
-    .item:
-
-      $C_4$ má $k=4$ literály: $k-2=2$ klauzule s jednou novou proměnnou, $(\lnot x_3\lor x_4\lor b_1)\land(\lnot b_1\lor\lnot x_5\lor x_1)$.
-
-  Formule $\varphi'$ má $3+1+1+2=7$ klauzulí a $5+3=8$ proměnných ($x_1,\dots,x_5,a_1,a_2,b_1$).
+  "Redukce:".notion $\prob{Pozitivní NAE-3-SAT} \redp \prob{Set Splitting}$, formule $\Phi$ $\mapsto$
+  ($U=$ proměnné $\Phi$, $S_j=$ množina proměnných $j$-té klauzule).
 
 
-  "b)".notion Podle důkazu lemmatu najdeme v každé dlouhé klauzuli pravdivý literál $\ell_i$ a položíme
-  $z_j=1$ pro $j\le i-2$, $z_j=0$ pro $j\ge i-1$.
-
-  .itemize:
-
-    .item:
-
-      $C_1$: literály mají hodnoty $x_1=0$, $\lnot x_2=0$, $x_3=1$, tedy $i=3$. Proto $a_1=1$ ($1\le i-2$) a $a_2=0$.
-
-    .item:
-
-      $C_4=(\lnot x_3\lor x_4\lor\lnot x_5\lor x_1)$: hodnoty $0,0,1,0$, pravdivý je $\ell_3=\lnot x_5$, tedy $i=3$
-      a $b_1=1$.
-
-  Dosazení ukazuje obrázek níže; krátké klauzule $(\lnot x_1\lor x_4\lor x_4)$ a $(x_2\lor x_2\lor x_2)$ splňuje
-  $\lnot x_1=1$ a $x_2=1$ stejně jako původní $C_2$, $C_3$.
+  "a) 1. $\prob{Set Splitting}$ je v $\NP$.".notion Certifikát je obarvení ($|U|$ bitů). Verifikátor projde každou
+  množinu a zkontroluje, že obsahuje obě barvy; čas $O(|U|+\sum_j|S_j|)$.
 
 
-  .centered:
-
-    !tikz:
-      filename: 07z-ulohy-navic-01
-
-      % radek C1: (x1|~x2|a1) (~a1|x3|a2) (~a2|~x4|x5), h: x=0,1,1,0,0, a1=1, a2=0
-      \node[font=\small] at (1.15,1.3) {$x_1\lor\lnot x_2\lor a_1$};
-      \node[font=\small] at (3.95,1.3) {$\lnot a_1\lor x_3\lor a_2$};
-      \node[font=\small] at (6.75,1.3) {$\lnot a_2\lor\lnot x_4\lor x_5$};
-      \foreach \t [count=\i] in {x_1,\lnot x_2,a_1} {\node[font=\scriptsize] at ({0.5+(\i-1)*0.65},0.62) {$\t$};}
-      \foreach \t [count=\i] in {\lnot a_1,x_3,a_2} {\node[font=\scriptsize] at ({3.3+(\i-1)*0.65},0.62) {$\t$};}
-      \foreach \t [count=\i] in {\lnot a_2,\lnot x_4,x_5} {\node[font=\scriptsize] at ({6.1+(\i-1)*0.65},0.62) {$\t$};}
-      \chNAEvals{0.5}{0}{0,0,1}
-      \chNAEvals{3.3}{0}{0,1,0}
-      \chNAEvals{6.1}{0}{1,1,0}
-      \foreach \x in {1.8,3.3,4.6,6.1} {\draw[intc,very thick] (\x-0.3,-0.3) rectangle (\x+0.3,0.3);}
-      \draw[acc!70!black,very thick,rounded corners=2pt] (3.55,-0.38) rectangle (4.35,0.38);
-      \node[font=\small] at (2.55,0) {$\land$};
-      \node[font=\small] at (5.35,0) {$\land$};
-      \node[font=\small,anchor=east,align=right] at (-0.1,0) {$C_1$, $k=5$\\ \scriptsize pravdivý $\ell_3=x_3$};
-      \node[font=\scriptsize,intc,anchor=west,align=left] at (7.7,0) {$a_1=1$\\ $a_2=0$};
-      % radek C4: (~x3|x4|b1) (~b1|~x5|x1), b1=1
-      \node[font=\small] at (1.15,-1.0) {$\lnot x_3\lor x_4\lor b_1$};
-      \node[font=\small] at (3.95,-1.0) {$\lnot b_1\lor\lnot x_5\lor x_1$};
-      \foreach \t [count=\i] in {\lnot x_3,x_4,b_1} {\node[font=\scriptsize] at ({0.5+(\i-1)*0.65},-1.68) {$\t$};}
-      \foreach \t [count=\i] in {\lnot b_1,\lnot x_5,x_1} {\node[font=\scriptsize] at ({3.3+(\i-1)*0.65},-1.68) {$\t$};}
-      \chNAEvals{0.5}{-2.3}{0,0,1}
-      \chNAEvals{3.3}{-2.3}{0,1,0}
-      \foreach \x in {1.8,3.3} {\draw[intc,very thick] (\x-0.3,-2.6) rectangle (\x+0.3,-2.0);}
-      \draw[acc!70!black,very thick,rounded corners=2pt] (3.55,-2.68) rectangle (4.35,-1.92);
-      \node[font=\small] at (2.55,-2.3) {$\land$};
-      \node[font=\small,anchor=east,align=right] at (-0.1,-2.3) {$C_4$, $k=4$\\ \scriptsize pravdivý $\ell_3=\lnot x_5$};
-      \node[font=\scriptsize,intc,anchor=west,align=left] at (4.9,-2.3) {$b_1=1$};
-
-  Hodnoty literálů v kouscích $C_1$ a $C_4$ při rozšířeném ohodnocení $h$. Pomocné proměnné jsou v oranžovém
-  rámečku, pravdivý původní literál $\ell_i$ v zeleném. "Všimni si:".emphasize nalevo od $\ell_i$ kousky splní
-  $a_j=1$, napravo $\lnot a_j=1$ – každý kousek má aspoň jednu jedničku.
+  "2. Konstrukce.".notion Klauzuli $\mathrm{NAE}(x,y,z)$ bez negací převedeme na množinu $\{x,y,z\}$. Opakuje-li se
+  v klauzuli proměnná, vznikne menší množina: $\mathrm{NAE}(x,x,y)\mapsto\{x,y\}$, $\mathrm{NAE}(x,x,x)\mapsto\{x\}$.
 
 
-  "c)".notion Dosadíme $g$ do sedmi klauzulí $\varphi'$ (vypisujeme hodnoty literálů):
-  $(x_1,\lnot x_2,a_1)=(1,0,0)$, $(\lnot a_1,x_3,a_2)=(1,0,1)$, $(\lnot a_2,\lnot x_4,x_5)=(0,0,1)$,
-  $(\lnot x_1,x_4,x_4)=(0,1,1)$, $(x_2,x_2,x_2)=(1,1,1)$, $(\lnot x_3,x_4,b_1)=(1,1,0)$,
-  $(\lnot b_1,\lnot x_5,x_1)=(1,0,1)$. Každá trojice obsahuje jedničku, $g$ tedy $\varphi'$ splňuje.
+  "3. Polynomialita.".notion Jeden průchod formulí, čas $O(|\Phi|)$.
 
 
-  Splňující ohodnocení $\varphi$ dostaneme tak, že pomocné proměnné "zapomeneme".emphasize: $x_1=1$, $x_2=1$,
-  $x_3=0$, $x_4=1$, $x_5=1$. Kontrola: $C_1$ splní $x_1$, $C_2$ a $C_4$ splní $x_4$, $C_3$ splní $x_2$. Obecně to
-  zaručuje směr ($\Leftarrow$) lemmatu: kdyby zúžení některou klauzuli $C$ nesplnilo, nesplnilo by žádné
-  rozšíření všechny kousky $C$.
+  "Klíčové pozorování.".notion Obarvení a ohodnocení si odpovídají: červená $=1$, modrá $=0$. Klauzule
+  $\mathrm{NAE}(\ell_1,\ell_2,\ell_3)$ bez negací je NAE-splněná, právě když mezi hodnotami jejích proměnných je
+  $0$ i $1$, a to je právě tehdy, když množina $S_j$ obsahuje prvek obou barev. Opakování proměnné na tom nic
+  nemění – množina hodnot klauzule je stejná jako množina barev $S_j$.
 
 
-  Postup z bodu b) by pro toto zúžení dal něco jiného: v $C_1$ je pravdivý už $\ell_1=x_1$, tedy $i=1$
-  a $a_1=a_2=0$, kdežto $g$ má $a_2=1$. To nevadí – lemma říká jen, že "nějaké".emphasize rozšíření existuje,
-  splňujících rozšíření může být víc ($\varphi$ má 10 splňujících ohodnocení, $\varphi'$ jich má 30).
+  "4. ($\Rightarrow$)".notion NAE-splňující ohodnocení $\Phi$ obarví $U$ tak, že podle pozorování žádná $S_j$ není
+  jednobarevná.
 
 
-  "d)".notion Se sdílenou proměnnou $z$ by vznikla formule
+  "5. ($\Leftarrow$)".notion Obarvení, při kterém žádná $S_j$ není jednobarevná, je jako ohodnocení podle pozorování
+  NAE-splňující.
 
-  .equation:
 
-    (x_1\lor x_2\lor z)\land(\lnot z\lor x_3\lor x_4)\land(x_3\lor x_4\lor z)\land(\lnot z\lor x_5\lor x_6)
-    \land(\lnot x_3\lor\lnot x_3\lor\lnot x_3)\land(\lnot x_4\lor\lnot x_4\lor\lnot x_4).
+  "6. Závěr.".notion Pozitivní $\prob{NAE-3-SAT}$ je NP-úplný (redukce .reference:red-poznae), tedy
+  $\prob{Set Splitting}$ je NP-těžký a podle bodu 1 NP-úplný.
 
-  Poslední dvě klauzule vynutí $x_3=x_4=0$. Druhá klauzule pak vynutí $z=0$ a třetí $z=1$ – spor, formule je
-  nesplnitelná. Přitom $\psi$ splnitelná je: $x_1=x_5=1$, $x_3=x_4=0$. Redukce by tedy z $\ANO$-instance udělala
-  $\NE$-instanci. Důvod: hodnoty pomocných proměnných závisí na tom, "který".emphasize literál klauzule je
-  pravdivý (první klauzule $\psi$ potřebuje $z=0$, protože pravdivý je $x_1$ vlevo; druhá potřebuje $z=1$,
-  protože pravdivý je $x_5$ vpravo). Proto musí mít každá klauzule své.
+
+  "b)".notion Jednoprvková množina $\{u\}$ (i prázdná množina) nikdy neobsahuje prvek obou barev – obsahuje-li ji
+  systém, odpověď je $\NE$. Dvouprvková množina $\{u,v\}$ říká „$u$ a $v$ mají různou barvu“, je to tedy hrana grafu s vrcholy $U$. Hledáme dvoubarvení
+  tohoto grafu, tj. zda je bipartitní. Prohledáním do šířky obarvíme v každé komponentě první vrchol červeně a každého
+  dalšího souseda opačně než vrchol, ze kterého jsme ho objevili; narazíme-li na hranu se stejně obarvenými konci,
+  odpověď je $\NE$ (v souvislé komponentě je obarvení určené až na prohození barev, jiné tedy nejde). Čas
+  $O(|U|+r)$. Těžkost přichází až s trojicemi – stejně jako u $\prob{2-SAT}$ a $\prob{3-SAT}$. ($\prob{Set Splitting}$
+  se také říká "dvoubarevnost hypergrafu".emphasize.)
 
 
 .Exercise:
-  title: 'Úloha 7.2 (symetrie NAE)'
+  title: 'Úloha 7.2 (ohodnocení, které vydrží překlopení)'
   label: un-7-2
 
-  Je dána formule
+  Problém $\prob{Flip-SAT}$:
 
-  .equation:
 
-    \Phi=(x_1\lor x_2\lor\lnot x_3)\land(\lnot x_1\lor x_2\lor x_4)\land(\lnot x_2\lor x_3\lor\lnot x_4)\land(x_1\lor x_3\lor x_4).
+  "Vstup:".notion formule $\varphi$ v CNF.
 
-  .enumerate:
-    type: a
 
-    .item:
+  "Otázka:".notion existuje ohodnocení $h$ takové, že formuli $\varphi$ splňuje $h$ "i".emphasize překlopené
+  ohodnocení $\bar h$ (všechny hodnoty prohozené $0\leftrightarrow1$)?
 
-      Najděte všechna ohodnocení, která $\Phi$ NAE-splňují (definice .reference:prob-nae). Využijte lemma
-      .reference:lem-bitflip, abyste nemuseli procházet všech 16 ohodnocení.
 
-    .item:
-
-      Dokažte, že počet NAE-splňujících ohodnocení každé 3-CNF formule (s aspoň jednou proměnnou) je sudý.
-      Platí totéž pro počet splňujících ohodnocení v obyčejném smyslu?
-
-    .item:
-
-      Ukažte, že $\Psi=(x\lor y\lor z)\land(x\lor y\lor\lnot z)\land(x\lor\lnot y\lor z)\land(\lnot x\lor y\lor z)$ je
-      splnitelná, ale není NAE-splnitelná.
+  Dokažte, že $\prob{Flip-SAT}$ je NP-úplný. "Nápověda: převádějte z NAE-3-SAT.".emphasize
 
 
 .Solution:
+  label: red-un-7-2
 
-  "a)".notion Podle lemmatu je $h$ NAE-splňující, právě když je NAE-splňující překlopené $\bar h$. Každá dvojice
-  $\{h,\bar h\}$ obsahuje právě jedno ohodnocení s $x_1=0$, stačí tedy projít 8 ohodnocení s $x_1=0$ a ke každému
-  nalezenému přidat jeho doplněk. V tabulce jsou hodnoty literálů jednotlivých klauzulí (ohodnocení píšeme
-  jako $x_1x_2x_3x_4$).
+  "Redukce:".notion $\prob{NAE-3-SAT} \redp \prob{Flip-SAT}$, formule $\Phi$ $\mapsto$ táž formule $\Phi$ (čtená jako
+  obyčejná CNF).
 
-  .table:
-    columns: 'cccccl'
 
-    .row:
-      head: true
+  "1. $\prob{Flip-SAT}$ je v $\NP$.".notion Certifikát je ohodnocení $h$. Verifikátor spočte $\bar h$ a dosadí obě
+  ohodnocení do všech klauzulí; čas $O(|\varphi|)$.
 
-      $x_1x_2x_3x_4$
 
-      $C_1$
+  "2. Konstrukce.".notion Identita. "Klíčové pozorování:".emphasize literál je při $\bar h$ pravdivý, právě když je při
+  $h$ nepravdivý (překlopí se hodnota proměnné, tedy i literálu). Klauzuli tedy $\bar h$ splňuje, právě když obsahuje
+  literál, který je při $h$ "nepravdivý".emphasize.
 
-      $C_2$
 
-      $C_3$
+  "3. Polynomialita.".notion Výstup je vstup, čas $O(|\Phi|)$.
 
-      $C_4$
 
-      výsledek
+  "4. ($\Rightarrow$)".notion Nechť $h$ NAE-splňuje $\Phi$. Každá klauzule má při $h$ pravdivý literál, takže $h$
+  splňuje $\Phi$, a nepravdivý literál, takže podle pozorování $\bar h$ splňuje $\Phi$.
 
-    .row:
 
-      0000
+  "5. ($\Leftarrow$)".notion Nechť $h$ i $\bar h$ splňují $\Phi$. Každá klauzule má literál pravdivý při $h$ a literál
+  pravdivý při $\bar h$, tedy nepravdivý při $h$. Při $h$ v ní tedy nejsou všechny literály stejné a $h$ $\Phi$
+  NAE-splňuje.
 
-      001
 
-      100
+  "6. Závěr.".notion $\prob{NAE-3-SAT}$ je NP-úplný, tedy $\prob{Flip-SAT}$ je NP-těžký a podle bodu 1 NP-úplný.
 
-      101
 
-      000
-
-      $C_4$ samé nuly
-
-    .row:
-
-      0001
-
-      001
-
-      101
-
-      100
-
-      001
-
-      $\ANO$
-
-    .row:
-
-      0010
-
-      000
-
-      100
-
-      111
-
-      010
-
-      $C_1$ samé nuly
-
-    .row:
-
-      0011
-
-      000
-
-      101
-
-      110
-
-      011
-
-      $C_1$ samé nuly
-
-    .row:
-
-      0100
-
-      011
-
-      110
-
-      001
-
-      000
-
-      $C_4$ samé nuly
-
-    .row:
-
-      0101
-
-      011
-
-      111
-
-      000
-
-      001
-
-      $C_2$ samé jedničky
-
-    .row:
-
-      0110
-
-      010
-
-      110
-
-      011
-
-      010
-
-      $\ANO$
-
-    .row:
-
-      0111
-
-      010
-
-      111
-
-      010
-
-      011
-
-      $C_2$ samé jedničky
-
-  NAE-splňující s $x_1=0$ jsou $0001$ a $0110$, k nim přidáme doplňky $1110$ a $1001$. Formule $\Phi$ má tedy
-  právě 4 NAE-splňující ohodnocení: $0001$, $0110$, $1001$, $1110$. (Všimněte si řádku $0111$: ohodnocení
-  formuli $\Phi$ obyčejně splňuje, ale v $C_2$ jsou samé jedničky.)
-
-
-  "b)".notion Označme $M$ množinu NAE-splňujících ohodnocení. Zobrazení $h\mapsto\bar h$ zobrazuje $M$ do $M$
-  (lemma .reference:lem-bitflip) a platí $\bar{\bar h}=h$. Navíc $\bar h\ne h$, protože se liší v každé proměnné
-  a aspoň jedna proměnná existuje. Množina $M$ se proto rozpadá na disjunktní dvojice $\{h,\bar h\}$ a $|M|$ je sudé.
-
-
-  Pro obyčejnou splnitelnost to neplatí: $(x_1\lor x_2\lor x_3)$ má 7 splňujících ohodnocení (všechna kromě $000$).
-  Formule $\Phi$ jich má 8, ale to je náhoda – překlopení splňující ohodnocení obecně nezachovává.
-
-
-  "c)".notion $\Psi$ je splnitelná: při $x=y=z=1$ má každá klauzule pravdivý literál (první tři $x$, poslední $y$).
-
-
-  NAE-klauzule nad proměnnými $x,y,z$ zakazuje přesně dvě ohodnocení $(x,y,z)$: to, při kterém jsou všechny tři
-  literály nepravdivé, a jeho doplněk (všechny pravdivé). Klauzule $\Psi$ tedy zakazují:
-
-  .itemize:
-
-    .item:
-
-      $(x\lor y\lor z)$: $000$ a $111$;
-
-    .item:
-
-      $(x\lor y\lor\lnot z)$: $001$ a $110$;
-
-    .item:
-
-      $(x\lor\lnot y\lor z)$: $010$ a $101$;
-
-    .item:
-
-      $(\lnot x\lor y\lor z)$: $100$ a $011$.
-
-  Dohromady je zakázáno všech 8 ohodnocení, $\Psi$ proto NAE-splnitelná není. (Totéž jinak: $\mathrm{NAE}(\ell_1,\ell_2,\ell_3)$
-  platí, právě když platí $(\ell_1\lor\ell_2\lor\ell_3)\land(\lnot\ell_1\lor\lnot\ell_2\lor\lnot\ell_3)$. Připojíme-li ke $\Psi$
-  klauzule s opačnými literály, dostaneme všech 8 klauzulí nad $x,y,z$, a ty splnit nejde.)
-
-
-.Exercise:
-  title: 'Úloha 7.3 (3-SAT na NAE-3-SAT krok za krokem)'
-  label: un-7-3
-
-  Je dána formule $\varphi=(x_1\lor x_2\lor\lnot x_3)\land(\lnot x_1\lor\lnot x_2\lor\lnot x_3)$.
-
-  .enumerate:
-    type: a
-
-    .item:
-
-      Sestrojte formuli $\varphi'$ (NAE-4-SAT, pólová proměnná $z$) a formuli $\varphi''$ (NAE-3-SAT, pomocné
-      proměnné $w_1,w_2$) podle oddílu .reference:ch-sat-3-sat-nae-3-sat. Kolik má $\varphi''$ proměnných a klauzulí?
-      Kolik obecně pro formuli s $n$ proměnnými a $m$ klauzulemi?
-
-    .item:
-
-      Ohodnocení $h$: $x_1=x_2=x_3=0$ splňuje $\varphi$. Doplňte hodnoty $z,w_1,w_2$ tak, aby výsledek NAE-splňoval
-      $\varphi''$. Najděte obecné pravidlo pro volbu $w$.
-
-    .item:
-
-      Ohodnocení $g$: $x_1=x_2=x_3=1$, $w_1=0$, $w_2=1$, $z=1$ NAE-splňuje $\varphi''$. Splňuje jeho zúžení na
-      $x_1,x_2,x_3$ formuli $\varphi$? Jak z $g$ dostanete splňující ohodnocení $\varphi$?
-
-
-.Solution:
-
-  "Redukce:".notion $\prob{3-SAT} \redp \prob{NAE-3-SAT}$, formule $\varphi$ $\mapsto$ $\varphi''$ (přes NAE-4-SAT
-  s pólovou proměnnou $z$, pak rozbití každé 4-klauzule proměnnou $w_j$).
-
-
-  "a)".notion Ke každé klauzuli přidáme společnou proměnnou $z$:
-
-  .equation:
-
-    \varphi'=\mathrm{NAE}(x_1,x_2,\lnot x_3,z)\land\mathrm{NAE}(\lnot x_1,\lnot x_2,\lnot x_3,z).
-
-  Každou 4-klauzuli $\mathrm{NAE}(\ell_1,\ell_2,\ell_3,z)$ rozbijeme na $\mathrm{NAE}(\ell_1,\ell_2,w)\land\mathrm{NAE}(\lnot w,\ell_3,z)$
-  s vlastní proměnnou $w$:
-
-  .equation:
-
-    \varphi''=\mathrm{NAE}(x_1,x_2,w_1)\land\mathrm{NAE}(\lnot w_1,\lnot x_3,z)\land\mathrm{NAE}(\lnot x_1,\lnot x_2,w_2)\land\mathrm{NAE}(\lnot w_2,\lnot x_3,z).
-
-  $\varphi''$ má 6 proměnných ($x_1,x_2,x_3,z,w_1,w_2$) a 4 klauzule. Obecně: $n+1+m$ proměnných (jedna $z$
-  a jedna $w_j$ na klauzuli) a $2m$ klauzulí.
-
-
-  "b)".notion Položíme $z=0$ (směr ($\Rightarrow$) věty .reference:thm-nae4). Pravidlo pro $w$ u klauzule
-  $(\ell_1\lor\ell_2\lor\ell_3)$ splněné ohodnocením $h$: "$w=1$, právě když $\ell_1=\ell_2=0$".notion. Zdůvodnění:
-
-  .itemize:
-
-    .item:
-
-      Je-li $\ell_1=\ell_2=0$, musí být $w=1$, jinak je první klauzule $(0,0,0)$. Druhá klauzule je
-      $(\lnot w,\ell_3,z)=(0,\ell_3,0)$ a je NAE, protože $\ell_3=1$ (klauzule je splněná a $\ell_1=\ell_2=0$).
-
-    .item:
-
-      Jinak je mezi $\ell_1,\ell_2$ jednička a s $w=0$ je první klauzule NAE. Druhá je $(1,\ell_3,0)$, tedy také NAE.
-
-  Pro $h$: v $C_1$ je $\ell_1=x_1=0$, $\ell_2=x_2=0$, tedy $w_1=1$; v $C_2$ je $\ell_1=\lnot x_1=1$, tedy $w_2=0$.
-  Hodnoty literálů čtyř klauzulí $\varphi''$ jsou $(0,0,1)$, $(0,1,0)$, $(1,1,0)$, $(1,1,0)$ – žádná trojice není
-  samé nuly ani samé jedničky (spodní řádek obrázku níže).
-
-
-  "c)".notion Zúžení $x_1=x_2=x_3=1$ formuli $\varphi$ "nesplňuje".emphasize: $C_2=(\lnot x_1\lor\lnot x_2\lor\lnot x_3)=(0\lor0\lor0)$.
-  To není chyba redukce. Při $z=1$ dodává jedničku do každé 4-klauzule proměnná $z$ a NAE od původních literálů
-  vynutí jen aspoň jednu "nulu".emphasize – zúžení splňuje formuli s opačnými literály, ne $\varphi$.
-
-
-  Podle lemmatu .reference:lem-bitflip proto překlopíme všechny hodnoty: $\bar g$: $x_1=x_2=x_3=0$, $w_1=1$,
-  $w_2=0$, $z=0$. Je to opět NAE-řešení a teď $z=0$, takže každá 4-klauzule musí mít jedničku mezi $\ell_1,\ell_2,\ell_3$:
-  zúžení $x_1=x_2=x_3=0$ splňuje $\varphi$ ($C_1$ splní $\lnot x_3$, $C_2$ splní $\lnot x_1$). Je to přesně
-  ohodnocení z bodu b).
-
-
-  .centered:
-
-    !tikz:
-      filename: 07z-ulohy-navic-02
-
-      \node[font=\footnotesize] at (1.15,1.3) {$\mathrm{NAE}(x_1,x_2,w_1)$};
-      \node[font=\footnotesize] at (4.05,1.3) {$\mathrm{NAE}(\lnot w_1,\lnot x_3,z)$};
-      \node[font=\footnotesize] at (6.95,1.3) {$\mathrm{NAE}(\lnot x_1,\lnot x_2,w_2)$};
-      \node[font=\footnotesize] at (9.85,1.3) {$\mathrm{NAE}(\lnot w_2,\lnot x_3,z)$};
-      \draw[decorate,decoration={brace,amplitude=4pt},gr] (0.2,1.65)--(5.0,1.65) node[midway,above=4pt,font=\scriptsize]{z klauzule $C_1$};
-      \draw[decorate,decoration={brace,amplitude=4pt},gr] (5.8,1.65)--(10.6,1.65) node[midway,above=4pt,font=\scriptsize]{z klauzule $C_2$};
-      \foreach \t [count=\i] in {x_1,x_2,w_1} {\node[font=\scriptsize] at ({0.5+(\i-1)*0.65},0.62) {$\t$};}
-      \foreach \t [count=\i] in {\lnot w_1,\lnot x_3,z} {\node[font=\scriptsize] at ({3.4+(\i-1)*0.65},0.62) {$\t$};}
-      \foreach \t [count=\i] in {\lnot x_1,\lnot x_2,w_2} {\node[font=\scriptsize] at ({6.3+(\i-1)*0.65},0.62) {$\t$};}
-      \foreach \t [count=\i] in {\lnot w_2,\lnot x_3,z} {\node[font=\scriptsize] at ({9.2+(\i-1)*0.65},0.62) {$\t$};}
-      \node[font=\small,anchor=east,align=right] at (-0.2,0) {$g$: $x=111$, $z=1$\\ \scriptsize zúžení nesplní $C_2$};
-      \chNAEvals{0.5}{0}{1,1,0}
-      \chNAEvals{3.4}{0}{1,0,1}
-      \chNAEvals{6.3}{0}{0,0,1}
-      \chNAEvals{9.2}{0}{0,0,1}
-      \draw[->,very thick,intc] (5.4,-0.42) -- node[right,font=\scriptsize]{překlopíme všechny bity (lemma)} (5.4,-1.18);
-      \node[font=\small,anchor=east,align=right] at (-0.2,-1.6) {$\bar g$: $x=000$, $z=0$\\ \scriptsize zúžení splní $\varphi$};
-      \chNAEvals{0.5}{-1.6}{0,0,1}
-      \chNAEvals{3.4}{-1.6}{0,1,0}
-      \chNAEvals{6.3}{-1.6}{1,1,0}
-      \chNAEvals{9.2}{-1.6}{1,1,0}
-      \foreach \y in {0,-1.6} {\foreach \x in {2.55,5.45,8.35,11.25} {\node[acc,font=\large] at (\x,\y) {$\checkmark$};}}
-
-  Hodnoty literálů čtyř klauzulí $\varphi''$ pro $g$ (nahoře) a pro překlopené $\bar g$ (dole). Obě ohodnocení jsou
-  NAE-řešení. "Všimni si:".emphasize při $z=1$ (nahoře) mají literály původní $C_2$, tedy $\lnot x_1,\lnot x_2,\lnot x_3$,
-  samé nuly; po překlopení je $z=0$ a jedničku musí dodat původní literály.
+  "Poznámka.".notion $\prob{Flip-SAT}$ je jen $\prob{NAE-SAT}$ "v přestrojení".emphasize (vzor přestrojení: identita,
+  ale je potřeba ukázat, že obě otázky mají stejnou odpověď). Je vidět i lemma .reference:lem-bitflip: s $h$ vyhovuje
+  i $\bar h$. Protože $h\neq\bar h$, má každá $\ANO$-instance $\prob{Flip-SAT}$ aspoň dvě splňující ohodnocení a je
+  i $\ANO$-instancí $\prob{Double-SAT}$ (úloha .reference:un-7-4); opačně to neplatí, např. $(x_1)\land(x_2\lor x_3)$.
 
 
 .Subsection Na úrovni testu
   label: ch-sat-ulohy-navic-test
+
+
+.Exercise:
+  title: 'Úloha 7.3 (NAE-splňující ohodnocení z orákula)'
+  label: un-7-3
+
+  Máte orákulum, které o formuli v 3-CNF (tři literály v klauzuli, opakování je dovolené) v jednom kroku rozhodne,
+  zda je "NAE-splnitelná".notion (problém .reference:prob-nae).
+
+  .enumerate:
+    type: a
+
+    .item:
+
+      Pomocí orákula najděte NAE-splňující ohodnocení formule $\Phi$ s proměnnými $x_1,\dots,x_n$, nebo oznamte, že
+      neexistuje. Ptát se smíte jen na formule v 3-CNF. Zdůvodněte správnost a určete počet dotazů.
+
+    .item:
+
+      Proč nejde přímo převzít self-redukci SATu (úloha .reference:un-7-9), tj. dosadit $x_i=1$ nebo přidat klauzuli
+      $(x_i\lor x_i\lor x_i)$?
+
+    .item:
+
+      Proveďte a) pro $\Phi=(x_1\lor x_2\lor x_3)\land(\lnot x_1\lor x_2\lor x_4)\land(x_2\lor x_3\lor\lnot x_4)\land(x_1\lor\lnot x_3\lor x_4)$
+      (klauzule čteme jako NAE).
+
+
+.Solution:
+  label: red-un-7-3
+
+  "Redukce s orákulem:".notion $\prob{NAE-3-SAT}$ – nalezení ohodnocení $\to$ $\prob{NAE-3-SAT}$ – rozhodovací verze.
+  Jak: $x_1=0$ zvolíme volně díky symetrii, ostatní proměnné porovnáváme s $x_1$ klauzulemi
+  $(x_i\lor\lnot x_1\lor\lnot x_1)$ („$x_i=x_1$“) a $(x_i\lor x_1\lor x_1)$ („$x_i\neq x_1$“).
+
+
+  "Dvě pozorování.".notion
+
+  .enumerate:
+
+    .item:
+
+      $\mathrm{NAE}(a,b,b)$ platí, právě když $a\neq b$ (hodnoty $a,b,b$ nejsou všechny stejné). Klauzule
+      $(x_i\lor x_1\lor x_1)$ tedy říká $x_i\neq x_1$ a klauzule $(x_i\lor\lnot x_1\lor\lnot x_1)$ říká
+      $x_i\neq\lnot x_1$, tj. $x_i=x_1$. Obě jsou v 3-CNF.
+
+    .item:
+
+      Podle lemmatu .reference:lem-bitflip s každým NAE-splňujícím ohodnocením funguje i překlopené. Je-li $\Phi$
+      NAE-splnitelná, má proto NAE-splňující ohodnocení s $x_1=0$.
+
+
+  "a) Algoritmus.".notion
+
+  .enumerate:
+
+    .item:
+
+      Zeptej se na $\Phi$. Při $\NE$ ohodnocení neexistuje – konec.
+
+    .item:
+
+      Polož $\Phi_1:=\Phi$. Pro $i=2,\dots,n$ se zeptej na $\Phi_{i-1}\land(x_i\lor\lnot x_1\lor\lnot x_1)$. Při $\ANO$
+      zapiš „$x_i$ stejná jako $x_1$“ a polož $\Phi_i:=\Phi_{i-1}\land(x_i\lor\lnot x_1\lor\lnot x_1)$, při $\NE$
+      zapiš „$x_i$ opačná“ a polož $\Phi_i:=\Phi_{i-1}\land(x_i\lor x_1\lor x_1)$.
+
+    .item:
+
+      Vydej $x_1=0$ a pro $i\ge2$ $x_i=0$ („stejná“), resp. $x_i=1$ („opačná“).
+
+
+  "Invariant:".notion $\Phi_i$ je NAE-splnitelná a každé její NAE-splňující ohodnocení NAE-splňuje $\Phi$ a má vztahy
+  $x_2,\dots,x_i$ k $x_1$ zapsané algoritmem.
+
+  .itemize:
+
+    .item:
+
+      Na začátku platí podle prvního dotazu.
+
+    .item:
+
+      Krok $\ANO$: splnitelnost potvrdilo orákulum, přidaná klauzule vynucuje zapsaný vztah.
+
+    .item:
+
+      Krok $\NE$: $\Phi_{i-1}$ je NAE-splnitelná a žádné její NAE-splňující ohodnocení nemá $x_i=x_1$. Všechna tedy mají
+      $x_i\neq x_1$ a splňují i přidanou klauzuli $(x_i\lor x_1\lor x_1)$; $\Phi_i$ je NAE-splnitelná.
+
+
+  "Konec.".notion Vezměme NAE-splňující ohodnocení $g$ formule $\Phi_n$. Má-li $g(x_1)=1$, překlopíme ho – podle
+  pozorování 2 zůstane NAE-splňující a vztahy „stejná/opačná“ se překlopením nemění. Teď $g(x_1)=0$ a vztahy určují
+  všechny ostatní hodnoty, takže $g$ je přesně výstup algoritmu. Výstup tedy NAE-splňuje $\Phi_n$, a tím i $\Phi$.
+
+
+  "Počet dotazů:".notion $1+(n-1)=n$. Každý dotaz je $\Phi$ s nejvýše $n-1$ přidanými klauzulemi, tedy polynomiálně
+  velký, a je v 3-CNF.
+
+
+  "b)".notion Po dosazení $x_i=1$ do $\mathrm{NAE}(x_i,\ell_2,\ell_3)$ zbude podmínka „aspoň jeden z $\ell_2,\ell_3$ je
+  nepravdivý“, tj. $(\lnot\ell_2\lor\lnot\ell_3)$ – to není NAE-klauzule a orákulum se na ni zeptat neumí. Klauzule
+  $(x_i\lor x_i\lor x_i)$ je zase NAE-nesplnitelná vždy (tři stejné literály). Hlavní důvod je obecný: podle lemmatu
+  .reference:lem-bitflip "žádná".emphasize NAE-formule nemůže vynutit $x_i=1$, protože s každým řešením vyhovuje
+  i překlopené. Vynutit jde jen vztah dvou proměnných, a proto potřebujeme referenční proměnnou $x_1$.
+
+
+  "c) Průběh.".notion NAE-splňující ohodnocení $\Phi$ jsou $x_1x_2x_3x_4\in\{0011,\ 0100,\ 1011,\ 1100\}$ (dvě dvojice
+  navzájem překlopených).
+
+  .table:
+    columns: 'lcl'
+
+    .row:
+      head: true
+
+      dotaz
+
+      odpověď
+
+      zápis
+
+    .row:
+
+      $\Phi$
+
+      $\ANO$
+
+      formule je NAE-splnitelná
+
+    .row:
+
+      $\Phi\land(x_2\lor\lnot x_1\lor\lnot x_1)$
+
+      $\ANO$
+
+      $x_2$ stejná (vyhovuje $0011$)
+
+    .row:
+
+      $\Phi_2\land(x_3\lor\lnot x_1\lor\lnot x_1)$
+
+      $\NE$
+
+      $x_3$ opačná (zbývají $0011$, $1100$)
+
+    .row:
+
+      $\Phi_3\land(x_4\lor\lnot x_1\lor\lnot x_1)$
+
+      $\NE$
+
+      $x_4$ opačná
+
+  Výsledek $x_1x_2x_3x_4=0011$ po 4 dotazech. Kontrola hodnot literálů v klauzulích: $(0,0,1)$, $(1,0,1)$,
+  $(0,1,0)$, $(0,0,1)$ – v žádné nejsou všechny stejné.
 
 
 .Exercise:
@@ -735,8 +525,14 @@ a 3-SAT s nejvýše třemi klauzulemi na proměnnou.
   "6. Závěr.".notion $\prob{3-SAT}$ je NP-úplný, tedy $\prob{E3-SAT}$ je NP-těžký a podle bodu 1 NP-úplný.
 
 
-  "Proč tu smějí být $a,b$ společné.".notion V úloze .reference:un-7-1 d) sdílená proměnná redukci rozbila, protože
-  hodnotu $z_j$ jsme "volili".emphasize podle toho, který literál je pravdivý. Tady se nic nevolí: náhrada je
+  "Proč tu smějí být $a,b$ společné.".notion V rozsekání dlouhých klauzulí (redukce .reference:red-sat3sat) musí mít
+  každá klauzule vlastní pomocné proměnné, protože hodnotu $z_j$ tam "volíme".emphasize podle toho, který literál je
+  pravdivý. Protipříklad: formule
+  $\psi=(x_1\lor x_2\lor x_3\lor x_4)\land(x_3\lor x_4\lor x_5\lor x_6)\land(\lnot x_3)\land(\lnot x_4)$ je
+  splnitelná ($x_1=x_5=1$, $x_3=x_4=0$). Kdyby obě dlouhé klauzule sdílely jedinou pomocnou proměnnou $z$, vzniklo by
+  $(x_1\lor x_2\lor z)\land(\lnot z\lor x_3\lor x_4)\land(x_3\lor x_4\lor z)\land(\lnot z\lor x_5\lor x_6)$ spolu
+  s $(\lnot x_3)$, $(\lnot x_4)$; při $x_3=x_4=0$ vynutí druhá klauzule $z=0$ a třetí $z=1$ – spor, výsledek je
+  nesplnitelný. Tady se nic nevolí: náhrada je
   ekvivalentní s $C$ při každé hodnotě $a,b$, takže jedna dvojice $a,b$ poslouží všem klauzulím.
 
 
@@ -795,7 +591,7 @@ a 3-SAT s nejvýše třemi klauzulemi na proměnnou.
   .centered:
 
     !tikz:
-      filename: 07z-ulohy-navic-03
+      filename: 07z-ulohy-navic-01
       options: 'cp/.style={v,minimum size=9mm,font=\small}, imp/.style={->,thick,draw=thmc,>={Stealth[length=2.6mm]}}, cl/.style={draw=black!60,thick,rounded corners=3pt,font=\small,inner sep=4pt,fill=defc!7}'
 
       \node[cp] (x1) at (0,1.5) {$x^{(1)}$};
@@ -939,107 +735,132 @@ a 3-SAT s nejvýše třemi klauzulemi na proměnnou.
 
 
 .Exercise:
-  title: 'Úloha 7.8 (proč stejný trik nedá těžkost 2-SAT)'
+  title: 'Úloha 7.8 (MAX-2-SAT přímo z 3-SAT)'
   label: un-7-8
 
-  $\prob{2-SAT}$ (klauzule nejvýše se dvěma literály) je v $\PP$ (oddíl .reference:ch-prostor-2-sat-je-v-p), přestože
-  $\prob{3-SAT}$ je NP-úplný. Úloha ukazuje, proč na 2-SAT nejde přenést rozsekání z oddílu
-  .reference:ch-sat-sat-3-sat. Části b)–d) jsou "(nad rámec přednášky)".emphasize.
+  $\prob{2-SAT}$ je v $\PP$ (oddíl .reference:ch-prostor-2-sat-je-v-p). Problém $\prob{MAX-2-SAT}$:
 
-  .enumerate:
-    type: a
 
-    .item:
+  "Vstup:".notion formule $\varphi$ v CNF, jejíž každá klauzule má nejvýše dva literály (klauzule se smějí opakovat
+  a počítají se násobně), a číslo $k$.
 
-      Ukažte, že $\exists z:\ (a\lor z)\land(\lnot z\lor b)$ platí, právě když platí $(a\lor b)$. Vysvětlete,
-      kde se konstrukce z oddílu .reference:ch-sat-sat-3-sat zasekne, chceme-li klauzuli $(\ell_1\lor\ell_2\lor\ell_3)$
-      nahradit 2-klauzulemi.
 
-    .item:
+  "Otázka:".notion existuje ohodnocení, které splní aspoň $k$ klauzulí?
 
-      Pro ohodnocení $h_1,h_2,h_3$ definujme "většinu".notion $\mathrm{maj}(h_1,h_2,h_3)$: každá proměnná dostane
-      hodnotu, kterou má v aspoň dvou ze tří ohodnocení. Dokažte: splňují-li $h_1,h_2,h_3$ formuli $\psi$ v 2-CNF,
-      splňuje ji i $\mathrm{maj}(h_1,h_2,h_3)$.
 
-    .item:
+  Dokažte převodem z $\prob{3-SAT}$, že $\prob{MAX-2-SAT}$ je NP-úplný.
 
-      Dokažte, že neexistuje 2-CNF formule $\psi(x,y,z,w_1,\dots,w_r)$ taková, že pro každé ohodnocení $x,y,z$ platí:
-      $(x\lor y\lor z)$ je pravdivá $\iff$ existují hodnoty $w_1,\dots,w_r$, při kterých je $\psi$ pravdivá.
 
-    .item:
+  "Nápověda.".emphasize Klauzuli $(a\lor b\lor c)$ nahraďte deseti klauzulemi s novou proměnnou $w$
 
-      Plyne z c), že redukce $\prob{3-SAT}\redp\prob{2-SAT}$ neexistuje?
+  .equation:
+
+    (a),\ (b),\ (c),\ (w),\ (\lnot a\lor\lnot b),\ (\lnot a\lor\lnot c),\ (\lnot b\lor\lnot c),\ (a\lor\lnot w),\ (b\lor\lnot w),\ (c\lor\lnot w)
+
+  a ukažte: je-li $(a\lor b\lor c)$ pravdivá, lze $w$ zvolit tak, aby platilo 7 z 10 klauzulí, a víc než 7 nikdy;
+  je-li nepravdivá, platí nejvýše 6. (Cvičení .reference:cv-4-4 dokazuje totéž později z $\prob{MaxCut}$;
+  tady jde o přímou cestu z $\prob{3-SAT}$.)
 
 
 .Solution:
+  label: red-un-7-8
 
-  "a)".notion Při $z=0$ je formule rovna $(a\lor0)\land1=a$, při $z=1$ je rovna $1\land(0\lor b)=b$. Existuje tedy
-  vhodné $z$, právě když $a=1$ nebo $b=1$, tj. $(a\lor b)$. (Je to rezoluce: proměnná $z$ zmizí a zbude spojení
-  zbytků.)
-
-
-  V oddílu má každý kousek tvar $(\lnot z_{j-1}\lor\ell_{j+1}\lor z_j)$: „vstup“ $\lnot z_{j-1}$, jeden původní literál
-  a „výstup“ $z_j$. To jsou tři literály. Ve 2-klauzulích se vejdou jen krajní kousky $(\ell_1\lor z_1)$
-  a $(\lnot z_1\lor\ell_2)$, a ty podle výpočtu výše vyjadřují jen $(\ell_1\lor\ell_2)$. Na $\ell_3$ už nezbývá místo:
-  kousek $(\lnot z_1\lor\ell_2\lor z_2)$ by měl tři literály. Že to nejde ani jinak (s libovolnými pomocnými
-  proměnnými), ukazují b) a c).
+  "Redukce:".notion $\prob{3-SAT} \redp \prob{MAX-2-SAT}$, formule $\varphi$ s $m$ klauzulemi $\mapsto$
+  $(\varphi_2,\ k=7m)$, kde $\varphi_2$ je spojení $m$ desetiklauzulových gadgetů.
 
 
-  "b)".notion Jednotkovou klauzuli $(\ell)$ chápeme jako $(\ell\lor\ell)$. Vezmeme libovolnou klauzuli $(\ell\lor\ell')$
-  formule $\psi$. Každé z ohodnocení $h_1,h_2,h_3$ ji splňuje, tedy dělá pravdivým $\ell$ nebo $\ell'$. Tři ohodnocení,
-  dva literály: podle Dirichletova principu je jeden z nich, řekněme $\ell$, pravdivý v aspoň dvou z $h_1,h_2,h_3$.
-  Nechť $\ell$ je literál proměnné $v$. Pak $v$ má v aspoň dvou ohodnoceních tu hodnotu, při které je $\ell$ pravdivý
-  ($1$ pro $\ell=v$, $0$ pro $\ell=\lnot v$), a $\mathrm{maj}$ dá proměnné $v$ právě tuto hodnotu. Literál $\ell$ je
-  tedy při $\mathrm{maj}(h_1,h_2,h_3)$ pravdivý a klauzule splněná. To platí pro každou klauzuli, takže
-  $\mathrm{maj}(h_1,h_2,h_3)$ splňuje $\psi$.
+  "1. $\prob{MAX-2-SAT}$ je v $\NP$.".notion Certifikát je ohodnocení; verifikátor spočítá splněné klauzule
+  a porovná s $k$, čas $O(|\varphi|)$.
 
 
-  "c)".notion Sporem: nechť taková $\psi$ existuje. Ohodnocení $(x,y,z)=(1,0,0)$, $(0,1,0)$, $(0,0,1)$ splňují
-  $(x\lor y\lor z)$, existují tedy jejich rozšíření $g_1,g_2,g_3$ na $w_1,\dots,w_r$, která splňují $\psi$. Podle b)
-  splňuje $\psi$ i $g=\mathrm{maj}(g_1,g_2,g_3)$. Většina se počítá po proměnných, takže na $x,y,z$ je $g$ většinou
-  z $(1,0,0)$, $(0,1,0)$, $(0,0,1)$: každá z $x,y,z$ má jedničku jen v jednom ze tří, tedy $g(x)=g(y)=g(z)=0$.
-  Ohodnocení $(0,0,0)$ má tedy rozšíření $g$ splňující $\psi$, takže podle předpokladu by $(x\lor y\lor z)$ byla při
-  $(0,0,0)$ pravdivá. Spor.
+  "2. Konstrukce.".notion Pro každou klauzuli $C_j=(a\lor b\lor c)$ formule $\varphi$ ($a,b,c$ jsou literály, mohou se
+  opakovat) zavedeme novou proměnnou $w_j$ a deset klauzulí $G_j$ z nápovědy s $w=w_j$. Všechny mají nejvýše dva
+  literály. Položíme $\varphi_2=G_1\land\dots\land G_m$ a $k=7m$.
 
 
-  .centered:
-
-    !tikz:
-      filename: 07z-ulohy-navic-04
-
-      \foreach \t [count=\i] in {x,y,z} {\node[font=\small] at ({0.5+(\i-1)*0.65},0.7) {$\t$};}
-      \node[font=\scriptsize,gr] at (3.0,0.7) {$w_1,\dots,w_r$};
-      \chNAEvals{0.5}{0}{1,0,0}
-      \chNAEvals{0.5}{-0.75}{0,1,0}
-      \chNAEvals{0.5}{-1.5}{0,0,1}
-      \foreach \r [count=\k] in {0,-0.75,-1.5} {
-        \node[font=\small,anchor=east] at (0,\r) {$g_{\k}$};
-        \node[draw=gr,dashed,minimum width=18mm,minimum height=6mm,font=\scriptsize,gr] at (3.0,\r) {rozšíření};
-        \node[acc,font=\small,anchor=west] at (4.1,\r) {$(x\lor y\lor z)$ platí, $\psi$ platí};
-      }
-      \draw[thick] (-0.4,-1.95)--(4.0,-1.95);
-      \node[font=\small,anchor=east] at (0,-2.45) {maj};
-      \chNAEvals{0.5}{-2.45}{0,0,0}
-      \node[draw=intc,thick,minimum width=18mm,minimum height=6mm,font=\scriptsize] at (3.0,-2.45) {většina $w$};
-      \node[rej,font=\small,anchor=west] at (4.1,-2.45) {$\psi$ platí (podle b), ale $(x\lor y\lor z)$ ne};
-
-  Důkaz části c): tři ohodnocení s jedinou jedničkou mezi $x,y,z$ a jejich většina $000$. "Všimni si:".emphasize
-  2-CNF „nepozná“, že se většina od všech tří liší, zatímco klauzule $(x\lor y\lor z)$ ano.
+  "3. Polynomialita.".notion $\varphi_2$ má $10m$ klauzulí a $n+m$ proměnných, sestrojí se jedním průchodem.
 
 
-  Důsledek: redukci, která (jako v oddílu .reference:ch-sat-sat-3-sat) nahradí každou klauzuli $C$ vlastní
-  2-CNF formulí $\psi_C$ s novými pomocnými proměnnými tak, že (jako v lemmatu .reference:lem-3satkor) $C$ platí,
-  právě když lze $\psi_C$ splnit vhodnými hodnotami pomocných proměnných, sestrojit nelze – pro klauzuli
-  $(x\lor y\lor z)$ by $\psi_C$ byla právě formule $\psi$ z bodu c).
+  "Lemma o gadgetu.".notion Zafixujme hodnoty literálů $a,b,c$ a nechť $t\in\{0,1,2,3\}$ je počet pravdivých z nich.
+  Pak klauzule $(a),(b),(c)$ splní $t$; klauzule $(w)$ splní $w$; ze tří klauzulí $(\lnot a\lor\lnot b)$, … je
+  nepravdivá ta, jejíž oba literály jsou pravdivé, splněných je tedy $3-\binom t2$; klauzule $(a\lor\lnot w)$, …
+  splní všechny tři při $w=0$, při $w=1$ jen $t$ z nich. Celkem:
+
+  .table:
+    columns: 'cccc'
+
+    .row:
+      head: true
+
+      $t$
+
+      $w=0$
+
+      $w=1$
+
+      nejlepší $w$
+
+    .row:
+
+      $0$
+
+      $0+0+3+3=6$
+
+      $0+1+3+0=4$
+
+      $6$
+
+    .row:
+
+      $1$
+
+      $1+0+3+3=7$
+
+      $1+1+3+1=6$
+
+      $7$
+
+    .row:
+
+      $2$
+
+      $2+0+2+3=7$
+
+      $2+1+2+2=7$
+
+      $7$
+
+    .row:
+
+      $3$
+
+      $3+0+0+3=6$
+
+      $3+1+0+3=7$
+
+      $7$
+
+  (sčítance v pořadí: jednotkové klauzule s $a,b,c$, klauzule $(w)$, dvojice záporů, klauzule s $\lnot w$). Gadget tedy
+  nikdy nesplní víc než 7 klauzulí, a 7 splní, právě když je $(a\lor b\lor c)$ pravdivá ($t\ge1$). Lemma závisí jen na
+  hodnotách literálů, takže platí i pro klauzule s opakovaným literálem.
 
 
-  "d)".notion Ne. Část c) vylučuje jen redukce „klauzule po klauzuli“ s pomocnými proměnnými, jejichž náhrada je
-  s klauzulí ekvivalentní jako v lemmatu .reference:lem-3satkor. Obecná polynomiální
-  redukce smí s formulí dělat cokoli. O existenci $\prob{3-SAT}\redp\prob{2-SAT}$ platí přesně: existuje, právě když
-  $\PP=\NP$. Kdyby existovala, plynulo by z $\prob{2-SAT}\in\PP$, že $\prob{3-SAT}\in\PP$, a tedy $\PP=\NP$. Naopak
-  je-li $\PP=\NP$, redukce rozhodne $\prob{3-SAT}$ v polynomiálním čase sama a vypíše pevnou $\ANO$-instanci
-  $(x)$, nebo pevnou $\NE$-instanci $(x)\land(\lnot x)$ problému $\prob{2-SAT}$. Protože otázka $\PP$ vs. $\NP$ je
-  otevřená, nevíme ani, zda redukce existuje – víme jen, že přímočarý trik z kapitoly nefunguje.
+  "4. ($\Rightarrow$)".notion Nechť $h$ splňuje $\varphi$. V každé klauzuli je $t\ge1$, a zvolíme-li $w_j$ podle
+  tabulky, splní gadget $G_j$ přesně 7 klauzulí. Celkem $7m=k$ splněných klauzulí.
+
+
+  "5. ($\Leftarrow$)".notion Nechť ohodnocení $g$ splní aspoň $7m$ klauzulí $\varphi_2$. Každý z $m$ gadgetů přispěje
+  nejvýše 7, takže každý přispěje přesně 7. Gadget nepravdivé klauzule by přispěl nejvýše 6, proto je každá klauzule
+  $C_j$ při zúžení $g$ na původní proměnné pravdivá a zúžení splňuje $\varphi$.
+
+
+  "6. Závěr.".notion $\prob{3-SAT}$ je NP-úplný, tedy $\prob{MAX-2-SAT}$ je NP-těžký a podle bodu 1 NP-úplný.
+
+
+  "Proč to není ve sporu s $\prob{2-SAT}\in\PP$.".notion $\prob{2-SAT}$ se ptá, zda jde splnit "všechny".emphasize
+  klauzule. Formule $\varphi_2$ splnitelná není nikdy (každý gadget splní nejvýše 7 z 10), takže jako vstup pro
+  $\prob{2-SAT}$ je nezajímavá. Těžkost se skrývá v otázce „kolik klauzulí?“, ne „všechny?“ – algoritmus pro
+  $\prob{2-SAT}$ přes implikační graf umí odpovědět jen na tu druhou.
 
 
 .Subsection Úlohy z jiných sbírek
@@ -1052,7 +873,7 @@ testu), úlohy 7.10 a 7.11 jsou důkazy NP-úplnosti (typ 4) a obě se kryjí s 
 je jako opakování „bez nahlížení“.
 
 
-K úloze 7.9 patří kuchařka „self-redukce SATu“ a k úlohám 7.10 a 7.11 kuchařka „NP-úplnost varianty SATu“ z
+K úloze 7.9 patří kuchařka „self-redukce“ a k úlohám 7.10 a 7.11 kuchařka „NP-úplnost varianty SATu“ z
 "rámečku na začátku oddílu"#ch-sat-ulohy-navic-nez-zacnes.
 
 
@@ -1238,8 +1059,7 @@ K úloze 7.9 patří kuchařka „self-redukce SATu“ a k úlohám 7.10 a 7.11 
 
 
   Tuto redukci obsahuje oddíl .reference:ch-sat-sat-3-sat (redukce .reference:red-sat3sat a lemma
-  .reference:lem-3satkor) – zkuste ji napsat bez nahlížení, v úplné testové podobě. Na konkrétní formuli ji
-  procvičuje úloha .reference:un-7-1.
+  .reference:lem-3satkor) – zkuste ji napsat bez nahlížení, v úplné testové podobě.
 
   "Zdroj: Příklady ADS2 – cvičení 10 (MFF UK), příklad 4(b).".small
 
@@ -1290,7 +1110,7 @@ K úloze 7.9 patří kuchařka „self-redukce SATu“ a k úlohám 7.10 a 7.11 
 
 
   "Typické chyby.".notion (1) Společné pomocné proměnné pro různé klauzule: v ($\Rightarrow$) pak hodnotu $z_j$
-  „chtějí“ dvě klauzule různě (protipříklad v úloze .reference:un-7-1 d). (2) Řetěz bez prvního či posledního kousku
+  „chtějí“ dvě klauzule různě (protipříklad u úlohy .reference:un-7-5). (2) Řetěz bez prvního či posledního kousku
   – pak je ($\Leftarrow$) nepravdivá, protože chybí „konec štafety“, který vyrobí spor. (3) Důkaz jen ($\Rightarrow$).
 
 
@@ -1403,5 +1223,4 @@ K úloze 7.9 patří kuchařka „self-redukce SATu“ a k úlohám 7.10 a 7.11 
   průchodů po $O(|\varphi|)$ krocích. Rezolventa může mít víc než tři literály – algoritmus délku klauzulí nepotřebuje.
 
 
-  Hranice mezi snadným a těžkým tedy leží mezi dvěma a třemi klauzulemi na proměnnou – stejně jako u $\prob{X3C}$
-  (úloha .reference:un-10-8) mezi dvěma a třemi výskyty prvku.
+  Hranice mezi snadným a těžkým tedy leží mezi dvěma a třemi klauzulemi na proměnnou.

@@ -45,10 +45,19 @@ Postup na papíře je v oddílu .reference:ch-test-postup-ilp-sat.
   .ditem:
     bullet: 'Úlohy navíc:'
 
-    ILP: "úloha 11.2"#un-11-2 (tři modelovací vzory na jednom grafu), "10.6"#un-10-6 (1-in-3 SAT jako soustava
-    rovnic), "15.1"#un-15-1 (logické podmínky: ekvivalence, „právě jeden“, implikace), "15.5"#un-15-5 (množstevní
-    sleva, velké $M$); SAT: "úloha 14.5"#un-14-5 (doplnění dam), "14.6"#un-14-6 (Tseitinova transformace),
-    "14.8"#un-14-8 („nejvýše jedna“ binárně). Ze sbírky: ILP "11.12"#un-11-12 (0/1 přípustnost),
+    ILP (všech osm úloh kapitoly .reference:ch-resice-ilp je typu 3): "úloha 15.1"#un-15-1 (logické podmínky:
+    ekvivalence, „právě jeden“, implikace), "15.2"#un-15-2 (spravedlivé dědictví: minimalizace rozdílu, počty
+    předmětů), "15.3"#un-15-3 (studijní plán s prerekvizitami: proměnné s časovým indexem), "15.4"#un-15-4
+    (rozvoz palet: zachování toku, celočíselný počet kamionů), "15.5"#un-15-5 (množstevní sleva, velké $M$),
+    "15.6"#un-15-6 (pošťák a parita: pomocná celočíselná proměnná), "15.7"#un-15-7 a "15.8"#un-15-8 (dvě formulace
+    téhož problému: síla LP relaxace, zákaz podcyklů vs. MTZ); dále "11.2"#un-11-2 (balíky do dodávek: nejmenší
+    počet košů s konflikty) a "10.6"#un-10-6 (1-in-3 SAT jako soustava rovnic). SAT (všech osm úloh kapitoly
+    .reference:ch-resice-sat je typu 3): "úloha 14.1"#un-14-1 (latinský čtverec a sudoku: bloky „právě jedna“),
+    "14.2"#un-14-2 (instalace balíčků: závislosti a konflikty, „nejvýše $k$“ čítačem), "14.3"#un-14-3 (hledání
+    min: omezení na konstantně mnoha proměnných), "14.4"#un-14-4 (rozsazení hostů: kapacita stolu čítačem,
+    symetrie), "14.5"#un-14-5 (doplnění dam), "14.6"#un-14-6 (rozvrh se závislostmi: časový index a čítač),
+    "14.7"#un-14-7 (zhasni světla: parita Tseitinovou transformací) a "14.8"#un-14-8 (převozník: plánování
+    s časovým indexem). Ze sbírky: ILP "11.12"#un-11-12 (0/1 přípustnost),
     "15.9"#un-15-9 až "15.18"#un-15-18 (batoh, KNF, 3-barvení, pokrytí, párování, balení množin, TSP, autobusy);
     SAT "14.9"#un-14-9 až "14.12"#un-14-12 ($k$-barevnost, trojrozměrné párování, hamiltonovská a dlouhá kružnice).
 

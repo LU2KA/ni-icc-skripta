@@ -2,19 +2,23 @@
   label: ch-cook-ulohy-navic
 
 
-Úlohy procvičují důkaz Cook–Levinovy věty „zevnitř“: převod dláždění na formuli (oddíl
-.reference:ch-cook-dlazdickovani-sat), dlaždice a výpočetní tabulku konkrétního stroje (oddíl
-.reference:ch-cook-l-dlazdickovani-vypocetni-tabulka), velikost formule, roli nedeterminismu a polynomiálního
-času a nakonec práci s mapou redukcí podle receptu z oddílu .reference:ch-cook-mapa-redukci-a-recept-na-dukaz-np-uplnosti.
+Úlohy jsou psané ve stylu zápočtového testu. Úlohy 6.1–6.5, 6.6 a) a 6.7 jsou důkazy NP-úplnosti (typ 4 testu);
+kromě umělého $\prob{UNP}$ (problém .reference:prob-unp) jsou jediné NP-úplné problémy, které v této chvíli známe,
+$\prob{SAT}$ a $\prob{Dlaždičkování}$, takže se převádí ze $\prob{SAT}$u podle receptu z oddílu
+.reference:ch-cook-mapa-redukci-a-recept-na-dukaz-np-uplnosti. Úloha 6.6 je v částech b a c self-redukce (typ 2).
+Úloha 6.8 se vrací k technickému detailu důkazu Cook–Levinovy věty, na který odkazuje oddíl
+.reference:ch-cook-l-dlazdickovani-vypocetni-tabulka.
 
 
 .Warning:
   title: 'Neoficiální úlohy'
 
-  Úlohy v tomto oddílu "nejsou".notion oficiální zadání předmětu. Jsou to procvičovací úlohy navíc k látce kapitoly;
-  dláždění, tabulky, počty proměnných a klauzulí i počty splňujících ohodnocení byly přepočítány programem (simulace
-  strojů a hrubou silou vyčíslená dláždění a formule na všech vstupech do délky 5), úlohy 6.6 a 6.7 jsou
-  úvahové a byly odvozeny ručně (6.7 navíc zkontrolována výpočtem tranzitivního uzávěru).
+  Úlohy v tomto oddílu "nejsou".notion oficiální zadání předmětu. Jsou to procvičovací úlohy navíc k látce kapitoly.
+  Každou redukci jsme naprogramovali a ekvivalenci odpovědí ověřili hrubou silou na stovkách až tisících malých
+  náhodných formulí (s kladnými i zápornými odpověďmi). U úlohy 6.7 jsme na 400 náhodných formulích spočítali všechna
+  dláždění (počet dláždění je vždy roven počtu splňujících ohodnocení). Algoritmus z úlohy 6.6 jsme porovnali
+  s hrubou silou na 1500 formulích (orákulum nahrazené hrubou silou) a průběh příkladu spočítal skript. Ověření
+  úlohy 6.8 popisuje její řešení.
 
 
 .Procedure:
@@ -28,86 +32,78 @@
     .item:
 
       $\prob{SAT}$: je formule v CNF splnitelná (problém .reference:prob-sat)? Cook–Levin: $\prob{SAT}$ je NP-úplný
-      (věta .reference:thm-cooklevin).
+      (věta .reference:thm-cooklevin). Je to zatím jediný přirozený „zdroj“ redukcí.
+
+    .item:
+
+      NP-těžký a NP-úplný problém (definice .reference:def-nphard); princip štafety: z $\prob{SAT}\redp Q$ plyne, že
+      $Q$ je NP-těžký (důsledek .reference:cor-jaknpc).
 
     .item:
 
       $\prob{Dlaždičkování}$: typy dlaždic, plocha $n\times m$ a předbarvené okraje; lze ji vydláždit tak, aby
-      sousední hrany souhlasily (problém .reference:prob-dlazdickovani)?
+      sousední hrany souhlasily (problém .reference:prob-dlazdickovani)? Potřebuješ ho v úlohách 6.7 a 6.8.
 
     .item:
 
-      "Výpočetní tabulka".emphasize (redukce .reference:red-dlazd): řádek $t$ je konfigurace v čase $t$, rozměry
-      $(p(n)+1)\times(2p(n)+1)$. Svislé hrany dlaždic nesou symbol nebo dvojici (stav, symbol), boční hrany předávaný
-      stav (obr. .reference:ch-cook-fig-dlazdice-z-prechodu).
-
-    .item:
-
-      "Formule".emphasize (redukce .reference:red-sat): $u^{(x,y)}_i=1$, když na $(x,y)$ leží dlaždice $i$; klauzule 1
-      „alespoň jeden typ“, 2 „nejvýše jeden typ“, 3 „sousedé pasují“, 4 „okraje sedí“
-      (tabulka .reference:ch-cook-tab-klauzule).
+      "Výpočetní tabulka".emphasize (redukce .reference:red-dlazd, jen úloha 6.8): řádek $t$ je konfigurace v čase $t$.
+      Svislé hrany dlaždic nesou symbol nebo dvojici (stav, symbol), boční hrany předávaný stav
+      (obr. .reference:ch-cook-fig-dlazdice-z-prechodu).
 
 
-  "Kuchařka – formule z dláždění a její velikost (úlohy 6.1, 6.4, 6.6).".notion
+  "Kuchařka – NP-úplnost ze SATu (úlohy 6.1–6.5, 6.6 a 6.7).".notion Postup .reference:ch-test-postup-np.
 
   .enumerate:
 
     .item:
 
-      Proměnných je (počet pozic) $\times$ (počet typů $t$).
+      $Q\in\NP$: certifikát je ohodnocení (u dláždění přiřazení typů pozicím) a ověří se dosazením.
 
     .item:
 
-      Klauzule po typech: 1 jedna na pozici; 2 $\binom t2$ na pozici; 3 jedna za každou nesedící dvojici typů na
-      sousedních pozicích; 4 jedna za každý nesedící typ na krajní pozici.
+      Hlavička redukce $\prob{SAT}\redp Q$: na co se zobrazí formule $\varphi$.
 
     .item:
 
-      Splňující ohodnocení odpovídají dlážděním: na každé pozici je pravdivá právě jedna proměnná.
+      Vyber vzor: "zobecnění".emphasize ($\prob{SAT}$ je speciální případ $Q$, redukce je identita),
+      "pevná protiváha".emphasize (k $\varphi$ přidáme pevnou část nebo parametr, např. nesplnitelnou formuli nebo
+      $k=m$), "gadget s novými proměnnými".emphasize (dvojice $x_i,y_i$ s $y_i=\lnot x_i$, nová proměnná $y$ přidaná
+      do klauzulí), nebo "převod do jiného jazyka".emphasize (dlaždice).
 
     .item:
 
-      Polynomialita: rozměry tabulky jsou polynomiální v $n$, právě když je polynomiální časová mez $p(n)$.
+      ($\Rightarrow$) rozšiř splňující ohodnocení na nové proměnné; ($\Leftarrow$) zúž ho na původní; velikost výstupu.
 
 
-  "Kuchařka – dlaždice a tabulka ze stroje (úlohy 6.2, 6.3, 6.5, 6.8).".notion
+  "Kuchařka – self-redukce (úloha 6.6, části b a c).".notion Postup .reference:ch-test-postup-self-redukce.
 
   .enumerate:
 
     .item:
 
-      Napiš řádky tabulky jako konfigurace v časech $0,1,\dots,p(n)$.
+      Optimální hodnotu najdi binárním vyhledáváním přes parametr $k$ (odpověď je v $k$ monotónní).
 
     .item:
 
-      Každá buňka je přepisová dlaždice (hlava je jinde, symbol se opíše), nebo dlaždice přechodu (hlava tu je, nebo
-      sem přichází).
+      Proměnné fixuj jednotkovými klauzulemi $(x_i)$, $(\lnot x_i)$ a ptej se se stejným $k$; formule zůstává v CNF.
 
     .item:
 
-      Dlaždice do sady patří, právě když odpovídá přepisu nebo některému přechodu $\delta$.
-
-    .item:
-
-      Nedeterminismus: pro tutéž horní hranu s hlavou je víc dlaždic; různým větvím odpovídají různá dláždění.
+      Invariant „aktuální formule má optimální řešení“, počet dotazů jako funkce $n$.
 
 
-  "Kuchařka – mapa redukcí (úloha 6.7).".notion
+  "Kuchařka – dlaždice ze stroje (úloha 6.8).".notion
 
   .enumerate:
 
     .item:
 
-      $X$ je NP-těžký, vede-li do něj cesta šipek z NP-těžkého problému (tranzitivita).
+      Každá buňka tabulky je přepisová dlaždice (hlava je jinde, symbol se opíše), nebo dlaždice přechodu (hlava tu je,
+      nebo sem přichází).
 
     .item:
 
-      $X\in\NP$ (resp. $\PP$), vede-li z něj cesta šipek do problému z $\NP$ (resp. $\PP$).
-
-    .item:
-
-      NP-úplný je problém, pro který platí obojí. Šipka z $X$ do NP-těžkého problému ani šipka do $X$ z problému v
-      $\PP$ o $X$ nic neříká.
+      Řádek dláždění má odpovídat jednomu kroku výpočtu: ověř, že přijímací dlaždice mohou ležet jen vedle hlavy.
 
 
 .Subsection Rozcvička
@@ -115,338 +111,184 @@
 
 
 .Exercise:
-  title: 'Úloha 6.1 (formule pro malé dláždění)'
+  title: 'Úloha 6.1 (splnitelnost obecné formule)'
   label: un-6-1
 
-  Máme tři typy dlaždic z příkladu .reference:ex-dlazdice33 (backtracking na mřížce $3\times3$; barvy v pořadí horní, pravá, spodní, levá hrana):
-  A = (červená, šedá, modrá, zelená), B = (červená, oranžová, červená, šedá), D = (modrá, šedá, modrá, zelená).
-  Plocha má rozměr $2\times2$, pozice značíme $(x,y)$, kde $x\in\{0,1\}$ je sloupec zleva a $y\in\{0,1\}$ řádek
-  shora. Okraje: nahoře obě hrany červené, vlevo obě zelené, vpravo obě oranžové, dole vlevo modrá a vpravo červená.
+  Problém $\prob{Formula-SAT}$:
 
 
-  .centered:
-
-    !tikz:
-      filename: 06z-ulohy-navic-01
-      options: 'scale=1.3'
-
-      \chRA{0}{0.5}\chRB{1.4}{0.5}\chRD{2.8}{0.5}
-      \draw[black!50,dashed] (5,0) rectangle (7,2) (6,0)--(6,2) (5,1)--(7,1);
-      \foreach \x/\y in {0/0,1/0,0/1,1/1} {\node[font=\scriptsize,gr] at ({5.5+\x},{1.5-\y}) {$(\x,\y)$};}
-      \draw[chRr,line width=3pt] (5,2.06)--(7,2.06);
-      \draw[chRz!80!black,line width=3pt] (4.94,0)--(4.94,2);
-      \draw[chRo,line width=3pt] (7.06,0)--(7.06,2);
-      \draw[chRb,line width=3pt] (5,-0.06)--(6,-0.06);
-      \draw[chRr,line width=3pt] (6,-0.06)--(7,-0.06);
-      \node[note] at (1.9,-0.45) {typy dlaždic};
-      \node[note] at (6,-0.45) {plocha $2\times2$ s okraji};
+  "Vstup:".notion výroková formule $\varphi$ sestavená z proměnných, spojek $\lnot$, $\land$, $\lor$ a závorek,
+  libovolně vnořená (nemusí být v CNF), např. $\lnot\bigl(x_1\land(x_2\lor\lnot x_3)\bigr)\lor(x_3\land\lnot x_1)$.
 
 
-  Dlaždice A, B, D a plocha s předbarvenými okraji.
+  "Otázka:".notion existuje ohodnocení proměnných, při kterém je $\varphi$ pravdivá?
 
 
-  .enumerate:
-    type: a
-
-    .item:
-
-      Sestavte formuli $\varphi$ z redukce "$\prob{Dlaždičkování}\redp\prob{SAT}$"#red-sat: kolik má proměnných a kolik
-      klauzulí každého ze čtyř typů? Typ 4 vypište celý.
-
-    .item:
-
-      Najděte všechna splňující ohodnocení $\varphi$ a přečtěte z nich dláždění.
-
-    .item:
-
-      Změníme pravý dolní okraj z červené na modrou. Ukažte na klauzulích, že formule je nesplnitelná.
+  Dokažte, že $\prob{Formula-SAT}$ je NP-úplný.
 
 
 .Solution:
+  label: red-un-6-1
 
-  "a) Proměnné.".notion $u^{(x,y)}_i$ pro 4 pozice a 3 typy $i\in\{A,B,D\}$, tedy $4\cdot3=12$ proměnných.
-
-
-  "Typ 1".notion (alespoň jeden typ): jedna klauzule $\bigl(u^{(x,y)}_A\lor u^{(x,y)}_B\lor u^{(x,y)}_D\bigr)$ na pozici,
-  celkem 4.
+  "Redukce:".notion $\prob{SAT} \redp \prob{Formula-SAT}$, formule $\varphi$ v CNF $\mapsto$ táž formule $\varphi$.
 
 
-  "Typ 2".notion (nejvýše jeden typ): na každé pozici $\binom32=3$ klauzule $(\lnot u_A\lor\lnot u_B)$,
-  $(\lnot u_A\lor\lnot u_D)$, $(\lnot u_B\lor\lnot u_D)$, celkem 12.
+  "1. $\prob{Formula-SAT}$ je v $\NP$.".notion Certifikát je ohodnocení proměnných ($n\le|\varphi|$ bitů). Verifikátor
+  dosadí hodnoty a formuli vyhodnotí zdola nahoru: opakovaně najde nejvnitřnější závorku, spočte její hodnotu a
+  nahradí ji výsledkem. Každý krok formuli zkrátí, takže stačí $O(|\varphi|)$ kroků po $O(|\varphi|)$, celkem
+  $O(|\varphi|^2)$ (zásobníkem jde i lineárně).
 
 
-  "Typ 3".notion (sousedé pasují). Vodorovně leží $p$ vlevo vedle $q$ správně, jen když pravá hrana $p$ = levá hrana
-  $q$. Pravé hrany: A šedá, B oranžová, D šedá; levé hrany: A zelená, B šedá, D zelená. Pasují jen dvojice
-  $(A,B)$ a $(D,B)$, zbylých $9-2=7$ dvojic je zakázaných. Svisle leží $p$ nad $q$ správně, jen když spodní hrana $p$ =
-  horní hrana $q$. Spodní: A modrá, B červená, D modrá; horní: A červená, B červená, D modrá. Pasují $(A,D)$, $(D,D)$,
-  $(B,A)$, $(B,B)$, zakázaných je 5. Vodorovně sousedících dvojic pozic jsou 2, svisle také 2, takže klauzulí typu 3 je
-  $2\cdot7+2\cdot5=24$, např. $\bigl(\lnot u^{(0,0)}_A\lor\lnot u^{(0,1)}_A\bigr)$ (A nad A: modrá $\ne$ červená).
+  "2. Konstrukce.".notion Formule v CNF je konjunkce závorek, v každé disjunkce literálů – tedy speciální případ
+  obecné formule. Redukce vrátí vstup beze změny: $f(\varphi)=\varphi$. (Řetězec, který formuli v CNF nekóduje,
+  pošleme na pevnou $\NE$-instanci $(x_1)\land(\lnot x_1)$.)
 
 
-  "Typ 4".notion (okraje). Každá pozice plochy $2\times2$ je rohová a sousedí se dvěma okraji:
-
-  .itemize:
-
-    .item:
-
-      $(0,0)$, nahoře červená, vlevo zelená: A sedí, B má vlevo šedou, D nahoře modrou $\Rightarrow$
-      $(\lnot u^{(0,0)}_B)$, $(\lnot u^{(0,0)}_D)$;
-
-    .item:
-
-      $(1,0)$, nahoře červená, vpravo oranžová: sedí jen B $\Rightarrow$ $(\lnot u^{(1,0)}_A)$, $(\lnot u^{(1,0)}_D)$;
-
-    .item:
-
-      $(0,1)$, vlevo zelená, dole modrá: A i D sedí, B má vlevo šedou $\Rightarrow$ $(\lnot u^{(0,1)}_B)$;
-
-    .item:
-
-      $(1,1)$, vpravo oranžová, dole červená: sedí jen B $\Rightarrow$ $(\lnot u^{(1,1)}_A)$, $(\lnot u^{(1,1)}_D)$.
-
-  Celkem 7 klauzulí typu 4 a formule má $4+12+24+7=47$ klauzulí.
+  "3. Polynomialita.".notion Identita, čas $O(|\varphi|)$.
 
 
-  "b) Řešení.".notion Jednotkové klauzule typu 4 spolu s klauzulí typu 1 na téže pozici vynutí
-  $u^{(0,0)}_A=1$, $u^{(1,0)}_B=1$ a $u^{(1,1)}_B=1$. Na pozici $(0,1)$ zbývá A nebo D; klauzule typu 3
-  $\bigl(\lnot u^{(0,0)}_A\lor\lnot u^{(0,1)}_A\bigr)$ vylučuje A, takže $u^{(0,1)}_D=1$. Klauzule typu 2 pak vynutí,
-  že všech ostatních 8 proměnných je 0. Ohodnocení je tím určeno jednoznačně a splňuje i všechny klauzule typu 3,
-  protože odpovídá správnému dláždění: nahoře A, B, dole D, B (A–B: šedá = šedá, D–B: šedá = šedá, A nad D:
-  modrá = modrá, B nad B: červená = červená). Formule má tedy "právě jedno".emphasize splňující ohodnocení a plocha
-  právě jedno dláždění. (Ověřeno i hrubou silou přes všech $2^{12}$ ohodnocení.)
+  "4. ($\Rightarrow$)".notion Splňuje-li ohodnocení $h$ formuli $\varphi$ jako formuli v CNF, je $\varphi$ při $h$
+  pravdivá i jako obecná formule – pravdivostní hodnota nezávisí na tom, jak formuli nazveme.
 
 
-  "c)".notion Na pozici $(1,1)$ je teď okraj vpravo oranžový a dole modrý. A má vpravo šedou, B má dole červenou,
-  D má vpravo šedou, proto vzniknou tři jednotkové klauzule $(\lnot u^{(1,1)}_A)$, $(\lnot u^{(1,1)}_B)$,
-  $(\lnot u^{(1,1)}_D)$. Spolu s klauzulí typu 1 $\bigl(u^{(1,1)}_A\lor u^{(1,1)}_B\lor u^{(1,1)}_D\bigr)$ už jen tyto čtyři
-  klauzule nelze splnit současně, takže $\varphi$ je nesplnitelná – přesně jako dláždění, na pozici $(1,1)$ žádná
-  dlaždice nepasuje.
+  "5. ($\Leftarrow$)".notion Stejně: ohodnocení, při kterém je $\varphi$ pravdivá, splňuje každou její klauzuli.
+
+
+  "6. Závěr.".notion $\prob{SAT}$ je NP-úplný (věta .reference:thm-cooklevin) a $\prob{SAT}\redp\prob{Formula-SAT}$,
+  tedy $\prob{Formula-SAT}$ je NP-těžký a podle bodu 1 NP-úplný.
+
+
+  "Vzor „zobecnění“.".notion Je-li známý NP-těžký problém speciálním případem $Q$, je NP-těžký i $Q$ a redukce je
+  identita. Pozor na směr: převod obecné formule do CNF roznásobením (redukce $\prob{Formula-SAT}\redp\prob{SAT}$)
+  polynomiální není – formule $(x_1\land y_1)\lor\dots\lor(x_n\land y_n)$ má po roznásobení $2^n$ klauzulí. Pro
+  NP-těžkost $\prob{Formula-SAT}$ ho ale vůbec nepotřebujeme. (Polynomiální převod s pomocnými proměnnými ukazuje
+  Tseitinova transformace v oddílu .reference:ch-resice-sat-tseitinova-transformace.)
 
 
 .Exercise:
-  title: 'Úloha 6.2 (dlaždice z přechodové funkce)'
+  title: 'Úloha 6.2 (neekvivalence dvou formulí)'
   label: un-6-2
 
-  Jednopáskový stroj $M$ nad $\Sigma=\{a,b\}$ s páskovou abecedou $\Gamma=\{a,b,X,\blank\}$ má tyto přechody (jiné
-  nemá; kde přechod chybí, stroj odmítne):
-
-  .table:
-    columns: 'll'
-    noheader: true
-
-    .row:
-
-      $\delta(q_0,a)=(q_1,X,\Rgt)$
-
-      $\delta(q_2,a)=(q_2,\blank,\Lft)$
-
-    .row:
-
-      $\delta(q_1,a)=(q_1,a,\Rgt)$
-
-      $\delta(q_2,b)=(q_2,\blank,\Lft)$
-
-    .row:
-
-      $\delta(q_1,b)=(q_1,b,\Rgt)$
-
-      $\delta(q_2,X)=(q_A,\blank,\Stay)$
-
-    .row:
-
-      $\delta(q_1,\blank)=(q_2,\blank,\Lft)$
-
-      $\delta(q_A,\blank)=(q_A,\blank,\Stay)$
+  Problém $\prob{Non-Equivalence}$:
 
 
-  Stroj si první $a$ přepíše na značku $X$, dojede na konec slova, vrací se a maže, a na značce $X$ ji smaže a přijme –
-  je to "vychovaný".emphasize stroj pro jazyk slov začínajících písmenem $a$. Dlaždice zapisujeme jako na
-  obr. .reference:ch-cook-fig-dlazdice-z-prechodu: $[\,\text{horní}\mid\text{pravá}\mid\text{spodní}\mid\text{levá}\,]$,
-  svislé hrany nesou symbol nebo dvojici (stav, symbol), boční hrany předávaný stav nebo $-$.
+  "Vstup:".notion dvě formule $\varphi$ a $\psi$ v CNF nad proměnnými $x_1,\dots,x_n$.
 
 
-  .enumerate:
-    type: a
-
-    .item:
-
-      Které z šesti dlaždic na obrázku patří do sady dlaždic sestrojené ze stroje $M$? U každé zdůvodněte.
-
-    .item:
-
-      Vypište celou sadu dlaždic a určete její velikost $t$.
+  "Otázka:".notion existuje ohodnocení, při kterém má $\varphi$ jinou pravdivostní hodnotu než $\psi$ (tedy $\varphi$
+  a $\psi$ nejsou ekvivalentní)?
 
 
-  .centered:
-
-    !tikz:
-      filename: 06z-ulohy-navic-02
-      options: 'scale=0.95'
-
-      \chRltile{0}{0}{$(q_1,b)$}{$q_1$}{$b$}{$-$}
-      \chRltile{2.5}{0}{$(q_1,b)$}{$-$}{$(q_1,b)$}{$-$}
-      \chRltile{5}{0}{$a$}{$q_2$}{$(q_2,a)$}{$-$}
-      \chRltile{7.5}{0}{$b$}{$-$}{$a$}{$-$}
-      \chRltile{10}{0}{$(q_2,X)$}{$-$}{$(q_A,\sqcup)$}{$-$}
-      \chRltile{12.5}{0}{$a$}{$-$}{$(q_2,a)$}{$q_2$}
-      \foreach \i in {1,...,6} {\node[font=\small\bfseries] at ({2.5*\i-1.5},-0.4) {(\i)};}
-
-
-  Kandidáti (1)–(6): horní hrana = čas $t$, spodní hrana = čas $t+1$.
+  Dokažte, že $\prob{Non-Equivalence}$ je NP-úplný.
 
 
 .Solution:
+  label: red-un-6-2
 
-  "a)".notion Dlaždice vzniknou třemi způsoby (oddíl .reference:ch-cook-l-dlazdickovani-vypocetni-tabulka):
-  přepis $[c\mid-\mid c\mid-]$ pro každý symbol $c\in\Gamma$; jedna dlaždice čtení/zápisu pro každý přechod; a
-  „přijímací“ dlaždice $[d\mid-\mid(r,d)\mid r]$ (stav $r$ přišel zleva) resp. $[d\mid r\mid(r,d)\mid-]$ (stav $r$ přišel
-  zprava) pro každý symbol $d$ a každý stav $r$, do kterého vede pohyb doprava resp. doleva.
-
-  .enumerate:
-
-    .item:
-
-      $[(q_1,b)\mid q_1\mid b\mid-]$ "patří".notion: je to dlaždice přechodu $\delta(q_1,b)=(q_1,b,\Rgt)$ – hlava čte $b$,
-      zapíše $b$ a stav $q_1$ předá pravým okrajem doprava.
-
-    .item:
-
-      $[(q_1,b)\mid-\mid(q_1,b)\mid-]$ "nepatří".notion: znamenala by krok na místě $(q_1,b,\Stay)$, takový přechod $M$
-      nemá ($M$ v $q_1$ na $b$ jde doprava).
-
-    .item:
-
-      $[a\mid q_2\mid(q_2,a)\mid-]$ "patří".notion: přijímací dlaždice – hlava byla vpravo a pohybem doleva přišla do
-      stavu $q_2$ (do $q_2$ vedou přechody s $\Lft$), na políčku je $a$.
-
-    .item:
-
-      $[b\mid-\mid a\mid-]$ "nepatří".notion: bez hlavy se symbol jen opisuje, $b$ se nesmí změnit na $a$.
-
-    .item:
-
-      $[(q_2,X)\mid-\mid(q_A,\blank)\mid-]$ "patří".notion: přechod $\delta(q_2,X)=(q_A,\blank,\Stay)$ – zápis i nový stav
-      zůstávají v téže buňce.
-
-    .item:
-
-      $[a\mid-\mid(q_2,a)\mid q_2]$ "nepatří".notion: stav $q_2$ by přišel zleva, tedy po pohybu "doprava".emphasize do
-      $q_2$. Do $q_2$ ale vedou jen přechody s $\Lft$, taková přijímací dlaždice se nevyrábí.
+  "Redukce:".notion $\prob{SAT} \redp \prob{Non-Equivalence}$, formule $\varphi$ $\mapsto$ dvojice
+  $\bigl(\varphi,\ \psi_0=(x_1)\land(\lnot x_1)\bigr)$.
 
 
-  "b)".notion Celá sada:
+  "1. $\prob{Non-Equivalence}$ je v $\NP$.".notion Certifikát je ohodnocení $h$ ($n$ bitů). Verifikátor dosadí $h$ do
+  obou formulí a zkontroluje, že vyšly různé hodnoty; čas $O(|\varphi|+|\psi|)$.
 
-  .itemize:
 
-    .item:
+  "2. Konstrukce.".notion K formuli $\varphi$ přidáme pevnou "nesplnitelnou".emphasize formuli
+  $\psi_0=(x_1)\land(\lnot x_1)$, kde $x_1$ je některá proměnná $\varphi$ (nemá-li $\varphi$ žádnou, vezmeme novou).
+  $\psi_0$ je při každém ohodnocení nepravdivá.
 
-      přepis (4): $[a\mid-\mid a\mid-]$, $[b\mid-\mid b\mid-]$, $[X\mid-\mid X\mid-]$, $[\blank\mid-\mid\blank\mid-]$;
 
-    .item:
+  "3. Polynomialita.".notion Přibudou dvě jednotkové klauzule, čas $O(|\varphi|)$.
 
-      čtení/zápis (8, jedna na přechod): $[(q_0,a)\mid q_1\mid X\mid-]$, $[(q_1,a)\mid q_1\mid a\mid-]$,
-      $[(q_1,b)\mid q_1\mid b\mid-]$, $[(q_1,\blank)\mid-\mid\blank\mid q_2]$, $[(q_2,a)\mid-\mid\blank\mid q_2]$,
-      $[(q_2,b)\mid-\mid\blank\mid q_2]$, $[(q_2,X)\mid-\mid(q_A,\blank)\mid-]$, $[(q_A,\blank)\mid-\mid(q_A,\blank)\mid-]$;
 
-    .item:
+  "4. ($\Rightarrow$)".notion Nechť $h$ splňuje $\varphi$. Pak $\varphi(h)=1$ a $\psi_0(h)=0$, formule mají při $h$
+  různé hodnoty, odpověď je $\ANO$.
 
-      příjem zleva, stav $q_1$ (4): $[d\mid-\mid(q_1,d)\mid q_1]$ pro $d\in\{a,b,X,\blank\}$;
 
-    .item:
+  "5. ($\Leftarrow$)".notion Nechť se $\varphi$ a $\psi_0$ liší při ohodnocení $h$. Protože $\psi_0(h)=0$, je
+  $\varphi(h)=1$ a $\varphi$ je splnitelná.
 
-      příjem zprava, stav $q_2$ (4): $[d\mid q_2\mid(q_2,d)\mid-]$ pro $d\in\{a,b,X,\blank\}$.
 
-  Celkem $t=|\Gamma|+|\delta|+4+4=4+8+4+4=20$ typů. Některé se v žádném výpočtu nepoužijí (třeba
-  $[X\mid-\mid(q_1,X)\mid q_1]$), konstrukce je ale vyrábí mechanicky pro všechna $d$, aniž zkoumá dosažitelnost;
-  na správnosti to nic nemění. Hlavně: $t$ závisí jen na $M$, ne na vstupu.
+  "6. Závěr.".notion $\prob{SAT}$ je NP-úplný, $\prob{SAT}\redp\prob{Non-Equivalence}$, tedy $\prob{Non-Equivalence}$
+  je NP-těžký a podle bodu 1 NP-úplný.
+
+
+  "Typická chyba.".notion Volit za $\psi_0$ "tautologii".emphasize, např. $(x_1\lor\lnot x_1)$. Pak se ptáme, zda
+  $\varphi$ "není".emphasize tautologie, a to je pro formuli v CNF snadné: CNF je tautologie, právě když každá její
+  klauzule obsahuje nějakou proměnnou kladně i záporně. Taková „redukce“ vede ze snadného problému a nic nedokazuje.
+  Protiváha musí být nesplnitelná, aby se otázka „liší se?“ změnila na „je $\varphi$ někdy pravdivá?“.
 
 
 .Exercise:
-  title: 'Úloha 6.3 (výpočetní tabulka)'
+  title: 'Úloha 6.3 (MAX-SAT a práh poloviny)'
   label: un-6-3
 
-  Vezměte stroj $M$ z úlohy .reference:un-6-2.
+  Problém $\prob{MAX-SAT}$:
+
+
+  "Vstup:".notion formule $\varphi$ v CNF s klauzulemi $C_1,\dots,C_m$ (každá má aspoň jeden literál) a číslo $k$.
+
+
+  "Otázka:".notion existuje ohodnocení, které splní aspoň $k$ klauzulí?
 
   .enumerate:
     type: a
 
     .item:
 
-      Kolik kroků udělá $M$ na slově délky $n\ge1$ začínajícím $a$? Ukažte, že $p(n)=2n+1$ je časová mez $M$.
+      Dokažte, že $\prob{MAX-SAT}$ je NP-úplný.
 
     .item:
 
-      Sestavte výpočetní tabulku pro $x=ab$: řádky $t=0,\dots,p(2)$, sloupce pozice $-p(2),\dots,p(2)$.
-
-    .item:
-
-      V každém řádku dláždění (krok $t\to t+1$) určete, na kterých pozicích leží jiná dlaždice než přepis a která.
-      Kolik dlaždic má celé dláždění a kolik z nich je přepisových?
+      Problém $\prob{Half-MAX-SAT}$ je totéž s pevným prahem $k=\lceil m/2\rceil$ (vstupem je jen $\varphi$). Je také
+      NP-úplný?
 
 
 .Solution:
+  label: red-un-6-3
 
-  "a)".notion Slovo $x_1\dots x_n$ s $x_1=a$: krok 1 přepíše $x_1$ na $X$ a hlava je na pozici 1; dalšími $n-1$ kroky
-  přejde v $q_1$ přes $x_2,\dots,x_n$ a po kroku $n$ stojí na pozici $n$ na $\blank$. Krok $n+1$ ji vrátí na pozici $n-1$
-  ve stavu $q_2$, kroky $n+2,\dots,2n$ smažou pozice $n-1,\dots,1$ a hlava je po kroku $2n$ na pozici 0 na $X$. Krok
-  $2n+1$ smaže $X$ a přejde do $q_A$. Přijímající výpočet má tedy přesně $2n+1$ kroků a končí v jediné přijímací
-  konfiguraci (prázdná páska, hlava na 0). Začíná-li slovo $b$ nebo je prázdné, $M$ hned odmítne (přechod
-  $\delta(q_0,b)$ ani $\delta(q_0,\blank)$ není). Žádná větev tedy nemá víc než $2n+1$ kroků a $p(n)=2n+1$ je mez.
+  "Redukce:".notion $\prob{SAT} \redp \prob{MAX-SAT}$, formule $\varphi$ s $m$ klauzulemi $\mapsto$ $(\varphi,\ k=m)$.
 
 
-  "b)".notion Pro $n=2$ je $p=5$, tabulka má $p+1=6$ řádků a $2p+1=11$ sloupců (pozice $-5$ až $5$):
+  "a) 1. $\prob{MAX-SAT}$ je v $\NP$.".notion Certifikát je ohodnocení. Verifikátor spočítá splněné klauzule
+  a porovná počet s $k$, čas $O(|\varphi|)$.
 
 
-  .centered:
-
-    !tikz:
-      filename: 06z-ulohy-navic-03
-      options: 'x=1cm,y=1cm'
-
-      \foreach \t in {0,...,5} {
-        \foreach \i in {0,...,10} {\node[cell,anchor=center,minimum width=9.5mm,minimum height=7mm,font=\scriptsize] at ({0.95*\i+0.475},{-0.7*\t}) {$\sqcup$};}
-        \node[font=\small,anchor=east] at (-0.15,{-0.7*\t}) {$t=\t$};
-      }
-      \foreach \t/\i/\s in {0/6/b, 1/5/X, 2/5/X, 2/6/b, 3/5/X} {\node[cell,anchor=center,minimum width=9.5mm,minimum height=7mm,font=\scriptsize] at ({0.95*\i+0.475},{-0.7*\t}) {$\s$};}
-      \foreach \t/\i/\s in {0/5/{(q_0,a)}, 1/6/{(q_1,b)}, 2/7/{(q_1,\sqcup)}, 3/6/{(q_2,b)}, 4/5/{(q_2,X)}, 5/5/{(q_A,\sqcup)}} {\node[cellhl,anchor=center,minimum width=9.5mm,minimum height=7mm,font=\scriptsize] at ({0.95*\i+0.475},{-0.7*\t}) {$\s$};}
-      \foreach \p [count=\i from 0] in {-5,...,5} {\node[font=\scriptsize,gr] at ({0.95*\i+0.475},0.6) {$\p$};}
-      \draw[decorate,decoration={brace,amplitude=5pt,mirror},thick,defc] (0,-3.85) -- (10.45,-3.85) node[midway,below=6pt,font=\small,defc]{šířka $2p+1=11$};
+  "2. Konstrukce.".notion Formuli necháme a položíme $k=m$: „splnit aspoň všechny klauzule“ znamená splnit
+  všechny. (Obsahuje-li $\varphi$ prázdnou klauzuli, je nesplnitelná a vydáme pevnou $\NE$-instanci
+  $\bigl((x_1),\ k=2\bigr)$.)
 
 
-  Výpočetní tabulka stroje $M$ na $x=ab$. Žlutě buňka s hlavou (stav, symbol).
+  "3. Polynomialita.".notion Spočítat klauzule a vypsat $\varphi$ trvá $O(|\varphi|)$.
 
 
-  Řádky po řadě: $(q_0,a)\,b$; $X\,(q_1,b)$; $X\,b\,(q_1,\blank)$; $X\,(q_2,b)$; $(q_2,X)$; $(q_A,\blank)$ (ostatní
-  buňky $\blank$). Poslední řádek je přesně předepsaný spodní okraj.
+  "4. ($\Rightarrow$)".notion Splňující ohodnocení splní všech $m=k$ klauzulí.
 
 
-  "c)".notion Dláždění má $p=5$ řádků po $11$ dlaždicích, tj. $55$ dlaždic. Jiné než přepisové (pozice v závorce):
+  "5. ($\Leftarrow$)".notion Ohodnocení, které splní aspoň $m$ z $m$ klauzulí, splní všechny, tedy $\varphi$ je splnitelná.
 
-  .itemize:
 
-    .item:
+  "6. Závěr.".notion $\prob{SAT}$ je NP-úplný, tedy $\prob{MAX-SAT}$ je NP-těžký a podle bodu 1 NP-úplný.
 
-      krok $0\to1$: $[(q_0,a)\mid q_1\mid X\mid-]$ (0) a $[b\mid-\mid(q_1,b)\mid q_1]$ (1);
 
-    .item:
+  "b)".notion "Ne".notion (pokud $\PP\neq\NP$): odpověď je "vždy".emphasize $\ANO$, takže problém je v $\PP$.
+  Vezměme libovolné ohodnocení $h$ a jeho překlopení $\bar h$ (všechny hodnoty prohozené). Klauzule, kterou $h$
+  nesplní, má při $h$ všechny literály nepravdivé, takže při $\bar h$ jsou všechny pravdivé a $\bar h$ ji splní
+  (klauzule je neprázdná). Každou klauzuli tedy splní $h$ nebo $\bar h$ a
 
-      krok $1\to2$: $[(q_1,b)\mid q_1\mid b\mid-]$ (1) a $[\blank\mid-\mid(q_1,\blank)\mid q_1]$ (2);
+  .equation:
 
-    .item:
+    \#\{\text{klauzule splněné }h\}+\#\{\text{klauzule splněné }\bar h\}\ \ge\ m.
 
-      krok $2\to3$: $[b\mid q_2\mid(q_2,b)\mid-]$ (1) a $[(q_1,\blank)\mid-\mid\blank\mid q_2]$ (2);
+  Jedno z obou ohodnocení proto splní aspoň $m/2$ klauzulí, a protože počet je celé číslo, aspoň $\lceil m/2\rceil$.
+  Algoritmus „vždy odpověz $\ANO$“ je správný. Kdyby byl $\prob{Half-MAX-SAT}$ NP-úplný, plynulo by $\PP=\NP$
+  (věta .reference:thm-gral).
 
-    .item:
 
-      krok $3\to4$: $[X\mid q_2\mid(q_2,X)\mid-]$ (0) a $[(q_2,b)\mid-\mid\blank\mid q_2]$ (1);
-
-    .item:
-
-      krok $4\to5$: $[(q_2,X)\mid-\mid(q_A,\blank)\mid-]$ (0) – pohyb na místě, přijímací dlaždice není potřeba.
-
-  Nepřepisových dlaždic je $2+2+2+2+1=9$, přepisových $55-9=46$. Při pohybu hlavy leží v řádku vždy dvě
-  nepřepisové dlaždice vedle sebe – obě nesou na společné hraně předávaný stav. (Program potvrdil, že jiné
-  dláždění této mřížky neexistuje.)
+  "Poučení.".notion O těžkosti rozhoduje i parametr. U $\prob{Half-Clique}$ (cvičení .reference:cv-3-3
+  v kapitole .reference:ch-is) je práh „polovina“ stále těžký, protože redukce umí graf doplnit vrcholy; tady je práh
+  $\lceil m/2\rceil$ tak nízko, že ho splní každá formule. Redukce $\varphi\mapsto\varphi$ s prahem $\lceil m/2\rceil$ by z nesplnitelné formule udělala
+  $\ANO$-instanci.
 
 
 .Subsection Na úrovni testu
@@ -454,341 +296,443 @@
 
 
 .Exercise:
-  title: 'Úloha 6.4 (velikost formule)'
+  title: 'Úloha 6.4 (přesně polovina proměnných pravdivá)'
   label: un-6-4
 
-  Pro stroj $M$ z úlohy .reference:un-6-2 ($t=20$ typů dlaždic, $p(n)=2n+1$) a vstup délky $n$ složíme obě redukce
-  $L(M)\redp\prob{Dlaždičkování}\redp\prob{SAT}$.
+  Problém $\prob{Half-SAT}$:
+
+
+  "Vstup:".notion formule $\varphi$ v CNF s proměnnými $x_1,\dots,x_N$.
+
+
+  "Otázka:".notion existuje ohodnocení, které $\varphi$ splňuje a při kterém má "přesně $N/2$".emphasize proměnných
+  hodnotu $1$? (Pro liché $N$ je odpověď $\NE$.)
 
   .enumerate:
     type: a
 
     .item:
 
-      Vyjádřete jako funkci $n$ rozměry mřížky, počet pozic, počet proměnných a počet klauzulí typu 1 a 2; pro typy 3 a 4
-      dejte horní odhad.
+      Dokažte, že $\prob{Half-SAT}$ je NP-úplný.
 
     .item:
 
-      Dosaďte $n=10$.
-
-    .item:
-
-      Zdůvodněte, proč je celá redukce polynomiální, a co se změní pro obecný NDTS s časem $p(n)$.
+      Ukažte, že NP-úplný je i problém, ve kterém požadujeme "aspoň".emphasize $N/2$ jedniček.
 
 
 .Solution:
+  label: red-un-6-4
 
-  "a)".notion Mřížka má šířku $W=2p+1=4n+3$ a výšku $H=p=2n+1$ dlaždic (řádek dlaždic = jeden krok; horní okraj je
-  konfigurace v čase 0, spodní v čase $p$). Počet pozic $N=W\cdot H=(4n+3)(2n+1)=8n^2+10n+3$.
-
-  .itemize:
-
-    .item:
-
-      proměnné: $t\cdot N=20N$;
-
-    .item:
-
-      typ 1: jedna na pozici, $N$;
-
-    .item:
-
-      typ 2: $\binom t2=190$ na pozici, $190N$;
-
-    .item:
-
-      typ 3: vodorovně sousedních dvojic pozic je $(W-1)H$, svisle $W(H-1)$, dohromady $2N-W-H$; na každou dvojici
-      nejvýše $t^2=400$ zakázaných kombinací, tedy nejvýše $400(2N-W-H)$;
-
-    .item:
-
-      typ 4: okrajových pozic je $2W+2H-4=12n+4$, na každé nejvýše $t=20$ nepasujících dlaždic, tedy nejvýše $20(12n+4)$.
+  "Redukce:".notion $\prob{SAT} \redp \prob{Half-SAT}$, formule $\varphi$ nad $x_1,\dots,x_n$ $\mapsto$
+  $\varphi'=\varphi\land\bigwedge_{i=1}^{n}(x_i\lor y_i)\land(\lnot x_i\lor\lnot y_i)$ nad $2n$ proměnnými.
 
 
-  "b)".notion $n=10$: $W=43$, $H=21$, $N=903$. Proměnných $18\,060$; typ 1: $903$; typ 2: $171\,570$; typ 3:
-  nejvýše $400\cdot(1806-64)=696\,800$; typ 4: nejvýše $20\cdot124=2\,480$. Celkem nejvýše $871\,753$ klauzulí.
-  (Přesný počet spočítaný programem pro tuto sadu dlaždic a slovo $x$ začínající $a$: typ 3 má $493\,894$ a typ 4
-  $1\,694$ klauzulí, celkem $668\,061$. Pro $x$ začínající $b$ je typ 4 o jednu klauzuli větší – dvojici $(q_0,b)$
-  nemá nahoře žádná dlaždice.)
+  "a) 1. $\prob{Half-SAT}$ je v $\NP$.".notion Certifikát je ohodnocení. Verifikátor dosadí do všech klauzulí,
+  spočítá jedničky a porovná s $N/2$; čas $O(|\varphi|+N)$.
 
 
-  "c)".notion Počet klauzulí je $O(N t^2)=O(n^2)$, protože $t=20$ je "konstanta".emphasize – závisí jen na stroji
-  $M$, ne na vstupu. Každá klauzule má nejvýše $t$ literálů a každý literál zapíšeme $O(\log N)$ bity, celá formule
-  má tedy $O(n^2\log n)$ bitů. Vytvoříme ji jednoduchými cykly přes pozice a dvojice typů, tedy v čase polynomiálním
-  v délce výstupu, a tím i v $n$. Okraje vypíšeme z $x$ v čase $O(p(n))$. Pro obecný NDTS s časem $p(n)$ vyjde
-  $N=(2p(n)+1)\,p(n)=O(p(n)^2)$ pozic a $O(p(n)^2)$ klauzulí s konstantou závislou na $M$ – stále polynom v $n$,
-  protože $p$ je polynom.
+  "2. Konstrukce.".notion Ke každé proměnné $x_i$ přidáme novou proměnnou $y_i$ a dvě klauzule:
+  $(x_i\lor y_i)$ zakazuje $x_i=y_i=0$, $(\lnot x_i\lor\lnot y_i)$ zakazuje $x_i=y_i=1$. Dohromady říkají přesně
+  $y_i=\lnot x_i$, takže v každé dvojici $x_i,y_i$ je právě jedna jednička. Formule $\varphi'$ má $N=2n$ proměnných
+  (všechny se v ní vyskytují).
+
+
+  "3. Polynomialita.".notion Přibude $n$ proměnných a $2n$ dvouprvkových klauzulí, čas $O(|\varphi|+n)$.
+
+
+  "4. ($\Rightarrow$)".notion Nechť $h$ splňuje $\varphi$. Položíme $y_i=1-h(x_i)$. Formule $\varphi$ proměnné $y_i$
+  neobsahuje, je tedy splněná; přidané klauzule jsou splněné, protože $x_i\neq y_i$. Jedniček je přesně $n=N/2$
+  (jedna v každé dvojici).
+
+
+  "5. ($\Leftarrow$)".notion Nechť $g$ splňuje $\varphi'$ (s jakýmkoli počtem jedniček). Pak splňuje i podformuli
+  $\varphi$, a protože $\varphi$ obsahuje jen $x_1,\dots,x_n$, splňuje ji i zúžení $g$ na tyto proměnné.
+
+
+  "6. Závěr.".notion $\prob{SAT}$ je NP-úplný, tedy $\prob{Half-SAT}$ je NP-těžký a podle bodu 1 NP-úplný.
+
+
+  "b)".notion Stejná redukce. Každé splňující ohodnocení $\varphi'$ má podle bodu 2 "přesně".emphasize $n=N/2$
+  jedniček, takže pro $\varphi'$ platí: „existuje splňující ohodnocení s aspoň $N/2$ jedničkami“ $\iff$ „existuje
+  splňující ohodnocení s přesně $N/2$ jedničkami“ $\iff$ „$\varphi'$ je splnitelná“ $\iff$ „$\varphi$ je splnitelná“.
+  Příslušnost do $\NP$ je stejná (certifikát je ohodnocení).
+
+
+  "Typická chyba.".notion Redukce $\varphi\mapsto\varphi$ nefunguje: $(x_1)\land(x_2)$ je splnitelná, ale jen
+  ohodnocením se dvěma jedničkami ze dvou. Gadget $y_i=\lnot x_i$ „pohltí“ počítání jedniček – jejich počet je
+  pak pevný, ať je $h$ jakékoli. Stejný trik uvidíš u $\prob{Half-Clique}$ (cvičení .reference:cv-3-3
+  v kapitole .reference:ch-is): instanci doplníme tak, aby se požadovaný počet trefil přesně.
 
 
 .Exercise:
-  title: 'Úloha 6.5 (kde je nedeterminismus)'
+  title: 'Úloha 6.5 (jiné splňující ohodnocení)'
   label: un-6-5
 
-  Nedeterministický stroj $N$ nad $\{a,b\}$ přijímá slova, která obsahují aspoň jedno $a$: hlava jde doprava
-  ve stavu $g$ („ještě jsem nevybral“) a na některém $a$ se může rozhodnout přejít do stavu $f$ („toto je moje $a$“).
-  Na konci slova se ve stavu $c$ vrací, maže a na značce $X$ (pozice 0) přijme. Přechody:
-
-  .itemize:
-
-    .item:
-
-      $\delta(q_0,a)=\{(g,X,\Rgt),(f,X,\Rgt)\}$, $\delta(q_0,b)=\{(g,X,\Rgt)\}$,
-
-    .item:
-
-      $\delta(g,a)=\{(g,a,\Rgt),(f,a,\Rgt)\}$, $\delta(g,b)=\{(g,b,\Rgt)\}$, $\delta(g,\blank)=\emptyset$,
-
-    .item:
-
-      $\delta(f,a)=\{(f,a,\Rgt)\}$, $\delta(f,b)=\{(f,b,\Rgt)\}$, $\delta(f,\blank)=\{(c,\blank,\Lft)\}$,
-
-    .item:
-
-      $\delta(c,a)=\{(c,\blank,\Lft)\}$, $\delta(c,b)=\{(c,\blank,\Lft)\}$, $\delta(c,X)=\{(q_A,\blank,\Stay)\}$,
-      $\delta(q_A,\blank)=\{(q_A,\blank,\Stay)\}$.
+  Problém $\prob{Another-SAT}$:
 
 
-  .enumerate:
-    type: a
+  "Vstup:".notion formule $\varphi$ v CNF a ohodnocení $h$, které $\varphi$ "splňuje".emphasize.
 
-    .item:
 
-      Ukažte, že každá větev výpočtu na slově délky $n$ má nejvýše $2n+1$ kroků, a určete, kolik přijímajících větví
-      má výpočet na slově $w$.
+  "Otázka:".notion má $\varphi$ ještě jiné splňující ohodnocení (různé od $h$)?
 
-    .item:
 
-      Kde přesně se nedeterminismus $N$ projeví v sadě dlaždic? Která místa dláždění pro $w=aba$ se mohou lišit?
-
-    .item:
-
-      Kolik splňujících ohodnocení má formule $\varphi_w$ (složení obou redukcí s $p(n)=2n+1$)? Kolik by jich mohl mít
-      deterministický stroj, např. $M$ z úlohy .reference:un-6-2? Kde ve formuli „je“ nedeterminismus?
+  Dokažte, že $\prob{Another-SAT}$ je NP-úplný.
+  "Nápověda: přidejte novou proměnnou $y$ tak, aby jedno splňující ohodnocení šlo napsat hned.".emphasize
 
 
 .Solution:
+  label: red-un-6-5
 
-  "a)".notion V $q_0$, $g$ a $f$ jde hlava jen doprava. Větev, která do $f$ nikdy nepřejde, dojde po $n$ krocích ve
-  stavu $g$ na $\blank$ na pozici $n$ a odmítne. Větev, která přejde do $f$, dojde po $n$ krocích na pozici $n$ ve
-  stavu $f$; krok $n+1$ ji vrátí na pozici $n-1$ ve stavu $c$, kroky $n+2,\dots,2n$ smažou pozice $n-1,\dots,1$ a krok
-  $2n+1$ smaže $X$ a přijme. Každá větev má tedy nejvýše $2n+1$ kroků a přijímající právě $2n+1$. Přijímající větev
-  je jednoznačně určena tím, "na kterém".emphasize $a$ přejde z $g$ (resp. $q_0$) do $f$ – potom už je výpočet
-  deterministický. Přijímajících větví je proto přesně $\#_a(w)$ (počet výskytů $a$ ve $w$).
+  "Redukce:".notion $\prob{SAT} \redp \prob{Another-SAT}$, formule $\varphi$ nad $x_1,\dots,x_n$ $\mapsto$
+  $(\varphi',h_0)$, kde $\varphi'=\bigwedge_{C\in\varphi}(C\lor y)\land\bigwedge_{i=1}^{n}(\lnot y\lor\lnot x_i)$
+  a $h_0$: $y=1$, $x_1=\dots=x_n=0$.
 
 
-  "b)".notion Nedeterminismus znamená, že pod jednou horní barvou může ležet víc dlaždic čtení/zápisu. Pod horní barvou
-  $(q_0,a)$ pasují dvě: $[(q_0,a)\mid g\mid X\mid-]$ a $[(q_0,a)\mid f\mid X\mid-]$; pod $(g,a)$ také dvě:
-  $[(g,a)\mid g\mid a\mid-]$ a $[(g,a)\mid f\mid a\mid-]$. Zvolená dlaždice pošle boční hranou jiný stav, a tím
-  určí i přijímací dlaždici souseda vpravo ($[d\mid-\mid(g,d)\mid g]$ nebo $[d\mid-\mid(f,d)\mid f]$). Pro $w=aba$ ($p=7$)
-  se volí v kroku $0\to1$ (pozice 0 a 1) a v kroku $2\to3$ (pozice 2 a 3). Obě přijímající větve se v čase 3
-  sejdou ve stejné konfiguraci $X\,b\,a\,(f,\blank)$, jejich dláždění se proto liší jen v prvních třech řádcích
-  (kroky $0\to1$ až $2\to3$, kde nesou stav $g$ resp. $f$) a od kroku $3\to4$ jsou stejná; větve ukazuje obrázek.
+  "1. $\prob{Another-SAT}$ je v $\NP$.".notion Certifikát je ohodnocení $g$. Verifikátor zkontroluje, že se $g$ liší
+  od $h$ aspoň v jedné proměnné a že splňuje $\varphi$; čas $O(|\varphi|+n)$.
 
 
-  .centered:
-
-    !tikz:
-      filename: 06z-ulohy-navic-04
-      options: 'level distance=12mm, every node/.style={font=\small}, cf/.style={draw=black!60,rounded corners=2pt,fill=white,inner sep=2pt}, edge from parent/.style={draw,->,thick,black!70}'
-
-      \node[cf] {$(q_0,a)\,b\,a$}
-        child[sibling distance=60mm] {node[cf] {$X\,(g,b)\,a$}
-          child {node[cf] {$X\,b\,(g,a)$}
-            child[sibling distance=36mm] {node[cf,fill=rej!12] {$X\,b\,a\,(g,\sqcup)$: odmítne}}
-            child[sibling distance=36mm] {node[cf] {$X\,b\,a\,(f,\sqcup)$}
-              child {node[cf,fill=acc!15] {$\dots\ (q_A,\sqcup)$ v čase 7}}}}}
-        child[sibling distance=60mm] {node[cf] {$X\,(f,b)\,a$}
-          child {node[cf] {$X\,b\,(f,a)$}
-            child {node[cf] {$X\,b\,a\,(f,\sqcup)$}
-              child {node[cf,fill=acc!15] {$\dots\ (q_A,\sqcup)$ v čase 7}}}}};
+  "2. Konstrukce.".notion Zvolíme novou proměnnou $y$. Do každé klauzule $C$ formule $\varphi$ přidáme literál $y$
+  a pro každou proměnnou $x_i$ přidáme klauzuli $(\lnot y\lor\lnot x_i)$, tedy implikaci $y\Rightarrow\lnot x_i$.
+  Ohodnocení $h_0$ ($y=1$, všechna $x_i=0$) $\varphi'$ splňuje: klauzule $(C\lor y)$ splní $y$, klauzule
+  $(\lnot y\lor\lnot x_i)$ splní $\lnot x_i$. Výstup je tedy platná instance – vstupem $\prob{Another-SAT}$ smí být
+  jen formule se "splňujícím".emphasize ohodnocením.
 
 
-  Strom výpočtu $N$ na $aba$: dvě přijímající větve (vybráno první, resp. druhé $a$) a jedna odmítající.
+  "3. Polynomialita.".notion Každá klauzule se prodlouží o jeden literál, přibude $n$ dvouprvkových klauzulí;
+  $h_0$ má $n+1$ bitů. Čas $O(|\varphi|+n)$.
 
 
-  "c)".notion Tvrdíme, že splňujících ohodnocení $\varphi_w$ je přesně tolik, kolik je přijímajících výpočtů délky
-  $p$, tedy $\#_a(w)$; pro $w=aba$ dvě. Důkaz ve dvou krocích:
-
-  .enumerate:
-
-    .item:
-
-      "Ohodnocení = dláždění.".notion Klauzule typu 1 a 2 vynutí na každé pozici právě jednu dlaždici a klauzule typu 3
-      a 4 pak říkají přesně „sousedé a okraje pasují“. Splňující ohodnocení a správná dláždění si tedy odpovídají
-      vzájemně jednoznačně.
-
-    .item:
-
-      "Dláždění = přijímající výpočet.".notion Indukcí po řádcích: horní hrany řádku tvoří konfiguraci s jedinou hlavou.
-      Přijímací dlaždice s $g$ nebo $f$ vyžaduje levého souseda, který tento stav posílá doprava – to umí jen dlaždice
-      s hlavou (stavy $g,f$ se předávají jen doprava, $c$ jen doleva; symetricky přijímací dlaždice s $c$ potřebuje pravého souseda
-      s hlavou, který posílá $c$ doleva). Proto řádek tvoří přepisové dlaždice, jedna
-      dlaždice čtení/zápisu pod hlavou (její výběr = výběr přechodu) a při pohybu přijímací dlaždice souseda ve směru
-      pohybu. Spodní hrany řádku jsou pak přesně následná konfigurace. Dláždění tedy odpovídá posloupnosti $p$ přechodů
-      ze startu do předepsané koncové konfigurace a naopak; různé volby dávají různá dláždění.
-
-  Pro $p=2n+1$ jsou to přesně přijímající větve z a), tedy $\#_a(w)$ ohodnocení (pro $w$ bez $a$ žádné – formule je
-  nesplnitelná). Pro deterministický $M$ je přechod pod hlavou vždy jediný, dláždění je nejvýše jedno a $\varphi_x$ má
-  "nejvýše jedno".emphasize splňující ohodnocení.
+  "4. ($\Rightarrow$)".notion Nechť $g$ splňuje $\varphi$. Rozšíříme ho o $y=0$. Klauzule $(C\lor y)$ má pak hodnotu
+  $C$ a je pravdivá, klauzuli $(\lnot y\lor\lnot x_i)$ splní $\lnot y$. Rozšířené $g$ splňuje $\varphi'$ a liší se od
+  $h_0$ v proměnné $y$. Odpověď je $\ANO$.
 
 
-  Ve formuli "není".emphasize žádná zvláštní klauzule pro nedeterminismus: klauzule jen zakazují nepasující sousedy.
-  Nedeterminismus se skrývá v otázce $\prob{SAT}$ „"existuje".emphasize ohodnocení?“ – volba ohodnocení je volba větve
-  výpočtu. (Ověřeno programem pro všechna $w\in\{a,b\}^{\le5}$: počet dláždění = počet přijímajících větví
-  $=\#_a(w)$. Redukci zachovávající počet řešení se říká "úsporná".emphasize, angl. parsimonious –
-  "(nad rámec přednášky)".emphasize.)
+  "5. ($\Leftarrow$)".notion Nechť $g'\neq h_0$ splňuje $\varphi'$. Kdyby $g'(y)=1$, klauzule $(\lnot y\lor\lnot x_i)$
+  by vynutily $x_i=0$ pro všechna $i$, tedy $g'=h_0$ – spor. Proto $g'(y)=0$ a každá klauzule $(C\lor y)$ je pravdivá
+  jen díky $C$. Zúžení $g'$ na $x_1,\dots,x_n$ splňuje $\varphi$.
+
+
+  "6. Závěr.".notion $\prob{SAT}$ je NP-úplný, tedy $\prob{Another-SAT}$ je NP-těžký a podle bodu 1 NP-úplný.
+
+
+  "Typická chyba.".notion Zobrazit $\varphi$ na $(\varphi,h)$ s „nějakým“ splňujícím ohodnocením $h$ nejde: redukce
+  ho musí sestrojit v polynomiálním čase, a najít splňující ohodnocení je právě to těžké. Proto si formuli upravíme
+  tak, aby jedno (nezajímavé) splňující ohodnocení $h_0$ měla vždy a všechna ostatní odpovídala řešením $\varphi$.
+  Srovnej s $\prob{Double-SAT}$ (úloha .reference:un-7-4), kde se ptáme na dvě řešení bez nápovědy.
 
 
 .Exercise:
-  title: 'Úloha 6.6 (proč polynomiální čas)'
+  title: 'Úloha 6.6 (ohodnocení s nejméně jedničkami z orákula)'
   label: un-6-6
 
-  Student tvrdí: „Stejnou konstrukcí převedu výpočet libovolného deterministického stroje s časem $2^n$ na formuli.
-  Tedy každý jazyk z $\EXP$ se redukuje na $\prob{SAT}$ a $\prob{SAT}$ je EXP-těžký.“
+  Problém $\prob{Min-Ones SAT}$: "Vstup:".emphasize formule $\varphi$ v CNF nad $x_1,\dots,x_n$ a číslo $k$.
+  "Otázka:".emphasize existuje ohodnocení, které $\varphi$ splňuje a má "nejvýše $k$".notion proměnných rovných $1$?
 
   .enumerate:
     type: a
 
     .item:
 
-      Které části důkazu Cook–Levinovy věty pro takový stroj platí dál a která selže? Kolik pozic má mřížka pro $n=50$,
-      porovnejte se strojem s časem $n^2$.
+      Dokažte, že $\prob{Min-Ones SAT}$ je NP-úplný.
 
     .item:
 
-      Co by plynulo, kdyby tvrzení studenta bylo pravdivé?
+      Máte orákulum, které $\prob{Min-Ones SAT}$ rozhodne v jednom kroku. Pomocí něj najděte splňující ohodnocení
+      $\varphi$ s nejmenším možným počtem jedniček, nebo oznamte, že $\varphi$ je nesplnitelná. Zdůvodněte správnost
+      a určete počet dotazů vzhledem k $n$.
+
+    .item:
+
+      Proveďte b) pro $\varphi=(x_1\lor x_2)\land(\lnot x_1\lor x_3)\land(x_2\lor x_3)\land(\lnot x_2\lor\lnot x_3)\land(x_1\lor x_4)$.
 
 
 .Solution:
+  label: red-un-6-6
 
-  "a)".notion Platí dál všechno „kvalitativní“: sada dlaždic je konečná a závisí jen na stroji (počet typů nezávisí na
-  čase výpočtu), okraje jsou počáteční a (vychovaná) přijímací konfigurace a mřížka jde vydláždit, právě když stroj
-  přijme – lemma .reference:lem-lredtiling i převod na klauzule fungují pro libovolnou časovou mez. Selže jediná
-  věc, "polynomialita".emphasize: mřížka má $(2T+1)\cdot T$ pozic pro čas $T$, pro $T=2^n$ tedy $(2^{n+1}+1)\,2^n$
-  pozic a formule má $\Omega(4^n)$ klauzulí. Redukce ji ani nestihne vypsat v polynomiálním čase. Pro $n=50$:
-  $T=2^{50}\approx1{,}13\cdot10^{15}$ a pozic je $(2^{51}+1)\cdot2^{50}\approx2{,}5\cdot10^{30}$; pro čas $n^2=2500$
-  jen $5001\cdot2500=12\,502\,500$. Polynomiální čas je v důkazu použit právě třikrát: tabulka je polynomiálně velká,
-  formule je tedy polynomiálně velká, a redukce ji vytvoří v polynomiálním čase (spočte $p(|x|)$ a vypíše okraje).
-  Exponenciální „redukce“ nedokazuje nic – v exponenciálním čase by redukce úlohu rovnou vyřešila.
+  "Redukce:".notion $\prob{SAT} \redp \prob{Min-Ones SAT}$, formule $\varphi$ $\mapsto$ $(\varphi,\ k=n)$; v části b)
+  "redukce s orákulem".emphasize $\prob{Min-Ones SAT}$ – nejlepší ohodnocení $\to$ $\prob{Min-Ones SAT}$ – rozhodovací
+  verze. Jak: optimum $k^*$ binárním vyhledáváním, pak proměnné po jedné zkusmo nastavujeme na $0$ a orákulem
+  hlídáme, že ohodnocení s $k^*$ jedničkami pořád existuje.
 
 
-  "b)".notion Bylo by $\EXP\subseteq\NP$: pro $L\in\EXP$ a $L\redp\prob{SAT}$ rozhodneme $L$ nedeterministicky v
-  polynomiálním čase (spočteme $f(x)$ a ověříme uhodnuté ohodnocení). S $\NP\subseteq\EXP$ by platilo $\NP=\EXP$, a
-  protože $\PP\subsetneq\EXP$ (důsledek .reference:cor-pexp věty o hierarchii), plynulo by $\PP\neq\NP$. Tak
-  laciný důkaz otázky $\PP$ vs. $\NP$ zjevně neexistuje – chyba je právě v polynomialitě.
+  "a)".notion "V $\NP$:".emphasize certifikát je ohodnocení, verifikátor dosadí a spočítá jedničky. "NP-těžkost:".emphasize
+  každé ohodnocení má nejvýše $n$ jedniček, takže $(\varphi,n)$ je $\ANO$-instance, právě když $\varphi$ je splnitelná
+  (obě implikace jsou tatáž věta); redukce jen dopíše číslo $n$. Podle principu štafety je $\prob{Min-Ones SAT}$
+  NP-těžký, tedy NP-úplný. (Vzor „zobecnění“: $\prob{SAT}$ je případ $k=n$.)
 
 
-.Exercise:
-  title: 'Úloha 6.7 (mapa redukcí)'
-  label: un-6-7
-
-  O problémech $A,\dots,G$ víme jen toto: $\prob{SAT}$ je NP-úplný; $A\in\NP$; $C\in\PP$; a platí redukce
-  (šipka $X\to Y$ znamená $X\redp Y$) na obrázku.
-
-
-  .centered:
-
-    !tikz:
-      filename: 06z-ulohy-navic-05
-      options: 'pp/.style={blokd,minimum width=10mm,font=\sffamily\small\bfseries}, rr/.style={->,thick,draw=defc!80!black}'
-
-      \node[pp,fill=thmc!15,draw=thmc] (sat) at (0,0) {SAT};
-      \node[pp] (a) at (2.6,0) {A};
-      \node[pp] (b) at (5.2,0) {B};
-      \node[pp] (d) at (5.2,-1.8) {D};
-      \node[pp] (g) at (7.8,0) {G};
-      \node[pp] (c) at (2.6,1.8) {C};
-      \node[pp] (e) at (0,1.8) {E};
-      \node[pp] (f) at (0,-1.8) {F};
-      \draw[rr] (sat)--(a);
-      \draw[rr] (a)--(b);
-      \draw[rr] (c)--(a);
-      \draw[rr] (b)--(d);
-      \draw[rr] (d) to[bend left=12] (sat);
-      \draw[rr] (e)--(c);
-      \draw[rr] (f)--(sat);
-      \draw[rr] (b)--(g);
-      \node[note,anchor=west] at (3.2,1.8) {$C\in\PP$};
-      \node[note,anchor=north] at (2.6,-0.35) {$A\in\NP$};
-
-
-  Známé redukce: $\prob{SAT}\to A$, $A\to B$, $C\to A$, $B\to D$, $D\to\prob{SAT}$, $E\to C$, $F\to\prob{SAT}$, $B\to G$.
-
+  "b) Algoritmus.".notion
 
   .enumerate:
-    type: a
 
     .item:
 
-      U každého z $A,\dots,G$ rozhodněte, co z faktů plyne: NP-úplný / NP-těžký (o $\NP$ nic nevíme) / v $\NP$ / v $\PP$.
-      Zdůvodněte.
+      Zeptej se na $(\varphi,n)$. Při $\NE$ je $\varphi$ nesplnitelná – konec.
 
     .item:
 
-      Plyne $D\redp A$? Plyne $C$ je NP-těžký?
+      "Hodnota optima.".emphasize Označme $k^*$ nejmenší počet jedniček splňujícího ohodnocení. Odpověď na $(\varphi,k)$
+      je monotónní v $k$ (ohodnocení s nejvýše $k$ jedničkami má i nejvýše $k+1$). Binární vyhledávání na $[lo,hi]=[0,n]$
+      s invariantem $lo\le k^*\le hi$: pro $mid=\lfloor(lo+hi)/2\rfloor$ se zeptej na $(\varphi,mid)$; při $\ANO$
+      polož $hi:=mid$, při $\NE$ $lo:=mid+1$. Při $lo=hi$ je $k^*=lo$.
 
     .item:
 
-      Co by plynulo, kdybychom navíc dokázali $A\redp C$? A co kdyby $G\redp F$?
+      "Fixování.".emphasize Polož $\varphi_0:=\varphi$. Pro $i=1,\dots,n$ se zeptej na $(\varphi_{i-1}\land(\lnot x_i),\ k^*)$.
+      Při $\ANO$ polož $x_i:=0$ a $\varphi_i:=\varphi_{i-1}\land(\lnot x_i)$, při $\NE$ polož $x_i:=1$ a
+      $\varphi_i:=\varphi_{i-1}\land(x_i)$.
+
+    .item:
+
+      Vydej $(x_1,\dots,x_n)$.
+
+  Práh $k^*$ se při fixování nemění: počítá "všechny".emphasize jedničky, i ty, které jsme už zafixovali.
 
 
-.Solution:
-
-  Použijeme tři pravidla. (1) Tranzitivita: z cesty šipek $X\to\dots\to Y$ plyne $X\redp Y$ (lemma .reference:lem-redvlast).
-  (2) Štafeta (oddíl .reference:ch-cook-karpuv-strom-princip-stafety): je-li $\prob{SAT}\redp X$, je $X$ NP-těžký,
-  protože $L\redp\prob{SAT}\redp X$ pro každé $L\in\NP$. (3) Je-li $X\redp Y$ a $Y\in\NP$, je $X\in\NP$: verifikátor pro
-  $X$ spočte $f(x)$ (polynomiální délky) a pustí na něj verifikátor $Y$ s certifikátem pro $f(x)$. Totéž pro $\PP$
-  (lemma .reference:lem-redvlast, bod 2).
-
-
-  "a)".notion
+  "Invariant:".notion $\varphi_i$ má splňující ohodnocení s nejvýše $k^*$ jedničkami a každé splňující ohodnocení
+  $\varphi_i$ splňuje $\varphi$ a má na $x_1,\dots,x_i$ hodnoty zvolené algoritmem.
 
   .itemize:
 
     .item:
 
-      $A$: $\prob{SAT}\to A$ dává NP-těžkost, $A\in\NP$ je dáno $\Rightarrow$ "NP-úplný".notion.
+      Na začátku platí podle kroku 2 ($\varphi_0=\varphi$ má ohodnocení s $k^*$ jedničkami).
 
     .item:
 
-      $B$: $\prob{SAT}\to A\to B$ dává NP-těžkost; $B\to D\to\prob{SAT}$ a $\prob{SAT}\in\NP$ dává $B\in\NP$ $\Rightarrow$
-      "NP-úplný".notion.
+      Krok $\ANO$: tvrzení pro $\varphi_i=\varphi_{i-1}\land(\lnot x_i)$ říká přímo orákulum.
 
     .item:
 
-      $D$: $\prob{SAT}\to A\to B\to D$ (těžký), $D\to\prob{SAT}$ ($\in\NP$) $\Rightarrow$ "NP-úplný".notion.
+      Krok $\NE$: podle invariantu má $\varphi_{i-1}$ splňující ohodnocení $g$ s nejvýše $k^*$ jedničkami. Žádné
+      takové nemá $x_i=0$ (jinak by orákulum řeklo $\ANO$), tedy $g(x_i)=1$ a $g$ splňuje i $\varphi_{i-1}\land(x_i)$.
 
     .item:
 
-      $G$: $\prob{SAT}\to A\to B\to G$ $\Rightarrow$ "NP-těžký".notion; z $G$ žádná šipka nevede, o $G\in\NP$ nevíme nic.
-
-    .item:
-
-      $C$: "v $\PP$".notion (dáno). Šipka $C\to A$ jde "ze".emphasize $C$, říká jen, že $C$ není těžší než $A$ – o těžkosti $C$
-      neříká nic.
-
-    .item:
-
-      $E$: $E\to C$ a $C\in\PP$ $\Rightarrow$ "$E\in\PP$".notion.
-
-    .item:
-
-      $F$: $F\to\prob{SAT}$ $\Rightarrow$ "$F\in\NP$".notion; do $F$ žádná šipka nevede, o těžkosti nic nevíme.
+      Přidaná jednotková klauzule zafixuje $x_i$ a formule zůstává v CNF.
 
 
-  "b)".notion $D\redp A$ ano: $D\to\prob{SAT}\to A$. Obecně se všechny NP-úplné problémy ($\prob{SAT},A,B,D$) redukují
-  každý na každý. $C$ NP-těžký "neplyne".emphasize: to by vyžadovalo šipku (cestu) "do".emphasize $C$ z NP-těžkého problému. Je-li
-  $\PP\neq\NP$, $C$ NP-těžký není (jinak $\prob{SAT}\redp C\in\PP$).
+  "Konec.".notion $\varphi_n$ má všechny proměnné zafixované, její jediné splňující ohodnocení je výstup algoritmu.
+  Podle invariantu splňuje $\varphi$ a má nejvýše $k^*$ jedniček; méně jich mít nemůže, protože $k^*$ je minimum.
+  Výstup je tedy optimální.
 
 
-  "c)".notion S $A\redp C$ máme $\prob{SAT}\redp A\redp C\in\PP$, tedy $\prob{SAT}\in\PP$ a podle věty
-  .reference:thm-gral $\PP=\NP$. S $G\redp F$ máme $G\to F\to\prob{SAT}$, tedy $G\in\NP$ a $G$ je NP-úplný; navíc
-  $\prob{SAT}\to A\to B\to G\to F$, takže i $F$ je NP-těžký, a protože $F\in\NP$, je NP-úplný.
+  "Počet dotazů:".notion $1+\lceil\log_2(n+1)\rceil+n=O(n)$. Každý dotaz je $\varphi$ s nejvýše $n$ jednotkovými
+  klauzulemi a číslem $k\le n$, tedy polynomiálně velký.
 
 
-.Subsection Těžší úloha
+  "c) Průběh.".notion Splňující ohodnocení jsou $x_1x_2x_3x_4\in\{0101,\ 1010,\ 1011\}$, optimum má 2 jedničky.
+
+  .table:
+    columns: 'lcl'
+
+    .row:
+      head: true
+
+      dotaz
+
+      odpověď
+
+      důsledek
+
+    .row:
+
+      $(\varphi,4)$
+
+      $\ANO$
+
+      $\varphi$ je splnitelná, $[lo,hi]=[0,4]$
+
+    .row:
+
+      $(\varphi,2)$
+
+      $\ANO$
+
+      $[lo,hi]=[0,2]$
+
+    .row:
+
+      $(\varphi,1)$
+
+      $\NE$
+
+      $[lo,hi]=[2,2]$, tedy $k^*=2$
+
+    .row:
+
+      $(\varphi\land(\lnot x_1),2)$
+
+      $\ANO$
+
+      $x_1=0$
+
+    .row:
+
+      $(\varphi_1\land(\lnot x_2),2)$
+
+      $\NE$
+
+      $x_2=1$ (při $x_1=0$ vynucuje $(x_1\lor x_2)$)
+
+    .row:
+
+      $(\varphi_2\land(\lnot x_3),2)$
+
+      $\ANO$
+
+      $x_3=0$
+
+    .row:
+
+      $(\varphi_3\land(\lnot x_4),2)$
+
+      $\NE$
+
+      $x_4=1$ (vynucuje $(x_1\lor x_4)$)
+
+  Výsledek $x_1x_2x_3x_4=0101$ se dvěma jedničkami, 7 dotazů. Kontrola: $(x_1\lor x_2)$ a $(x_2\lor x_3)$ splní
+  $x_2$, $(\lnot x_1\lor x_3)$ a $(\lnot x_2\lor\lnot x_3)$ splní $\lnot x_1$ a $\lnot x_3$, $(x_1\lor x_4)$ splní $x_4$.
+
+
+.Subsection Těžší úlohy
   label: ch-cook-ulohy-navic-tezsi
+
+
+.Exercise:
+  title: 'Úloha 6.7 ($\prob{SAT}\redp\prob{Dlaždičkování}$ přímo)'
+  label: un-6-7
+
+  V oddílu .reference:ch-cook-l-dlazdickovani-vypocetni-tabulka jsme NP-těžkost $\prob{Dlaždičkování}$ dokázali
+  převodem libovolného jazyka z $\NP$ přes výpočetní tabulku. Dokažte, že $\prob{Dlaždičkování}$ je NP-úplný,
+  "přímou redukcí ze SATu".notion: z formule $\varphi$ s proměnnými $x_1,\dots,x_n$ a klauzulemi $C_1,\dots,C_m$ sestrojte
+  v polynomiálním čase sadu dlaždic a okraje plochy $n\times m$ tak, aby plochu šlo vydláždit, právě když je
+  $\varphi$ splnitelná.
+
+
+  "Nápověda: sloupec $i$ patří proměnné $x_i$, řádek $j$ klauzuli $C_j$.".emphasize
+  "Svislé hrany nesou hodnotu $x_i$, boční hrany v řádku $j$ informaci „klauzule $C_j$ už je splněná“.".emphasize
+
+
+.Solution:
+  label: red-un-6-7
+
+  "Redukce:".notion $\prob{SAT} \redp \prob{Dlaždičkování}$, formule $\varphi$ $\mapsto$ (sada $4nm$ dlaždic
+  $T(i,j,v,s)$, plocha $n\times m$, okraje).
+
+
+  "1. $\prob{Dlaždičkování}$ je v $\NP$.".notion Certifikát je přiřazení typu dlaždice každé pozici plochy.
+  Okraje jsou na vstupu vypsané hrana po hraně, takže počet pozic $n\cdot m$ je polynomiální v délce vstupu
+  a certifikát také. Verifikátor projde všechny dvojice sousedních pozic a okrajové pozice a porovná barvy, čas
+  $O(nm)$ porovnání.
+
+
+  "2. Konstrukce.".notion Barvy hran:
+
+  .itemize:
+
+    .item:
+
+      "svislé".emphasize (horní a spodní) hrany: $0$, $1$ (hodnota proměnné) a zvláštní barva $\ast$ pro horní a spodní
+      okraj;
+
+    .item:
+
+      "boční".emphasize hrany: trojice $\langle i,j,s\rangle$ pro $i=1,\dots,n+1$, $j=1,\dots,m$, $s\in\{0,1\}$ –
+      „v řádku $j$ těsně před sloupcem $i$; $s=1$, právě když $C_j$ už splnil některý literál proměnných
+      $x_1,\dots,x_{i-1}$“.
+
+  Pro každé $i\le n$, $j\le m$, $v,s\in\{0,1\}$ je jedna dlaždice $T(i,j,v,s)$:
+
+  .itemize:
+
+    .item:
+
+      levá hrana $\langle i,j,s\rangle$, pravá hrana $\langle i+1,j,s'\rangle$, kde $s'=1$, právě když $s=1$, nebo
+      $C_j$ obsahuje literál $x_i$ a $v=1$, nebo $C_j$ obsahuje literál $\lnot x_i$ a $v=0$;
+
+    .item:
+
+      horní hrana $v$ (v prvním řádku, $j=1$, barva $\ast$), spodní hrana $v$ (v posledním řádku, $j=m$, barva $\ast$).
+
+  Okraje: horní i spodní okraj má všude barvu $\ast$, levý okraj v řádku $j$ barvu $\langle1,j,0\rangle$, pravý okraj
+  v řádku $j$ barvu $\langle n+1,j,1\rangle$. (Nemá-li $\varphi$ klauzule, vydáme pevnou $\ANO$-instanci; má-li
+  klauzule, ale žádné proměnné, jsou klauzule prázdné a vydáme pevnou $\NE$-instanci.)
+
+
+  .centered:
+
+    !tikz:
+      filename: 06z-ulohy-navic-01
+      options: 'scale=0.8'
+
+      % phi = (x1 | ~x2) & (x2 | x3), h = (1,1,0)
+      \chRltile{0}{2}{$\ast$}{$1$}{$1$}{$0$}
+      \chRltile{2}{2}{$\ast$}{$1$}{$1$}{$1$}
+      \chRltile{4}{2}{$\ast$}{$1$}{$0$}{$1$}
+      \chRltile{0}{0}{$1$}{$0$}{$\ast$}{$0$}
+      \chRltile{2}{0}{$1$}{$1$}{$\ast$}{$0$}
+      \chRltile{4}{0}{$0$}{$1$}{$\ast$}{$1$}
+      \draw[acc!80!black,line width=2.5pt] (2,2)--(2,4) (4,0)--(4,2);
+      \draw[black,line width=1.6pt] (0,0) rectangle (6,4);
+      \foreach \t [count=\i from 0] in {$x_1=1$,$x_2=1$,$x_3=0$} {\node[font=\small] at (2*\i+1,4.4) {\t};}
+      \node[font=\small,anchor=east] at (-0.2,3) {$C_1=(x_1\lor\lnot x_2)$};
+      \node[font=\small,anchor=east] at (-0.2,1) {$C_2=(x_2\lor x_3)$};
+
+
+  Dláždění pro $\varphi=(x_1\lor\lnot x_2)\land(x_2\lor x_3)$ a ohodnocení $x_1=x_2=1$, $x_3=0$. Na svislých hranách
+  je hodnota proměnné (na okrajích $\ast$), na bočních příznak $s$ (souřadnice $\langle i,j\rangle$ barvy nekreslíme).
+  "Všimni si:".emphasize zeleně je místo, kde se $s$ v řádku změní z $0$ na $1$ – v řádku $C_1$ za sloupcem $x_1$,
+  v řádku $C_2$ za sloupcem $x_2$. Pravý okraj chce $s=1$, tedy „klauzule je splněná“.
+
+
+  "3. Polynomialita.".notion Typů dlaždic je $4nm$, barvy mají $O(\log(nm))$ bitů, okrajů je $2(n+m)$. Pro každou
+  dlaždici stačí zjistit, zda $C_j$ obsahuje $x_i$ či $\lnot x_i$, celkem čas $O(nm\cdot|\varphi|)$.
+
+
+  "4. ($\Rightarrow$)".notion Nechť $h$ splňuje $\varphi$. Pro $j\le m$ a $i\le n+1$ označme $s_{ij}=1$, právě když
+  $C_j$ obsahuje literál některé z proměnných $x_1,\dots,x_{i-1}$, který je při $h$ pravdivý. Na pozici (sloupec $i$,
+  řádek $j$) položíme $T(i,j,h(x_i),s_{ij})$. Sousedé v řádku pasují: pravá hrana dlaždice na pozici $i$ je podle
+  definice $s'$ právě $\langle i+1,j,s_{i+1,j}\rangle$, levá hrana následující dlaždice. Levý okraj sedí, protože
+  $s_{1j}=0$, pravý okraj, protože $C_j$ má pravdivý literál, a tedy $s_{n+1,j}=1$. Ve sloupci $i$ mají všechny dlaždice
+  na svislých hranách tutéž hodnotu $h(x_i)$ a na okrajích $\ast$.
+
+
+  "5. ($\Leftarrow$)".notion Nechť plocha je vydlážděná.
+
+  .enumerate:
+
+    .item:
+
+      "Dlaždice leží na svých místech.".emphasize V řádku $j$ má krajní levá dlaždice levou hranu $\langle1,j,0\rangle$,
+      je to tedy $T(1,j,\cdot,0)$; její pravá hrana je $\langle2,j,\cdot\rangle$, takže vedle leží $T(2,j,\cdot,\cdot)$,
+      atd. Na pozici (sloupec $i$, řádek $j$) leží $T(i,j,v_{ij},s_{ij})$.
+
+    .item:
+
+      "Sloupec nese jednu hodnotu.".emphasize Spodní hrana dlaždice v řádku $j<m$ je $v_{ij}$ a musí se rovnat horní
+      hraně dlaždice pod ní, tedy $v_{i,j+1}$. Všechna $v_{ij}$ ve sloupci $i$ jsou stejná; položíme $h(x_i)=v_{i1}$.
+
+    .item:
+
+      "Každá klauzule je splněná.".emphasize V řádku $j$ je $s_{1j}=0$, každá dlaždice nastaví $s_{i+1,j}$ podle
+      definice $s'$ a pravý okraj vynutí $s_{n+1,j}=1$. Příznak se tedy někde změní na $1$, tj. pro některé $i$
+      obsahuje $C_j$ literál proměnné $x_i$ pravdivý při $h$.
+
+  Ohodnocení $h$ splňuje $\varphi$.
+
+
+  "6. Závěr.".notion $\prob{SAT}$ je NP-úplný a $\prob{SAT}\redp\prob{Dlaždičkování}$, tedy $\prob{Dlaždičkování}$ je
+  NP-těžký a podle bodu 1 NP-úplný. Dláždění a splňující ohodnocení si dokonce odpovídají vzájemně jednoznačně
+  (příznaky $s_{ij}$ jsou ohodnocením určené).
+
+
+  "Proč souřadnice v barvách.".notion Bez $\langle i,j\rangle$ by dlaždice „nevěděla“, ke které klauzuli a proměnné
+  patří, a dlaždice klauzule $C_1$ by šla položit do řádku $C_2$. Souřadnice v barvách bočních hran tvoří „kolej“,
+  po které se každá dlaždice dostane jen na své místo. Že sada závisí na formuli (v Cook–Levinově důkazu závisela jen na
+  stroji), nevadí: redukce smí vyrobit libovolnou sadu, jen polynomiálně velkou.
 
 
 .Exercise:
@@ -848,7 +792,7 @@
   .centered:
 
     !tikz:
-      filename: 06z-ulohy-navic-06
+      filename: 06z-ulohy-navic-02
       options: 'scale=0.75'
 
       % radek 1: krok 0 -> 1
@@ -917,8 +861,8 @@
   roven počtu přijímajících výpočtů délky $p$.)
 
 
-  "Proč to nevadilo v úlohách .reference:un-6-2 až .reference:un-6-5:".notion tam se každý stav předává jen jedním
-  směrem ($q_1$, $g$, $f$ doprava; $q_2$, $c$ doleva), takže barva stavu směr nese implicitně. Přesně: vede-li do
+  "Proč to nevadí v příkladech oddílu .reference:ch-cook-l-dlazdickovani-vypocetni-tabulka:".notion tam se do
+  každého stavu vstupuje jen z jedné strany, takže barva stavu směr nese implicitně. Přesně: vede-li do
   každého stavu pohyb jen jedním směrem, je jednoduchá konstrukce totožná s opravenou, a tedy správná. Vede-li do
   některého stavu pohyb doprava i doleva, mohou vzniknout dvojice z b); zda to pokazí odpověď, záleží na stroji a
   vstupu. Takové stavy má většina strojů, které se po pásce vracejí. Místo značení barev lze stejně dobře upravit
