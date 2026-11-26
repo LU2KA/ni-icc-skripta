@@ -25,6 +25,103 @@ strojů je $\{0,1\}$. Jeden "krok".notion je jedno použití přechodové funkce
 koncového stavu).
 
 
+.Procedure:
+  title: 'Než začneš: co budeš potřebovat'
+  label: ch-vycisl-ulohy-navic-nez-zacnes
+
+  Na zápočtový test tato látka není: je až na ústní zkoušku (oddíl .reference:ch-test-co-je-na-testu).
+
+
+  "Definice.".notion
+
+  .itemize:
+
+    .item:
+
+      $L$ je "rekurzivně spočetný".emphasize, když ho nějaký stroj přijímá (mimo $L$ se smí zacyklit), a
+      "rekurzivní".emphasize, když ho stroj přijímá a navíc vždy zastaví (definice .reference:def-rekurzivni).
+
+    .item:
+
+      $\mathrm{UC}(\alpha)=0$, právě když $\alpha$ je zápis stroje $M_\alpha$ a $M_\alpha(\alpha)=1$, jinak $1$
+      (definice .reference:def-uc); $\prob{UC}$ není počitatelná (věta .reference:thm-ucnc).
+
+    .item:
+
+      $\prob{Halt}=\{\enc{M,x}\mid M\text{ zastaví na }x\}$ je rekurzivně spočetný, ale není rekurzivní
+      (věta .reference:thm-halting). Univerzální stroj s budíkem simuluje $M$ na $x$ nejvýše $k$ kroků
+      (oddíl .reference:ch-ts-univerzalni-turinguv-stroj).
+
+    .item:
+
+      Hilbertův 10. problém (má diofantická rovnice celočíselné řešení?) je nerozhodnutelný
+      (věta .reference:thm-matijasevic).
+
+
+  "Kuchařka – je jazyk rekurzivní, nebo rekurzivně spočetný? (úlohy 2.1, 2.4, 2.5 a), 2.6 b), 2.8)".notion
+
+  .enumerate:
+
+    .item:
+
+      Rekurzivně spočetný: popiš stroj, který při odpovědi $\ANO$ jistě zastaví a přijme (typicky simulace
+      univerzálním strojem).
+
+    .item:
+
+      Hledáš-li „existuje slovo / řešení“, nezkoušej kandidáty po jednom až do konce (simulace jednoho se může
+      zacyklit): v kole $t$ simuluj prvních $t$ kandidátů po $t$ krocích.
+
+    .item:
+
+      Rekurzivní: stroj musí zastavit i při odpovědi $\NE$, tedy omez počet kroků (budík) nebo počet kandidátů.
+
+    .item:
+
+      Doplněk: jsou-li $L$ i $\overline L$ rekurzivně spočetné, simuluj oba stroje střídavě po krocích; jeden z nich
+      přijme.
+
+
+  "Kuchařka – diagonalizace (úlohy 2.2, 2.3).".notion
+
+  .enumerate:
+
+    .item:
+
+      Seřaď objekty (stroje, slova) do posloupnosti a představ si tabulku: řádek $i$ je $i$-tý objekt, sloupec $j$
+      jeho chování na $j$-tém vstupu.
+
+    .item:
+
+      Sestroj nový objekt, který se pro každé $i$ liší od $i$-tého řádku v políčku $(i,i)$.
+
+    .item:
+
+      Kdyby byl nový objekt v posloupnosti na místě $i$, lišil by se sám od sebe v políčku $(i,i)$ – spor.
+
+
+  "Kuchařka – nerozhodnutelnost redukcí z $\prob{Halt}$ (úlohy 2.5–2.7).".notion
+
+  .enumerate:
+
+    .item:
+
+      Hlavička „Redukce s orákulem: $\prob{Halt}\to A$“. Předpokládej, že jazyk $A$ rozhoduje stroj $R$.
+
+    .item:
+
+      Ze vstupu $\enc{M,x}$ sestroj stroj $M'$; typicky $M'$ svůj vstup ignoruje, simuluje $M$ na $x$ a pak přijme.
+      Sestrojení $M'$ jen zapíše kód, $M$ se při něm nespouští, takže vždy skončí.
+
+    .item:
+
+      Dokaž: $M$ zastaví na $x$ $\iff$ $\enc{M'}\in A$ (nebo $\notin A$).
+
+    .item:
+
+      Jediný dotaz na $R$ by tedy rozhodl $\prob{Halt}$, což je ve sporu s větou .reference:thm-halting.
+
+
 .Subsection Rozcvička
   label: ch-vycisl-ulohy-navic-rozcvicka
 

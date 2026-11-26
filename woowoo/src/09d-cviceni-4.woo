@@ -2,6 +2,79 @@
   label: sec-cv4
 
 
+.Procedure:
+  title: 'Než začneš: co budeš potřebovat'
+
+  "Definice.".notion
+
+  .itemize:
+
+    .item:
+
+      "Redukce a NP-úplnost".notion (definice .reference:def-redukce a .reference:def-nphard): $f$ polynomiální,
+      $x\in A\iff f(x)\in Q$; $Q$ je NP-úplný, když $Q\in\NP$ a $A\redp Q$ pro nějaký NP-těžký $A$.
+
+    .item:
+
+      "CNF".notion (problém .reference:prob-sat): formule je konjunkce klauzulí, klauzule je disjunkce literálů
+      ($x$ nebo $\lnot x$). V 2-CNF má klauzule nejvýše dva literály, v 3-CNF právě tři.
+
+    .item:
+
+      $\prob{MaxCut}$ (problém .reference:prob-maxcut, NP-úplný podle věty .reference:thm-naemaxcut): rozdělit
+      $V=A\cup B$ tak, aby aspoň $k$ hran vedlo mezi $A$ a $B$.
+
+    .item:
+
+      $\prob{NAE-3-SAT}$ (problém .reference:prob-nae): v každé klauzuli aspoň jedna pravda "a".emphasize aspoň
+      jedna nepravda. S ohodnocením je řešením i jeho negace (lemma .reference:lem-bitflip).
+
+    .item:
+
+      $\prob{3-Coloring}$ (problém .reference:prob-3col): trojúhelník má v každém 3-obarvení tři různé barvy
+      (lemma .reference:lem-trojuhelnik).
+
+    .item:
+
+      $\prob{Set Cover}$, $\prob{Feedback Vertex Set}$, $\prob{Dominating Set}$: zadání i řešení jsou v cvičeních 3.4–3.6
+      (oddíl .reference:sec-cv3), redukují se z $\prob{Vertex Cover}$ (problém .reference:prob-vc).
+
+
+  "Kuchařka".notion (zkrácený postup z oddílu .reference:ch-test-postup-np):
+
+  .enumerate:
+
+    .item:
+
+      "$Q\in\NP$:".notion certifikát (ohodnocení, obarvení, množina) a jeho ověření.
+
+    .item:
+
+      "Zdroj".notion podle struktury: dvě strany řezu $\leftrightarrow$ pravda/nepravda ($\prob{MaxCut}$);
+      „ne všechny stejné“ $\leftrightarrow$ různé barvy ($\prob{NAE-3-SAT}$).
+
+    .item:
+
+      "Hlavička".notion $A\redp Q$ a co se převádí na co.
+
+    .item:
+
+      "Gadgety:".notion co odpovídá proměnné, co klauzuli nebo hraně. U počítacích problémů ($\prob{MAX-2-SAT}$)
+      tabulkou spočítej, kolik se jich splní v každém případě, a z toho práh $k$ cílové instance.
+
+    .item:
+
+      "Polynomialita".notion (velikost $f(x)$), pak "($\Rightarrow$)".notion a "($\Leftarrow$)".notion.
+
+    .item:
+
+      "Závěr:".notion $Q$ je NP-těžký, s bodem 1 NP-úplný.
+
+
+  "Častá chyba:".notion práh cílové instance opsaný z původní ($k$ místo $|E|+k$), nebo ($\Leftarrow$), která
+  předpokládá „hezké“ řešení, aniž by to bylo dokázané.
+
+
 .Exercise:
   title: 'Cvičení 4.1–4.3'
   label: cv-4-1

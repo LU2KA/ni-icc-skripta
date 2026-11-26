@@ -19,6 +19,80 @@ z kapitoly .reference:ch-vycisl.
   přepočítané ručně.
 
 
+.Procedure:
+  title: 'Než začneš: co budeš potřebovat'
+  label: ch-redukce-ulohy-navic-nez-zacnes
+
+  "Definice.".notion
+
+  .itemize:
+
+    .item:
+
+      "Polynomiální redukce".emphasize $L\redp Q$ je funkce $f$ spočitatelná v polynomiálním čase, pro kterou
+      $x\in L\iff f(x)\in Q$ pro "každé".emphasize $x$ (definice .reference:def-redukce).
+
+    .item:
+
+      Tranzitivita; z $L\redp Q$ a $Q\in\PP$ plyne $L\in\PP$; z $L\redp Q$ a $L\notin\PP$ plyne $Q\notin\PP$
+      (lemma .reference:lem-redvlast).
+
+    .item:
+
+      $Q$ je "NP-těžký".emphasize, když $L\redp Q$ pro všechna $L\in\NP$, a "NP-úplný".emphasize, když navíc $Q\in\NP$
+      (definice .reference:def-nphard). NP-úplný $Q$ leží v $\PP$, právě když $\PP=\NP$ (věta .reference:thm-gral).
+
+    .item:
+
+      $\prob{UNP}$: vstup $\enc{M,x,1^k}$ (NDTS, slovo, $k$ unárně); přijme $M$ slovo $x$ do $k$ kroků? Je NP-úplný
+      (problém .reference:prob-unp, věta .reference:thm-unpnpc).
+
+
+  "Kuchařka – je to redukce? pravda, nebo nepravda? (úlohy 5.1–5.5)".notion
+
+  .enumerate:
+
+    .item:
+
+      Ověř obě podmínky definice zvlášť. Ekvivalence musí platit oběma směry; protipříklad je jedno $x$, na kterém se
+      odpovědi liší.
+
+    .item:
+
+      Čas: výstup není delší než počet kroků redukce, $|f(x)|\le p(n)$. Algoritmus pro $Q$ pak běží na vstupu délky
+      $p(n)$ – dosaď to do jeho času.
+
+    .item:
+
+      Směr: $L\redp Q$ přenáší snadnost z $Q$ na $L$ a těžkost z $L$ na $Q$, nikdy obráceně.
+
+    .item:
+
+      Protipříklady hledej mezi triviálními jazyky $\emptyset$, $\Sigma^*$ a jazyky z $\PP$.
+
+
+  "Kuchařka – NP-úplnost redukcí z $\prob{UNP}$ (úlohy 5.6–5.8).".notion Postup .reference:ch-test-postup-np.
+
+  .enumerate:
+
+    .item:
+
+      $Q\in\NP$ (chce-li zadání úplnost): certifikát a verifikátor.
+
+    .item:
+
+      Hlavička $\prob{UNP}\redp Q$: $\enc{M,x,1^k}\mapsto\dots$
+
+    .item:
+
+      Cílová instance je typicky nový stroj $M'$ sestrojený z $M$ (zadrátované slovo, čekání v přijímacím stavu,
+      deterministická simulace všech větví); popiš, co dělá, a nový počet kroků $k'$ (unárně, polynomiální v $|x|+k$).
+
+    .item:
+
+      Obě implikace ($\Rightarrow$ i $\Leftarrow$) a závěr: $Q$ je NP-těžký, spolu s prvním bodem NP-úplný.
+
+
 .Subsection Rozcvička
   label: ch-redukce-ulohy-navic-rozcvicka
 

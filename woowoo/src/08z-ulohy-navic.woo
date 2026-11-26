@@ -20,6 +20,95 @@ hledání největší nezávislé množiny pomocí orákula a NP-úplnost $\prob
   spočítal skript.
 
 
+.Procedure:
+  title: 'Než začneš: co budeš potřebovat'
+  label: ch-is-ulohy-navic-nez-zacnes
+
+  "Definice.".notion
+
+  .itemize:
+
+    .item:
+
+      "Nezávislá množina".emphasize: žádné dva její vrcholy nejsou spojené hranou; $\prob{IS}$: existuje velikosti
+      aspoň $k$ (problém .reference:prob-is)? Největší má velikost $\alpha(G)$.
+
+    .item:
+
+      "Vrcholové pokrytí".emphasize: každá hrana má v něm aspoň jeden konec; $\prob{VC}$: velikosti nejvýše $c$
+      (problém .reference:prob-vc). $S$ je nezávislá $\iff$ $V\setminus S$ je pokrytí, $\alpha(G)+\tau(G)=n$
+      (lemma .reference:lem-isvc).
+
+    .item:
+
+      "Klika".emphasize: každé dva vrcholy spojené; $S$ je nezávislá v $G$ $\iff$ klika v doplňku $\overline G$
+      (lemma .reference:lem-doplnek), tedy $\alpha(G)=\omega(\overline G)$.
+
+    .item:
+
+      $\prob{Hitting Set}$: množina $H$ s $|H|\le k$, která protne každou množinu systému
+      (problém .reference:prob-hs).
+
+    .item:
+
+      $\prob{3-SAT}\redp\prob{IS}$ (redukce .reference:red-is): hrana $x_i$–$\lnot x_i$ za proměnnou, trojúhelník za
+      klauzuli, hrana z každého literálu klauzule k jeho negaci, $k=n+m$.
+
+
+  "Kuchařka – NP-úplnost krátkou redukcí (úlohy 8.4–8.7, 8.10).".notion Postup .reference:ch-test-postup-np.
+
+  .enumerate:
+
+    .item:
+
+      $Q\in\NP$: certifikát je vybraná množina.
+
+    .item:
+
+      Zdroj podle nápovědy ($\prob{IS}$, $\prob{VC}$, $\prob{Clique}$) a hlavička redukce.
+
+    .item:
+
+      Rozpoznej vzor: zdroj je speciální případ $Q$ (hrana $\mapsto$ dvouprvková množina), přechod k doplňku grafu,
+      nebo jen jiný popis téhož (vrchol $\mapsto$ množina jeho hran); přepočítej parametr $k$.
+
+    .item:
+
+      Obě implikace a velikost instance.
+
+
+  "Kuchařka – self-redukce (úloha 8.9).".notion Postup .reference:ch-test-postup-self-redukce.
+
+  .enumerate:
+
+    .item:
+
+      Hodnotu $\alpha(G)$ najdi binárním vyhledáváním přes $k\in\{0,\dots,n\}$.
+
+    .item:
+
+      Vrchol $v$ „vezmeš“ tak, že smažeš $v$ i jeho sousedy a ptáš se, zda zbytek má nezávislou množinu velikosti o
+      jedna menší.
+
+    .item:
+
+      Invariant, počet dotazů a velikost dotazovaných grafů jako funkce $n$.
+
+
+  "Kuchařka – konkrétní grafy (úlohy 8.1–8.3, 8.8).".notion
+
+  .enumerate:
+
+    .item:
+
+      Dolní mez ukaž příkladem množiny; horní mez argumentem (z každé kliky nebo hrany lze do nezávislé množiny vzít
+      nejvýše jeden vrchol).
+
+    .item:
+
+      Pro pevné $k$ stačí vyzkoušet všech $\binom nk=O(n^k)$ podmnožin, což je polynom.
+
+
 .Subsection Rozcvička
   label: ch-is-ulohy-navic-rozcvicka
 
@@ -910,6 +999,10 @@ hledání největší nezávislé množiny pomocí orákula a NP-úplnost $\prob
 Úlohy v tomto pododdílu pocházejí ze sbírky „External Practice Bank“, kterou sestavil spolužák z volně dostupných
 materiálů (hlavně MFF UK). Zadání jsou česky převyprávěná, řešení jsou naše. Úloha 8.9 je self-redukce (typ 2
 testu), úloha 8.10 důkaz NP-úplnosti (typ 4), který skripta už obsahují – berte ji jako opakování „bez nahlížení“.
+
+
+K úloze 8.9 patří kuchařka „self-redukce“ a k úloze 8.10 kuchařka „NP-úplnost krátkou redukcí“ z
+"rámečku na začátku oddílu"#ch-is-ulohy-navic-nez-zacnes.
 
 
 .Exercise:

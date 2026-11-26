@@ -9,6 +9,66 @@ kostru: proměnné s významem, omezení po krocích „chceme … $\to$ implika
 
 
 .Procedure:
+  title: 'Než začneš: co budeš potřebovat'
+
+  "Definice.".notion
+
+  .itemize:
+
+    .item:
+
+      "CNF".notion (problém .reference:prob-sat): konjunkce klauzulí, klauzule je disjunkce literálů ($x$, $\lnot x$).
+      Implikace $A\land B\Rightarrow C$ je klauzule $(\lnot A\lor\lnot B\lor C)$.
+
+    .item:
+
+      "Stavební bloky".notion (definice .reference:ch-resice-sat-def-bloky): „alespoň jedna“ = jedna klauzule
+      $(y_1\lor\dots\lor y_n)$, „nejvýše jedna“ = $\binom n2$ klauzulí $(\lnot y_i\lor\lnot y_j)$, „právě jedna“
+      = obojí, „nejvýše $k$“.
+
+    .item:
+
+      "Tseitinova transformace".notion (oddíl .reference:ch-resice-sat-tseitin, věta .reference:ch-resice-sat-thm-tseitin):
+      každé hradlo dostane novou proměnnou $g$ a klauzule obou implikací „$g\Rightarrow$ hradlo“ a „hradlo $\Rightarrow g$“.
+      Výsledek je s původní formulí "ekvisplnitelný".emphasize, ne ekvivalentní.
+
+    .item:
+
+      "Problémy:".notion $\prob{Vertex Cover}$ (problém .reference:prob-vc), $\prob{Dominating Set}$ (definice v zadání 7.1),
+      orientovaná hamiltonovská cesta (problém .reference:prob-dhp): cesta, která projde každý vrchol právě jednou.
+
+
+  "Kuchařka".notion (zkrácená verze rámečku níže a oddílu .reference:ch-test-postup-ilp-sat):
+
+  .enumerate:
+
+    .item:
+
+      "Proměnné s významem:".notion výběr ($x_v=1\iff v\in C$), přiřazení ($x_{v,c}$), pozice ($p_{v,i}=1\iff v$ je
+      na $i$-tém místě).
+
+    .item:
+
+      "Každá podmínka zvlášť:".notion věta česky $\to$ implikace $\to$ klauzule, s rozsahem indexů.
+
+    .item:
+
+      "Počty".notion bloky: alespoň / nejvýše / právě jedna; „nejvýše $k$“ přes pozice nebo čítač (cvičení .reference:cv-7-4),
+      nikdy výčtem všech $(k+1)$-tic.
+
+    .item:
+
+      "Co není v CNF".notion (XOR, parita): Tseitin, nová proměnná za každé hradlo.
+
+    .item:
+
+      "Závěr:".notion korektnost oběma směry, jak z modelu přečíst řešení, počet proměnných a klauzulí.
+
+
+  "Častá chyba:".notion podmínka zapsaná jako něco, co není klauzule („$x_u\ne x_v$“, „$\sum x_v\le k$“).
+
+
+.Procedure:
   title: 'Postup na papíře: kódování do SAT'
   label: ch-resice-sat-postup-kodovani
 

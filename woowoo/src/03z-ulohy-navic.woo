@@ -16,6 +16,105 @@ a .reference:ch-cas-prvni-obyvatel-exp) a větu o časové hierarchii (oddíl .r
   a 3.6 porovnané s hrubou silou na všech malých vstupech), čistě důkazové části jsou překontrolované ručně.
 
 
+.Procedure:
+  title: 'Než začneš: co budeš potřebovat'
+  label: ch-cas-ulohy-navic-nez-zacnes
+
+  Na zápočtový test tato látka jako samostatná úloha není: je až na ústní zkoušku
+  (oddíl .reference:ch-test-co-je-na-testu). U úlohy typu 1 se z ní hodí odhad času stroje a to, že na konstantách
+  nezáleží.
+
+
+  "Definice.".notion
+
+  .itemize:
+
+    .item:
+
+      $f=O(g)$, když existuje $c\in\N$ s $f(n)\le c\cdot g(n)$ pro všechna $n$ (definice .reference:def-bigo);
+      $f=o(g)$, když $f(n)/g(n)\to0$.
+
+    .item:
+
+      Stroj pracuje v čase $T(n)$, když na "každém".emphasize vstupu délky $n$ zastaví po nejvýše $T(n)$ krocích
+      (definice .reference:def-casova); $n$ je délka zápisu vstupu.
+
+    .item:
+
+      $\DTIME(f)$ jsou jazyky rozhodnutelné v čase $O(f(n))$, $\PP=\bigcup_d\DTIME(n^d)$ a
+      $\EXP=\bigcup_d\DTIME(2^{n^d})$ (definice .reference:def-tridy).
+
+    .item:
+
+      Lineární zrychlení: pro každé $\varepsilon>0$ existuje ekvivalentní stroj s časem
+      $n+3+\lceil\varepsilon(n+T_M(n))\rceil$ (věta .reference:thm-speedup).
+
+    .item:
+
+      Hierarchie: jsou-li $f,g$ časově konstruovatelné (definice .reference:def-konstr) a $f\log f=o(g)$, pak
+      $\DTIME(f)\subsetneq\DTIME(g)$ (věta .reference:thm-hierarchie).
+
+
+  "Kuchařka – růst funkcí a tvrzení o $O$ (úlohy 3.1, 3.4).".notion
+
+  .enumerate:
+
+    .item:
+
+      Přepiš funkce do tvaru $2^{h(n)}$ (např. $n^{\log n}=2^{\log^2 n}$) a porovnej exponenty.
+
+    .item:
+
+      $f=O(g)$ dokazuj konkrétní konstantou $c$ platnou pro všechna $n$; $f\ne O(g)$ ukaž tím, že $f/g$ roste nade
+      všechny meze.
+
+    .item:
+
+      Protipříklad hledej mezi jednoduchými funkcemi ($n$, $2n$, $n^2$, $2^n$) nebo funkcí, která se podle parity $n$
+      střídá mezi dvěma tvary.
+
+
+  "Kuchařka – patří problém do $\PP$, nebo do $\EXP$? (úlohy 3.2, 3.5, 3.6, 3.8 a))".notion
+
+  .enumerate:
+
+    .item:
+
+      Urči délku vstupu $N$: číslo $n$ zapsané binárně má asi $\log_2n$ bitů, unárně $n$ symbolů.
+
+    .item:
+
+      Popiš algoritmus a spočítej jeho kroky jako funkci $N$, ne jako funkci hodnoty čísel.
+
+    .item:
+
+      Polynom v $N$ dává $\PP$, $2^{N^d}$ dává $\EXP$. U zřetězení jazyků stačí zkusit všech $n+1$ míst rozdělení
+      slova; rozkladů na libovolně mnoho kusů je ale exponenciálně mnoho.
+
+
+  "Kuchařka – co plyne z hierarchie (úlohy 3.3, 3.7, 3.8 b)).".notion
+
+  .enumerate:
+
+    .item:
+
+      Liší-li se $f$ a $g$ jen konstantním násobkem, jsou třídy stejné (důsledek .reference:cor-nokonst).
+
+    .item:
+
+      Jinak ověř předpoklad $f\log f=o(g)$ výpočtem limity. Když neplatí, věta nic neříká.
+
+    .item:
+
+      Ostrou inkluzi mezi sjednoceními tříd (např. $\PP\subsetneq\EXP$) dokazuj jedinou dvojicí $f,g$ s
+      $\PP\subseteq\DTIME(f)\subsetneq\DTIME(g)\subseteq\EXP$.
+
+    .item:
+
+      $L\notin\PP$ plyne, když z polynomiálního algoritmu pro $L$ dostaneš polynomiální algoritmus pro jazyk, o kterém
+      hierarchie říká, že v $\PP$ není.
+
+
 .Subsection Rozcvička
   label: ch-cas-ulohy-navic-rozcvicka
 

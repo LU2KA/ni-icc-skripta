@@ -27,6 +27,95 @@ obklopený symboly $\blank$, ostatní pásky jsou prázdné a všechny hlavy sto
 Nevykreslené přechody vedou do $\qR$.
 
 
+.Procedure:
+  title: 'Než začneš: co budeš potřebovat'
+  label: ch-ts-ulohy-navic-nez-zacnes
+
+  "Definice.".notion
+
+  .itemize:
+
+    .item:
+
+      "Turingův stroj".emphasize (definice .reference:def-dts): stavy, abeceda pásky s $\blank$, $k$ pásek a
+      přechodová funkce $\delta(q,s)=(q',s',D)$. "Krok".emphasize je jedno použití $\delta$, "konfigurace".emphasize
+      je stav, obsah pásek a polohy hlav.
+
+    .item:
+
+      Stroj "rozhoduje".emphasize jazyk $L$, když na každém vstupu zastaví a přijme právě slova z $L$;
+      "funkce $f_M$".emphasize je obsah výstupu po zastavení (definice .reference:def-fm).
+
+    .item:
+
+      "Velikost instance".emphasize je délka jejího zápisu (definice .reference:def-instance): číslo $N$ zabere
+      binárně asi $\log_2N$ symbolů, unárně $N$. Hodnotu optima z rozsahu $0,\dots,\mathrm{MAX}$ najde binární
+      vyhledávání na $\lceil\log_2\mathrm{MAX}\rceil$ dotazů (důsledek .reference:cor-binsearch).
+
+
+  "Kuchařka – návrh TS (úlohy 1.4–1.6, 1.8–1.15).".notion Podrobně v postupu .reference:ch-test-postup-ts.
+
+  .enumerate:
+
+    .item:
+
+      Myšlenka jednou větou („odškrtni jedno $a$ a jedno $b$ a opakuj“, „druhá páska je čítač“).
+
+    .item:
+
+      Pásky a značky: co je na které pásce a jakými symboly ($X$, $Y$) odškrtáváš.
+
+    .item:
+
+      Stavy s významem: u každého stavu napiš, co v něm platí a kde stojí hlava.
+
+    .item:
+
+      Kontrola tvaru a okrajů: prázdné slovo, špatné pořadí písmen; nevypsané přechody vedou do $\qR$.
+
+    .item:
+
+      Odhad kroků: počet průchodů krát délka průchodu. Nakonec zkouška na jednom slově z jazyka a jednom mimo něj.
+
+
+  "Kuchařka – stopování, kódování a dotazy (úlohy 1.1–1.3).".notion
+
+  .enumerate:
+
+    .item:
+
+      Vypisuj konfigurace krok po kroku a hledej, co udělá jeden průchod páskou; z toho plyne $f_M$ i počet kroků jako
+      součet délek průchodů.
+
+    .item:
+
+      Kód stroje skládej přechod po přechodu přesně podle vzorce ze zadání; dekódování je totéž pozpátku.
+
+    .item:
+
+      Rozhodovací verze má stejný vstup a navíc práh $k$: „existuje řešení s hodnotou aspoň (nejvýše) $k$?“ Počet
+      dotazů porovnávej s délkou vstupu, ne s hodnotou čísel.
+
+
+  "Kuchařka – simulace jednoho stroje jiným (úlohy 1.7, 1.16, 1.17).".notion
+
+  .enumerate:
+
+    .item:
+
+      Kódování: jak se obsah všech pásek a polohy hlav vejdou na jednu pásku (stopy, značky hlav, přeložení pásky).
+
+    .item:
+
+      Jeden simulovaný krok: průchod přes použitou část pásky, při kterém si stroj ve stavu zapamatuje čtené symboly,
+      a průchod, při kterém zapíše nové symboly a posune značky.
+
+    .item:
+
+      Cena: kolik kroků stojí jeden simulovaný krok (u stop úměrně délce použité části pásky, ta roste nejvýš o buňku
+      za krok), krát počet simulovaných kroků.
+
+
 .Subsection Rozcvička
   label: ch-ts-ulohy-navic-rozcvicka
 
@@ -1122,6 +1211,10 @@ Nevykreslené přechody vedou do $\qR$.
 materiálů (hlavně MFF UK). Zadání jsou česky převyprávěná, řešení jsou naše. Úlohy 1.9–1.13 odpovídají úloze 1
 zápočtového testu (postup v oddílu .reference:ch-test-postup-ts), úlohy 1.14–1.17 jsou těžší a jdou nad rámec
 testu. Platí konvence z úvodu oddílu; kde zadání předepisuje jinou, je to v něm řečeno.
+
+
+K úlohám 1.9–1.13 stačí kuchařka „návrh TS“ a k úlohám 1.16 a 1.17 kuchařka „simulace“ z
+"rámečku na začátku oddílu"#ch-ts-ulohy-navic-nez-zacnes.
 
 
 .Exercise:

@@ -20,6 +20,89 @@ NP-úplnost $\prob{X3C}$ v testové podobě a redukci třírozměrného párová
   $\prob{3DM}$ s $q\le3$; soustavu z úlohy 10.10 b) vyřešil program zkoušením všech vektorů.
 
 
+.Procedure:
+  title: 'Než začneš: co budeš potřebovat'
+  label: ch-x3c-ulohy-navic-nez-zacnes
+
+  "Definice.".notion
+
+  .itemize:
+
+    .item:
+
+      $\prob{1-in-3 SAT}$: ohodnocení 3-CNF formule, při kterém je v každé klauzuli "přesně jeden".emphasize pravdivý
+      literál (problém .reference:prob-1in3); pozitivní verze je bez negací.
+
+    .item:
+
+      $\prob{X3C}$: univerzum s $3q$ prvky a tříprvkové množiny; lze vybrat $q$ z nich tak, aby každý prvek byl pokryt
+      právě jednou (problém .reference:prob-x3c)? Redukce $\prob{3-SAT}\redp\prob{X3C}$: .reference:red-x3c.
+
+    .item:
+
+      $\prob{Subset Sum}$: má některá podmnožina čísel $a_1,\dots,a_n$ součet přesně $T$
+      (problém .reference:prob-subsetsum)? Čísla po číslicích staví redukce .reference:red-subsetsum.
+
+    .item:
+
+      $\prob{ILP}$: celočíselné proměnné, omezení $Ax\le b$ (problém .reference:prob-ilp).
+
+
+  "Kuchařka – konkrétní instance a běh redukce (úlohy 10.1, 10.2).".notion
+
+  .enumerate:
+
+    .item:
+
+      „Přesně jeden“ propaguj: pravdivý literál vynutí nepravdivost ostatních v klauzuli.
+
+    .item:
+
+      U $\prob{X3C}$: prvek v jediné množině ji vynutí; vybraná množina vyřadí všechny, které se s ní protínají.
+
+    .item:
+
+      U běhu redukce počítej prvky a množiny zvlášť podle druhu gadgetu.
+
+
+  "Kuchařka – NP-úplnost s podmínkou „přesně jednou“ (úlohy 10.3–10.7, 10.9, 10.10).".notion
+  Postup .reference:ch-test-postup-np.
+
+  .enumerate:
+
+    .item:
+
+      $Q\in\NP$ a zdroj $\prob{X3C}$ nebo $\prob{1-in-3 SAT}$.
+
+    .item:
+
+      „Pokryt právě jednou“ přepiš do cíle: rovnice $\sum=1$, číslice rovna $1$, nebo $|H\cap B|=1$ po výměně rolí
+      prvků a množin.
+
+    .item:
+
+      Nové prvky přidávej tak, aby je šlo pokrýt jen zamýšleným způsobem. U čísel zvol základ větší než největší možný
+      součet v číslici, aby nevznikl přenos.
+
+    .item:
+
+      Obě implikace a velikost (čísla mají polynomiálně mnoho číslic).
+
+
+  "Kuchařka – varianta v $\PP$ (úloha 10.8).".notion
+
+  .enumerate:
+
+    .item:
+
+      Leží-li prvek ve dvou množinách, říká „vyber právě jednu z nich“ – je to podmínka mezi dvěma objekty, takové
+      umíme řešit v $\PP$ (2-barvení, $\prob{2-SAT}$).
+
+    .item:
+
+      Postav graf podle nápovědy a nezapomeň na prvky, které leží v jediné množině nebo v žádné.
+
+
 .Subsection Rozcvička
   label: ch-x3c-ulohy-navic-rozcvicka
 
@@ -876,6 +959,11 @@ NP-úplnost $\prob{X3C}$ v testové podobě a redukci třírozměrného párová
 Úlohy v tomto pododdílu pocházejí ze sbírky „External Practice Bank“, kterou sestavil spolužák z volně dostupných
 materiálů (hlavně MFF UK). Zadání jsou česky převyprávěná, řešení jsou naše. Obě úlohy jsou důkazy NP-těžkosti
 (typ 4 testu); úloha 10.9 se kryje s oddílem .reference:ch-x3c-exact-cover – berte ji jako opakování „bez nahlížení“.
+
+
+Problém $\prob{3DM}$ z úlohy 10.10 nemá ve skriptech vlastní definici, znění je v zadání: je to $\prob{X3C}$, kde
+univerzum tvoří tři třídy $X,Y,Z$ a každá trojice má z každé třídy jeden prvek. Kuchařky jsou v
+"rámečku na začátku oddílu"#ch-x3c-ulohy-navic-nez-zacnes.
 
 
 .Exercise:

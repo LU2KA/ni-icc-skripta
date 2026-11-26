@@ -16,6 +16,91 @@ každé tvrzení typu „… je v $\PSPACE$“.
   vyhodnocení QBF a hry, srovnání redukce s hrubou silou na stovkách náhodných instancí), důkazy jsme prošli ručně.
 
 
+.Procedure:
+  title: 'Než začneš: co budeš potřebovat'
+  label: ch-pspace-ulohy-navic-nez-zacnes
+
+  Na zápočtový test tato látka není: je až na ústní zkoušku (oddíl .reference:ch-test-co-je-na-testu).
+
+
+  "Definice.".notion
+
+  .itemize:
+
+    .item:
+
+      $\prob{TQBF}$: je plně kvantifikovaná formule $Q_1x_1\dots Q_nx_n:\varphi$ pravdivá
+      (problém .reference:prob-tqbf)? Čteno jako hra: hráč $\exists$ volí hodnoty proměnných s $\exists$, soupeř
+      $\forall$ ostatní.
+
+    .item:
+
+      $X$ je $\PSPACE$-úplný, když $X\in\PSPACE$ a $Y\redp X$ pro každé $Y\in\PSPACE$
+      (definice .reference:def-pspaceuplny); $\prob{TQBF}$ je $\PSPACE$-úplný (věta .reference:thm-tqbfpspace).
+
+    .item:
+
+      $\prob{Generalized Geography}$: žeton se posouvá po hranách do nenavštívených vrcholů, kdo nemůže táhnout,
+      prohrál; má Alice vítěznou strategii (problém .reference:prob-gg)? Je $\PSPACE$-úplná
+      (věta .reference:thm-ggpspace).
+
+
+  "Kuchařka – vyhodnocení formule nebo hry (úlohy 13.1, 13.2, 13.7).".notion
+
+  .enumerate:
+
+    .item:
+
+      Strom hry: uzel $\exists$ je OR (stačí jeden dobrý tah), uzel $\forall$ je AND (dobré musí být všechny).
+
+    .item:
+
+      Pozice je vyhrávající pro hráče na tahu, když z ní vede tah do pozice prohrávající pro soupeře.
+
+    .item:
+
+      V geografii závisí pozice i na množině navštívených vrcholů; v acyklickém grafu ne, a lze ji vyhodnocovat od
+      konce.
+
+    .item:
+
+      Vítězná strategie je odpověď na "každý".emphasize možný tah soupeře.
+
+
+  "Kuchařka – problém je v $\PSPACE$ (úlohy 13.4 b), 13.6).".notion
+
+  .enumerate:
+
+    .item:
+
+      Rekurze přes tahy: vyhodnoť všechny tahy z pozice jeden po druhém a paměť po návratu použij znovu.
+
+    .item:
+
+      Prostor = hloubka rekurze (délka partie) krát paměť jednoho patra (zápis pozice); oboje polynomiální.
+
+
+  "Kuchařka – $\PSPACE$-těžkost redukcí a prenexní tvar (úlohy 13.3, 13.4 a), 13.5, 13.8).".notion
+
+  .enumerate:
+
+    .item:
+
+      Kroky jako u NP-těžkosti (postup .reference:ch-test-postup-np), jen zdroj je $\prob{TQBF}$ nebo $\prob{GG}$ a
+      obě implikace převádějí vítěznou strategii na vítěznou strategii.
+
+    .item:
+
+      Pro $\prob{TQBF}\redp\prob{GG}$ formuli nejdřív uprav: kvantifikátory se střídají, začínají i končí $\exists$
+      (fiktivní proměnné), uvnitř je KNF (oddíl .reference:ch-pspace-tqbf-gg).
+
+    .item:
+
+      Prenexní tvar: $\lnot\forall x\,\varphi\equiv\exists x\,\lnot\varphi$ a
+      $(\forall x\,\varphi)\Rightarrow\psi\equiv\exists x\,(\varphi\Rightarrow\psi)$, pokud $x$ v $\psi$ není; kolize
+      jmen řeš přejmenováním.
+
+
 .Subsection Rozcvička
   label: ch-pspace-ulohy-navic-rozcvicka
 

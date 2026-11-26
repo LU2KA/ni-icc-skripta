@@ -21,6 +21,99 @@ a 3-SAT s nejvýše třemi klauzulemi na proměnnou.
   z úlohy 7.11 b) (20 000 náhodných formulí) a průběh příkladu v úloze 7.9 b).
 
 
+.Procedure:
+  title: 'Než začneš: co budeš potřebovat'
+  label: ch-sat-ulohy-navic-nez-zacnes
+
+  "Definice.".notion
+
+  .itemize:
+
+    .item:
+
+      Formule v CNF je konjunkce klauzulí, klauzule je disjunkce literálů ($x$ nebo $\lnot x$). $\prob{SAT}$
+      (problém .reference:prob-sat); v $\prob{3-SAT}$ má každá klauzule tři literály (opakování je dovolené).
+
+    .item:
+
+      "Rozsekání".emphasize (redukce .reference:red-sat3sat): $(\ell_1\lor\dots\lor\ell_k)\mapsto$
+      $(\ell_1\lor\ell_2\lor z_1)\land(\lnot z_1\lor\ell_3\lor z_2)\land\dots$
+      $\land(\lnot z_{k-3}\lor\ell_{k-1}\lor\ell_k)$, každá klauzule má vlastní $z$ (lemma .reference:lem-3satkor).
+
+    .item:
+
+      $\prob{NAE-3-SAT}$: v každé klauzuli je aspoň jeden pravdivý a aspoň jeden nepravdivý literál
+      (problém .reference:prob-nae). Negace všech hodnot NAE-splnění zachová (lemma .reference:lem-bitflip).
+
+    .item:
+
+      $\prob{3-SAT}\redp\prob{NAE-3-SAT}$: pólová proměnná $z$ do každé klauzule, pak rozseknutí 4-klauzule pomocnou
+      proměnnou $w$ (oddíl .reference:ch-sat-3-sat-nae-3-sat). $\prob{2-SAT}$ je v $\PP$
+      (oddíl .reference:ch-prostor-2-sat-je-v-p).
+
+
+  "Kuchařka – redukce na konkrétní formuli (úlohy 7.1–7.3).".notion
+
+  .enumerate:
+
+    .item:
+
+      Konstrukci aplikuj klauzuli po klauzuli, s novými pomocnými proměnnými pro každou klauzuli.
+
+    .item:
+
+      Spočítej proměnné a klauzule, konkrétně i obecně pro $n$ proměnných a $m$ klauzulí.
+
+    .item:
+
+      ($\Rightarrow$) Pomocné proměnné nastav podle důkazu (u rozsekání podle toho, kde leží pravdivý literál).
+
+    .item:
+
+      ($\Leftarrow$) Zúžení na původní proměnné splňuje původní formuli; u NAE nejdřív otoč všechny hodnoty, je-li pól
+      $z=1$.
+
+
+  "Kuchařka – NP-úplnost varianty SATu (úlohy 7.4–7.7, 7.10, 7.11).".notion Postup .reference:ch-test-postup-np.
+
+  .enumerate:
+
+    .item:
+
+      $Q\in\NP$: certifikát je ohodnocení (u $\prob{Double-SAT}$ dvě různá).
+
+    .item:
+
+      Zdroj $\prob{SAT}$ nebo $\prob{3-SAT}$ a hlavička redukce.
+
+    .item:
+
+      Lokální úprava: doplnění klauzule novými proměnnými, rozsekání, nebo kopie proměnné $x_1,\dots,x_r$ s kruhem
+      implikací $x_1\Rightarrow x_2\Rightarrow\dots\Rightarrow x_r\Rightarrow x_1$.
+
+    .item:
+
+      ($\Rightarrow$) rozšiř ohodnocení na nové proměnné; ($\Leftarrow$) zúž ho na původní; velikost výstupu.
+
+
+  "Kuchařka – self-redukce SATu (úloha 7.9).".notion Postup .reference:ch-test-postup-self-redukce.
+
+  .enumerate:
+
+    .item:
+
+      Dotaz „je $\varphi$ splnitelná?“; při $\NE$ konec.
+
+    .item:
+
+      Pro $i=1,\dots,n$: dosaď $x_i=1$ (splněné klauzule smaž, literál $\lnot x_i$ vyškrtni) a zeptej se; při $\NE$
+      dosaď místo toho $x_i=0$. Pohlídej prázdnou klauzuli a formuli bez klauzulí.
+
+    .item:
+
+      Invariant: aktuální formule je splnitelná; počet dotazů jako funkce $n$.
+
+
 .Subsection Rozcvička
   label: ch-sat-ulohy-navic-rozcvicka
 
@@ -957,6 +1050,10 @@ a 3-SAT s nejvýše třemi klauzulemi na proměnnou.
 materiálů (hlavně MFF UK). Zadání jsou česky převyprávěná, řešení jsou naše. Úloha 7.9 je self-redukce (typ 2
 testu), úlohy 7.10 a 7.11 jsou důkazy NP-úplnosti (typ 4) a obě se kryjí s látkou, kterou už skripta mají – berte
 je jako opakování „bez nahlížení“.
+
+
+K úloze 7.9 patří kuchařka „self-redukce SATu“ a k úlohám 7.10 a 7.11 kuchařka „NP-úplnost varianty SATu“ z
+"rámečku na začátku oddílu"#ch-sat-ulohy-navic-nez-zacnes.
 
 
 .Exercise:

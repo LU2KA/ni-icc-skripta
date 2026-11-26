@@ -17,6 +17,99 @@
   úvahové a byly odvozeny ručně (6.7 navíc zkontrolována výpočtem tranzitivního uzávěru).
 
 
+.Procedure:
+  title: 'Než začneš: co budeš potřebovat'
+  label: ch-cook-ulohy-navic-nez-zacnes
+
+  "Definice.".notion
+
+  .itemize:
+
+    .item:
+
+      $\prob{SAT}$: je formule v CNF splnitelná (problém .reference:prob-sat)? Cook–Levin: $\prob{SAT}$ je NP-úplný
+      (věta .reference:thm-cooklevin).
+
+    .item:
+
+      $\prob{Dlaždičkování}$: typy dlaždic, plocha $n\times m$ a předbarvené okraje; lze ji vydláždit tak, aby
+      sousední hrany souhlasily (problém .reference:prob-dlazdickovani)?
+
+    .item:
+
+      "Výpočetní tabulka".emphasize (redukce .reference:red-dlazd): řádek $t$ je konfigurace v čase $t$, rozměry
+      $(p(n)+1)\times(2p(n)+1)$. Svislé hrany dlaždic nesou symbol nebo dvojici (stav, symbol), boční hrany předávaný
+      stav (obr. .reference:ch-cook-fig-dlazdice-z-prechodu).
+
+    .item:
+
+      "Formule".emphasize (redukce .reference:red-sat): $u^{(x,y)}_i=1$, když na $(x,y)$ leží dlaždice $i$; klauzule 1
+      „alespoň jeden typ“, 2 „nejvýše jeden typ“, 3 „sousedé pasují“, 4 „okraje sedí“
+      (tabulka .reference:ch-cook-tab-klauzule).
+
+
+  "Kuchařka – formule z dláždění a její velikost (úlohy 6.1, 6.4, 6.6).".notion
+
+  .enumerate:
+
+    .item:
+
+      Proměnných je (počet pozic) $\times$ (počet typů $t$).
+
+    .item:
+
+      Klauzule po typech: 1 jedna na pozici; 2 $\binom t2$ na pozici; 3 jedna za každou nesedící dvojici typů na
+      sousedních pozicích; 4 jedna za každý nesedící typ na krajní pozici.
+
+    .item:
+
+      Splňující ohodnocení odpovídají dlážděním: na každé pozici je pravdivá právě jedna proměnná.
+
+    .item:
+
+      Polynomialita: rozměry tabulky jsou polynomiální v $n$, právě když je polynomiální časová mez $p(n)$.
+
+
+  "Kuchařka – dlaždice a tabulka ze stroje (úlohy 6.2, 6.3, 6.5, 6.8).".notion
+
+  .enumerate:
+
+    .item:
+
+      Napiš řádky tabulky jako konfigurace v časech $0,1,\dots,p(n)$.
+
+    .item:
+
+      Každá buňka je přepisová dlaždice (hlava je jinde, symbol se opíše), nebo dlaždice přechodu (hlava tu je, nebo
+      sem přichází).
+
+    .item:
+
+      Dlaždice do sady patří, právě když odpovídá přepisu nebo některému přechodu $\delta$.
+
+    .item:
+
+      Nedeterminismus: pro tutéž horní hranu s hlavou je víc dlaždic; různým větvím odpovídají různá dláždění.
+
+
+  "Kuchařka – mapa redukcí (úloha 6.7).".notion
+
+  .enumerate:
+
+    .item:
+
+      $X$ je NP-těžký, vede-li do něj cesta šipek z NP-těžkého problému (tranzitivita).
+
+    .item:
+
+      $X\in\NP$ (resp. $\PP$), vede-li z něj cesta šipek do problému z $\NP$ (resp. $\PP$).
+
+    .item:
+
+      NP-úplný je problém, pro který platí obojí. Šipka z $X$ do NP-těžkého problému ani šipka do $X$ z problému v
+      $\PP$ o $X$ nic neříká.
+
+
 .Subsection Rozcvička
   label: ch-cook-ulohy-navic-rozcvicka
 

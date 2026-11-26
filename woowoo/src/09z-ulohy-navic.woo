@@ -15,6 +15,93 @@ celou redukci v šesti krocích a rozebrat, co musí gadget zaručit. Opírají 
   resp. 6 vrcholů), gadgety výčtem všech obarvení a úlohu s agenty prohledáním všech společných pozic agentů.
 
 
+.Procedure:
+  title: 'Než začneš: co budeš potřebovat'
+  label: ch-zoo-ulohy-navic-nez-zacnes
+
+  "Definice.".notion
+
+  .itemize:
+
+    .item:
+
+      "$k$-obarvení".emphasize: každý vrchol dostane jednu z $k$ barev a sousedé mají různé barvy; $\prob{3-Coloring}$
+      (problém .reference:prob-3col).
+
+    .item:
+
+      $\prob{3-SAT}\redp\prob{3-Coloring}$ (redukce .reference:red-3col): paleta $T,F,B$, literály $x_i,\lnot x_i$
+      spojené navzájem i s $B$, za klauzuli „prasátko“; lemma .reference:lem-trojuhelnik: stejné barvy vstupů vynutí
+      tutéž barvu výstupu, různé dovolí libovolnou.
+
+    .item:
+
+      $\prob{MaxCut}$: rozdělení $V=A\cup B$, při kterém má aspoň $k$ hran konce v různých částech
+      (problém .reference:prob-maxcut); vážená verze a redukce .reference:red-wmaxcut.
+
+    .item:
+
+      $\prob{MAPF}$: agenti v každém kroku stojí, nebo přejdou na souseda, bez srážek a bez výměny po hraně; stihnou
+      do cílů za $\ell$ kroků (problém .reference:prob-mapf)? Gadget pro křížení: lemma .reference:lem-krizeni.
+
+
+  "Kuchařka – NP-úplnost (úlohy 9.4, 9.5, 9.7).".notion Postup .reference:ch-test-postup-np.
+
+  .enumerate:
+
+    .item:
+
+      $Q\in\NP$: certifikát je obarvení, rozdělení nebo bisekce.
+
+    .item:
+
+      Zdroj podle nápovědy ($\prob{3-Coloring}$, $\prob{MaxCut}$) a hlavička redukce.
+
+    .item:
+
+      Typické úpravy: nový vrchol spojený se všemi (musí dostat vlastní barvu), doplněk grafu (barevná třída je
+      nezávislá množina, v doplňku klika), přidání izolovaných vrcholů (vyrovná velikosti částí).
+
+    .item:
+
+      Obě implikace a velikost; u ($\Leftarrow$) pozor, že řešení cílové instance může nové vrcholy použít jinak, než
+      jsi zamýšlel.
+
+
+  "Kuchařka – konstrukce na malé instanci (úlohy 9.1, 9.3, 9.8).".notion
+
+  .enumerate:
+
+    .item:
+
+      Spočítej vrcholy a hrany přesně podle konstrukce (paleta, gadgety proměnných, gadgety klauzulí).
+
+    .item:
+
+      Barvi postupně: paleta, literály podle ohodnocení, nakonec gadgety; u každého vrcholu zdůvodni, proč barva je
+      vynucená, nebo kolik možností zbývá.
+
+    .item:
+
+      U řezu sečti váhy přeříznutých hran a porovnej s prahem. Horní mez: v každé liché kružnici zůstane aspoň jedna
+      hrana nepřeříznutá.
+
+
+  "Kuchařka – algoritmus a plán (úlohy 9.2, 9.6).".notion
+
+  .enumerate:
+
+    .item:
+
+      2-barvení: obarvi start, sousedy prohledáváním do šířky opačnou barvou; konflikt znamená lichou kružnici. Čas
+      $O(n+m)$.
+
+    .item:
+
+      MAPF: dolní mez makespanu je vzdálenost agenta do cíle; dva protijdoucí agenti se v chodbě minou, jen když jeden
+      uhne mimo cestu druhého.
+
+
 .Subsection Rozcvička
   label: ch-zoo-ulohy-navic-rozcvicka
 

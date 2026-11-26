@@ -23,6 +23,99 @@ zápočtového testu.
   spočítanému přímo), LP meze řešičem.
 
 
+.Procedure:
+  title: 'Než začneš: co budeš potřebovat'
+  label: ch-resice-ilp-ulohy-navic-nez-zacnes
+
+  "Definice.".notion
+
+  .itemize:
+
+    .item:
+
+      "ILP".emphasize: $\max c^Tx$ za podmínek $Ax\le b$, $x\in\mathbb Z^n$
+      (definice .reference:ch-resice-ilp-def-ilp); přípustné a optimální řešení:
+      definice .reference:ch-resice-ilp-def-terminologie.
+
+    .item:
+
+      "LP relaxace".emphasize zruší celočíselnost; u maximalizace je $\mathrm{OPT}_{LP}\ge\mathrm{OPT}$
+      (definice .reference:ch-resice-ilp-def-lp-relaxace).
+
+    .item:
+
+      "Duál".emphasize k $\max c^Tx$, $Ax\le b$, $x\ge0$ je $\min b^Ty$, $A^Ty\ge c$, $y\ge0$
+      (definice .reference:ch-resice-ilp-def-dual); slabá dualita: $c^Tx\le b^Ty$
+      (věta .reference:ch-resice-ilp-thm-slaba-dualita).
+
+    .item:
+
+      "Gap".emphasize $(B-z)/|z|$ (definice .reference:ch-resice-ilp-def-gap); "řez".emphasize platí pro všechna
+      celočíselná řešení a odřízne LP optimum (definice .reference:ch-resice-ilp-def-rez).
+
+    .item:
+
+      Modelovací triky ($a\Rightarrow b$ jako $a\le b$, vypínač $x\le My$, buď–anebo): tabulka v
+      oddílu .reference:ch-resice-ilp-prehled-modelovacich-triku.
+
+
+  "Kuchařka – model ILP (úlohy 15.1, 15.5, 15.7–15.18).".notion Postupy .reference:ch-test-postup-ilp-sat
+  a .reference:ch-resice-ilp-proc-formulace.
+
+  .enumerate:
+
+    .item:
+
+      Proměnné s oborem a významem (i pomocné).
+
+    .item:
+
+      Omezení po skupinách s kvantifikátorem a větou, co zajišťují; logiku a podmínky převeď triky na lineární.
+
+    .item:
+
+      Provázání pomocných proměnných (velké $M$) a účelová funkce.
+
+    .item:
+
+      Velikost a obě strany korespondence: řešení úlohy dá přípustné řešení se stejnou hodnotou a naopak.
+
+
+  "Kuchařka – LP relaxace a branch & bound (úlohy 15.2, 15.3, 15.6, 15.7).".notion
+
+  .enumerate:
+
+    .item:
+
+      LP v rovině: nakresli polyedr a optimum hledej ve vrcholech.
+
+    .item:
+
+      Neceločíselná proměnná $x_j=f$: větve $x_j\le\lfloor f\rfloor$ a $x_j\ge\lceil f\rceil$
+      (algoritmus .reference:ch-resice-ilp-alg-branch-and-bound).
+
+    .item:
+
+      Uzel zahoď, je-li LP nepřípustný nebo jeho mez není lepší než incumbent; po každém uzlu zapiš $z$, $B$ a gap.
+
+    .item:
+
+      Řez: sečti vhodná omezení a zaokrouhli (příklad .reference:ch-resice-ilp-ex-rez).
+
+
+  "Kuchařka – duál (úloha 15.4).".notion
+
+  .enumerate:
+
+    .item:
+
+      Ke každému omezení primálu proměnná $y_i\ge0$; $b$ a $c$ si vymění role, matice se transponuje.
+
+    .item:
+
+      Každé přípustné $y$ dává horní mez $b^Ty$; najde-li se přípustné $x$ se stejnou hodnotou, jsou obě optimální.
+
+
 .Subsection Rozcvička
   label: ch-resice-ilp-ulohy-navic-rozcvicka
 
@@ -1286,6 +1379,11 @@ materiálů (hlavně MFF UK); zadání jsou česky převyprávěná, řešení j
 s významem, omezení po skupinách, účel, velikost a obě strany korespondence řešení. Několik modelů už ve skriptech
 je (batoh, splnitelnost 3-KNF, $\prob{Vertex Cover}$, 3-barvení, obchodní cestující, chromatické číslo); u takové úlohy to v zadání
 přiznáváme a řešení se soustředí na to, co je nové. Úlohy 15.17 a 15.18 jsou těžší.
+
+
+Všechny úlohy pododdílu jsou modely ILP: stačí kuchařka „model ILP“ z
+"rámečku na začátku oddílu"#ch-resice-ilp-ulohy-navic-nez-zacnes; problémy, které skripta jinde nedefinují (hranové
+pokrytí, párování), definuje zadání.
 
 
 .Exercise:

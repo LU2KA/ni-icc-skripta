@@ -7,6 +7,75 @@ problému. Stačí-li nám v redukci odpovědět „triviálně“ (např. když
 nějakou "pevnou".emphasize ANO- či NE-instanci cílového problému.
 
 
+.Procedure:
+  title: 'Než začneš: co budeš potřebovat'
+
+  "Definice.".notion
+
+  .itemize:
+
+    .item:
+
+      "Třída $\NP$".notion (definice .reference:def-nphat): problém má certifikát polynomiální délky, který
+      deterministický verifikátor ověří v polynomiálním čase.
+
+    .item:
+
+      "Polynomiální redukce".notion $A\redp Q$ (definice .reference:def-redukce): funkce $f$ spočitatelná
+      v polynomiálním čase, pro kterou $x\in A\iff f(x)\in Q$.
+
+    .item:
+
+      "NP-těžký, NP-úplný".notion (definice .reference:def-nphard): $Q$ je NP-těžký, když se na něj redukuje každý
+      problém z $\NP$. K důkazu stačí jediná redukce $A\redp Q$ ze známého NP-těžkého $A$ (důsledek
+      .reference:cor-jaknpc). NP-úplný je NP-těžký problém, který navíc leží v $\NP$.
+
+    .item:
+
+      "Zdrojové problémy:".notion $\prob{Clique}$ (problém .reference:prob-cliquer: $k$ vrcholů, každé dva spojené),
+      $\prob{Vertex Cover}$ (problém .reference:prob-vc: nejvýše $c$ vrcholů, každá hrana má konec mezi nimi),
+      $\prob{Independent Set}$ (problém .reference:prob-is) a $\prob{3-Coloring}$ (problém .reference:prob-3col)
+      pro cvičení 3.1.
+
+
+  "Kuchařka".notion (zkrácený postup z oddílu .reference:ch-test-postup-np):
+
+  .enumerate:
+
+    .item:
+
+      "$Q\in\NP$:".notion co je certifikát, jak je dlouhý a jak se ověří.
+
+    .item:
+
+      "Zdroj $A$".notion podle podobnosti: hledá se podgraf nebo klika $\to$ $\prob{Clique}$; vrcholy, které
+      „pokryjí“ všechny hrany $\to$ $\prob{Vertex Cover}$.
+
+    .item:
+
+      "Hlavička:".notion $A\redp Q$, instance $\mapsto$ instance (oddíl .reference:ch-test-hlavicka-redukce).
+
+    .item:
+
+      "Konstrukce".notion $f(x)$ celá, včetně parametru $k$ cílové instance, a proč je polynomiální.
+
+    .item:
+
+      "($\Rightarrow$)".notion z řešení $x$ sestroj řešení $f(x)$; "($\Leftarrow$)".notion z "libovolného".emphasize
+      řešení $f(x)$ sestroj řešení $x$.
+
+    .item:
+
+      "Závěr:".notion $A$ je NP-těžký a $A\redp Q$, tedy $Q$ je NP-těžký; s bodem 1 NP-úplný.
+
+
+  Cvičení 3.1 je self-redukce, ne důkaz NP-úplnosti: postup je v oddílu .reference:ch-test-postup-self-redukce.
+
+
+  "Častá chyba:".notion opačný směr. $Q\redp\prob{Clique}$ jen říká, že $Q$ není těžší než $\prob{Clique}$;
+  redukuje se "ze známého těžkého na $Q$".emphasize.
+
+
 .Exercise:
   title: 'Cvičení 3.1 (= cvičení 2.5)'
   label: cv-3-1

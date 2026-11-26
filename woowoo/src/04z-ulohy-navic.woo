@@ -21,6 +21,104 @@ hledání izomorfismu grafů pomocí orákula pro rozhodovací verzi.
   algoritmus spustili na 300 náhodných dvojicích izomorfních grafů do 6 vrcholů; průběh v části c) spočítal skript.
 
 
+.Procedure:
+  title: 'Než začneš: co budeš potřebovat'
+  label: ch-np-ulohy-navic-nez-zacnes
+
+  "Definice.".notion
+
+  .itemize:
+
+    .item:
+
+      "Nedeterministický TS".emphasize (definice .reference:def-ndts) má místo funkce přechodovou relaci, výpočet je
+      strom. Slovo přijme, když "aspoň jedna".emphasize větev skončí v $\qA$ (definice .reference:def-ndts-acc).
+
+    .item:
+
+      NDTS pracuje v čase $T(n)$, když "každá".emphasize větev skončí do $T(n)$ kroků; $\NP=\bigcup_d\NTIME(n^d)$
+      (definice .reference:def-ntime).
+
+    .item:
+
+      "Certifikát".emphasize: $L\in\NP$, právě když existuje polynomiální verifikátor $V$ a polynom $p$, že
+      $x\in L\iff\exists c$, $|c|\le p(|x|)$: $V(x,c)$ přijme (definice .reference:def-nphat,
+      věta .reference:thm-np-eq).
+
+    .item:
+
+      $\coNP=\{L:\overline L\in\NP\}$ (definice .reference:def-conp). $\NP\subseteq\EXP$: deterministický stroj projde
+      všechny větve, resp. všechny certifikáty (lemma .reference:lem-np-exp).
+
+
+  "Kuchařka – návrh NDTS (úlohy 4.1, 4.4).".notion Postup .reference:ch-test-postup-ts a
+  oddíl .reference:ch-np-jak-navrhovat-nedeterministicke-stroje.
+
+  .enumerate:
+
+    .item:
+
+      Guess: co stroj hádá (pozici, číslo, část slova) a ve které fázi.
+
+    .item:
+
+      Verify: jak uhodnuté deterministicky ověří.
+
+    .item:
+
+      Každá větev skončí do $T(n)$ kroků; hádání má omezenou délku (např. hlava se při něm posouvá doprava).
+
+    .item:
+
+      Správnost: $x\in L$ ⇒ "nějaká".emphasize větev přijme; $x\notin L$ ⇒ "žádná".emphasize nepřijme. Certifikát je
+      posloupnost voleb přijímající větve.
+
+
+  "Kuchařka – $L\in\NP$ certifikátem (úlohy 4.3, 4.5, 4.6 a), 4.7, 4.8).".notion
+
+  .enumerate:
+
+    .item:
+
+      Certifikát: co by přesvědčilo skeptika (řešení, dělitel, rozdělení slova na kousky).
+
+    .item:
+
+      Délka certifikátu je polynomiální v $|x|$.
+
+    .item:
+
+      Verifikátor: co zkontroluje a proč v polynomiálním čase.
+
+    .item:
+
+      Obě implikace: $x\in L$ ⇒ certifikát existuje; verifikátor přijme ⇒ $x\in L$. Otázky typu „žádné“, „pro každé“,
+      „největší je právě“ přirozený krátký certifikát nemají.
+
+
+  "Kuchařka – self-redukce (úlohy 4.6 b), c), 4.9).".notion Postup .reference:ch-test-postup-self-redukce.
+
+  .enumerate:
+
+    .item:
+
+      Nejdřív se zeptej, zda řešení vůbec existuje.
+
+    .item:
+
+      Číselnou hodnotu (např. nejmenšího dělitele) najdi binárním vyhledáváním přes práh; dotazů je tolik, kolik má
+      číslo bitů.
+
+    .item:
+
+      Řešení stav po částech: každou volbu zakóduj do dotazované instance a orákulem ověř, že řešení s ní stále
+      existuje.
+
+    .item:
+
+      Počet a velikost dotazů napiš jako funkci $n$ (resp. počtu bitů $N$).
+
+
 .Subsection Rozcvička
   label: ch-np-ulohy-navic-rozcvicka
 
@@ -1066,6 +1164,10 @@ hledání izomorfismu grafů pomocí orákula pro rozhodovací verzi.
 Úlohy v tomto pododdílu pocházejí ze sbírky „External Practice Bank“, kterou sestavil spolužák z volně dostupných
 materiálů (hlavně MFF UK). Zadání jsou česky převyprávěná, řešení jsou naše. Úloha 4.9 je self-redukce (typ 2 testu)
 pro problém, který NP-úplný být nemusí; postup je stejný jako v oddílu .reference:ch-test-postup-self-redukce.
+
+
+K úloze 4.9 patří kuchařka „self-redukce“ z "rámečku na začátku oddílu"#ch-np-ulohy-navic-nez-zacnes; definici
+izomorfismu grafů dává zadání.
 
 
 .Exercise:

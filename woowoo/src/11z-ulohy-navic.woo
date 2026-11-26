@@ -22,6 +22,101 @@ s omezeným stupněm.
   redukce a model $\prob{0-1 ILP}$ na tisících náhodných malých instancí, vždy s odpověďmi $\ANO$ i $\NE$.
 
 
+.Procedure:
+  title: 'Než začneš: co budeš potřebovat'
+  label: ch-cisla-ulohy-navic-nez-zacnes
+
+  "Definice.".notion
+
+  .itemize:
+
+    .item:
+
+      "Hamiltonovská cesta / kružnice".emphasize navštíví každý vrchol právě jednou (problém .reference:prob-dhp);
+      $\prob{TSP}$: hamiltonovská kružnice váhy nejvýše $k$ v úplném grafu (problém .reference:prob-tsp).
+
+    .item:
+
+      $\prob{Subset Sum}$ (součet přesně $T$, problém .reference:prob-subsetsum), $\prob{Partition}$ (dvě skupiny se
+      stejným součtem, .reference:prob-partition), $\prob{Knapsack}$ (váha $\le W$, cena
+      $\ge C$, .reference:prob-knapsack); dále $\prob{Bin Packing}$ (.reference:prob-binpacking) a
+      $\prob{3-Partition}$ (.reference:prob-3partition).
+
+    .item:
+
+      DP pro $\prob{Subset Sum}$ v čase $O(n\cdot T)$ (věta .reference:thm-ssdp): $\mathrm{DP}[i,w]$ říká, zda některá
+      podmnožina prvních $i$ čísel má součet $w$.
+
+    .item:
+
+      "Pseudopolynomiální".emphasize algoritmus je polynomiální v hodnotě čísel (definice .reference:def-pseudopoly);
+      "silně".emphasize NP-těžký problém zůstane těžký i při unárním zápisu (definice .reference:def-silne).
+
+    .item:
+
+      $\prob{ILP}$ (problém .reference:prob-ilp) a tři vzory: výběr podmnožiny (.reference:red-ilpvc), logika
+      (.reference:red-ilpsat), jedna z možností (.reference:red-ilpcol).
+
+
+  "Kuchařka – NP-úplnost číselného problému (úlohy 11.4, 11.5, 11.13–11.15).".notion
+  Postup .reference:ch-test-postup-np a oddíl .reference:ch-cisla-jak-poznat-podezrelou-redukci.
+
+  .enumerate:
+
+    .item:
+
+      $Q\in\NP$ a zdroj $\prob{Subset Sum}$ nebo $\prob{Partition}$.
+
+    .item:
+
+      Přidej jedno nebo dvě „vyrovnávací“ čísla spočítaná ze součtu $S$ a cíle $T$.
+
+    .item:
+
+      Čísla zůstávají binárně; velikost výstupu je polynomiální v počtu "bitů".emphasize vstupu.
+
+    .item:
+
+      Obě implikace: rozeber, do které skupiny padne vyrovnávací číslo.
+
+
+  "Kuchařka – NP-úplnost grafového problému (úlohy 11.3, 11.10, 11.11, 11.16).".notion
+
+  .enumerate:
+
+    .item:
+
+      Zdroj $\prob{HC}$ nebo hamiltonovská cesta (s pevnými konci nebo bez).
+
+    .item:
+
+      Typické úpravy: přidej vrchol spojený se všemi, zdvoj vrchol, přidej listy (list musí být koncem cesty); u
+      $\prob{TSP}$ váha $1$ na hranách a $2$ na nehranách.
+
+    .item:
+
+      Obě implikace; u ($\Leftarrow$) ukaž, že přidané vrcholy nedovolí „podvádět“.
+
+
+  "Kuchařka – self-redukce, DP a ILP (úlohy 11.1, 11.2, 11.7, 11.9, 11.12).".notion
+
+  .enumerate:
+
+    .item:
+
+      Self-redukce (postup .reference:ch-test-postup-self-redukce): smaž hranu; má-li graf dál hamiltonovskou
+      kružnici, nech ji smazanou, jinak ji vrať.
+
+    .item:
+
+      DP: tabulka podle prefixu čísel a dosažitelného součtu (u více skupin součtů víc); řešení zpětným průchodem.
+
+    .item:
+
+      ILP (postup .reference:ch-test-postup-ilp-sat): proměnné s významem, omezení po skupinách, obě strany
+      korespondence.
+
+
 .Subsection Rozcvička
   label: ch-cisla-ulohy-navic-rozcvicka
 
@@ -771,6 +866,11 @@ s omezeným stupněm.
 (hlavně MFF UK). Zadání jsou česky převyprávěná, řešení jsou naše. Několik úloh se kryje s látkou kapitoly nebo
 s typovými úlohami; u nich to v zadání přiznáváme a řešení je v kompaktní testové podobě s odkazem. Zkuste je nejdřív
 napsat bez nahlížení. Poslední úloha je těžší (ve sbírce „STRETCH“).
+
+
+Problémy, které skripta jinde nedefinují (rozvrh na $m$ strojů, kostra s omezeným stupněm, $\prob{0-1 ILP}$ ve tvaru
+$Ax\ge b$), jsou definované přímo v zadání; kuchařky jsou v
+"rámečku na začátku oddílu"#ch-cisla-ulohy-navic-nez-zacnes.
 
 
 .Exercise:

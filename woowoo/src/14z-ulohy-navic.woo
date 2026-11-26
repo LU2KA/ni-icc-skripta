@@ -22,6 +22,93 @@ v podobě, jakou čeká zápočtový test.
   DPLL v Pythonu, včetně čtení řešení z modelu a počtů proměnných a klauzulí.
 
 
+.Procedure:
+  title: 'Než začneš: co budeš potřebovat'
+  label: ch-resice-sat-ulohy-navic-nez-zacnes
+
+  "Definice.".notion
+
+  .itemize:
+
+    .item:
+
+      "Hornova klauzule".emphasize má nejvýše jeden kladný literál (definice .reference:ch-resice-sat-def-horn); unit
+      propagation ji rozhodne (algoritmus .reference:ch-resice-sat-alg-horn).
+
+    .item:
+
+      "DPLL".emphasize: unit propagation, větvení a návrat po konfliktu (definice .reference:ch-resice-sat-def-dpll).
+      "CDCL".emphasize: implikační graf s přiřazeními $x@k$
+      (definice .reference:ch-resice-sat-def-implikacni-graf-cdcl) a analýza konfliktu 1UIP
+      (postup .reference:ch-resice-sat-proc-1uip).
+
+    .item:
+
+      Stavební bloky: alespoň jedna (jedna klauzule), nejvýše jedna ($\binom n2$ klauzulí $\lnot y_i\lor\lnot y_j$),
+      právě jedna (definice .reference:ch-resice-sat-def-bloky).
+
+    .item:
+
+      Tseitin: proměnná za každé hradlo a klauzule za ekvivalenci „hradlo $\Leftrightarrow$ jeho funkce“; výsledek je
+      ekvisplnitelný s původní formulí (věta .reference:ch-resice-sat-thm-tseitin). DIMACS: hlavička "p cnf".code,
+      klauzule končí nulou (oddíl .reference:ch-resice-sat-dimacs).
+
+
+  "Kuchařka – kódování do SAT (úlohy 14.5, 14.8–14.12).".notion Postupy .reference:ch-test-postup-ilp-sat
+  a .reference:ch-resice-sat-postup-kodovani.
+
+  .enumerate:
+
+    .item:
+
+      Proměnné s významem („$x_{v,c}=1$, právě když vrchol $v$ má barvu $c$“).
+
+    .item:
+
+      Klauzule po skupinách, každá s větou, co zajišťuje; používej stavební bloky.
+
+    .item:
+
+      Obě implikace: z řešení model, z modelu řešení; jak řešení z modelu přečíst.
+
+    .item:
+
+      Velikost: počet proměnných a klauzulí; musí být polynomiální i při binárně zapsaném parametru.
+
+
+  "Kuchařka – ruční běh řešiče (úlohy 14.1–14.4).".notion
+
+  .enumerate:
+
+    .item:
+
+      Unit propagation: klauzule s jediným nepřiřazeným literálem a ostatními nepravdivými ho vynutí; opakuj, dokud
+      jde.
+
+    .item:
+
+      DPLL zapisuj do tabulky (rozhodnutí, propagace, konflikt, návrat) a kresli strom prohledávání.
+
+    .item:
+
+      CDCL: trail $x@k$, implikační graf; konfliktní klauzuli rezolvuj s důvody literálů poslední úrovně (od konce
+      trailu), dokud z ní nezbude jediný. Skoč na nejvyšší úroveň mezi ostatními literály naučené klauzule.
+
+
+  "Kuchařka – Tseitin a rezoluce (úlohy 14.6, 14.7).".notion
+
+  .enumerate:
+
+    .item:
+
+      Hradlo $g\Leftrightarrow(a\land b)$ dá klauzule $(\lnot g\lor a)$, $(\lnot g\lor b)$,
+      $(g\lor\lnot a\lor\lnot b)$; pro $\lor$ obdobně, nakonec jednotková klauzule s výstupem obvodu.
+
+    .item:
+
+      Rezoluce: z $(A\lor x)$ a $(B\lor\lnot x)$ plyne $(A\lor B)$; odvození prázdné klauzule dokazuje nesplnitelnost.
+
+
 .Subsection Rozcvička
   label: ch-resice-sat-ulohy-navic-rozcvicka
 
@@ -1524,6 +1611,10 @@ v podobě, jakou čeká zápočtový test.
 materiálů (hlavně MFF UK). Zadání jsou česky převyprávěná, řešení jsou naše. Všechny čtyři úlohy jsou typu 3 testu
 (kódování do $\prob{SAT}$u, postup v oddílu .reference:ch-test-postup-ilp-sat): proměnné s významem, klauzule po
 skupinách, obě implikace, čtení řešení z modelu a velikost formule.
+
+
+Problémy $\prob{3DM}$, $\prob{HC}$ a $\prob{Long Cycle}$ jsou definované přímo v zadání; k úlohám stačí kuchařka
+„kódování do SAT“ z "rámečku na začátku oddílu"#ch-resice-sat-ulohy-navic-nez-zacnes.
 
 
 .Exercise:

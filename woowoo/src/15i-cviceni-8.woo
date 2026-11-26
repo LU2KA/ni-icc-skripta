@@ -9,6 +9,69 @@ v příloze .reference:ch-ukazkovy.
 
 
 .Procedure:
+  title: 'Než začneš: co budeš potřebovat'
+
+  "Definice.".notion
+
+  .itemize:
+
+    .item:
+
+      "ILP".notion (definice .reference:ch-resice-ilp-def-ilp): $\max$ (nebo $\min$) $c^Tx$ za podmínek $Ax\le b$,
+      $x\in\mathbb Z^n$. Omezení i účel jsou "lineární".emphasize; 0/1-ILP má $x\in\{0,1\}^n$, MIP celočíselné jen některé proměnné.
+
+    .item:
+
+      "Přípustné a optimální řešení, optimum".notion (definice .reference:ch-resice-ilp-def-terminologie):
+      přípustné splní všechna omezení, optimální je nejlepší přípustné, optimum je jeho hodnota.
+
+    .item:
+
+      "LP relaxace".notion (definice .reference:ch-resice-ilp-def-lp-relaxace, cvičení .reference:cv-8-3):
+      $x\in\mathbb Z^n$ nahradíme $x\in\mathbb R^n$; slabá relaxace dává řešiči špatnou mez.
+
+    .item:
+
+      $\prob{MaxCut}$ (problém .reference:prob-maxcut, cvičení .reference:cv-8-4): rozdělit $V=A\cup B$ a maximalizovat
+      počet hran mezi $A$ a $B$.
+
+    .item:
+
+      "Modelovací triky".notion (tabulka v oddílu .reference:ch-resice-ilp-prehled-modelovacich-triku): $a\Rightarrow b$
+      je $a\le b$; vypínač $x\le My$; „různé strany“ $y=a\oplus b$ čtyřmi nerovnicemi; minimum maxima přes novou
+      proměnnou $t\ge$ každý výraz.
+
+
+  "Kuchařka".notion (zkrácená verze rámečku níže a oddílu .reference:ch-test-postup-ilp-sat):
+
+  .enumerate:
+
+    .item:
+
+      "Co volíme?".notion Proměnné s oborem a významem větou; počty lidí, kusů a tyčí jsou $\mathbb Z_{\ge0}$,
+      rozhodnutí ano/ne $\{0,1\}$.
+
+    .item:
+
+      "Omezení po skupinách".notion s kvantifikátorem a větou, co zajišťují; projdi zadání větu po větě.
+
+    .item:
+
+      "Pomocné proměnné".notion (použitá barva, seřízení linky, sklad) a jejich vazba triky z tabulky.
+
+    .item:
+
+      "Účel:".notion $\min$ nebo $\max$ lineárního výrazu.
+
+    .item:
+
+      "Velikost".notion (počet proměnných a omezení) a proč optimum ILP = optimum úlohy (oba směry).
+
+
+  "Častá chyba:".notion nelineární výraz ($x\cdot y$, $|x-y|$, $\max$, $\ne$) nebo proměnná bez oboru.
+
+
+.Procedure:
   title: 'Postup na papíře: formulace jako ILP'
   label: ch-resice-ilp-proc-formulace
 

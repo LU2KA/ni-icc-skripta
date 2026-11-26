@@ -2,6 +2,78 @@
   label: sec-cv2
 
 
+.Procedure:
+  title: 'Než začneš: co budeš potřebovat'
+
+  "Definice.".notion
+
+  .itemize:
+
+    .item:
+
+      "Nedeterministický TS".notion (definice .reference:def-ndts): jako deterministický, ale místo přechodové
+      funkce má "relaci".emphasize $\delta$ – v jedné situaci smí mít víc možných kroků, výpočty tvoří strom.
+
+    .item:
+
+      "Přijetí".notion (definice .reference:def-ndts-acc): slovo je přijato, když "aspoň jedna".emphasize větev
+      skončí v $\qA$; zamítnuto, když žádná.
+
+    .item:
+
+      "Čas NDTS".notion (definice .reference:def-ntime): odhad $T(n)$ musí platit pro "každou".emphasize větev;
+      $\NP=\bigcup_d\NTIME(n^d)$.
+
+    .item:
+
+      "Certifikát a verifikátor".notion (definice .reference:def-verifikator a .reference:def-nphat): $L\in\NP$, právě
+      když existuje deterministický $V(x,c)$ polynomiální v $|x|$ a polynom $p$ s $x\in L\iff\exists c$, $|c|\le p(|x|)$,
+      $V(x,c)$ přijme. Obě definice $\NP$ jsou ekvivalentní (věta .reference:thm-np-eq).
+
+    .item:
+
+      "Orákulum".notion (cvičení 2.4 a 2.5): černá skříňka pro rozhodovací verzi, jeden
+      dotaz je jeden krok (oddíl .reference:ch-ts-od-optima-k-reseni-samo-redukovatelnost).
+
+
+  "Kuchařka".notion (certifikát, guess & verify; oddíly .reference:ch-np-guess-verify-jak-ndts-pouzivat
+  a .reference:ch-np-jak-navrhovat-nedeterministicke-stroje):
+
+  .enumerate:
+
+    .item:
+
+      "Svědek:".notion co by ukázal někdo, kdo odpověď $\ANO$ zná (klika, pořadí vrcholů, bijekce, slovo,
+      prostředek palindromu). To je certifikát $c$.
+
+    .item:
+
+      "Délka:".notion spočítej $|c|$ v bitech vůči $|x|$ ($k$ vrcholů je $O(k\log n)$ bitů). Musí být polynomiální;
+      když nejkratší svědek může být exponenciálně dlouhý (NFA), certifikát to není.
+
+    .item:
+
+      "Ověření:".notion deterministický postup, který $c$ zkontroluje, a jeho čas – to je verifikátor $V(x,c)$.
+
+    .item:
+
+      "Jako NDTS:".notion "Guess".notion = zapiš $c$ na pásku symbol po symbolu, každý symbol je větvení; řekni,
+      kde a mezi čím stroj volí, a hlídej délku (odškrtáváním unárního $k$, posunem hlavy 1). "Verify".notion = krok 3,
+      neúspěch vede do $\qR$.
+
+    .item:
+
+      "Čas a správnost:".notion odhad pro "každou".emphasize větev; $x\in L\iff$ některá větev uhodne platný certifikát.
+
+
+  Úlohy s orákulem (cvičení 2.4 a 2.5) se řeší postupem z oddílu .reference:ch-test-postup-self-redukce:
+  nejdřív hodnota optima binárním vyhledáváním (důsledek .reference:cor-binsearch), pak mazání prvků s dotazem,
+  zda optimum zůstalo.
+
+
+  "Častá chyba:".notion větev, která hádá neomezeně dlouho nebo nikdy neskončí; odhad času jen pro přijímající větev.
+
+
 .Exercise:
   title: 'Cvičení 2.1'
   label: cv-2-1

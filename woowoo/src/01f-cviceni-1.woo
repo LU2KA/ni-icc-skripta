@@ -6,6 +6,77 @@ Ve všech řešeních značí $\blank$ prázdný symbol a zápis $x/y,D$ na hran
 zapiš $y$, posuň hlavu ve směru $D$“. Nevykreslené přechody vedou do $\qR$.
 
 
+.Procedure:
+  title: 'Než začneš: co budeš potřebovat'
+
+  "Definice.".notion
+
+  .itemize:
+
+    .item:
+
+      "Turingův stroj".notion (definice .reference:def-dts): stavy $Q$, vstupní abeceda $\Sigma$, abeceda pásky
+      $G\supsetneq\Sigma$ s prázdným symbolem $\blank$, $k$ pásek a počáteční stav $q_0$. Rozhodovací stroj končí
+      v $\qA$ (přijme) nebo v $\qR$ (zamítne), stroj počítající funkci v $\qhalt$.
+
+    .item:
+
+      "Přechodová funkce".notion $\delta\colon Q\times G^k\to Q\times G^k\times\{\Lft,\Stay,\Rgt\}^k$: podle stavu
+      a symbolů pod hlavami určí nový stav, co zapsat a kam posunout každou hlavu. V obrázku je to hrana $x/y,D$.
+
+    .item:
+
+      "Funkce počítaná strojem".notion (definice .reference:def-fm, cvičení .reference:cv-1-4): výstup je obsah
+      pásky po zastavení.
+
+    .item:
+
+      "Čas".notion (definice .reference:def-casova): $T_M(n)$ je největší počet kroků přes všechny vstupy délky $n$
+      (nejhorší případ). Na konstantách nezáleží (věta .reference:thm-speedup), stačí odhad $O(n)$ nebo $O(n^2)$.
+
+    .item:
+
+      "Deterministický konečný automat".notion $(Q,\Sigma,\delta,q_0,F)$ (cvičení .reference:cv-1-5) čte slovo
+      zleva doprava podle $\delta\colon Q\times\Sigma\to Q$ a přijme, skončí-li ve stavu z $F$.
+
+
+  "Kuchařka".notion (zkrácený postup z oddílu .reference:ch-test-postup-ts):
+
+  .enumerate:
+
+    .item:
+
+      "Myšlenka jednou větou:".notion co si stroj pamatuje "ve stavu".emphasize (konečně mnoho informace, např.
+      právě smazaný symbol) a co "na pásce".emphasize (odškrtnuté symboly $X,Y,Z$, čítač na druhé pásce).
+
+    .item:
+
+      "Pásky:".notion co je na které pásce a kterým směrem se v které fázi hýbe která hlava.
+
+    .item:
+
+      "Stavy s významem:".notion ke každému stavu jedna věta, co v něm platí; přechody nakresli jako graf
+      s hranami $x/y,D$.
+
+    .item:
+
+      "Okrajové případy:".notion prázdné slovo, špatné pořadí písmen, jedna páska skončí dřív. Stačí věta
+      „nevypsané přechody vedou do $\qR$“, ale u každé fáze má být jasné, proč je slovo mimo jazyk.
+
+    .item:
+
+      "Čas:".notion počet průchodů krát délka průchodu. Konstantně mnoho průchodů dá $O(n)$, $n/2$ kol po $O(n)$
+      krocích dá $O(n^2)$.
+
+    .item:
+
+      "Kontrola".notion na jednom slově z jazyka a jednom mimo něj.
+
+
+  "Častá chyba:".notion jednopáskové „odškrtni a vrať se“ ($O(n^2)$) tam, kde zadání chce lineární čas na dvou
+  páskách. Tam se počítá na druhé pásce (cvičení .reference:cv-1-2, příklad .reference:ex-palin).
+
+
 .Exercise:
   title: 'Cvičení 1.1'
   label: cv-1-1

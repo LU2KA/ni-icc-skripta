@@ -16,6 +16,95 @@ věta .reference:thm-immerman) a implikační graf $\prob{2-SAT}$u (oddíl .refe
   síle), čísla a průběhy výpočtů spočítal program, úloha 12.6 je čistě důkazová.
 
 
+.Procedure:
+  title: 'Než začneš: co budeš potřebovat'
+  label: ch-prostor-ulohy-navic-nez-zacnes
+
+  Na zápočtový test prostorové třídy, Savitchova věta ani $\NL$ nejsou: jsou až na ústní zkoušku
+  (oddíl .reference:ch-test-co-je-na-testu). Výjimkou je návrh stroje s pracovním prostorem $O(\log n)$ jako v úloze
+  12.4, který může být částí úlohy typu 1.
+
+
+  "Definice.".notion
+
+  .itemize:
+
+    .item:
+
+      Stroj pracuje v prostoru $S(n)$, když navštíví nejvýše $S(n)$ buněk "pracovních".emphasize pásek; $\DSPACE$,
+      $\NSPACE$, $\PSPACE=\bigcup_k\DSPACE(n^k)$ (definice .reference:def-prostor).
+
+    .item:
+
+      $\LL=\DSPACE(\log n)$, $\NL=\NSPACE(\log n)$; vstupní páska je jen pro čtení a do prostoru se nepočítá
+      (definice .reference:def-lnl). Platí $\LL\subseteq\NL\subseteq\PP$ (věta .reference:thm-nlp).
+
+    .item:
+
+      Savitch: $\NSPACE(S)\subseteq\DSPACE(S^2)$ pro $S(n)\ge\log n$, rekurze $\mathrm{REACH}(A,B,t)$ přes prostředek
+      (věta .reference:thm-savitch). Immerman–Szelepcsényi: $\NL=\coNL$ (věta .reference:thm-immerman).
+
+    .item:
+
+      Hierarchie: $f=o(g)$ ⇒ $\DSPACE(f)\subsetneq\DSPACE(g)$ (věta .reference:thm-prostorhier). Stroj s prostorem $S$
+      má $2^{O(S)}$ konfigurací, proto $\DSPACE(S)\subseteq\DTIME(2^{O(S)})$ (důsledek .reference:cor-zacykleni).
+
+    .item:
+
+      Implikační graf 2-CNF: klauzule $(a\lor b)$ dává hrany $\lnot a\to b$ a $\lnot b\to a$; formule je splnitelná,
+      právě když $x$ a $\lnot x$ leží v různých silně souvislých komponentách (věta .reference:thm-2sat).
+
+
+  "Kuchařka – stroj v logaritmickém prostoru (úlohy 12.4, 12.7).".notion Prostorový rámeček v
+  postupu .reference:ch-test-postup-ts.
+
+  .enumerate:
+
+    .item:
+
+      Na pracovní pásce je jen konstantně mnoho binárních čítačů a ukazatelů do vstupu, každý s hodnotou nejvýše $n$.
+
+    .item:
+
+      Nic ze vstupu nekopíruj a na vstupní pásku nepiš; místo toho vstup projdi znovu.
+
+    .item:
+
+      Prostor: $O(1)$ čítačů krát $O(\log n)$ bitů. Stroj zastaví, protože všechny cykly řídí čítače.
+
+
+  "Kuchařka – problém v $\NL$ (úlohy 12.5, 12.8).".notion
+
+  .enumerate:
+
+    .item:
+
+      Hádej cestu vrchol po vrcholu; pamatuj si jen aktuální vrchol a čítač kroků (nejvýše $n$).
+
+    .item:
+
+      Správnost: odpověď $\ANO$ ⇔ některá větev přijme. Doplněk problému je v $\NL$ díky $\NL=\coNL$.
+
+
+  "Kuchařka – inkluze tříd a ruční běh (úlohy 12.1–12.3, 12.6).".notion
+
+  .enumerate:
+
+    .item:
+
+      U tvrzení o třídách zkus postupně Savitche, prostorovou hierarchii a odhad počtu konfigurací. Rozhodlo-li by
+      tvrzení otevřený problém (např. $\PP$ vs. $\PSPACE$), odpověď je „nevíme“.
+
+    .item:
+
+      Konfigurace = stav, poloha vstupní hlavy, poloha pracovní hlavy a obsah pracovní pásky; jejich počty vynásob.
+
+    .item:
+
+      U $\mathrm{REACH}$ zkoušej prostředky v pořadí; zásobník má $O(\log t)$ pater. U implikačního grafu napiš dvě
+      hrany za klauzuli a najdi silně souvislé komponenty.
+
+
 .Subsection Rozcvička
   label: ch-prostor-ulohy-navic-rozcvicka
 
