@@ -1606,7 +1606,7 @@
   <span class="md-ellipsis">
     
   
-    4.7 Jak navrhovat nedeterministické stroje
+    4.7 Jak navrhovat nedeterministické stroje (proseminář 2)
   
 
     
@@ -4224,7 +4224,7 @@
   <span class="md-ellipsis">
     
   
-    14.6 SAT řešič v praxi: Schurova čísla
+    14.6 SAT řešič v praxi: Schurova čísla (proseminář 7)
   
 
     
@@ -5545,11 +5545,11 @@
 
 <h1 id="14-sat-algoritmy-kodovani-a-resice">14 SAT: algoritmy, kódování a řešiče<a class="headerlink" href="#14-sat-algoritmy-kodovani-a-resice" title="Permanent link">&para;</a></h1>
 <div class="woo">
-<p>Zdroje: přednáška 7, proseminář 7, cvičení 7.</p>
-<div class="admonition tip woo-concept"><p class="admonition-title">Proč to děláme</p><p>V kapitolách o <a class="woo-term" href="../ch-redukce/ch-redukce-np-tezkost-a-np-uplnost.html#def-nphard" data-pojem="def-nphard">NP-úplnosti</a> jsme se ptali, <em>zda</em> je problém těžký, a odpovídali redukcí <em>z</em> <span class="arithmatex">\(\href{../ch-cook/ch-cook-cook-levinova-veta.html#prob-sat}{\class{woo-pk-prob-sat}{\prob{SAT}}}\)</span>u (kapitola <a href="../ch-sat/index.html">7</a>). Teď se otázka mění: problém je těžký – jak ho přesto vyřešit? Ukážeme varianty <span class="arithmatex">\(\href{../ch-cook/ch-cook-cook-levinova-veta.html#prob-sat}{\class{woo-pk-prob-sat}{\prob{SAT}}}\)</span>u, které jsou v <span class="arithmatex">\(\href{../ch-cas/ch-cas-tridy-p-a-exp.html#def-tridy}{\class{woo-pk-def-tridy}{\PP}}\)</span> díky své struktuře, vysvětlíme princip moderních řešičů (<a class="woo-term" href="ch-resice-sat-jak-funguji-sat-resice.html#ch-resice-sat-def-dpll" data-pojem="ch-resice-sat-def-dpll">DPLL</a> a CDCL) a naučíme se kódovat problémy <em>do</em> <span class="arithmatex">\(\href{../ch-cook/ch-cook-cook-levinova-veta.html#prob-sat}{\class{woo-pk-prob-sat}{\prob{SAT}}}\)</span>u, abychom je mohli předat hotovému řešiči. Na prosemináři si řešič vyzkoušíme sami na <a class="woo-term" href="ch-resice-sat-sat-resic-v-praxi.html#ch-resice-sat-def-schur" data-pojem="ch-resice-sat-def-schur">Schurových číslech</a> a na cvičení kódujeme <a class="woo-term" href="../ch-is/ch-is-vertex-cover.html#prob-vc" data-pojem="prob-vc">Vertex Cover</a>, <a class="woo-term" href="../ch-is/sec-cv3.html#cv-3-6" data-pojem="pojem-dominating-set">Dominating Set</a>, Hamiltonovu cestu, paritu a podmínky „nejvýše <span class="woo-nobr"><span class="arithmatex">\(k\)</span>“.</span></p></div>
+<p>Zdroje: přednáška 7, cvičení 7; navíc proseminář 7 (řešič v praxi, oddíl <a href="ch-resice-sat-sat-resic-v-praxi.html">14.6</a>).</p>
+<div class="admonition tip woo-concept"><p class="admonition-title">Proč to děláme</p><p>V kapitolách o <a class="woo-term" href="../ch-redukce/ch-redukce-np-tezkost-a-np-uplnost.html#def-nphard" data-pojem="def-nphard">NP-úplnosti</a> jsme se ptali, <em>zda</em> je problém těžký, a odpovídali redukcí <em>z</em> <span class="arithmatex">\(\href{../ch-cook/ch-cook-cook-levinova-veta.html#prob-sat}{\class{woo-pk-prob-sat}{\prob{SAT}}}\)</span>u (kapitola <a href="../ch-sat/index.html">7</a>). Teď se otázka mění: problém je těžký – jak ho přesto vyřešit? Ukážeme varianty <span class="arithmatex">\(\href{../ch-cook/ch-cook-cook-levinova-veta.html#prob-sat}{\class{woo-pk-prob-sat}{\prob{SAT}}}\)</span>u, které jsou v <span class="arithmatex">\(\href{../ch-cas/ch-cas-tridy-p-a-exp.html#def-tridy}{\class{woo-pk-def-tridy}{\PP}}\)</span> díky své struktuře, vysvětlíme princip moderních řešičů (<a class="woo-term" href="ch-resice-sat-jak-funguji-sat-resice.html#ch-resice-sat-def-dpll" data-pojem="ch-resice-sat-def-dpll">DPLL</a> a CDCL) a naučíme se kódovat problémy <em>do</em> <span class="arithmatex">\(\href{../ch-cook/ch-cook-cook-levinova-veta.html#prob-sat}{\class{woo-pk-prob-sat}{\prob{SAT}}}\)</span>u, abychom je mohli předat hotovému řešiči. Na cvičení kódujeme <a class="woo-term" href="../ch-is/ch-is-vertex-cover.html#prob-vc" data-pojem="prob-vc">Vertex Cover</a>, <a class="woo-term" href="../ch-is/sec-cv3.html#cv-3-6" data-pojem="pojem-dominating-set">Dominating Set</a>, Hamiltonovu cestu, paritu a podmínky „nejvýše <span class="woo-nobr"><span class="arithmatex">\(k\)</span>“.</span> Jako praktické rozšíření si na prosemináři 7 vyzkoušíme skutečný řešič na <a class="woo-term" href="ch-resice-sat-sat-resic-v-praxi.html#ch-resice-sat-def-schur" data-pojem="ch-resice-sat-def-schur">Schurových číslech</a>.</p></div>
 <p>Druhá polovina semestru tedy nestaví další redukce <em>z</em> těžkých problémů (redukce, <a class="woo-term" href="../ch-redukce/ch-redukce-np-tezkost-a-np-uplnost.html#def-nphard" data-pojem="def-nphard">NP-úplnost</a>, prostor, <span class="woo-nobr"><span class="arithmatex">\(\href{../ch-prostor/ch-prostor-prostorove-tridy.html#def-prostor}{\class{woo-pk-def-prostor}{\PSPACE}}\)</span>),</span> ale řešiče, garance a chytré algoritmy. Přednáška 7 začíná u <span class="arithmatex">\(\href{../ch-cook/ch-cook-cook-levinova-veta.html#prob-sat}{\class{woo-pk-prob-sat}{\prob{SAT}}}\)</span>u a má tři cíle:</p>
 <ul><li>ukázat další polynomiálně řešitelné varianty <span class="arithmatex">\(\href{../ch-cook/ch-cook-cook-levinova-veta.html#prob-sat}{\class{woo-pk-prob-sat}{\prob{SAT}}}\)</span>u (vedle <span class="arithmatex">\(\href{../ch-prostor/ch-prostor-2-sat-je-v-p.html#thm-2sat}{\class{woo-pk-pojem-2sat}{\prob{2-SAT}}}\)</span>u z oddílu <a href="../ch-prostor/ch-prostor-2-sat-je-v-p.html">12.5</a>);</li><li>vysvětlit základní princip fungování efektivních <a class="woo-term" href="../ch-cook/ch-cook-cook-levinova-veta.html#prob-sat" data-pojem="prob-sat">SAT</a> řešičů;</li><li>ukázat několik triků, jak kódovat problémy jako <span class="woo-nobr"><span class="arithmatex">\(\href{../ch-cook/ch-cook-cook-levinova-veta.html#prob-sat}{\class{woo-pk-prob-sat}{\prob{SAT}}}\)</span>,</span> abychom je mohli vyřešit řešičem.</li></ul>
-<p>Proseminář 7 navazuje praktickou ukázkou: od zadání (Schurův problém) přes generátor formule ve formátu DIMACS a řešič Kissat až po přečtení odpovědi a ověření důkazu nesplnitelnosti.</p>
+<p>Proseminář 7 navazuje praktickou ukázkou (rozšíření, oddíl <a href="ch-resice-sat-sat-resic-v-praxi.html">14.6</a>): od zadání (Schurův problém) přes generátor formule ve formátu DIMACS a řešič Kissat až po přečtení odpovědi a ověření důkazu nesplnitelnosti. Na testu se ale kóduje ručně, na papíře: proměnné, jejich význam a klauzule (oddíl <a href="ch-resice-sat-redukce-do-sat.html">14.3</a> a cvičení 7).</p>
 </div>
 
 <h2 id="oddily-kapitoly">Oddíly kapitoly<a class="headerlink" href="#oddily-kapitoly" title="Permanent link">&para;</a></h2>
@@ -5559,7 +5559,7 @@
 <li><a href="ch-resice-sat-redukce-do-sat.html">14.3 Redukce do SAT: kódování problémů</a></li>
 <li><a href="ch-resice-sat-tseitinova-transformace.html">14.4 Tseitinova transformace</a></li>
 <li><a href="ch-resice-sat-smt.html">14.5 Kdy přestane stačit čistý SAT: SMT</a></li>
-<li><a href="ch-resice-sat-sat-resic-v-praxi.html">14.6 SAT řešič v praxi: Schurova čísla</a></li>
+<li><a href="ch-resice-sat-sat-resic-v-praxi.html">14.6 SAT řešič v praxi: Schurova čísla (proseminář 7)</a></li>
 <li><a href="ch-resice-sat-cviceni-7.html">14.7 Cvičení 7: Enkódování do SAT</a></li>
 <li><a href="ch-resice-sat-shrnuti-kapitoly.html">14.8 Shrnutí kapitoly</a></li>
 <li><a href="ch-resice-sat-ulohy-navic.html">14.9 Úlohy navíc</a></li>

@@ -25,7 +25,7 @@
     
     
       
-        <title>14.6 SAT řešič v praxi: Schurova čísla - NI-ICC – skripta</title>
+        <title>14.6 SAT řešič v praxi: Schurova čísla (proseminář 7) - NI-ICC – skripta</title>
       
     
     
@@ -89,7 +89,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#146-sat-resic-v-praxi-schurova-cisla" class="md-skip">
+        <a href="#146-sat-resic-v-praxi-schurova-cisla-proseminar-7" class="md-skip">
           Přeskočit obsah
         </a>
       
@@ -123,7 +123,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              14.6 SAT řešič v praxi: Schurova čísla
+              14.6 SAT řešič v praxi: Schurova čísla (proseminář 7)
             
           </span>
         </div>
@@ -1606,7 +1606,7 @@
   <span class="md-ellipsis">
     
   
-    4.7 Jak navrhovat nedeterministické stroje
+    4.7 Jak navrhovat nedeterministické stroje (proseminář 2)
   
 
     
@@ -4233,7 +4233,7 @@
   <span class="md-ellipsis">
     
   
-    14.6 SAT řešič v praxi: Schurova čísla
+    14.6 SAT řešič v praxi: Schurova čísla (proseminář 7)
   
 
     
@@ -4251,7 +4251,7 @@
   <span class="md-ellipsis">
     
   
-    14.6 SAT řešič v praxi: Schurova čísla
+    14.6 SAT řešič v praxi: Schurova čísla (proseminář 7)
   
 
     
@@ -5799,8 +5799,9 @@
 
 
 
-<h1 id="146-sat-resic-v-praxi-schurova-cisla">14.6 SAT řešič v praxi: Schurova čísla<a class="headerlink" href="#146-sat-resic-v-praxi-schurova-cisla" title="Permanent link">&para;</a></h1>
+<h1 id="146-sat-resic-v-praxi-schurova-cisla-proseminar-7">14.6 SAT řešič v praxi: Schurova čísla (proseminář 7)<a class="headerlink" href="#146-sat-resic-v-praxi-schurova-cisla-proseminar-7" title="Permanent link">&para;</a></h1>
 <div class="woo">
+<div class="admonition note woo-remark"><p class="admonition-title">Rozšíření z prosemináře 7</p><p>Oddíl je z prosemináře 7: praktická ukázka práce s řešičem (Kissat, formát DIMACS, čtení modelu, důkaz nesplnitelnosti). Je to rozšíření nad přednášku, instalaci ani ovládání řešiče na test znát nemusíš. V typové úloze 3 se kóduje ručně – proměnné, jejich význam a klauzule – jako v oddílu <a href="ch-resice-sat-redukce-do-sat.html">14.3</a> a ve cvičení 7 (oddíl <a href="ch-resice-sat-cviceni-7.html">14.7</a>). Z tohoto oddílu se k tomu hodí jen pododdíl <a href="ch-resice-sat-sat-resic-v-praxi.html#ch-resice-sat-schur-promenne">14.6.3</a>: kódování Schurova problému a otázka, zda jsou potřeba klauzule „nejvýše jedna barva“.</p></div>
 <p>Na přednášce jsme slyšeli, že <a class="woo-term" href="../ch-cook/ch-cook-cook-levinova-veta.html#prob-sat" data-pojem="prob-sat">SAT</a> řešiče zvládají obrovské instance. Proseminář 7 to zkouší prakticky, od instalace po přečtení výsledku: (1) instalace volně dostupného řešiče Kissat, (2) vstupní formát <strong>DIMACS</strong> – jak problém zapsat jako CNF, (3) výstup – jak přečíst odpověď a proč věřit i odpovědi „nesplnitelné“.</p>
 <figure class="woo-float woo-figure" id="ch-resice-sat-fig-pipeline"><div class="woo-centered"><img class="woo-fig" src="../figures/14f-resic-v-praxi-01.svg" width="539" height="72" alt="Obrázek: Cesta od problému k odpovědi: generátor napíše formuli ve formátu DIMACS, řešič vypíše model, dekodér z něj přečte obarvení." loading="lazy"></div><figcaption><span class="woo-fignum">Obrázek 14.19:</span> Cesta od problému k odpovědi: generátor napíše formuli ve formátu DIMACS, řešič vypíše model, dekodér z něj přečte obarvení.</figcaption></figure>
 </div>

@@ -1613,7 +1613,7 @@
   <span class="md-ellipsis">
     
   
-    4.7 Jak navrhovat nedeterministické stroje
+    4.7 Jak navrhovat nedeterministické stroje (proseminář 2)
   
 
     
@@ -4224,7 +4224,7 @@
   <span class="md-ellipsis">
     
   
-    14.6 SAT řešič v praxi: Schurova čísla
+    14.6 SAT řešič v praxi: Schurova čísla (proseminář 7)
   
 
     
@@ -5545,8 +5545,8 @@
 
 <h1 id="4-nedeterminismus-a-trida-np">4 Nedeterminismus a třída NP<a class="headerlink" href="#4-nedeterminismus-a-trida-np" title="Permanent link">&para;</a></h1>
 <div class="woo">
-<p>Zdroje: přednáška 2, proseminář 2, cvičení 2.</p>
-<div class="admonition tip woo-concept"><p class="admonition-title">Proč to děláme</p><p>Dosud náš <a class="woo-term" href="../ch-ts/ch-ts-turinguv-stroj.html#def-dts" data-pojem="def-dts">Turingův stroj</a> fungoval jako klasický počítač: aktuální stav a čtený symbol jednoznačně určily další krok. V této kapitole stroji dovolíme reagovat v jedné situaci několika různými způsoby – výpočet už není cesta, ale strom. <a class="woo-term" href="ch-np-od-determinismu-k-nedeterminismu.html#def-ndts" data-pojem="def-ndts">Nedeterministický Turingův stroj</a> (<a class="woo-term" href="ch-np-od-determinismu-k-nedeterminismu.html#def-ndts" data-pojem="def-ndts">NDTS</a>) není fyzicky realizovatelný, je to abstraktní model; ukáže se ale jako ultimátní nástroj pro pochopení struktury a složitosti problémů, zejména třídy <span class="woo-nobr"><span class="arithmatex">\(\href{ch-np-tridy-nedeterministicke-casove-slozitosti.html#def-ntime}{\class{woo-pk-def-ntime}{\NP}}\)</span>.</span> Vedle definice <span class="arithmatex">\(\href{ch-np-tridy-nedeterministicke-casove-slozitosti.html#def-ntime}{\class{woo-pk-def-ntime}{\NP}}\)</span> přes <a class="woo-term" href="ch-np-od-determinismu-k-nedeterminismu.html#def-ndts" data-pojem="def-ndts">NDTS</a> zavedeme i pohled přes <a class="woo-term" href="ch-np-od-hadani-k-overovani-certifikaty.html#def-verifikator" data-pojem="def-verifikator">certifikáty</a> a <a class="woo-term" href="ch-np-od-hadani-k-overovani-certifikaty.html#def-verifikator" data-pojem="def-verifikator">verifikátory</a> (řešení je snazší ověřit, než ho vymyslet), ukážeme, že obě definice splývají, a dojdeme k otázce <span class="woo-nobr"><span class="arithmatex">\(\href{../ch-cas/ch-cas-tridy-p-a-exp.html#def-tridy}{\class{woo-pk-def-tridy}{\PP}}\overset{?}{=}\href{ch-np-tridy-nedeterministicke-casove-slozitosti.html#def-ntime}{\class{woo-pk-def-ntime}{\NP}}\)</span>.</span></p></div>
+<p>Zdroje: přednáška 2, cvičení 2; navíc proseminář 2 (oddíl <a href="ch-np-jak-navrhovat-nedeterministicke-stroje.html">4.7</a>) a bonusový proseminář 2 (Prattův <a class="woo-term" href="ch-np-od-hadani-k-overovani-certifikaty.html#def-verifikator" data-pojem="def-verifikator">certifikát</a>).</p>
+<div class="admonition tip woo-concept"><p class="admonition-title">Proč to děláme</p><p>Dosud náš <a class="woo-term" href="../ch-ts/ch-ts-turinguv-stroj.html#def-dts" data-pojem="def-dts">Turingův stroj</a> fungoval jako klasický počítač: aktuální stav a čtený symbol jednoznačně určily další krok. V této kapitole stroji dovolíme reagovat v jedné situaci několika různými způsoby – výpočet už není cesta, ale strom. <a class="woo-term" href="ch-np-od-determinismu-k-nedeterminismu.html#def-ndts" data-pojem="def-ndts">Nedeterministický Turingův stroj</a> (<a class="woo-term" href="ch-np-od-determinismu-k-nedeterminismu.html#def-ndts" data-pojem="def-ndts">NDTS</a>) není fyzicky realizovatelný, je to abstraktní model; ukáže se ale jako ultimátní nástroj pro pochopení struktury a složitosti problémů, zejména třídy <span class="woo-nobr"><span class="arithmatex">\(\href{ch-np-tridy-nedeterministicke-casove-slozitosti.html#def-ntime}{\class{woo-pk-def-ntime}{\NP}}\)</span>.</span> Vedle definice <span class="arithmatex">\(\href{ch-np-tridy-nedeterministicke-casove-slozitosti.html#def-ntime}{\class{woo-pk-def-ntime}{\NP}}\)</span> přes <a class="woo-term" href="ch-np-od-determinismu-k-nedeterminismu.html#def-ndts" data-pojem="def-ndts">NDTS</a> zavedeme i pohled přes <a class="woo-term" href="ch-np-od-hadani-k-overovani-certifikaty.html#def-verifikator" data-pojem="def-verifikator">certifikáty</a> a <a class="woo-term" href="ch-np-od-hadani-k-overovani-certifikaty.html#def-verifikator" data-pojem="def-verifikator">verifikátory</a> (řešení je snazší ověřit, než ho vymyslet), ukážeme, že obě definice splývají, a dojdeme k otázce <span class="woo-nobr"><span class="arithmatex">\(\href{../ch-cas/ch-cas-tridy-p-a-exp.html#def-tridy}{\class{woo-pk-def-tridy}{\PP}}\overset{?}{=}\href{ch-np-tridy-nedeterministicke-casove-slozitosti.html#def-ntime}{\class{woo-pk-def-ntime}{\NP}}\)</span>.</span> To je jádro z přednášky 2 (oddíly <a href="ch-np-od-determinismu-k-nedeterminismu.html">4.1</a> až <a href="ch-np-problem-p-vs-np.html">4.6</a>). Proseminář 2 je rozšíření: procvičí návrh <a class="woo-term" href="ch-np-od-determinismu-k-nedeterminismu.html#def-ndts" data-pojem="def-ndts">NDTS</a> na dvou příkladech a bonusový proseminář ukáže Prattův <a class="woo-term" href="ch-np-od-hadani-k-overovani-certifikaty.html#def-verifikator" data-pojem="def-verifikator">certifikát</a> prvočíselnosti.</p></div>
 </div>
 
 <h2 id="oddily-kapitoly">Oddíly kapitoly<a class="headerlink" href="#oddily-kapitoly" title="Permanent link">&para;</a></h2>
@@ -5557,7 +5557,7 @@
 <li><a href="ch-np-tridy-nedeterministicke-casove-slozitosti.html">4.4 Třídy nedeterministické časové složitosti</a></li>
 <li><a href="ch-np-od-hadani-k-overovani-certifikaty.html">4.5 Od hádání k ověřování: certifikáty</a></li>
 <li><a href="ch-np-problem-p-vs-np.html">4.6 Problém <span class="arithmatex">\(\PP\overset{?}{=}\NP\)</span></a></li>
-<li><a href="ch-np-jak-navrhovat-nedeterministicke-stroje.html">4.7 Jak navrhovat nedeterministické stroje</a></li>
+<li><a href="ch-np-jak-navrhovat-nedeterministicke-stroje.html">4.7 Jak navrhovat nedeterministické stroje (proseminář 2)</a></li>
 <li><a href="sec-cv2.html">4.8 Cvičení 2: Nedeterminismus a certifikáty</a></li>
 <li><a href="ch-np-ulohy-navic.html">4.9 Úlohy navíc</a></li>
 </ul>

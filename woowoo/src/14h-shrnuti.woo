@@ -36,7 +36,7 @@
 
     .item:
 
-      "Řešič v praxi.".notion Vstup DIMACS ("p cnf".code proměnné klauzule, klauzule = řádek čísel zakončený
+      "Řešič v praxi (proseminář 7, rozšíření).".notion Vstup DIMACS ("p cnf".code proměnné klauzule, klauzule = řádek čísel zakončený
       "0".code, záporné číslo = negace), výstup "s SATISFIABLE".code / "s UNSATISFIABLE".code a model v řádcích
       "v".code, návratový kód 10/20. SAT ověříme sami (model je certifikát), UNSAT pomocí důkazu DRAT a
       "drat-trim".code. Enkódování rozhoduje: vynechání zbytečných klauzulí a rozbití symetrie zrychlí řešení o řády.

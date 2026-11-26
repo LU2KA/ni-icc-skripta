@@ -2,7 +2,7 @@
   label: ch-pspace
 
 
-Zdroje: přednáška 6 (3. část), proseminář 6.
+Zdroje: přednáška 6 (3. část); navíc proseminář 6 (Generalized Geography, oddíl .reference:sec-geografie).
 
 
 .Concept:
@@ -10,9 +10,10 @@ Zdroje: přednáška 6 (3. část), proseminář 6.
 
   Už víme, jak spolu souvisejí prostorové a časové třídy (kapitola .reference:ch-prostor). Podobně jako u $\NP$ teď
   i v $\PSPACE$ hledáme „reprezentační“ problém, na který se dá všechno ostatní z $\PSPACE$ redukovat. Tím problémem je
-  $\prob{TQBF}$ (kvantifikované booleovské formule); z něj pak redukcí dostaneme $\PSPACE$-úplnost hry
-  $\prob{Generalized Geography}$. Na kvantifikovanou formuli se lze dívat jako na hru dvou hráčů, a proto $\PSPACE$
-  přirozeně popisuje složitost her.
+  $\prob{TQBF}$ (kvantifikované booleovské formule). Na kvantifikovanou formuli se lze dívat jako na hru dvou hráčů,
+  a proto $\PSPACE$ přirozeně popisuje složitost her; kapitolu uzavírá velký obraz tříd složitosti. To je jádro
+  z přednášky 6. Jako rozšíření z prosemináře 6 ukážeme jedinou redukci do $\PSPACE$-úplnosti: z $\prob{TQBF}$
+  na hru $\prob{Generalized Geography}$.
 
 
 .Definition:

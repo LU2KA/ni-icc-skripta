@@ -1693,7 +1693,7 @@
   <span class="md-ellipsis">
     
   
-    4.7 Jak navrhovat nedeterministické stroje
+    4.7 Jak navrhovat nedeterministické stroje (proseminář 2)
   
 
     
@@ -4304,7 +4304,7 @@
   <span class="md-ellipsis">
     
   
-    14.6 SAT řešič v praxi: Schurova čísla
+    14.6 SAT řešič v praxi: Schurova čísla (proseminář 7)
   
 
     
@@ -5665,6 +5665,7 @@
 
 <h2 id="ch-ts-vice-pasek-palindromy-v-linearnim-case">1.4.2 Více pásek: palindromy v lineárním čase (proseminář 1)<a class="headerlink" href="#ch-ts-vice-pasek-palindromy-v-linearnim-case" title="Permanent link">&para;</a></h2>
 <div class="woo">
+<div class="admonition note woo-remark"><p class="admonition-title">Rozšíření z prosemináře 1</p><p>Dvoupáskový stroj pro palindromy je ukázka z prosemináře 1, nad rámec přednášky. Odnést si stačí trik: druhá páska slouží jako paměť – slovo zkopírujeme a čteme ho proti sobě, takže hlava nemusí běhat sem a tam (<span class="arithmatex">\(O(n)\)</span> místo <span class="arithmatex">\(O(n^2)\)</span> na jedné pásce). Hodí se v typové úloze 1, když zadání omezuje čas; jednopáskovou verzi řeší cvičení <a href="sec-cv1.html#cv-1-1">1.1</a>.</p></div>
 <div class="admonition example woo-example" id="ex-palin"><p class="admonition-title">Příklad 1.6: Palindromy nad <span class="arithmatex">\(\{0,1\}\)</span></p><p>Chceme rozhodnout, zda se slovo čte stejně zepředu i zezadu (např. <span class="woo-nobr"><span class="arithmatex">\(0110\)</span>).</span></p><details class="success woo-solution woo-example-solution"><summary>Řešení</summary><ul><li><strong>1 páska:</strong> zapamatuj první znak <em>ve stavu</em>, smaž ho, doběhni na konec, porovnej a smaž poslední znak, doběhni zpět… Hlava neustále běhá sem a tam: <span class="arithmatex">\(O(n^2)\)</span> (viz cvičení&nbsp;1.1).</li><li><strong>2 pásky:</strong> slovo zkopírujeme na druhou pásku a pak čteme obě současně – jednu zepředu, druhou zezadu: <span class="woo-nobr"><span class="arithmatex">\(O(n)\)</span>.</span></li></ul></details></div>
 <figure class="woo-float woo-figure"><div class="woo-centered"><img class="woo-fig" src="../figures/01d-turinguv-stroj-05.svg" width="509" height="492" alt="Obrázek: Dvoupáskový stroj pro palindromy na vstupu 0110." loading="lazy"></div><figcaption><span class="woo-fignum">Obrázek 1.10:</span> Dvoupáskový stroj pro palindromy na vstupu <span class="woo-nobr"><span class="arithmatex">\(0110\)</span>.</span></figcaption></figure>
 <figure class="woo-float woo-table"><figcaption><span class="woo-fignum">Tabulka 1.1:</span> Přechodová funkce dvoupáskového stroje pro palindromy.</figcaption><table><thead><tr><th style="text-align:left">Fáze</th><th style="text-align:left">Přechod <span class="arithmatex">\(\delta(q,a,b)=(q',a',b',D_1,D_2)\)</span></th><th style="text-align:left">Význam</th></tr></thead><tbody><tr><td style="text-align:left">kopírování</td><td style="text-align:left"><span class="arithmatex">\(\delta(q_{\mathrm{copy}},0,\blank)=(q_{\mathrm{copy}},0,0,\Rgt,\Rgt)\)</span></td><td style="text-align:left">zkopíruj 0</td></tr><tr><td style="text-align:left"></td><td style="text-align:left"><span class="arithmatex">\(\delta(q_{\mathrm{copy}},1,\blank)=(q_{\mathrm{copy}},1,1,\Rgt,\Rgt)\)</span></td><td style="text-align:left">zkopíruj 1</td></tr><tr><td style="text-align:left"></td><td style="text-align:left"><span class="arithmatex">\(\delta(q_{\mathrm{copy}},\blank,\blank)=(q_{\mathrm{rewind}},\blank,\blank,\Stay,\Lft)\)</span></td><td style="text-align:left">konec slova</td></tr><tr><td style="text-align:left">převinutí</td><td style="text-align:left"><span class="woo-nobr"><span class="arithmatex">\(\delta(q_{\mathrm{rewind}},\blank,x)=(q_{\mathrm{rewind}},\blank,x,\Stay,\Lft)\)</span>,</span> <span class="arithmatex">\(x\in\{0,1\}\)</span></td><td style="text-align:left">hlava 2 couvá</td></tr><tr><td style="text-align:left"></td><td style="text-align:left"><span class="arithmatex">\(\delta(q_{\mathrm{rewind}},\blank,\blank)=(q_{\mathrm{compare}},\blank,\blank,\Lft,\Rgt)\)</span></td><td style="text-align:left">začátek porovnávání</td></tr><tr><td style="text-align:left">porovnání</td><td style="text-align:left"><span class="arithmatex">\(\delta(q_{\mathrm{compare}},x,x)=(q_{\mathrm{compare}},x,x,\Lft,\Rgt)\)</span></td><td style="text-align:left">znaky sedí</td></tr><tr><td style="text-align:left"></td><td style="text-align:left"><span class="arithmatex">\(\delta(q_{\mathrm{compare}},x,y)=(\qR,x,y,\Stay,\Stay)\)</span> pro <span class="arithmatex">\(x\neq y\)</span></td><td style="text-align:left">zamítni</td></tr><tr><td style="text-align:left"></td><td style="text-align:left"><span class="arithmatex">\(\delta(q_{\mathrm{compare}},\blank,\blank)=(\qA,\blank,\blank,\Stay,\Stay)\)</span></td><td style="text-align:left">přijmi</td></tr></tbody></table></figure>

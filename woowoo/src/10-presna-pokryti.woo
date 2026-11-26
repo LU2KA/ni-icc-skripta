@@ -2,7 +2,7 @@
   label: ch-x3c
 
 
-Zdroje: přednáška 4, proseminář 4.
+Zdroje: přednáška 4 (1-in-3 SAT); proseminář 4 ($\prob{X3C}$, oddíl .reference:ch-x3c-exact-cover).
 
 
 .Concept:
@@ -14,3 +14,5 @@ Zdroje: přednáška 4, proseminář 4.
   verzi bez negací. NP-těžkost $\prob{X3C}$ ukážeme dvakrát – z $\prob{3-SAT}$ (gadgety a úklid) a z monotónního
   $\prob{1-in-3 SAT}$ (téměř identita) – a uvidíme, jak moc záleží na volbě výchozího problému.
   Kapitolu uzavírá shrnutí redukčních řetězců a opakujících se technik.
+  Jádrem z přednášky 4 je $\prob{1-in-3 SAT}$; $\prob{X3C}$ pochází z prosemináře 4, ale přednáška 5 ho bere jako
+  známý problém, takže na test ho znát je potřeba (co přesně, říká rámeček na začátku oddílu .reference:ch-x3c-exact-cover).

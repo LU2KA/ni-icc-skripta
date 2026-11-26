@@ -2,7 +2,7 @@
   label: ch-is
 
 
-Zdroje: proseminář 3, cvičení 3.
+Zdroje: proseminář 3, cvičení 3. Přednáška NP-úplnost těchto problémů nedokazuje, ale od přednášky 5 je bere jako známé.
 
 
 .Concept:
@@ -17,3 +17,15 @@ Zdroje: proseminář 3, cvičení 3.
 
 
 Obě implikace stručně: $\Rightarrow$ nasypat řešení, $\Leftarrow$ přečíst řešení.
+
+
+.Remark:
+  title: 'Z prosemináře 3: na test potřeba'
+
+  Celá kapitola vychází z prosemináře 3 a cvičení 3, a přesto je "povinná".emphasize: přednáška 5 bere IS, VC,
+  Clique a Hitting Set jako známé NP-úplné problémy (důkazy byly na prosemináři) a právě z nich se v typové úloze 4
+  nejčastěji redukuje. Na test potřebuješ hlavně definice těchto problémů, redukci $\prob{3-SAT}\redp\prob{IS}$
+  (oddíl .reference:ch-is-nezavisla-mnozina) a krátké redukce mezi IS, VC a Clique (doplněk množiny, doplněk grafu;
+  oddíly .reference:ch-is-vertex-cover a .reference:ch-is-is-clique). Oddíl o anatomii redukcí nepřináší nový
+  problém, jen popisuje, jak psát obě implikace důkazu; u Hitting Setu stačí znát problém a vědět, že VC je jeho
+  speciální případ.

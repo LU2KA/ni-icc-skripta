@@ -1,5 +1,16 @@
-.Section SAT řešič v praxi: Schurova čísla
+.Section SAT řešič v praxi: Schurova čísla (proseminář 7)
   label: ch-resice-sat-sat-resic-v-praxi
+
+
+.Remark:
+  title: 'Rozšíření z prosemináře 7'
+
+  Oddíl je z prosemináře 7: praktická ukázka práce s řešičem (Kissat, formát DIMACS, čtení modelu, důkaz
+  nesplnitelnosti). Je to rozšíření nad přednášku, instalaci ani ovládání řešiče na test znát nemusíš. V typové
+  úloze 3 se kóduje ručně – proměnné, jejich význam a klauzule – jako v oddílu .reference:ch-resice-sat-redukce-do-sat
+  a ve cvičení 7 (oddíl .reference:ch-resice-sat-cviceni-7). Z tohoto oddílu se k tomu hodí jen pododdíl
+  .reference:ch-resice-sat-schur-promenne: kódování Schurova problému a otázka, zda jsou potřeba klauzule
+  „nejvýše jedna barva“.
 
 
 Na přednášce jsme slyšeli, že SAT řešiče zvládají obrovské instance. Proseminář 7 to zkouší prakticky, od instalace

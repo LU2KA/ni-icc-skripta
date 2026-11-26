@@ -1606,7 +1606,7 @@
   <span class="md-ellipsis">
     
   
-    4.7 Jak navrhovat nedeterministické stroje
+    4.7 Jak navrhovat nedeterministické stroje (proseminář 2)
   
 
     
@@ -4315,7 +4315,7 @@
   <span class="md-ellipsis">
     
   
-    14.6 SAT řešič v praxi: Schurova čísla
+    14.6 SAT řešič v praxi: Schurova čísla (proseminář 7)
   
 
     
@@ -5668,6 +5668,10 @@
 
 
 <h1 id="133-generalized-geography-je-pspace-uplna-proseminar-6">13.3 Generalized Geography je PSPACE-úplná (proseminář 6)<a class="headerlink" href="#133-generalized-geography-je-pspace-uplna-proseminar-6" title="Permanent link">&para;</a></h1>
+<div class="woo">
+<div class="admonition note woo-remark"><p class="admonition-title">Rozšíření z prosemináře 6</p><p>Oddíl je z prosemináře 6 a jde nad rámec přednášky; je to jediná ukázka redukce, kterou se dokazuje <span class="arithmatex">\(\href{../ch-prostor/ch-prostor-prostorove-tridy.html#def-prostor}{\class{woo-pk-def-prostor}{\PSPACE}}\)</span>-úplnost. Na test stačí vědět, že <span class="arithmatex">\(\href{#prob-gg}{\class{woo-pk-prob-gg}{\prob{Generalized Geography}}}\)</span> je <span class="arithmatex">\(\href{../ch-prostor/ch-prostor-prostorove-tridy.html#def-prostor}{\class{woo-pk-def-prostor}{\PSPACE}}\)</span>-úplná, a umět říct, proč je v <span class="woo-nobr"><span class="arithmatex">\(\href{../ch-prostor/ch-prostor-prostorove-tridy.html#def-prostor}{\class{woo-pk-def-prostor}{\PSPACE}}\)</span>:</span> rekurze <span class="arithmatex">\(\mathrm{Win}\)</span> má hloubku nejvýše <span class="woo-nobr"><span class="arithmatex">\(|V|\)</span>,</span> každá úroveň si pamatuje jen <span class="arithmatex">\(O(\log n)\)</span> bitů a prostor se po návratu z rekurze znovu použije (pododdíl <a href="sec-geografie.html#ch-pspace-gg-v-pspace">13.3.2</a>). Konstrukce z <span class="arithmatex">\(\href{ch-pspace-tqbf.html#prob-tqbf}{\class{woo-pk-prob-tqbf}{\prob{TQBF}}}\)</span> a neorientovaná geografie v <span class="arithmatex">\(\href{../ch-cas/ch-cas-tridy-p-a-exp.html#def-tridy}{\class{woo-pk-def-tridy}{\PP}}\)</span> jsou bonus.</p></div>
+</div>
+
 <h2 id="ch-pspace-slovni-fotbal-s-mesty">13.3.1 Slovní fotbal s městy<a class="headerlink" href="#ch-pspace-slovni-fotbal-s-mesty" title="Permanent link">&para;</a></h2>
 <div class="woo">
 <p>Hráči Alice a Bob střídavě říkají česká města; každé musí začínat písmenem, kterým končí předchozí, žádné město se nesmí opakovat a kdo nemůže pokračovat, prohrál. <strong>Hra jako graf:</strong> vrcholy = města, hrana <span class="woo-nobr"><span class="arithmatex">\(u\to v\)</span>,</span> když <span class="arithmatex">\(v\)</span> začíná posledním písmenem <span class="woo-nobr"><span class="arithmatex">\(u\)</span>;</span> hráči posouvají žeton po hranách do dosud nenavštíveného vrcholu.</p>

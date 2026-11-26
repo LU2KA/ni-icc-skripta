@@ -46,6 +46,13 @@ na předchozí; vyjdi z úvodu kapitoly v předloze, nic nevymýšlej), pak zbyt
 první `\section`). Každý `\section` je vlastní soubor `NNa-`, `NNb-`, … v pořadí předlohy; `\section*{Shrnutí kapitoly}`
 je poslední oddíl `.Section Shrnutí kapitoly`. Krátké jméno souboru bez diakritiky (`08b-anatomie-redukci.woo`).
 
+**Látka z proseminářů.** Jádrem skript jsou přednášky; proseminář je obvykle rozšíření. Oddíl nebo pododdíl převzatý
+z prosemináře má v nadpisu `(proseminář N)` a hned za nadpisem (u celé kapitoly za rámečkem „Proč to děláme“) rámeček
+`.Remark:` s titulkem `'Rozšíření z prosemináře N'`, nebo `'Z prosemináře N: na test potřeba'`, když je látka povinná
+(typová úloha testu, problém, který přednáška bere jako známý). Ve 2–3 větách řekne, co v oddílu je, že jde
+o rozšíření nad přednášku, a co z toho je potřeba na test (nebo že nic). Řádek `Zdroje:` uvádí proseminář jako
+„navíc“; úvod kapitoly a „Co si odnést“ ho jako jádro nestaví. Totéž platí pro budoucí prosemináře.
+
 **Úlohy navíc** (`NNz-ulohy-navic.woo`, kapitoly 01–15): za shrnutím kapitoly následuje oddíl `.Section Úlohy navíc`
 se štítkem `<štítek kapitoly>-ulohy-navic` – osm úplně vyřešených úloh nad rámec cvičení (nejsou v LaTeXové předloze
 ani ve zdrojích předmětu). Stavba: úvodní odstavec, `.Warning:` s `title: 'Neoficiální úlohy'`, pododdíly

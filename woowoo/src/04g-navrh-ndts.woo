@@ -1,5 +1,14 @@
-.Section Jak navrhovat nedeterministické stroje
+.Section Jak navrhovat nedeterministické stroje (proseminář 2)
   label: ch-np-jak-navrhovat-nedeterministicke-stroje
+
+
+.Remark:
+  title: 'Rozšíření z prosemináře 2'
+
+  Oddíl je z prosemináře 2 a nic nového nezavádí: definice NDTS a recept Guess & Verify jsou z přednášky
+  (oddíl .reference:ch-np-guess-verify-jak-ndts-pouzivat), tady je jen procvičíme na složených číslech a na klice.
+  Na test se hodí jako vzor pro typovou úlohu 1, když zadání chce "nedeterministický".emphasize stroj: co uhodnout,
+  jak dlouhé smí hádání být a co ověřit deterministicky.
 
 
 .Concept:

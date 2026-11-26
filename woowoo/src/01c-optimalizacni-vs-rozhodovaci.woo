@@ -103,6 +103,14 @@ i "hodnotu".emphasize optima – binárním vyhledáváním přes práh $k$.
 
 
 .Remark:
+  title: 'Z prosemináře 1: na test potřeba'
+
+  Tento pododdíl je z prosemináře 1: z rozhodovací verze TSP vytáhneme samotnou optimální okružní cestu.
+  Na rozdíl od většiny látky z proseminářů je "povinný".emphasize – self-redukce je typová úloha 2 zápočtového
+  testu (postup v oddílu .reference:ch-test-postup-self-redukce). Mazání hran s hlídáním prahu si proto projdi pořádně.
+
+
+.Remark:
   title: 'Redukce s orákulem: $\prob{TSP}$ – nalezení kružnice $\to$ $\prob{TSP}$ – rozhodovací verze'
   label: red-tspsearch
 

@@ -1606,7 +1606,7 @@
   <span class="md-ellipsis">
     
   
-    4.7 Jak navrhovat nedeterministické stroje
+    4.7 Jak navrhovat nedeterministické stroje (proseminář 2)
   
 
     
@@ -4224,7 +4224,7 @@
   <span class="md-ellipsis">
     
   
-    14.6 SAT řešič v praxi: Schurova čísla
+    14.6 SAT řešič v praxi: Schurova čísla (proseminář 7)
   
 
     
@@ -5545,8 +5545,8 @@
 
 <h1 id="10-presna-pokryti-1-in-3-sat-a-x3c">10 Přesná pokrytí: 1-in-3 SAT a X3C<a class="headerlink" href="#10-presna-pokryti-1-in-3-sat-a-x3c" title="Permanent link">&para;</a></h1>
 <div class="woo">
-<p>Zdroje: přednáška 4, proseminář 4.</p>
-<div class="admonition tip woo-concept"><p class="admonition-title">Proč to děláme</p><p>Do katalogu <a class="woo-term" href="../ch-redukce/ch-redukce-np-tezkost-a-np-uplnost.html#def-nphard" data-pojem="def-nphard">NP-úplných</a> problémů přidáváme dva problémy s podmínkou „přesně jednou“: <span class="arithmatex">\(\href{ch-x3c-1-in-3-sat.html#prob-1in3}{\class{woo-pk-prob-1in3}{\prob{1-in-3 SAT}}}\)</span> (v každé klauzuli je přesně jeden literál pravdivý) a <span class="arithmatex">\(\href{ch-x3c-exact-cover.html#prob-x3c}{\class{woo-pk-prob-x3c}{\prob{X3C}}}\)</span> (každý prvek univerza je pokryt právě jednou). <span class="arithmatex">\(\href{ch-x3c-1-in-3-sat.html#prob-1in3}{\class{woo-pk-prob-1in3}{\prob{1-in-3 SAT}}}\)</span> navazuje na barvení grafů: jeho <a class="woo-term" href="../ch-redukce/ch-redukce-np-tezkost-a-np-uplnost.html#def-nphard" data-pojem="def-nphard">NP-těžkost</a> plyne z redukce z <span class="woo-nobr"><span class="arithmatex">\(\href{../ch-zoo/ch-zoo-3-coloring.html#prob-3col}{\class{woo-pk-prob-3col}{\prob{3-Coloring}}}\)</span>,</span> a to rovnou pro verzi bez negací. <a class="woo-term" href="../ch-redukce/ch-redukce-np-tezkost-a-np-uplnost.html#def-nphard" data-pojem="def-nphard">NP-těžkost</a> <span class="arithmatex">\(\href{ch-x3c-exact-cover.html#prob-x3c}{\class{woo-pk-prob-x3c}{\prob{X3C}}}\)</span> ukážeme dvakrát – z <span class="arithmatex">\(\href{../ch-sat/ch-sat-sat-3-sat.html#red-sat3sat}{\class{woo-pk-pojem-3sat}{\prob{3-SAT}}}\)</span> (<a class="woo-term" href="../ch-is/ch-is-anatomie-redukci.html#fig-is-dva-smery" data-pojem="pojem-gadget">gadgety</a> a úklid) a z monotónního <span class="arithmatex">\(\href{ch-x3c-1-in-3-sat.html#prob-1in3}{\class{woo-pk-prob-1in3}{\prob{1-in-3 SAT}}}\)</span> (téměř identita) – a uvidíme, jak moc záleží na volbě výchozího problému. Kapitolu uzavírá shrnutí redukčních řetězců a opakujících se technik.</p></div>
+<p>Zdroje: přednáška 4 (<a class="woo-term" href="ch-x3c-1-in-3-sat.html#prob-1in3" data-pojem="prob-1in3">1-in-3 SAT</a>); proseminář 4 (<span class="woo-nobr"><span class="arithmatex">\(\href{ch-x3c-exact-cover.html#prob-x3c}{\class{woo-pk-prob-x3c}{\prob{X3C}}}\)</span>,</span> oddíl <a href="ch-x3c-exact-cover.html">10.2</a>).</p>
+<div class="admonition tip woo-concept"><p class="admonition-title">Proč to děláme</p><p>Do katalogu <a class="woo-term" href="../ch-redukce/ch-redukce-np-tezkost-a-np-uplnost.html#def-nphard" data-pojem="def-nphard">NP-úplných</a> problémů přidáváme dva problémy s podmínkou „přesně jednou“: <span class="arithmatex">\(\href{ch-x3c-1-in-3-sat.html#prob-1in3}{\class{woo-pk-prob-1in3}{\prob{1-in-3 SAT}}}\)</span> (v každé klauzuli je přesně jeden literál pravdivý) a <span class="arithmatex">\(\href{ch-x3c-exact-cover.html#prob-x3c}{\class{woo-pk-prob-x3c}{\prob{X3C}}}\)</span> (každý prvek univerza je pokryt právě jednou). <span class="arithmatex">\(\href{ch-x3c-1-in-3-sat.html#prob-1in3}{\class{woo-pk-prob-1in3}{\prob{1-in-3 SAT}}}\)</span> navazuje na barvení grafů: jeho <a class="woo-term" href="../ch-redukce/ch-redukce-np-tezkost-a-np-uplnost.html#def-nphard" data-pojem="def-nphard">NP-těžkost</a> plyne z redukce z <span class="woo-nobr"><span class="arithmatex">\(\href{../ch-zoo/ch-zoo-3-coloring.html#prob-3col}{\class{woo-pk-prob-3col}{\prob{3-Coloring}}}\)</span>,</span> a to rovnou pro verzi bez negací. <a class="woo-term" href="../ch-redukce/ch-redukce-np-tezkost-a-np-uplnost.html#def-nphard" data-pojem="def-nphard">NP-těžkost</a> <span class="arithmatex">\(\href{ch-x3c-exact-cover.html#prob-x3c}{\class{woo-pk-prob-x3c}{\prob{X3C}}}\)</span> ukážeme dvakrát – z <span class="arithmatex">\(\href{../ch-sat/ch-sat-sat-3-sat.html#red-sat3sat}{\class{woo-pk-pojem-3sat}{\prob{3-SAT}}}\)</span> (<a class="woo-term" href="../ch-is/ch-is-anatomie-redukci.html#fig-is-dva-smery" data-pojem="pojem-gadget">gadgety</a> a úklid) a z monotónního <span class="arithmatex">\(\href{ch-x3c-1-in-3-sat.html#prob-1in3}{\class{woo-pk-prob-1in3}{\prob{1-in-3 SAT}}}\)</span> (téměř identita) – a uvidíme, jak moc záleží na volbě výchozího problému. Kapitolu uzavírá shrnutí redukčních řetězců a opakujících se technik. Jádrem z přednášky 4 je <span class="woo-nobr"><span class="arithmatex">\(\href{ch-x3c-1-in-3-sat.html#prob-1in3}{\class{woo-pk-prob-1in3}{\prob{1-in-3 SAT}}}\)</span>;</span> <span class="arithmatex">\(\href{ch-x3c-exact-cover.html#prob-x3c}{\class{woo-pk-prob-x3c}{\prob{X3C}}}\)</span> pochází z prosemináře 4, ale přednáška 5 ho bere jako známý problém, takže na test ho znát je potřeba (co přesně, říká rámeček na začátku oddílu <a href="ch-x3c-exact-cover.html">10.2</a>).</p></div>
 </div>
 
 <h2 id="oddily-kapitoly">Oddíly kapitoly<a class="headerlink" href="#oddily-kapitoly" title="Permanent link">&para;</a></h2>

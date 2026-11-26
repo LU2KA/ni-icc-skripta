@@ -2,6 +2,15 @@
   label: sec-geografie
 
 
+.Remark:
+  title: 'Rozšíření z prosemináře 6'
+
+  Oddíl je z prosemináře 6 a jde nad rámec přednášky; je to jediná ukázka redukce, kterou se dokazuje
+  $\PSPACE$-úplnost. Na test stačí vědět, že $\prob{Generalized Geography}$ je $\PSPACE$-úplná, a umět říct,
+  proč je v $\PSPACE$: rekurze $\mathrm{Win}$ má hloubku nejvýše $|V|$, každá úroveň si pamatuje jen $O(\log n)$
+  bitů a prostor se po návratu z rekurze znovu použije (pododdíl .reference:ch-pspace-gg-v-pspace). Konstrukce z $\prob{TQBF}$ a neorientovaná geografie v $\PP$ jsou bonus.
+
+
 .Subsection Slovní fotbal s městy
   label: ch-pspace-slovni-fotbal-s-mesty
 

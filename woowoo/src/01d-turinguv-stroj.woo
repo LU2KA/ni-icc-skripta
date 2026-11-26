@@ -155,6 +155,15 @@ místo něj dva koncové stavy: $\qA$ (accept, výstup 1) a $\qR$ (reject, výst
   label: ch-ts-vice-pasek-palindromy-v-linearnim-case
 
 
+.Remark:
+  title: 'Rozšíření z prosemináře 1'
+
+  Dvoupáskový stroj pro palindromy je ukázka z prosemináře 1, nad rámec přednášky. Odnést si stačí trik:
+  druhá páska slouží jako paměť – slovo zkopírujeme a čteme ho proti sobě, takže hlava nemusí běhat sem a tam
+  ($O(n)$ místo $O(n^2)$ na jedné pásce). Hodí se v typové úloze 1, když zadání omezuje čas; jednopáskovou
+  verzi řeší cvičení .reference:cv-1-1.
+
+
 .Example:
   title: 'Palindromy nad $\{0,1\}$'
   label: ex-palin

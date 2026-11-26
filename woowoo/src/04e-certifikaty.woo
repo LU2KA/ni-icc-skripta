@@ -242,6 +242,14 @@ U vyhledávacích problémů (sudoku, $\prob{SAT}$, klika) je certifikát přím
   Ukázka pro $p=29$ je na obr. .reference:fig-np-pratt.
 
 
+.Remark:
+  title: 'Rozšíření z bonusového prosemináře 2'
+
+  Že prvočíselnost má krátký certifikát, zmiňuje přednáška. Jak Prattův certifikát vypadá a jak ho verifikátor
+  kontroluje (obr. .reference:fig-np-pratt), je z bonusového prosemináře 2 a na test to potřeba není. Odnést si
+  stačí pointu níže: certifikát nemusí být samotné řešení, stačí důkaz ověřitelný v polynomiálním čase.
+
+
 .Figure:
   label: fig-np-pratt
 

@@ -10,8 +10,12 @@ stranu druhé poloviny semestru: SAT a ILP řešiče a modelování problémů p
 .reference:ch-ukazkovy) a graf všech redukcí (příloha .reference:ch-graf).
 
 
-Obsah proseminářů je zapracován přímo do textu a zadání cvičení (s nápovědou a vzorovým řešením) najdete
-u kapitoly, ke které tematicky patří. Tabulka ukazuje, kde je která přednáška, proseminář a cvičení:
+Jádrem skript jsou přednášky. Látka z proseminářů je v textu označená „(proseminář $N$)“ v nadpisu oddílu nebo
+pododdílu a hned na jeho začátku je rámeček, který říká, co z ní je potřeba na test; pokud rámeček neříká jinak,
+jde o rozšíření nad přednášku. Povinné jsou samo-redukovatelnost (proseminář 1, typová úloha 2), problémy IS, VC, Clique
+a Hitting Set (proseminář 3) a $\prob{X3C}$ (proseminář 4), protože je přednáška 5 bere jako známé. Zadání cvičení
+(s nápovědou a vzorovým řešením) najdete u kapitoly, ke které tematicky patří. Tabulka ukazuje, kde je která
+přednáška, proseminář a cvičení:
 
 
 .Table:

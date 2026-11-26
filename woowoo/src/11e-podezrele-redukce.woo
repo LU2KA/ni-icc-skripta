@@ -2,6 +2,18 @@
   label: sec-podezrele
 
 
+.Remark:
+  title: 'Rozšíření z prosemináře 5'
+
+  Oddíl je z prosemináře 5 a jde nad rámec přednášky: čtyři chybné redukce z čísel, jejich opravy a algoritmy,
+  které ukazují, že cílové problémy jsou ve skutečnosti v $\PP$. Konstrukce ani algoritmy z něj na test znát
+  nemusíš. Odnést si stačí kontrolu pro každou vlastní redukci v typové úloze 4: je výstup redukce polynomiálně
+  velký vůči "délce zápisu".emphasize vstupu? Vyrábí-li konstrukce něco úměrného "hodnotě".emphasize binárně
+  zapsaného čísla (vrcholy, políčka), je výstup exponenciální. Rozvinout číslo na strukturu smí jen redukce ze
+  silně NP-těžkého problému, který je těžký i s čísly zapsanými unárně (kontrolní seznam v pododdílu
+  .reference:ch-cisla-jak-poznat-podezrelou-redukci).
+
+
 $\prob{Subset Sum}$ a $\prob{Knapsack}$ jsou NP-úplné, ale jen "slabě".emphasize. Redukce z nich proto nabízejí řadu
 nenápadných chyb: často se objevují jako „důkaz“ NP-těžkosti, a přitom je cílový problém polynomiální.
 Projdeme čtyři takové redukce; u každé si nejdřív zkuste chybu najít sami.

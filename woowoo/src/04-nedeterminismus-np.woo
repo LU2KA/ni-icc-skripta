@@ -2,7 +2,8 @@
   label: ch-np
 
 
-Zdroje: přednáška 2, proseminář 2, cvičení 2.
+Zdroje: přednáška 2, cvičení 2; navíc proseminář 2 (oddíl .reference:ch-np-jak-navrhovat-nedeterministicke-stroje)
+a bonusový proseminář 2 (Prattův certifikát).
 
 
 .Concept:
@@ -14,3 +15,6 @@ Zdroje: přednáška 2, proseminář 2, cvičení 2.
   ultimátní nástroj pro pochopení struktury a složitosti problémů, zejména třídy $\NP$.
   Vedle definice $\NP$ přes NDTS zavedeme i pohled přes certifikáty a verifikátory (řešení je snazší ověřit, než ho
   vymyslet), ukážeme, že obě definice splývají, a dojdeme k otázce $\PP\overset{?}{=}\NP$.
+  To je jádro z přednášky 2 (oddíly .reference:ch-np-od-determinismu-k-nedeterminismu až
+  .reference:ch-np-problem-p-vs-np). Proseminář 2 je rozšíření: procvičí návrh NDTS na dvou příkladech
+  a bonusový proseminář ukáže Prattův certifikát prvočíselnosti.

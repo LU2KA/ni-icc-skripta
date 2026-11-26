@@ -1682,7 +1682,7 @@
   <span class="md-ellipsis">
     
   
-    4.7 Jak navrhovat nedeterministické stroje
+    4.7 Jak navrhovat nedeterministické stroje (proseminář 2)
   
 
     
@@ -4293,7 +4293,7 @@
   <span class="md-ellipsis">
     
   
-    14.6 SAT řešič v praxi: Schurova čísla
+    14.6 SAT řešič v praxi: Schurova čísla (proseminář 7)
   
 
     
@@ -5644,6 +5644,7 @@
 
 <h2 id="ch-ts-od-optima-k-reseni-samo-redukovatelnost">1.3.2 Od optima k řešení: samo-redukovatelnost (proseminář 1)<a class="headerlink" href="#ch-ts-od-optima-k-reseni-samo-redukovatelnost" title="Permanent link">&para;</a></h2>
 <div class="woo">
+<div class="admonition note woo-remark"><p class="admonition-title">Z prosemináře 1: na test potřeba</p><p>Tento pododdíl je z prosemináře 1: z rozhodovací verze <a class="woo-term" href="#prob-tsp" data-pojem="prob-tsp">TSP</a> vytáhneme samotnou optimální okružní cestu. Na rozdíl od většiny látky z proseminářů je <em>povinný</em> – <a class="woo-term" href="#ch-ts-od-optima-k-reseni-samo-redukovatelnost" data-pojem="pojem-self-redukce">self-redukce</a> je typová úloha 2 zápočtového testu (postup v oddílu <a href="../ch-test/ch-test-postupy-na-papire.html#ch-test-postup-self-redukce">A.3.2</a>). Mazání hran s hlídáním prahu si proto projdi pořádně.</p></div>
 <div class="admonition abstract woo-remark woo-redukcebox" id="red-tspsearch"><p class="admonition-title">Redukce s orákulem: <span class="arithmatex">\(\href{#prob-tsp}{\class{woo-pk-prob-tsp}{\prob{TSP}}}\)</span> – nalezení kružnice <span class="arithmatex">\(\to\)</span> <span class="arithmatex">\(\href{#prob-tsp}{\class{woo-pk-prob-tsp}{\prob{TSP}}}\)</span> – rozhodovací verze</p><p>Hrany po jedné mažeme a <a class="woo-term" href="../ch-graf/ch-graf-redukce-s-orakulem-a-vycislitelnost.html#fig-graf-redukce-s-orakulem" data-pojem="pojem-orakulum">orákulem</a> s prahem <span class="arithmatex">\(W\)</span> (přesné optimum) hlídáme, že optimální kružnice v grafu zůstává.</p></div>
 <p>Víme, že optimum je <span class="woo-nobr"><span class="arithmatex">\(W=22\)</span>.</span> Ale <em>kudy</em> máme jet? API odpovídá jen ANO/NE. Řešení z něj vytáhneme technikou <strong><a class="woo-term" href="#ch-ts-od-optima-k-reseni-samo-redukovatelnost" data-pojem="pojem-self-redukce">self-reducibility</a></strong> (<a class="woo-term" href="#ch-ts-od-optima-k-reseni-samo-redukovatelnost" data-pojem="pojem-self-redukce">samo-redukovatelnost</a>):</p>
 <div class="woo-centered"><img class="woo-fig" src="../figures/01c-optimalizacni-vs-rozhodovaci-03.svg" width="430" height="120" alt="Obrázek: Od optima k řešení: samo-redukovatelnost (proseminář 1)" loading="lazy"></div>

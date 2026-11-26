@@ -1693,7 +1693,7 @@
   <span class="md-ellipsis">
     
   
-    4.7 Jak navrhovat nedeterministické stroje
+    4.7 Jak navrhovat nedeterministické stroje (proseminář 2)
   
 
     
@@ -4304,7 +4304,7 @@
   <span class="md-ellipsis">
     
   
-    14.6 SAT řešič v praxi: Schurova čísla
+    14.6 SAT řešič v praxi: Schurova čísla (proseminář 7)
   
 
     
@@ -5683,6 +5683,7 @@
 <div class="woo">
 <p>U vyhledávacích problémů (sudoku, <span class="woo-nobr"><span class="arithmatex">\(\href{../ch-cook/ch-cook-cook-levinova-veta.html#prob-sat}{\class{woo-pk-prob-sat}{\prob{SAT}}}\)</span>,</span> klika) je <a class="woo-term" href="#def-verifikator" data-pojem="def-verifikator">certifikát</a> přímočarý: je to samo řešení. U čistě rozhodovacích problémů ale <a class="woo-term" href="#def-verifikator" data-pojem="def-verifikator">certifikát</a> často není „objekt“, nýbrž <em>matematický důkaz</em> ověřitelný v polynomiálním čase.</p>
 <div class="admonition example woo-example" id="ex-primes"><p class="admonition-title">Příklad 4.12: <span class="woo-nobr"><span class="arithmatex">\(\prob{Primes}\)</span>:</span> je <span class="arithmatex">\(p\)</span> prvočíslo?</p><p>Je-li <span class="arithmatex">\(p\)</span> <em>složené</em>, <a class="woo-term" href="#def-verifikator" data-pojem="def-verifikator">certifikát</a> je snadný – dělitel. Pro <em>prvočíselnost</em> ale musíme v polynomiálním čase přesvědčit, že <span class="arithmatex">\(p\)</span> žádného dělitele nemá, a zkoušet všechny trvá exponenciálně dlouho. Řešením je <strong>Prattův <a class="woo-term" href="#def-verifikator" data-pojem="def-verifikator">certifikát</a></strong> (1975): rekurzivní stromová struktura (svědectví o primitivních kořenech), kterou <a class="woo-term" href="#def-verifikator" data-pojem="def-verifikator">verifikátor</a> mechanicky ověří. Ukázka pro <span class="arithmatex">\(p=29\)</span> je na obr. <a href="ch-np-od-hadani-k-overovani-certifikaty.html#fig-np-pratt">4.12</a>.</p></div>
+<div class="admonition note woo-remark"><p class="admonition-title">Rozšíření z bonusového prosemináře 2</p><p>Že prvočíselnost má krátký <a class="woo-term" href="#def-verifikator" data-pojem="def-verifikator">certifikát</a>, zmiňuje přednáška. Jak Prattův <a class="woo-term" href="#def-verifikator" data-pojem="def-verifikator">certifikát</a> vypadá a jak ho <a class="woo-term" href="#def-verifikator" data-pojem="def-verifikator">verifikátor</a> kontroluje (obr. <a href="ch-np-od-hadani-k-overovani-certifikaty.html#fig-np-pratt">4.12</a>), je z bonusového prosemináře 2 a na test to potřeba není. Odnést si stačí pointu níže: <a class="woo-term" href="#def-verifikator" data-pojem="def-verifikator">certifikát</a> nemusí být samotné řešení, stačí důkaz ověřitelný v polynomiálním čase.</p></div>
 <figure class="woo-float woo-figure" id="fig-np-pratt"><div class="woo-centered"><img class="woo-fig" src="../figures/04e-certifikaty-05.svg" width="507" height="307" alt="Obrázek: Prattův certifikát čísla 29 (bonusový proseminář 2). Vnitřní uzel nese prvočíslo p, rozklad p-1 a svědka a; verifikátor vynásobením zkontroluje, že rozklad je úplný, a rychlým umocňováním Lucasovy podmínky a^p-11 a a^(p-1)/q1 p pro každé prvočíslo q | p-1 (vpravo). Že jsou čísla q opravdu prvočísla, dokazují jejich podstromy. Všimni si: verifikátor nic nerozkládá, jen násobí a umocňuje; každé q≤(p-1)/2, takže hloubka stromu je O(log p), tj. lineární v délce vstupu." loading="lazy"></div><figcaption><span class="woo-fignum">Obrázek 4.12:</span> Prattův <a class="woo-term" href="#def-verifikator" data-pojem="def-verifikator">certifikát</a> čísla <span class="arithmatex">\(29\)</span> (bonusový proseminář 2). Vnitřní uzel nese prvočíslo <span class="woo-nobr"><span class="arithmatex">\(p\)</span>,</span> rozklad <span class="arithmatex">\(p-1\)</span> a svědka <span class="woo-nobr"><span class="arithmatex">\(a\)</span>;</span> <a class="woo-term" href="#def-verifikator" data-pojem="def-verifikator">verifikátor</a> vynásobením zkontroluje, že rozklad je úplný, a rychlým umocňováním Lucasovy podmínky <span class="arithmatex">\(a^{p-1}\equiv1\)</span> a <span class="arithmatex">\(a^{(p-1)/q}\not\equiv1 \pmod p\)</span> pro každé prvočíslo <span class="arithmatex">\(q\mid p-1\)</span> (vpravo). Že jsou čísla <span class="arithmatex">\(q\)</span> opravdu prvočísla, dokazují jejich podstromy. <em>Všimni si:</em> <a class="woo-term" href="#def-verifikator" data-pojem="def-verifikator">verifikátor</a> nic nerozkládá, jen násobí a umocňuje; každé <span class="woo-nobr"><span class="arithmatex">\(q\le(p-1)/2\)</span>,</span> takže hloubka stromu je <span class="woo-nobr"><span class="arithmatex">\(O(\log p)\)</span>,</span> tj. lineární v délce vstupu.</figcaption></figure>
 <div class="admonition tip woo-concept"><p class="admonition-title">Pointa</p><p><a class="woo-term" href="#def-verifikator" data-pojem="def-verifikator">Certifikát</a> je v jádru vždy <strong>záznamem rozhodnutí v jedné konkrétní přijímající větvi</strong> výpočtu <a class="woo-term" href="ch-np-od-determinismu-k-nedeterminismu.html#def-ndts" data-pojem="def-ndts">NDTS</a>.</p></div>
 </div>

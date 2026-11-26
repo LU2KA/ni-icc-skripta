@@ -2,7 +2,7 @@
   label: ch-resice-sat
 
 
-Zdroje: přednáška 7, proseminář 7, cvičení 7.
+Zdroje: přednáška 7, cvičení 7; navíc proseminář 7 (řešič v praxi, oddíl .reference:ch-resice-sat-sat-resic-v-praxi).
 
 
 .Concept:
@@ -12,8 +12,8 @@ Zdroje: přednáška 7, proseminář 7, cvičení 7.
   $\prob{SAT}$u (kapitola .reference:ch-sat). Teď se otázka mění: problém je těžký – jak ho přesto vyřešit?
   Ukážeme varianty $\prob{SAT}$u, které jsou v $\PP$ díky své struktuře, vysvětlíme princip moderních řešičů
   (DPLL a CDCL) a naučíme se kódovat problémy "do".emphasize $\prob{SAT}$u, abychom je mohli předat hotovému
-  řešiči. Na prosemináři si řešič vyzkoušíme sami na Schurových číslech a na cvičení kódujeme Vertex Cover,
-  Dominating Set, Hamiltonovu cestu, paritu a podmínky „nejvýše $k$“.
+  řešiči. Na cvičení kódujeme Vertex Cover, Dominating Set, Hamiltonovu cestu, paritu a podmínky „nejvýše $k$“.
+  Jako praktické rozšíření si na prosemináři 7 vyzkoušíme skutečný řešič na Schurových číslech.
 
 
 Druhá polovina semestru tedy nestaví další redukce "z".emphasize těžkých problémů (redukce, NP-úplnost, prostor,
@@ -34,5 +34,7 @@ $\PSPACE$), ale řešiče, garance a chytré algoritmy. Přednáška 7 začíná
     ukázat několik triků, jak kódovat problémy jako $\prob{SAT}$, abychom je mohli vyřešit řešičem.
 
 
-Proseminář 7 navazuje praktickou ukázkou: od zadání (Schurův problém) přes generátor formule ve formátu
-DIMACS a řešič Kissat až po přečtení odpovědi a ověření důkazu nesplnitelnosti.
+Proseminář 7 navazuje praktickou ukázkou (rozšíření, oddíl .reference:ch-resice-sat-sat-resic-v-praxi): od zadání
+(Schurův problém) přes generátor formule ve formátu DIMACS a řešič Kissat až po přečtení odpovědi a ověření důkazu
+nesplnitelnosti. Na testu se ale kóduje ručně, na papíře: proměnné, jejich význam a klauzule (oddíl
+.reference:ch-resice-sat-redukce-do-sat a cvičení 7).

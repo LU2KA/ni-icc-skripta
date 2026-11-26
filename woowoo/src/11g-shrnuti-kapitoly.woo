@@ -32,3 +32,9 @@
 
       Čas měříme vůči "délce zápisu".emphasize, ne hodnotě čísel. Převádět čísla na strukturu smíme jen při redukci ze
       silně NP-těžkého problému.
+
+    .item:
+
+      "Navíc (proseminář 5):".notion podezřelé redukce z batohu (oddíl .reference:sec-podezrele) jsou rozšíření nad
+      přednášku. Na test si z nich vezmi jen kontrolu velikosti výstupu redukce: binárně zapsané číslo nesmí konstrukce
+      rozvinout na tolik vrcholů, kolik je jeho hodnota.

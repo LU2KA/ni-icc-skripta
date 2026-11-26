@@ -2,6 +2,16 @@
   label: ch-x3c-exact-cover
 
 
+.Remark:
+  title: 'Z prosemináře 4: na test potřeba (zčásti)'
+
+  Oddíl je z prosemináře 4. Samotný $\prob{X3C}$ je "povinný".emphasize: přednáška 5 ho bere jako známý NP-úplný
+  problém a v typové úloze 4 se hodí jako výchozí problém redukce. Na test stačí znát problém a kratší redukci
+  z monotónního $\prob{1-in-3 SAT}$ (pododdíl .reference:ch-x3c-monotonni-1-in-3-sat-x3c). Redukce z $\prob{3-SAT}$
+  (pododdíl .reference:ch-x3c-3-sat-x3c) je delší ukázka gadgetů a úklidu; projdi ji pro inspiraci, zpaměti ji
+  umět nemusíš.
+
+
 .Definition:
   title: 'Problém $\prob{X3C}$'
   label: prob-x3c

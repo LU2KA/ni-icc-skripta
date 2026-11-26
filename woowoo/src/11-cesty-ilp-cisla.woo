@@ -2,7 +2,8 @@
   label: ch-cisla
 
 
-Zdroje: přednáška 5, proseminář 5, cvičení 5 (pseudopolynomiální algoritmy pro Knapsack; oddíl .reference:sec-cv5).
+Zdroje: přednáška 5, cvičení 5 (pseudopolynomiální algoritmy pro Knapsack; oddíl .reference:sec-cv5); navíc proseminář 5
+(podezřelé redukce z batohu, oddíl .reference:sec-podezrele).
 
 
 .Concept:
@@ -12,7 +13,8 @@ Zdroje: přednáška 5, proseminář 5, cvičení 5 (pseudopolynomiální algori
   Tato kapitola přidává problémy s úplně jinou strukturou: pořadí (hamiltonovské cesty, TSP), rovnice (celočíselné programování),
   sítě (Steinerův strom) a čísla (Subset Sum, Partition, Knapsack, 3-Partition).
   U čísel narazíme na jemnost, kterou jsme zatím nepotřebovali: záleží na tom, jak jsou čísla zapsaná.
-  Na ni navazuje proseminář 5 (podezřelé redukce z batohu) a cvičení 5 (pseudopolynomiální algoritmy pro Knapsack).
+  Na ni navazuje cvičení 5 (pseudopolynomiální algoritmy pro Knapsack) a jako rozšíření nad přednášku proseminář 5
+  (podezřelé redukce z batohu, oddíl .reference:sec-podezrele).
 
 
 .Figure:

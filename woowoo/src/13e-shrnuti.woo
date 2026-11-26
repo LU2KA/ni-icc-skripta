@@ -24,10 +24,10 @@
 
     .item:
 
-      $\prob{Generalized Geography}$: $\in\PSPACE$ rekurzí $\mathrm{Win}$; $\prob{TQBF}\redp\prob{GG}$ diamanty (volba
-      hodnoty, hráči se střídají sami), Bob volí klauzuli, Alice literál, hrana pro pravdivý literál vede do
-      nenavštívené strany.
+      "Navíc (proseminář 6):".notion $\prob{Generalized Geography}$ je $\PSPACE$-úplná; $\in\PSPACE$ rekurzí
+      $\mathrm{Win}$ – to na test stačí. Bonus: $\prob{TQBF}\redp\prob{GG}$ diamanty (volba hodnoty, hráči se
+      střídají sami), Bob volí klauzuli, Alice literál, hrana pro pravdivý literál vede do nenavštívené strany.
 
     .item:
 
-      Neorientovaná geografie (vrcholy) je v $\PP$: rozhoduje, zda $\nu(G-s)<\nu(G)$.
+      Bonus (proseminář 6): neorientovaná geografie (vrcholy) je v $\PP$: rozhoduje, zda $\nu(G-s)<\nu(G)$.
