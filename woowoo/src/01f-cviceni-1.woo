@@ -207,6 +207,12 @@ zapiš $y$, posuň hlavu ve směru $D$“. Nevykreslené přechody vedou do $\qR
   jen posun hlavy 2 doleva. Počet $X$ pod hlavou 2 a vlevo od ní je vždy počet dosud nespárovaných $a$.
 
 
+"Varianta: $X$ mazat.".notion Kdo si druhou pásku představuje jako zásobník, může při čtení $b$ symbol $X$
+rovnou smazat: přechod $(b,X)/(b,\blank),\ \Rgt,\Lft$ místo $(b,X)/(b,X),\ \Rgt,\Lft$. Nic jiného se nemění
+(přijetí při $(\blank,\blank)$, čas $O(n)$) a na pásce je pak vidět přesně tolik $X$, kolik $a$ zbývá spárovat.
+Správně je obojí.
+
+
 .Exercise:
   title: 'Cvičení 1.3'
   label: cv-1-3
@@ -216,7 +222,59 @@ zapiš $y$, posuň hlavu ve směru $D$“. Nevykreslené přechody vedou do $\qR
 
 .Solution:
 
-  Rozšíříme myšlenku z~obr. .reference:fig-anbn: v jednom průchodu odškrtneme "jedno".emphasize $a$
+  "Řešení se dvěma páskami (čas $O(n)$).".notion Zadání počet pásek neomezuje, takže se nabízí prodloužit
+  cvičení .reference:cv-1-2 o třetí fázi: za každé $a$ zapíšeme na pásku 2 symbol $X$, za každé $b$ přepíšeme
+  jedno $X$ na $Y$ a jdeme po pásce 2 doleva, za každé $c$ smažeme jedno $Y$ a jdeme doprava.
+
+
+  .centered:
+
+    !tikz:
+      filename: 01f-cviceni-1-09
+      options: 'node distance=14mm and 30mm'
+
+      \node[st,initial,initial text=] (a) {$q_a$};
+      \node[st,right=of a] (b) {$q_b$};
+      \node[st,right=of b] (c) {$q_c$};
+      \node[stacc,below=of c] (acc) {\qA};
+      \draw[tr] (a) edge[loop above] node[lab]{$(a,\blank)/(a,X),\ \Rgt,\Rgt$} (a);
+      \draw[tr] (a) -- node[lab,above]{$(b,\blank),(\blank,\blank)$} node[lab,below]{$\Stay,\Lft$} (b);
+      \draw[tr] (b) edge[loop above] node[lab]{$(b,X)/(b,Y),\ \Rgt,\Lft$} (b);
+      \draw[tr] (b) -- node[lab,above]{$(c,\blank),(\blank,\blank)$} node[lab,below]{$\Stay,\Rgt$} (c);
+      \draw[tr] (c) edge[loop above] node[lab]{$(c,Y)/(c,\blank),\ \Rgt,\Rgt$} (c);
+      \draw[tr] (c) -- node[lab,right]{$(\blank,\blank),\ \Stay,\Stay$} (acc);
+
+
+  .itemize:
+
+    .item:
+
+      $q_a$: čte $a$, píše $X$, obě hlavy doprava. Při prvním $b$ (nebo na konci vstupu) přejde do $q_b$ a hlavu 2
+      vrátí na poslední $X$.
+
+    .item:
+
+      $q_b$: dvojice $(b,X)$ – $X$ přepíše na $Y$, hlava 1 doprava, hlava 2 doleva. Při prvním $c$ (nebo na konci
+      vstupu) musí hlava 2 stát na prázdném políčku vlevo od všech $X$, tedy $b$ bylo přesně tolik jako $a$.
+      Pak přejde do $q_c$ a hlavu 2 posune na první $Y$.
+
+    .item:
+
+      $q_c$: dvojice $(c,Y)$ – $Y$ smaže, obě hlavy doprava. Přijme při $(\blank,\blank)$: vstup i symboly $Y$ došly
+      současně, tedy $c$ bylo stejně jako $b$.
+
+    .item:
+
+      Všechny ostatní dvojice vedou do $\qR$: $(b,\blank)$ v $q_b$ = víc $b$ než $a$; $(c,X)$ nebo $(\blank,X)$
+      v $q_b$ = málo $b$; $(\blank,Y)$ v $q_c$ = málo $c$; $(c,\blank)$ v $q_c$ = moc $c$; $a$ v $q_b$ nebo $a$, $b$
+      v $q_c$ = špatné pořadí. Prázdné slovo projde $q_a\to q_b\to q_c$ až k $(\blank,\blank)$ a přijme se.
+
+  Hlava 1 projde vstup jednou, hlava 2 projde úsek se symboly třikrát (tam, zpět, tam): čas $O(n)$. Přepis $X\to Y$ a mazání $Y$ nejsou nutné –
+  počítá jen pohyb hlavy 2 (doleva při $b$, doprava při $c$) –, ale výpočet je díky nim na pásce lépe vidět.
+
+
+  "Řešení s jednou páskou (čas $O(n^2)$).".notion Když zadání chce "jednopáskový".emphasize stroj (na testu si to
+  vždy přečti), druhou pásku nemáme a musíme odškrtávat. Rozšíříme myšlenku z~obr. .reference:fig-anbn: v jednom průchodu odškrtneme "jedno".emphasize $a$
   (na $X$), "jedno".emphasize $b$ (na $Y$) a "jedno".emphasize $c$ (na $Z$).
 
 
