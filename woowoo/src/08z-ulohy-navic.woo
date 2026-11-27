@@ -2,7 +2,7 @@
   label: ch-is-ulohy-navic
 
 
-Úlohy jsou psané ve stylu zápočtového testu. Většina jsou důkazy NP-úplnosti (typ 4 testu): krátké redukce
+Většina jsou důkazy NP-úplnosti (typ 4 testu): krátké redukce
 z $\prob{IS}$, $\prob{VC}$ a $\prob{Clique}$ typu „zobecnění“, „doplnění grafu“ a „přestrojení“ jako ve cvičení
 .reference:sec-cv3, přímá redukce z $\prob{3-SAT}$ (úloha 8.2) a v úloze 8.8 úprava grafu, která zachová těžkost
 i na užší třídě grafů. Úloha 8.3 je self-redukce (typ 2). Pododdíl .reference:ch-is-ulohy-navic-sbirka přidává dvě
@@ -151,7 +151,7 @@ i na užší třídě grafů. Úloha 8.3 je self-redukce (typ 2). Pododdíl .ref
   těžkosti neříká nic.
 
 
-.Subsection Na úrovni testu
+.Subsection Základní úlohy
   label: ch-is-ulohy-navic-test
 
 
@@ -1039,7 +1039,7 @@ K úloze 8.9 patří kuchařka „self-redukce“ a k úloze 8.10 kuchařka „N
 
 
   Redukci obsahuje oddíl .reference:ch-is-vc-hitting-set (redukce .reference:red-hs) – zkuste důkaz napsat bez
-  nahlížení, v úplné testové podobě.
+  nahlížení a celý.
 
   "Zdroj: P. Kučera, NTIN090 – skripta (MFF UK), §11.4, cvičení 10.".small
 

@@ -3716,7 +3716,7 @@
   <a href="#ch-prostor-ulohy-navic-test" class="md-nav__link">
     <span class="md-ellipsis">
       
-        12.7.2 Na úrovni testu
+        12.7.2 Základní úlohy
       
     </span>
   </a>
@@ -5610,7 +5610,7 @@
   <a href="#ch-prostor-ulohy-navic-test" class="md-nav__link">
     <span class="md-ellipsis">
       
-        12.7.2 Na úrovni testu
+        12.7.2 Základní úlohy
       
     </span>
   </a>
@@ -5702,7 +5702,7 @@
 <p><strong>d)</strong> Ano. <a class="woo-term" href="../ch-np/ch-np-od-determinismu-k-nedeterminismu.html#def-ndts" data-pojem="def-ndts">Nedeterministický stroj</a> se může zacyklit v jedné větvi a přijmout v jiné, proto argument z b) nestačí. Postupujeme jako v důkazu <span class="arithmatex">\(\href{ch-prostor-logaritmicky-prostor-l-a-nl.html#def-lnl}{\class{woo-pk-def-lnl}{\NL}}\subseteq\href{../ch-cas/ch-cas-tridy-p-a-exp.html#def-tridy}{\class{woo-pk-def-tridy}{\PP}}\)</span> (věta <a href="ch-prostor-logaritmicky-prostor-l-a-nl.html#thm-nlp">12.10</a>): deterministický simulátor projde graf konfigurací do šířky z počáteční konfigurace a přijme, narazí-li na přijímající konfiguraci. Vrcholů je <span class="woo-nobr"><span class="arithmatex">\(C(n)=2^{O(f(n))}\)</span>,</span> z každého vede jen konstantně mnoho hran (podle <span class="woo-nobr"><span class="arithmatex">\(\delta\)</span>),</span> BFS běží v čase polynomiálním v <span class="woo-nobr"><span class="arithmatex">\(C(n)\)</span>,</span> tedy <span class="woo-nobr"><span class="arithmatex">\(\bigl(2^{O(f(n))}\bigr)^{O(1)}=2^{O(f(n))}\)</span>.</span> (Kvůli zjištění <span class="arithmatex">\(f(n)\)</span> a výčtu konfigurací předpokládáme, že <span class="arithmatex">\(f\)</span> je <a class="woo-term" href="ch-prostor-prostorove-tridy.html#def-prostor-konstr" data-pojem="def-prostor-konstr">prostorově konstruovatelná</a>.)</p></details>
 </div>
 
-<h2 id="ch-prostor-ulohy-navic-test">12.7.2 Na úrovni testu<a class="headerlink" href="#ch-prostor-ulohy-navic-test" title="Permanent link">&para;</a></h2>
+<h2 id="ch-prostor-ulohy-navic-test">12.7.2 Základní úlohy<a class="headerlink" href="#ch-prostor-ulohy-navic-test" title="Permanent link">&para;</a></h2>
 <div class="woo">
 <div class="admonition question woo-exercise" id="un-12-4"><p class="admonition-title">Úloha 12.4 (dva jazyky v logaritmickém prostoru)</p><p>Popište <strong>deterministické</strong> <a class="woo-term" href="../ch-ts/ch-ts-turinguv-stroj.html#def-dts" data-pojem="def-dts">Turingovy stroje</a> se vstupní páskou pouze pro čtení, které rozhodují dané jazyky s <strong>pracovním prostorem</strong> <span class="woo-nobr"><span class="arithmatex">\(O(\log n)\)</span>.</span> Uveďte, co přesně je na pracovních páskách, a zdůvodněte odhad prostoru.</p>
 <ol type="a"><li><span class="arithmatex">\(L_1=\{\,w\in\{a,b\}^*\mid \#_a(w)=2\cdot\#_b(w)\,\}\)</span> (např. <span class="woo-nobr"><span class="arithmatex">\(aab\in L_1\)</span>,</span> <span class="woo-nobr"><span class="arithmatex">\(abab\notin L_1\)</span>,</span> <span class="woo-nobr"><span class="arithmatex">\(\varepsilon\in L_1\)</span>).</span></li><li><span class="arithmatex">\(L_2\)</span> = správně uzávorkované výrazy nad <span class="woo-nobr"><span class="arithmatex">\(\{(,)\}\)</span>,</span> kde <span class="arithmatex">\(L_2\)</span> je nejmenší jazyk s <span class="arithmatex">\(\varepsilon\in L_2\)</span> a <span class="arithmatex">\(u,v\in L_2\Rightarrow(u)v\in L_2\)</span> (např. <span class="woo-nobr"><span class="arithmatex">\((()())\in L_2\)</span>,</span> <span class="woo-nobr"><span class="arithmatex">\(())(\notin L_2\)</span>).</span></li></ol></div>

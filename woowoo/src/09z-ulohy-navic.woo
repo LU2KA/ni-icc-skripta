@@ -2,8 +2,8 @@
   label: ch-zoo-ulohy-navic
 
 
-Úlohy jsou ve stylu testu a cvičení .reference:sec-cv4: sedm důkazů NP-úplnosti problémů kolem barvení a řezů
-(typ 4 testu) a jedna self-redukce s orákulem pro $\prob{MaxCut}$ (typ 2). Opírají se o oddíly
+V oddílu je sedm důkazů NP-úplnosti problémů kolem barvení a řezů
+(typ 4 testu) a jedna self-redukce s orákulem pro $\prob{MaxCut}$ (typ 2). Úlohy se opírají o oddíly
 .reference:ch-zoo-3-coloring a .reference:ch-zoo-maxcut a o redukce z cvičení .reference:sec-cv4. Úlohy jdou zhruba od
 lehčích k těžším.
 
@@ -266,7 +266,7 @@ lehčích k těžším.
   počet.
 
 
-.Subsection Na úrovni testu
+.Subsection Základní úlohy
   label: ch-zoo-ulohy-navic-test
 
 

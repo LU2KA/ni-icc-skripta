@@ -494,7 +494,7 @@ věta .reference:thm-immerman) a implikační graf $\prob{2-SAT}$u (oddíl .refe
   konfigurací předpokládáme, že $f$ je prostorově konstruovatelná.)
 
 
-.Subsection Na úrovni testu
+.Subsection Základní úlohy
   label: ch-prostor-ulohy-navic-test
 
 

@@ -2,12 +2,12 @@
   label: ch-sat-ulohy-navic
 
 
-Úlohy jsou psané ve stylu zápočtového testu. Většina jsou důkazy NP-úplnosti variant SATu (typ 4 testu) z problémů
+Většina jsou důkazy NP-úplnosti variant SATu (typ 4 testu) z problémů
 této kapitoly: $\prob{SAT}$, $\prob{3-SAT}$, $\prob{NAE-3-SAT}$ a pozitivního $\prob{NAE-3-SAT}$ (oddíly
 .reference:ch-sat-sat-3-sat a .reference:ch-sat-nae-3-sat-not-all-equal). Úloha 7.3 je self-redukce (typ 2) pro
 $\prob{NAE-3-SAT}$, kde nejde dosazovat hodnoty. Úloha 7.8 ukazuje, že $\prob{2-SAT}$ je sice v $\PP$, ale jeho
 optimalizační verze $\prob{MAX-2-SAT}$ je NP-úplná. Pododdíl .reference:ch-sat-ulohy-navic-sbirka přidává tři
-úlohy z jiné sbírky: self-redukci SATu dosazováním, $\prob{SAT}\redp\prob{3-SAT}$ v testové podobě a 3-SAT s nejvýše třemi klauzulemi
+úlohy z jiné sbírky: self-redukci SATu dosazováním, úplný důkaz $\prob{SAT}\redp\prob{3-SAT}$ a 3-SAT s nejvýše třemi klauzulemi
 na proměnnou.
 
 
@@ -230,7 +230,7 @@ na proměnnou.
   i $\ANO$-instancí $\prob{Double-SAT}$ (úloha .reference:un-7-4); opačně to neplatí, např. $(x_1)\land(x_2\lor x_3)$.
 
 
-.Subsection Na úrovni testu
+.Subsection Základní úlohy
   label: ch-sat-ulohy-navic-test
 
 
@@ -1059,7 +1059,7 @@ K úloze 7.9 patří kuchařka „self-redukce“ a k úlohám 7.10 a 7.11 kucha
 
 
   Tuto redukci obsahuje oddíl .reference:ch-sat-sat-3-sat (redukce .reference:red-sat3sat a lemma
-  .reference:lem-3satkor) – zkuste ji napsat bez nahlížení, v úplné testové podobě.
+  .reference:lem-3satkor) – zkuste ji napsat bez nahlížení a celou.
 
   "Zdroj: Příklady ADS2 – cvičení 10 (MFF UK), příklad 4(b).".small
 

@@ -56,7 +56,7 @@ o rozšíření nad přednášku, a co z toho je potřeba na test (nebo že nic)
 **Úlohy navíc** (`NNz-ulohy-navic.woo`, kapitoly 01–15): za shrnutím kapitoly následuje oddíl `.Section Úlohy navíc`
 se štítkem `<štítek kapitoly>-ulohy-navic` – osm úplně vyřešených úloh nad rámec cvičení (nejsou v LaTeXové předloze
 ani ve zdrojích předmětu). Stavba: úvodní odstavec, `.Warning:` s `title: 'Neoficiální úlohy'`, pododdíly
-`Rozcvička` / `Na úrovni testu` / `Těžší úlohy` (štítky `<štítek kapitoly>-ulohy-navic-…`) a případně
+`Rozcvička` / `Základní úlohy` / `Těžší úlohy` (štítky `<štítek kapitoly>-ulohy-navic-…`) a případně
 `Úlohy z jiných sbírek` (`…-ulohy-navic-sbirka`: převzatá zadání s uvedeným zdrojem, naše řešení, čísla N.9 dál –
 stávající čísla úloh se nepřečíslovávají). Úloha je dvojice
 `.Exercise:` (`title: 'Úloha N.k (název)'`, `label: un-N-k`, N = číslo kapitoly) + `.Solution:`; řešení s redukcí má

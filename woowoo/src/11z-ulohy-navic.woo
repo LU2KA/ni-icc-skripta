@@ -2,7 +2,7 @@
   label: ch-cisla-ulohy-navic
 
 
-Úlohy jsou ve stylu testu a cvičení .reference:sec-cv5 a pokrývají látku celé kapitoly: důkazy NP-úplnosti
+Úlohy pokrývají látku celé kapitoly: důkazy NP-úplnosti
 číselných a grafových problémů (typ 4 testu, oddíly .reference:ch-cisla-hamiltonovska-cesta a
 .reference:ch-cisla-ciselne-problemy), self-redukci s orákulem pro $\prob{Partition}$ (typ 2), model ILP (typ 3,
 oddíl .reference:ch-cisla-ilp) a dynamické programování jako na cvičení. Úloha 11.8 navíc procvičuje rozdíl mezi
@@ -362,7 +362,7 @@ $\prob{TSP}$, 0/1 celočíselného programování, batohu, rozvrhování a kostr
   $s_i$ v omezení 2) a tím, že počet dodávek není daný – stačí jich $n$.
 
 
-.Subsection Na úrovni testu
+.Subsection Základní úlohy
   label: ch-cisla-ulohy-navic-test
 
 
@@ -974,7 +974,7 @@ $\prob{TSP}$, 0/1 celočíselného programování, batohu, rozvrhování a kostr
 
 Úlohy 11.9–11.16 pocházejí ze sbírky „External Practice Bank“, kterou sestavil spolužák z volně dostupných materiálů
 (hlavně MFF UK). Zadání jsou česky převyprávěná, řešení jsou naše. Několik úloh se kryje s látkou kapitoly nebo
-s typovými úlohami; u nich to v zadání přiznáváme a řešení je v kompaktní testové podobě s odkazem. Zkuste je nejdřív
+s typovými úlohami; u nich to v zadání přiznáváme a řešení je stručné, s odkazem. Zkuste je nejdřív
 napsat bez nahlížení. Poslední úloha je těžší (ve sbírce „STRETCH“).
 
 

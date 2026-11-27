@@ -2002,7 +2002,7 @@
   <a href="#ch-redukce-ulohy-navic-test" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5.4.2 Na úrovni testu
+        5.4.2 Základní úlohy
       
     </span>
   </a>
@@ -5610,7 +5610,7 @@
   <a href="#ch-redukce-ulohy-navic-test" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5.4.2 Na úrovni testu
+        5.4.2 Základní úlohy
       
     </span>
   </a>
@@ -5689,7 +5689,7 @@
 <p><strong>6. Závěr.</strong> <span class="arithmatex">\(\href{ch-redukce-np-tezkost-a-np-uplnost.html#prob-unp}{\class{woo-pk-prob-unp}{\prob{UNP}}}\)</span> je <a class="woo-term" href="ch-redukce-np-tezkost-a-np-uplnost.html#def-nphard" data-pojem="def-nphard">NP-úplný</a> (věta <a href="ch-redukce-np-tezkost-a-np-uplnost.html#thm-unpnpc">5.6</a>) a <span class="woo-nobr"><span class="arithmatex">\(\href{ch-redukce-np-tezkost-a-np-uplnost.html#prob-unp}{\class{woo-pk-prob-unp}{\prob{UNP}}}\mathrel{\href{ch-redukce-jak-porovnat-slozitost-dvou-problemu.html#def-redukce}{\class{woo-pk-def-redukce}{\redp}}}\href{ch-redukce-np-tezkost-a-np-uplnost.html#prob-unp}{\class{woo-pk-prob-unp}{\prob{UNP}}}_{\ge2}\)</span>,</span> tedy <span class="arithmatex">\(\href{ch-redukce-np-tezkost-a-np-uplnost.html#prob-unp}{\class{woo-pk-prob-unp}{\prob{UNP}}}_{\ge2}\)</span> je <a class="woo-term" href="ch-redukce-np-tezkost-a-np-uplnost.html#def-nphard" data-pojem="def-nphard">NP-těžký</a>; s bodem 1 je <a class="woo-term" href="ch-redukce-np-tezkost-a-np-uplnost.html#def-nphard" data-pojem="def-nphard">NP-úplný</a>. <strong>Proč nestačí identita:</strong> stroj <span class="arithmatex">\(M_1\)</span> s přechody <span class="arithmatex">\((q_0,c)\to(\qA,c,\Stay)\)</span> přijme slovo <span class="arithmatex">\(a\)</span> jedinou větví, takže <span class="arithmatex">\(\enc{M_1,a,1^1}\)</span> je <a class="woo-term" href="../ch-ts/ch-ts-co-vlastne-pocitame-abecedy-jazyky-problemy.html#def-instance" data-pojem="def-instance">ANO-instance</a> <span class="woo-nobr"><span class="arithmatex">\(\href{ch-redukce-np-tezkost-a-np-uplnost.html#prob-unp}{\class{woo-pk-prob-unp}{\prob{UNP}}}\)</span>,</span> ale <a class="woo-term" href="../ch-ts/ch-ts-co-vlastne-pocitame-abecedy-jazyky-problemy.html#def-instance" data-pojem="def-instance">NE-instance</a> <span class="woo-nobr"><span class="arithmatex">\(\href{ch-redukce-np-tezkost-a-np-uplnost.html#prob-unp}{\class{woo-pk-prob-unp}{\prob{UNP}}}_{\ge2}\)</span>.</span></p></details>
 </div>
 
-<h2 id="ch-redukce-ulohy-navic-test">5.4.2 Na úrovni testu<a class="headerlink" href="#ch-redukce-ulohy-navic-test" title="Permanent link">&para;</a></h2>
+<h2 id="ch-redukce-ulohy-navic-test">5.4.2 Základní úlohy<a class="headerlink" href="#ch-redukce-ulohy-navic-test" title="Permanent link">&para;</a></h2>
 <div class="woo">
 <div class="admonition question woo-exercise" id="un-5-3"><p class="admonition-title">Úloha 5.3 (přijímající větev z orákula pro UNP)</p><p>Máte k dispozici <a class="woo-term" href="../ch-graf/ch-graf-redukce-s-orakulem-a-vycislitelnost.html#fig-graf-redukce-s-orakulem" data-pojem="pojem-orakulum">orákulum</a>, které v jednom kroku rozhodne libovolnou instanci <span class="woo-nobr"><span class="arithmatex">\(\href{ch-redukce-np-tezkost-a-np-uplnost.html#prob-unp}{\class{woo-pk-prob-unp}{\prob{UNP}}}\)</span>.</span> Navrhněte algoritmus, který pro vstup <span class="arithmatex">\(\enc{M,x,1^k}\)</span> najde přijímající větev stroje <span class="arithmatex">\(M\)</span> na <span class="arithmatex">\(x\)</span> délky nejvýše <span class="arithmatex">\(k\)</span> (jako posloupnost použitých přechodů), nebo oznámí, že žádná není. Zdůvodněte správnost a odhadněte počet dotazů vzhledem ke <span class="arithmatex">\(k\)</span> a k číslu <span class="arithmatex">\(d\)</span> – největšímu počtu přechodů stroje <span class="arithmatex">\(M\)</span> pro jednu dvojici (stav, čtené symboly).</p></div>
 <details class="success woo-solution" id="red-un-5-3"><summary>Řešení</summary><p class="woo-redukce"><strong><a class="woo-term" href="../ch-graf/ch-graf-redukce-s-orakulem-a-vycislitelnost.html#fig-graf-redukce-s-orakulem" data-pojem="pojem-orakulum">Redukce s orákulem</a>:</strong> <span class="arithmatex">\(\href{ch-redukce-np-tezkost-a-np-uplnost.html#prob-unp}{\class{woo-pk-prob-unp}{\prob{UNP}}}\)</span> – nalezení přijímající větve <span class="arithmatex">\(\to\)</span> <span class="arithmatex">\(\href{ch-redukce-np-tezkost-a-np-uplnost.html#prob-unp}{\class{woo-pk-prob-unp}{\prob{UNP}}}\)</span> – rozhodovací verze. Jak: větev stavíme krok po kroku; o každém kandidátovi na další přechod se zeptáme na stroj, kterému začátek výpočtu vnutíme.</p>

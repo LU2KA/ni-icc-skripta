@@ -2,16 +2,14 @@
   label: ch-ts-ulohy-navic
 
 
-Úlohy mají formát úlohy 1 zápočtového testu (úloha .reference:ut-1 ukázkového testu, typové úlohy
-v oddílu .reference:ch-typove-typ-1-turinguv-stroj): jazyk zadaný množinou s příklady a dvě nebo tři části, každá s jiným modelem
-stroje – deterministický jednopáskový, dvoupáskový v čase $O(n)$, nedeterministický s omezenou délkou větví
+Každá úloha zadá jazyk množinou s příklady a ve dvou nebo třech částech chce stroj jiného typu – deterministický jednopáskový, dvoupáskový v čase $O(n)$, nedeterministický s omezenou délkou větví
 a deterministický se vstupní páskou jen pro čtení a pracovním prostorem $O(\log n)$. Opírají se o oddíl
 .reference:ch-ts-turinguv-stroj, o cvičení .reference:sec-cv1 a o postup .reference:ch-test-postup-ts; nedeterminismus
 je látka kapitoly .reference:ch-np a logaritmický prostor kapitoly .reference:ch-prostor. Pododdíl
 .reference:ch-ts-ulohy-navic-sbirka přidává devět úloh z jiné sbírky (úlohy 1.9–1.17): pět strojů na úrovni
 testu (počty symbolů na jedné pásce, sčítání na více páskách, kopírování) a čtyři těžší konstrukce (převod
 unárního zápisu na binární a zpět, prvočísla, jednostranná páska, stroj bez kroků na místě). Úlohy 1.9–1.11
-mají navíc část ve stylu testu s jiným modelem stroje.
+chtějí navíc stroj jiného typu (dvě pásky, nebo logaritmický prostor).
 
 
 .Warning:
@@ -390,7 +388,7 @@ Nevykreslené přechody vedou do $\qR$.
   nejvýše $n+2$ kroků (simulace do délky 11: přesně tolik je maximum).
 
 
-.Subsection Na úrovni testu
+.Subsection Základní úlohy
   label: ch-ts-ulohy-navic-test
 
 
@@ -1396,7 +1394,7 @@ K úlohám 1.9–1.13 stačí kuchařka „návrh TS“ a k úlohám 1.16 a 1.17
   i slova se špatnými počty, a odhadněte počet kroků.
 
 
-  "(Ve stylu testu)".emphasize Popište navíc "deterministický dvoupáskový".notion Turingův stroj, který rozhoduje
+  Popište také "deterministický dvoupáskový".notion Turingův stroj, který rozhoduje
   $L$ v čase $O(N)$, kde $N$ je délka vstupu. Uveďte myšlenku, význam stavů a odhad času.
 
 
@@ -1572,7 +1570,7 @@ K úlohám 1.9–1.13 stačí kuchařka „návrh TS“ a k úlohám 1.16 a 1.17
   na $O(N)$.
 
 
-  "Část navíc ve stylu testu: dvoupáskový stroj v čase $O(N)$".notion
+  "Dvoupáskový stroj v čase $O(N)$".notion
 
 
   "Myšlenka.".notion Za každou "druhou".emphasize nulu zapíšeme na pásku 2 symbol $X$ (paritu nul nese stav), pak
@@ -1602,7 +1600,7 @@ K úlohám 1.9–1.13 stačí kuchařka „návrh TS“ a k úlohám 1.16 a 1.17
   Dejte přechodovou funkci, zdůvodněte správnost a odhadněte čas. (Je to obdoba úlohy .reference:un-1-4.)
 
 
-  "(Ve stylu testu)".emphasize Popište navíc "deterministický".notion Turingův stroj se vstupní páskou pouze pro
+  Popište také "deterministický".notion Turingův stroj se vstupní páskou pouze pro
   čtení, který rozhoduje $L$ s "pracovním prostorem".notion $O(\log n)$. Zdůvodněte odhad prostoru.
 
 
@@ -1737,7 +1735,7 @@ K úlohám 1.9–1.13 stačí kuchařka „návrh TS“ a k úlohám 1.16 a 1.17
   $0^{2k}1^k$ s $5k^2+4k+1$ kroky (29 pro $000011$).
 
 
-  "Část navíc ve stylu testu: logaritmický prostor".notion Jedním průchodem vstupu spočítá stroj binární čítače
+  "Logaritmický prostor".notion Jedním průchodem vstupu spočítá stroj binární čítače
   $Z=\#_0(w)$ a $J=\#_1(w)$ na pracovní pásce. Číslo $2J$ je binární zápis $J$ s připsanou nulou, takže
   podmínku $Z=2J$ ověří porovnáním bit po bitu (nejnižší bit $Z$ musí být $0$, zbytek $Z$ se musí rovnat $J$).
   Dva čítače s hodnotami nejvýše $n$: $2\lceil\log_2(n+1)\rceil+O(1)=O(\log n)$ buněk. Na pořadí symbolů nezáleží,
@@ -1758,7 +1756,7 @@ K úlohám 1.9–1.13 stačí kuchařka „návrh TS“ a k úlohám 1.16 a 1.17
   přechody, zdůvodnění správnosti a odhad času.
 
 
-  "(Ve stylu testu)".emphasize Popište navíc "deterministický".notion Turingův stroj se vstupní páskou pouze pro
+  Popište také "deterministický".notion Turingův stroj se vstupní páskou pouze pro
   čtení, který rozhoduje $L$ s "pracovním prostorem".notion $O(\log n)$. Zdůvodněte odhad prostoru.
 
 
@@ -1825,7 +1823,7 @@ K úlohám 1.9–1.13 stačí kuchařka „návrh TS“ a k úlohám 1.16 a 1.17
   $(2k+1)(3k+1)$ kroky.
 
 
-  "Část navíc ve stylu testu: logaritmický prostor".notion Jedním průchodem spočítá stroj binární čítače
+  "Logaritmický prostor".notion Jedním průchodem spočítá stroj binární čítače
   $A=\#_a(w)$, $B=\#_b(w)$ a $C=\#_c(w)$ a pak porovnáním bit po bitu (od nejvyššího bitu, čítače doplněné
   nulami na stejnou délku) ověří $B>A$ a $C>A$. Tři čítače s hodnotami nejvýše $n$: $3\lceil\log_2(n+1)\rceil+O(1)=O(\log n)$
   buněk.

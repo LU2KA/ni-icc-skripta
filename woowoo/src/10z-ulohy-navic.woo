@@ -2,10 +2,10 @@
   label: ch-x3c-ulohy-navic
 
 
-Úlohy jsou ve stylu testu: jedna self-redukce s orákulem pro $\prob{X3C}$ (typ 2) a sedm důkazů NP-úplnosti
+V oddílu je jedna self-redukce s orákulem pro $\prob{X3C}$ (typ 2) a sedm důkazů NP-úplnosti
 (typ 4) s podmínkou „přesně jednou“ – redukce z $\prob{X3C}$ a $\prob{1-in-3 SAT}$ (oddíly .reference:ch-x3c-1-in-3-sat
 a .reference:ch-x3c-exact-cover) na příbuzné problémy s množinami, formulemi, čísly a grafy. Pododdíl
-.reference:ch-x3c-ulohy-navic-sbirka přidává dvě úlohy z jiné sbírky: NP-úplnost $\prob{X3C}$ v testové podobě
+.reference:ch-x3c-ulohy-navic-sbirka přidává dvě úlohy z jiné sbírky: úplný důkaz NP-úplnosti $\prob{X3C}$
 a redukci třírozměrného párování na soustavu $Ay=\mathbf 1$.
 
 
@@ -345,7 +345,7 @@ a redukci třírozměrného párování na soustavu $Ay=\mathbf 1$.
   v klauzulích $2,2,1,1$ pravdivých literálů – taková redukce by z $\NE$ udělala $\ANO$.
 
 
-.Subsection Na úrovni testu
+.Subsection Základní úlohy
   label: ch-x3c-ulohy-navic-test
 
 
@@ -1007,7 +1007,7 @@ univerzum tvoří tři třídy $X,Y,Z$ a každá trojice má z každé třídy j
 
 
   Důkaz redukcí $\prob{3-SAT}\redp\prob{X3C}$ je v oddílu .reference:ch-x3c-3-sat-x3c (redukce .reference:red-x3c,
-  lemmata .reference:lem-x3c1 a .reference:lem-x3c2) – zkuste ho napsat bez nahlížení, v úplné testové podobě
+  lemmata .reference:lem-x3c1 a .reference:lem-x3c2) – zkuste ho napsat bez nahlížení a celý
   (konstrukce, počty prvků, obě implikace).
 
   "Zdroj: P. Kučera, NTIN090 – skripta (MFF UK), §11.4, cvičení 8.".small

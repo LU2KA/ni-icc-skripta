@@ -2,7 +2,7 @@
   label: ch-cook-ulohy-navic
 
 
-Úlohy jsou psané ve stylu zápočtového testu. Úlohy 6.1–6.5, 6.6 a) a 6.7 jsou důkazy NP-úplnosti (typ 4 testu);
+Úlohy 6.1–6.5, 6.6 a) a 6.7 jsou důkazy NP-úplnosti (typ 4 testu);
 kromě umělého $\prob{UNP}$ (problém .reference:prob-unp) jsou jediné NP-úplné problémy, které v této chvíli známe,
 $\prob{SAT}$ a $\prob{Dlaždičkování}$, takže se převádí ze $\prob{SAT}$u podle receptu z oddílu
 .reference:ch-cook-mapa-redukci-a-recept-na-dukaz-np-uplnosti. Úloha 6.6 je v částech b a c self-redukce (typ 2).
@@ -291,7 +291,7 @@ $\prob{SAT}$ a $\prob{Dlaždičkování}$, takže se převádí ze $\prob{SAT}$u
   $\ANO$-instanci.
 
 
-.Subsection Na úrovni testu
+.Subsection Základní úlohy
   label: ch-cook-ulohy-navic-test
 
 

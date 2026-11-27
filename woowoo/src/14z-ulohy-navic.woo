@@ -585,7 +585,7 @@ párování, hamiltonovské kružnice a dlouhé kružnice.
   propagace v obou větvích.)
 
 
-.Subsection Na úrovni testu
+.Subsection Základní úlohy
   label: ch-resice-sat-ulohy-navic-test
 
 
@@ -1510,7 +1510,7 @@ Problémy $\prob{3DM}$, $\prob{HC}$ a $\prob{Long Cycle}$ jsou definované pří
 
 
 .Exercise:
-  title: 'Úloha 14.9 ($k$-barevnost jako SAT v testové podobě)'
+  title: 'Úloha 14.9 ($k$-barevnost jako SAT)'
   label: un-14-9
 
   "Problém $k$-$\prob{Coloring}$.".notion
