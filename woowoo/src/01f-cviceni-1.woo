@@ -1,5 +1,14 @@
-.Section Cvičení 1: Turingovy stroje
+.Section Cvičení: Turingovy stroje
   label: sec-cv1
+
+
+Všechny úlohy z cvičení na Turingovy stroje na jednom místě: deterministické stroje z cvičení 1 (pododdíl
+.reference:sec-cv1-dts) a návrh nedeterministických strojů, úlohy 2.1 a 2.2 z cvičení 2 (pododdíl
+.reference:sec-cv2-ndts). Nedeterminismus zavádí až kapitola .reference:ch-np, takže druhý pododdíl si
+nech na dobu, kdy ji budeš mít přečtenou. Zbytek cvičení 2 (certifikáty a orákula) je v oddílu .reference:sec-cv2.
+
+Další úlohy na Turingovy stroje: úlohy navíc .reference:ch-ts-ulohy-navic, typové úlohy v oddílu
+.reference:ch-typove-typ-1-turinguv-stroj a úloha .reference:ut-1 ukázkového testu.
 
 
 Ve všech řešeních značí $\blank$ prázdný symbol a zápis $x/y,D$ na hraně znamená „přečti $x$,
@@ -39,6 +48,13 @@ zapiš $y$, posuň hlavu ve směru $D$“. Nevykreslené přechody vedou do $\qR
       "Deterministický konečný automat".notion $(Q,\Sigma,\delta,q_0,F)$ (cvičení .reference:cv-1-5) čte slovo
       zleva doprava podle $\delta\colon Q\times\Sigma\to Q$ a přijme, skončí-li ve stavu z $F$.
 
+    .item:
+
+      "Nedeterministický TS".notion (k úlohám 2.1 a 2.2, definice .reference:def-ndts a .reference:def-ndts-acc):
+      místo přechodové funkce má "relaci".emphasize, takže v jedné situaci smí mít víc možných kroků a výpočty
+      tvoří strom. Slovo přijme, když "aspoň jedna".emphasize větev skončí v $\qA$. Odhad času (definice
+      .reference:def-ntime) musí platit pro "každou".emphasize větev.
+
 
   "Kuchařka".notion (zkrácený postup z oddílu .reference:ch-test-postup-ts):
 
@@ -75,6 +91,17 @@ zapiš $y$, posuň hlavu ve směru $D$“. Nevykreslené přechody vedou do $\qR
 
   "Častá chyba:".notion jednopáskové „odškrtni a vrať se“ ($O(n^2)$) tam, kde zadání chce lineární čas na dvou
   páskách. Tam se počítá na druhé pásce (cvičení .reference:cv-1-2, příklad .reference:ex-palin).
+
+
+  "Nedeterministický stroj (Guess & Verify)".notion, úlohy 2.1 a 2.2: "Guess".notion = stroj zapíše na pásku
+  svědka symbol po symbolu (každý symbol je větvení) nebo uhodne místo (třeba prostředek slova); řekni, mezi čím
+  volí, a hlídej délku. "Verify".notion = deterministická kontrola svědka, neúspěch vede do $\qR$. Čas odhadni pro
+  "každou".emphasize větev; slovo patří do jazyka, právě když některá větev uhodne správně.
+
+
+
+.Subsection Deterministické stroje (cvičení 1)
+  label: sec-cv1-dts
 
 
 .Exercise:
@@ -436,3 +463,182 @@ Správně je obojí.
 
 
   Stroj udělá přesně $n+1$ kroků, vždy zastaví, a tedy "rozhoduje".emphasize regulární jazyk $L(M)$.
+
+
+.Subsection Nedeterministické stroje (cvičení 2)
+  label: sec-cv2-ndts
+
+
+Úlohy 2.1 a 2.2 z cvičení 2. Potřebuješ k nim definici nedeterministického stroje a metodu Guess & Verify
+z kapitoly .reference:ch-np (oddíly .reference:ch-np-guess-verify-jak-ndts-pouzivat
+a .reference:ch-np-jak-navrhovat-nedeterministicke-stroje); stručně je shrnuje rámeček na začátku oddílu.
+
+
+.Exercise:
+  title: 'Cvičení 2.1'
+  label: cv-2-1
+
+  Sestrojte dvoupáskový nedeterministický Turingův stroj, který rozpoznává jazyk všech palindromů nad
+  binární abecedou $\{0,1\}$ tak, že každá větev jeho výpočtu na vstupu délky $n$ skončí po nejvýše
+  $n+1$ krocích.
+
+
+.Solution:
+
+  "Idea: uhodni prostředek.".notion Deterministický dvoupáskový stroj z oddílu o vícepáskových strojích
+  (kap. .reference:ch-ts) potřebuje $\approx 3n$ kroků: kopírovat, převinout, porovnat. Převíjení ušetříme
+  nedeterminismem: kopírujeme jen "první polovinu".emphasize a v okamžiku, kdy stroj „uhodne“ prostředek slova,
+  začne hlava 2 couvat po zkopírované polovině, zatímco hlava 1 pokračuje dál po druhé polovině.
+  Hlava 1 se v "každém".emphasize kroku posune doprava, takže žádná větev nemůže být delší než $n+1$.
+
+
+  .centered:
+
+    !tikz:
+      filename: 04h-cviceni-2-01
+
+      \node[st,initial,initial text=] (s) at (0,0) {$q_0$};
+      \node[st] (c) at (4.2,0) {$q_{\mathrm{cp}}$};
+      \node[st] (m) at (9.6,0) {$q_{\mathrm{cmp}}$};
+      \node[stacc] (a) at (9.6,-2.6) {\qA};
+      \draw[tr] (s) -- node[lab,above]{\textbf{K}} (c);
+      \draw[tr] (c) edge[loop above] node[lab]{\textbf{K}} (c);
+      \draw[tr] (c) edge[bend left=22] node[lab,above]{\textbf{S} (sudá délka)} (m);
+      \draw[tr] (c) edge[bend right=22] node[lab,below]{\textbf{L} (lichá délka)} (m);
+      \draw[tr] (s) edge[bend left=38] node[lab,above]{\textbf{S}, \textbf{L}} (m);
+      \draw[tr] (m) edge[loop right] node[lab,right]{$(x,x)/(x,x),\ \Rgt\Lft$} (m);
+      \draw[tr] (m) -- node[lab,right]{$(\blank,\blank)$} (a);
+      \draw[tr] (s) |- node[lab,pos=0.75,below]{$(\blank,\blank)$: prázdné slovo} (a);
+
+
+  .table:
+    columns: 'cll'
+    noheader: true
+
+    .row:
+
+      "K".notion
+
+      $(x,\blank)\to(x,x),\ \Rgt\Rgt$
+
+      kopíruj a pokračuj v~první polovině
+
+    .row:
+
+      "S".notion
+
+      $(x,\blank)\to(x,x),\ \Rgt\Stay$
+
+      $x$ je poslední symbol první poloviny (hlava 2 zůstane na něm)
+
+    .row:
+
+      "L".notion
+
+      $(x,\blank)\to(x,\blank),\ \Rgt\Lft$
+
+      $x$ je prostřední symbol (nekopíruje se, hlava 2 couvne)
+
+
+  Symbol $x\in\{0,1\}$; v $q_{\mathrm{cp}}$ (i v $q_0$) má stroj na každý symbol "tři".notion možnosti
+  "K".notion, "S".notion, "L".notion – to je jediné místo nedeterminismu. V $q_{\mathrm{cmp}}$ porovnává
+  symbol pod hlavou 1 (jde doprava) se symbolem pod hlavou 2 (jde doleva). Chybějící přechody (neshoda,
+  konec jen na jedné pásce, $q_{\mathrm{cp}}$ na $\blank$) znamenají zamítnutí.
+
+
+  "Počet kroků:".notion pro $n=2m$ přijímající větev zkopíruje $m$ symbolů ($m$ kroků, poslední z nich už
+  s~volbou "S".notion), porovná $m$ dvojic ($m$ kroků) a na $(\blank,\blank)$ přijme: $2m+1=n+1$. Pro
+  $n=2m+1$: $m$ kroků kopírování, 1 krok přes prostřední symbol, $m$ porovnání a 1 krok přijetí: $n+1$.
+  Každá jiná větev skončí nejpozději ve chvíli, kdy hlava 1 dojede na $\blank$ za slovem.
+
+
+  .centered:
+
+    !tikz:
+      filename: 04h-cviceni-2-06
+
+      \def\row#1#2#3#4#5#6{%
+        \node[font=\small\sffamily\bfseries,anchor=east] at (-0.4,#1+0.9) {#2};
+        \node[font=\scriptsize,anchor=east] at (-0.2,#1+0.35) {páska 1};
+        \tmtape{0}{#1+0.35}{_,0,1,1,0,_}{#3}
+        \node[font=\scriptsize,anchor=east] at (-0.2,#1-0.95) {páska 2};
+        \tmtape{0}{#1-0.95}{#4}{#5}
+        \node[note,anchor=west,text width=60mm,align=left] at (4.6,#1-0.3) {#6};}
+      \row{0}{krok 0}{2}{_,_,_,_,_,_}{2}{$q_0$: obě hlavy na prvním symbolu, páska 2 prázdná.}
+      \row{-3.0}{krok 1}{3}{_,0,_,_,_,_}{3}{volba \textbf{K} na \texttt{0}: zkopíruj, $\Rgt\Rgt$.}
+      \row{-6.0}{krok 2}{4}{_,0,1,_,_,_}{3}{volba \textbf{S} na \texttt{1}: zkopíruj, $\Rgt\Stay$, přejdi do $q_{\mathrm{cmp}}$. Stroj „uhodl“ konec první poloviny; hlava 2 už stojí na jejím konci.}
+      \row{-9.0}{krok 4}{6}{_,0,1,_,_,_}{1}{$q_{\mathrm{cmp}}$ dvakrát: $(\texttt{1},\texttt{1})$ a $(\texttt{0},\texttt{0})$, $\Rgt\Lft$. V kroku 5 čte $(\blank,\blank)$ $\Rightarrow$ \qA.}
+
+
+  Přijímající větev (volby "K".notion, "S".notion) na vstupu "0110".code krok po kroku. "Všimni si:".emphasize
+  oproti deterministickému stroji z kapitoly .reference:ch-ts úplně odpadá převíjení pásky 2 – hlava 1 jde v každém
+  kroku doprava a výpočet skončí po $n+1=5$ krocích.
+
+
+  .centered:
+
+    !tikz:
+      filename: 04h-cviceni-2-02
+      options: 'level distance=9mm, level 1/.style={sibling distance=44mm},level 2/.style={sibling distance=29mm},level 3/.style={sibling distance=12mm}, every node/.style={font=\scriptsize}, b/.style={circle,draw,inner sep=1pt,minimum size=4mm,fill=defc!6}, ok/.style={rectangle,rounded corners=1pt,draw=acc,fill=acc!15,inner sep=2pt}, ko/.style={rectangle,rounded corners=1pt,draw=rej,fill=rej!8,inner sep=2pt}'
+
+      \node[b] {}
+        child {node[ko] {S po \texttt{0}: \texttt{0}$\ne$\texttt{1}}}
+        child {node[b] {}
+           child {node[ok] {S po \texttt{01}: \qA}}
+           child {node[b] {}
+              child {node[ko] {\dots}}
+              child {node[ko] {\dots}}
+              child {node[ko] {\dots}}}
+           child {node[ko] {L na \texttt{1}: \texttt{0}$\ne$\texttt{1}}}}
+        child {node[ko] {L na \texttt{0}: \texttt{1}$\ne$\blank}};
+
+
+  Strom výpočtu na vstupu "0110".code: v~každém uzlu volba "K".notion/"S".notion/"L".notion ("K".notion = prostřední větev); jediná přijímající větev je "K".notion, "S".notion.
+
+
+.Exercise:
+  title: 'Cvičení 2.2'
+  label: cv-2-2
+
+  Sestrojte nedeterministický Turingův stroj pracující v polynomiálním čase, který rozhoduje rozhodovací
+  verzi problému $\prob{nejdelší společné podposloupnosti}$: pro vstup ve tvaru $1^k\#w_1\#\cdots\#w_m$, kde
+  číslo $k$ je zapsáno unárně a $w_1,\dots,w_m$ jsou řetězce nad $\{0,1\}$, přijme právě tehdy, když existuje
+  řetězec $x$ délky $k$, jenž je podposloupností všech řetězců $w_1,\dots,w_m$.
+
+
+.Solution:
+
+  "Guess:".notion na pracovní pásku stroj zapíše $k$ bitů $x_1\cdots x_k$ – u každého se nedeterministicky
+  rozhodne pro $0$ nebo $1$. Délku hlídá tak, že s každým zapsaným bitem odškrtne jednu jedničku z bloku
+  $1^k$. Hádání trvá $O(k)\subseteq O(n)$ kroků, protože $k$ je zapsáno "unárně".emphasize a $k\le n$.
+
+
+  "Verify:".notion pro každé $w_i$ deterministicky ověří, že $x$ je jeho podposloupností, "hladově".emphasize:
+  ukazatel do $x$ posouvá vždy, když najde v $w_i$ shodný symbol.
+
+
+  .centered:
+
+    !tikz:
+      filename: 04h-cviceni-2-03
+      options: 'x=7.5mm,c/.style={cell,anchor=center},ch/.style={cellhl,anchor=center}'
+
+      \node[anchor=east,font=\small] at (-0.7,0) {$w_i$:};
+      \foreach \s [count=\i from 0] in {1,0,0,1,1,0,1} {\node[c] (w\i) at (\i,0) {\s};}
+      \node[ch] at (1,0) {0}; \node[ch] at (3,0) {1}; \node[ch] at (4,0) {1};
+      \node[anchor=east,font=\small] at (-0.7,-1.5) {$x$:};
+      \foreach \s [count=\i] in {0,1,1} {\node[ch] (x\i) at (\i+0.5,-1.5) {\s};}
+      \draw[->,thick,acc] (x1.north) -- (1,-0.4);
+      \draw[->,thick,acc] (x2.north) -- (3,-0.4);
+      \draw[->,thick,acc] (x3.north) -- (4,-0.4);
+      \node[note,anchor=west,text width=52mm,align=left] at (7.4,-0.75) {hladově: každý symbol $x$ spárujeme s~prvním vhodným
+         symbolem $w_i$ za předchozím párem; jeden průchod, čas $O(|w_i|+k)$};
+
+
+  Celkem $O(k+\sum_i|w_i|)=O(n)$ kroků na RAM, na Turingově stroji polynomiálně (převíjení $x$ pro každé
+  $w_i$). Přijme $\iff$ existuje větev, která uhodla společnou podposloupnost délky $k$.
+
+
+  "Poznámka (proč unárně?).".notion Kdyby bylo $k$ binárně, stroj by hádáním $k$ bitů strávil čas exponenciální vzhledem k délce zápisu $k$.
+  (Tady by to ve skutečnosti nevadilo, protože musí platit $k\le|w_1|$, ale obecně je to stejná past jako
+  u~$\prob{UNP}$ v~kapitole .reference:ch-redukce.) Pro neomezené $m$ je problém NP-úplný (Maier, 1978).
