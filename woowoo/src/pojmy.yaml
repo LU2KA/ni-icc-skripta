@@ -1365,6 +1365,16 @@
   makro: []
   text: ['[Pp]odposloupnost\w*']
 
+- id: pojem-presmycka
+  title: 'Přesmyčka'
+  body: |
+    Slovo $y$ je *přesmyčkou* slova $x$, když vznikne přeházením jeho písmen, tedy když $y$ obsahuje každé
+    písmeno stejně často jako $x$.
+  odkaz: typ-1-9
+  prob: []
+  makro: []
+  text: ['[Pp]řesmyč\w*']
+
 - id: pojem-cyklicky-posun
   title: 'Cyklický posun'
   body: |

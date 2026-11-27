@@ -7,6 +7,142 @@ například mimo jiné požadavek na čas, prostor, (ne)determinismus.“ (6 bod
 .reference:ch-test-postup-ts.
 
 
+.Procedure:
+  title: 'Než začneš: co budeš potřebovat'
+
+  Všechno, co úlohy na této stránce předpokládají, v kostce. Podrobnosti jsou v odkazovaných definicích
+  a v postupu na papíře v oddílu .reference:ch-test-postup-ts.
+
+
+  "Definice.".notion
+
+  .itemize:
+
+    .item:
+
+      "Jednopáskový deterministický TS".notion (definice .reference:def-dts): konečná množina stavů $Q$
+      s počátečním stavem $q_0$ a koncovými stavy $\qA$ (přijme) a $\qR$ (zamítne), vstupní abeceda $\Sigma$
+      a abeceda pásky $G\supsetneq\Sigma$, která navíc obsahuje prázdný symbol $\blank$ a pomocné značky
+      ($X$, $Z$, …). Na začátku je na pásce vstup, všude jinde $\blank$ a hlava stojí na prvním symbolu.
+      Přechodová funkce $\delta\colon Q\times G\to Q\times G\times\{\Lft,\Stay,\Rgt\}$; hrana $x/y,D$
+      v diagramu znamená „přečti $x$, zapiš $y$, posuň hlavu ve směru $D$“. Nevypsané přechody vedou do $\qR$.
+
+    .item:
+
+      "Vícepáskový stroj".notion ($k$ pásek, každá s vlastní hlavou): přechodová funkce
+      $\delta\colon Q\times G^k\to Q\times G^k\times\{\Lft,\Stay,\Rgt\}^k$ čte symboly pod všemi hlavami
+      najednou. Vstup je na pásce 1, ostatní pásky jsou prázdné. Hranu $(s_1,s_2)/(s_1',s_2'),\ D_1,D_2$ čti
+      „pod hlavami je $s_1,s_2$, zapiš $s_1',s_2'$ a posuň hlavy“.
+
+    .item:
+
+      "Čas".notion (definice .reference:def-casova): $T_M(n)$ je největší počet kroků přes "všechny".emphasize
+      vstupy délky $n$ (nejhorší případ, zamítnuté vstupy se počítají také). Stroj jazyk "rozhoduje".emphasize,
+      když na každém vstupu zastaví. Na multiplikativních konstantách nezáleží (věta .reference:thm-speedup),
+      stačí ukázat $c\cdot n$ nebo $c\cdot n^2$.
+
+    .item:
+
+      "Vstupní páska jen pro čtení a pracovní páska".notion (definice .reference:def-prostor
+      a .reference:def-lnl): vstupní hlava smí jezdit tam i zpět, ale nesmí psát, a do prostoru se počítají jen
+      navštívené buňky pracovních pásek. Číslo $v\le n$ zapsané "binárně".emphasize má nejvýše
+      $\lceil\log_2(n+1)\rceil$ bitů, proto čítač do $n$ (délka, index, ukazatel do vstupu) zabere $O(\log n)$
+      buněk. Unárně by zabral až $n$ buněk.
+
+    .item:
+
+      "Nedeterministický TS".notion (definice .reference:def-ndts, .reference:def-ndts-acc
+      a .reference:def-ntime): místo funkce má přechodovou "relaci".emphasize, v jedné situaci smí mít víc
+      možných kroků a výpočty tvoří strom. Slovo přijme, když "aspoň jedna".emphasize větev skončí v $\qA$,
+      a zamítne, když žádná. Čas $f(n)$ znamená, že "každá".emphasize větev (i zamítající) skončí po nejvýše
+      $f(n)$ krocích.
+
+
+  "Kuchařka podle modelu.".notion
+
+  .description:
+
+    .ditem:
+      bullet: 'Jedna páska, $O(n^2)$:'
+
+      odškrtávání. V jednom kole přepiš na $X$ jeden symbol z každé části, která se páruje, a co jsi
+      odškrtl, si nes "ve stavu".emphasize (stavy $r_a$, $r_b$); pak se vrať na začátek. Když už není co
+      odškrtávat, jeden kontrolní průchod ověří, že nic nezbylo. Kol je $O(n)$ a každé má $O(n)$ kroků, celkem
+      $O(n^2)$. Vzory: obr. .reference:fig-anbn, .reference:cv-1-1, .reference:cv-1-3
+      a "typová úloha 1.9"#typ-1-9.
+
+    .ditem:
+      bullet: 'Dvě pásky, $O(n)$:'
+
+      druhá páska nese "kopii".emphasize části vstupu (porovná se po převinutí, nebo pozpátku bez převíjení)
+      nebo "čítač".emphasize (jedno $X$ za každý symbol, nebo jen poloha hlavy 2). Každá hlava udělá
+      konstantně mnoho průchodů po $O(n)$ krocích, žádné běhání tam a zpět pro každý symbol.
+      Vzory: .reference:cv-1-2, příklad .reference:ex-palin, "typové úlohy 1.1"#typ-1-1 a "1.3"#typ-1-3.
+
+    .ditem:
+      bullet: 'Logaritmický prostor:'
+
+      na pracovních páskách jen "konstantně mnoho".emphasize binárních čítačů a ukazatelů do vstupu (délky,
+      indexy, pozice); fázi a přečtený symbol nese stav. Symbol na pozici $p$ přečteš tak, že vstupní hlavu
+      vrátíš na levý okraj, nastavíš $c:=p$ a posouváš ji doprava a odečítáš od $c$, dokud není $c=0$. Dvě
+      pozice vstupu porovnáš tak, že dojedeš pro první symbol, zapamatuješ si ho ve stavu a dojedeš pro druhý.
+      Zdůvodnění prostoru: „čítačů je pevný počet, každý má hodnotu nejvýše $n$, tedy $O(\log n)$ bitů; vstup
+      se nepočítá a nepíše se na něj; všechny cykly řídí čítače, takže stroj zastaví.“ Vzory:
+      "úloha 1 b)"#ut-1 ukázkového testu, "typové úlohy 1.1"#typ-1-1 a "1.7"#typ-1-7.
+
+    .ditem:
+      bullet: 'Nedeterminismus:'
+
+      Guess & Verify (oddíl .reference:ch-np-jak-navrhovat-nedeterministicke-stroje). Řekni, "co".emphasize
+      stroj hádá (místo, prostředek, začátek bloku) a jak to deterministicky ověří. Délku "každé".emphasize
+      větve omez, nejjednodušeji tak, že každý krok hádání posune hlavu 1 doprava. Správnost ukaž oběma směry:
+      slovo z $L$ má přijímající větev a každá přijímající větev dokazuje, že slovo je v $L$.
+      Vzory: .reference:cv-2-1, "typové úlohy 1.2"#typ-1-2, "1.4"#typ-1-4 a "1.10"#typ-1-10.
+
+
+  "Co napsat za plné body.".notion Myšlenku jednou větou; co je na které pásce; stavy nebo fáze a ke každému
+  větu, co v něm platí; přechody (tabulku nebo diagram), když zadání chce stroj „sestrojit“ nebo „význam
+  stavů“ (u logaritmického prostoru stačí fáze a operace s čítači); okrajové případy (prázdné slovo, prázdná
+  část, chybějící nebo druhý oddělovač, špatné pořadí písmen); krátkou kontrolu na jednom slově z $L$ a jednom
+  mimo $L$; odhad času nebo prostoru se zdůvodněním.
+
+
+  "Nejčastější chyby.".notion
+
+  .itemize:
+
+    .item:
+
+      Jednopáskové odškrtávání ($O(n^2)$) tam, kde se chce $O(n)$ na dvou páskách.
+
+    .item:
+
+      Odhad času jen pro přijímaná slova nebo pro „typický“ vstup; počítá se nejhorší případ.
+
+    .item:
+
+      V logaritmickém prostoru kopie části vstupu nebo unární čítač na pracovní pásce ($\Theta(n)$ buněk),
+      zápis na vstupní pásku, nebo „číslo si pamatuji ve stavu“ (stavů je konečně mnoho).
+
+    .item:
+
+      U nedeterminismu hádání neomezené délky, odhad jen pro přijímající větev, nebo záměna „aspoň jedna větev
+      přijme“ za „všechny větve přijmou“.
+
+    .item:
+
+      Zapomenutá kontrola tvaru (právě jeden oddělovač, pořadí $a^*b^*$) a okrajových případů.
+
+
+  "Doporučené pořadí úloh na této stránce".notion (od nejlehčí): "1.3"#typ-1-3 (jediný čítač, dva stavy)
+  $\to$ "1.1"#typ-1-1 (kopie a převinutí; první logaritmický prostor) $\to$ "1.9"#typ-1-9 (jedna páska
+  s diagramem) $\to$ "1.2"#typ-1-2 (dvě kola párování; první nedeterminismus) $\to$ "1.4"#typ-1-4 (uhodnutý
+  prostředek) $\to$ "1.10"#typ-1-10 (uhodnutá dvojice bloků; ukazatele místo kopie) $\to$ "1.7"#typ-1-7
+  (hladové párování) $\to$ "1.6"#typ-1-6 (sčítání s přenosem) $\to$ "1.5"#typ-1-5 (součin, tři pásky)
+  $\to$ "1.8"#typ-1-8 (cyklický posun, nejtěžší).
+
+
+
 .Subsection Kde to ve skriptech je
   label: ch-typove-ts-kde
 
@@ -1578,3 +1714,451 @@ například mimo jiné požadavek na čas, prostor, (ne)determinismus.“ (6 bod
   porovnat počty nul a jedniček: $0011\#0101$ je má stejné, a přesto $0011$ není cyklický posun $0101$ (jeho
   posuny jsou $0101$ a $1010$). Zdvojení $yy$ v části a) a index modulo $m$ v části b) jsou dva zápisy téže
   myšlenky: v prvním se „kruh“ rozvine na pásce, ve druhém se jen přetočí ukazatel.
+
+
+.Exercise:
+  title: 'Typová úloha 1.9 [6 bodů]'
+  label: typ-1-9
+
+  Slovo $y$ je "přesmyčkou".notion slova $x$, když vznikne přeházením jeho písmen, tj. $|y|_a=|x|_a$
+  a $|y|_b=|x|_b$ ($|w|_a$ je počet výskytů písmene $a$ ve slově $w$). Uvažujte jazyk nad abecedou
+  $\{a,b,\#\}$
+
+  .equation:
+
+    L = \{\, x\#y \mid x,y\in\{a,b\}^*,\ y \text{ je přesmyčkou } x \,\}.
+
+  Např. $aab\#aba\in L$, $ab\#ba\in L$, $\#\in L$, $ab\#aa\notin L$, $ab\#a\notin L$, $a\#a\#a\notin L$,
+  $ab\notin L$.
+
+  .enumerate:
+    type: a
+
+    .item:
+
+      Sestrojte "deterministický jednopáskový".notion Turingův stroj, který rozhoduje $L$ v čase $O(n^2)$.
+      Nakreslete diagram přechodů, popište význam stavů a odhadněte čas.
+
+    .item:
+
+      Popište "deterministický dvoupáskový".notion Turingův stroj, který rozhoduje $L$ v čase $O(n)$.
+      Uveďte myšlenku, význam stavů a odhad času.
+
+
+.Solution:
+
+  "a) Jednopáskový stroj v čase $O(n^2)$".notion
+
+
+  "Myšlenka (odškrtávání).".notion Druhou pásku nemáme, páruje se tedy přímo na vstupu, jako u $a^nb^n$
+  (obr. .reference:fig-anbn). V každém kole stroj odškrtne (přepíše na $X$) první dosud neodškrtnutý symbol
+  $\sigma$ části $x$, zapamatuje si ho "ve stavu".emphasize, přejede $\#$, odškrtne v $y$ první neodškrtnutý
+  výskyt téhož písmene $\sigma$ a vrátí se na levý okraj. Když je celé $x$ odškrtnuté, zbývá ověřit, že v $y$
+  nezůstal žádný neodškrtnutý symbol.
+
+
+  "Abeceda pásky".notion je $\{a,b,\#,X,\blank\}$, kde $X$ je odškrtnutý symbol. Odškrtnuté symboly $x$
+  tvoří vždy začátek $x$; v $y$ mohou být rozházené.
+
+
+  "Stavy a jejich význam".notion ($\sigma\in\{a,b\}$, $\bar\sigma$ je druhé písmeno, $\qR$ ve všech
+  nevypsaných situacích):
+
+  .description:
+
+    .ditem:
+      bullet: '$q_0$ (počáteční):'
+
+      začátek kola, hlava stojí na levém konci vstupu. $X$: přeskoč doprava. $\sigma$: přepiš na $X$, doprava,
+      do $r_\sigma$. $\#$: celé $x$ je odškrtnuté, doprava, do $\mathit{chk}$. $\blank$: ve vstupu chybí $\#$,
+      zamítni.
+
+    .ditem:
+      bullet: '$r_a$, $r_b$:'
+
+      v tomto kole bylo v $x$ odškrtnuto písmeno $\sigma$ (index stavu); hlava jde doprava přes zbytek $x$.
+      Na $\#$: doprava, do $s_\sigma$. Na $\blank$: chybí $\#$, zamítni.
+
+    .ditem:
+      bullet: '$s_a$, $s_b$:'
+
+      hlava je v $y$ a hledá první neodškrtnuté $\sigma$; $X$ a $\bar\sigma$ přeskakuje doprava. Na $\sigma$:
+      přepiš na $X$, doleva, do $\mathit{back}$. Na $\blank$: v $y$ je méně písmen $\sigma$ než v $x$, zamítni.
+      Na $\#$: druhý oddělovač, zamítni.
+
+    .ditem:
+      bullet: '$\mathit{back}$:'
+
+      dvojice je spárovaná; hlava jde doleva přes všechno ($a$, $b$, $\#$, $X$) až na $\blank$ před vstupem,
+      pak o krok doprava, do $q_0$.
+
+    .ditem:
+      bullet: '$\mathit{chk}$:'
+
+      celé $x$ je odškrtnuté a každé jeho písmeno má v $y$ odškrtnutý protějšek. $X$: doprava. $\blank$: v $y$
+      nic nezbylo, přijmi. $a$, $b$: v $y$ je víc písmen než v $x$, zamítni. $\#$: druhý oddělovač, zamítni.
+
+
+  .centered:
+
+    !tikz:
+      filename: 17a-turinguv-stroj-11
+
+      \node[st,initial,initial text=] (q0) at (0,0) {$q_0$};
+      \node[st] (ra) at (3.4,2.0) {$r_a$};
+      \node[st] (rb) at (3.4,-2.0) {$r_b$};
+      \node[st] (sa) at (7.0,2.0) {$s_a$};
+      \node[st] (sb) at (7.0,-2.0) {$s_b$};
+      \node[st] (bk) at (10.4,0) {$\mathit{back}$};
+      \node[st] (ck) at (-2.8,-2.0) {$\mathit{chk}$};
+      \node[stacc] (acc) at (-2.8,2.0) {\qA};
+      \draw[tr] (q0) edge[loop above] node[lab]{$X/X,\Rgt$} (q0);
+      \draw[tr] (q0) -- node[lab,above left]{$a/X,\Rgt$} (ra);
+      \draw[tr] (q0) -- node[lab,below left]{$b/X,\Rgt$} (rb);
+      \draw[tr] (ra) edge[loop above] node[lab]{$a,b$/stejné$,\Rgt$} (ra);
+      \draw[tr] (rb) edge[loop below] node[lab]{$a,b$/stejné$,\Rgt$} (rb);
+      \draw[tr] (ra) -- node[lab,above]{$\#/\#,\Rgt$} (sa);
+      \draw[tr] (rb) -- node[lab,below]{$\#/\#,\Rgt$} (sb);
+      \draw[tr] (sa) edge[loop above] node[lab]{$b,X$/stejné$,\Rgt$} (sa);
+      \draw[tr] (sb) edge[loop below] node[lab]{$a,X$/stejné$,\Rgt$} (sb);
+      \draw[tr] (sa) -- node[lab,above right]{$a/X,\Lft$} (bk);
+      \draw[tr] (sb) -- node[lab,below right]{$b/X,\Lft$} (bk);
+      \draw[tr] (bk) edge[loop right] node[lab,align=left]{$a,b,\#,X$\\/stejné$,\Lft$} (bk);
+      \draw[tr] (bk) -- node[lab,above,pos=0.45]{$\blank/\blank,\Rgt$} (q0);
+      \draw[tr] (q0) -- node[lab,below right]{$\#/\#,\Rgt$} (ck);
+      \draw[tr] (ck) edge[loop below] node[lab]{$X/X,\Rgt$} (ck);
+      \draw[tr] (ck) -- node[lab,left]{$\blank/\blank,\Stay$} (acc);
+      \node[note,anchor=north,text width=80mm] at (5.2,-3.6) {nevypsané přechody vedou do $\qR$};
+
+  Stavový diagram jednopáskového stroje z části a). Zápis „$a/X,\Rgt$“ čti „přečti $a$, zapiš $X$ a posuň
+  hlavu doprava“. "Všimni si:".emphasize horní a dolní polovina diagramu jsou stejné, liší se jen tím, které
+  písmeno si stroj nese ve stavu; jedno kolo je cesta $q_0\to r_\sigma\to s_\sigma\to\mathit{back}\to q_0$.
+
+
+  .centered:
+
+    !tikz:
+      filename: 17a-turinguv-stroj-12
+
+      \def\row#1#2#3#4#5{%
+        \node[font=\small\sffamily\bfseries,anchor=east] at (-0.3,#1) {#2};
+        \typtape{0}{#1}{#3}{#4}
+        \node[note,anchor=west,text width=62mm,align=left] at (6.7,#1) {#5};}
+      \row{0}{Start}{\blank,a,a,b,\#,a,b,a,\blank}{2}{krok 0, $q_0$: nic není odškrtnuté.}
+      \row{-1.5}{Po 1. kole}{\blank,$X$,a,b,\#,$X$,b,a,\blank}{2}{krok 10, $q_0$: $a$ z $x$ spárováno s prvním $a$ v $y$.}
+      \row{-3.0}{Po 2. kole}{\blank,$X$,$X$,b,\#,$X$,b,$X$,\blank}{2}{krok 24, $q_0$: $s_a$ přeskočil $X$ a $b$, odškrtl poslední $a$.}
+      \row{-4.5}{Po 3. kole}{\blank,$X$,$X$,$X$,\#,$X$,$X$,$X$,\blank}{2}{krok 36, $q_0$: odškrtnuto i $b$.}
+      \row{-6.0}{Konec}{\blank,$X$,$X$,$X$,\#,$X$,$X$,$X$,\blank}{9}{krok 44: $q_0$ přeskočil $X$, na $\#$ přešel do $\mathit{chk}$, ten přešel jen $X$ až na $\blank$ $\Rightarrow$ $\qA$.}
+
+  Výpočet stroje z části a) na vstupu $aab\#aba$, snímky pásky na začátku každého kola a na konci.
+  "Všimni si:".emphasize v $y$ se neodškrtává zleva, ale vždy první neodškrtnutý výskyt "právě neseného".emphasize
+  písmene.
+
+
+  "Správnost.".notion Každé kolo odškrtne jedno písmeno $\sigma$ části $x$ a jedno dosud neodškrtnuté
+  písmeno $\sigma$ části $y$, takže každé písmeno $y$ se spáruje nejvýše jednou. Dojde-li stroj do
+  $\mathit{chk}$, má každé písmeno $x$ vlastní stejný protějšek v $y$, tedy $|y|_a\ge|x|_a$ a $|y|_b\ge|x|_b$;
+  $\mathit{chk}$ přijme, právě když v $y$ nezbylo nic neodškrtnutého, tj. právě když platí obě rovnosti.
+  Naopak je-li $y$ přesmyčkou $x$, je před každým kolem v neodškrtnuté části $y$ stejně písmen $\sigma$ jako
+  v neodškrtnuté části $x$, takže $s_\sigma$ své $\sigma$ vždy najde a stroj přijme. Tvar: bez $\#$ zamítne
+  $q_0$ nebo $r_\sigma$; druhý $\#$ se nikdy neodškrtne, takže na něj narazí $s_\sigma$, nebo nejpozději
+  $\mathit{chk}$. Pro vstup $\#$ přejde $q_0$ hned do $\mathit{chk}$ a ten přijme (2 kroky). U $ab\#aa$ první
+  kolo spáruje $a$ s $a$, ve druhém $s_b$ přejede $X$, $a$ a narazí na $\blank$: zamítne.
+
+
+  "Čas.".notion Kolo, které v $y$ odškrtne symbol na pozici $p$ vstupu, trvá přesně $2p$ kroků: $p$ kroků
+  doprava z pozice 1 včetně odškrtnutí, $p-1$ kroků doleva na $\blank$ před vstupem a jeden krok zpět na
+  pozici 1. Protože $p\le n$, má kolo nejvýše $2n$ kroků. Odškrtávacích kol je nejvýše $|x|\le n-1$ a poslední
+  průchod (z $q_0$ přes $\mathit{chk}$ do $\qA$, nebo kolo, které zamítne) má nejvýše $n+1$ kroků. Celkem
+  nejvýše $2n(n-1)+n+1\le 2n^2$ kroků pro $n\ge1$, tedy $O(n^2)$, a stroj vždy zastaví. Kvadratický počet
+  kroků opravdu nastane: na $aab\#aba$ jich stroj udělá 44, na $aaaa\#aaaa$ ($n=9$) už 70.
+
+
+  "b) Dvoupáskový stroj v čase $O(n)$".notion
+
+
+  "Myšlenka.".notion Přesmyčka jsou dvě rovnosti počtů, $|x|_a=|y|_a$ a $|x|_b=|y|_b$, a každou ověří jeden
+  průchod vstupem s čítačem na pásce 2. Jako v "typové úloze 1.3"#typ-1-3 je čítačem
+  "poloha hlavy 2".emphasize vůči značce $Z$: písmeno $a$ v $x$ ji posune doprava, písmeno $a$ v $y$ doleva. Na konci
+  průchodu stojí hlava 2 na $Z$, právě když $|x|_a=|y|_a$. Pak hlava 1 převine na začátek a druhý průchod
+  udělá totéž pro $b$.
+
+
+  "Pásky.".notion Páska 1 nese vstup a stroj ji nepřepisuje. Na pásku 2 se v prvním kroku zapíše jediný
+  symbol $Z$, jinak zůstane prázdná; hlava 2 tedy čte $Z$, právě když je čítač nulový.
+
+
+  "Stavy a jejich význam".notion ($s\in\{Z,\blank\}$ je symbol pod hlavou 2 a nepřepisuje se, $\qR$ ve všech
+  nevypsaných situacích):
+
+  .description:
+
+    .ditem:
+      bullet: '$q_0$ (počáteční):'
+
+      zapiš $Z$ na pásku 2, obě hlavy stojí, do $A_x$.
+
+    .ditem:
+      bullet: '$A_x$:'
+
+      hlava 1 je v $x$, hlava 2 stojí $|u|_a$ buněk vpravo od $Z$, kde $u$ je dosud přečtená část $x$.
+      $(a,s)$: $\Rgt,\Rgt$. $(b,s)$: $\Rgt,\Stay$. $(\#,s)$: $\Rgt,\Stay$, do $A_y$. $(\blank,s)$: chybí $\#$,
+      zamítni.
+
+    .ditem:
+      bullet: '$A_y$:'
+
+      hlava 1 je v $y$, hlava 2 stojí $|x|_a-|v|_a$ buněk vpravo od $Z$ (záporné číslo znamená vlevo), kde $v$
+      je dosud přečtená část $y$. $(a,s)$: $\Rgt,\Lft$. $(b,s)$: $\Rgt,\Stay$. $(\#,s)$: druhý oddělovač,
+      zamítni. $(\blank,Z)$: počty $a$ souhlasí, hlava 1 $\Lft$, do $\mathit{back}$. $(\blank,\blank)$:
+      počty $a$ nesouhlasí, zamítni.
+
+    .ditem:
+      bullet: '$\mathit{back}$:'
+
+      hlava 2 stojí na $Z$, hlava 1 couvá. $(a,Z)$, $(b,Z)$, $(\#,Z)$: hlava 1 $\Lft$. $(\blank,Z)$: hlava 1
+      $\Rgt$ na první symbol vstupu, do $B_x$.
+
+    .ditem:
+      bullet: '$B_x$, $B_y$:'
+
+      totéž co $A_x$, $A_y$ s prohozenými rolemi $a$ a $b$: v $B_x$ posouvá hlavu 2 doprava $b$, v $B_y$ doleva
+      $b$, písmeno $a$ se přeskočí s hlavou 2 na místě. $B_y$ na $(\blank,Z)$ přijme, na $(\blank,\blank)$
+      zamítne. (Druhý $\#$ už vyloučil $A_y$.)
+
+
+  "Správnost.".notion Indukcí podle počtu přečtených symbolů platí invarianty uvedené u stavů: každé $a$
+  v $x$ posune hlavu 2 o $+1$, každé $a$ v $y$ o $-1$ a $b$ ani $\#$ ji neposunou. Na konci prvního průchodu je
+  tedy hlava 2 o $|x|_a-|y|_a$ od $Z$ a čte $Z$, právě když $|x|_a=|y|_a$; druhý průchod začíná zase na $Z$
+  a stejně ověří $|x|_b=|y|_b$. Stroj přijme, právě když platí obě rovnosti a vstup má tvar $x\#y$, tj. právě
+  když $x\#y\in L$. Na $ab\#aa$ stojí hlava 2 po prvním průchodu o $1-2=-1$ od $Z$, čte $\blank$ a stroj
+  zamítne.
+
+
+  "Čas.".notion Krok $q_0$; v $A_x$, $A_y$ jeden krok na každý symbol a jeden na $\blank$ za vstupem;
+  v $\mathit{back}$ $n$ kroků doleva a jeden z $\blank$ zpět; v $B_x$, $B_y$ zase $n+1$ kroků. Celkem
+  nejvýše $1+3(n+1)=3n+4$ kroků (přesně tolik na každém slově z $L$), tedy $O(n)$.
+
+
+.Remark:
+  title: 'K typové úloze 1.9'
+
+  Obě části řeší tutéž rovnost počtů, jen jinými prostředky. Na jedné pásce není kam odložit čítač, proto se
+  páruje odškrtáváním a hlava běhá tam a zpět ($O(n^2)$); na dvou páskách stačí čítač a konstantně mnoho
+  průchodů ($O(n)$). Typická chyba v části a): vynechat $\mathit{chk}$ a přijmout hned, když $q_0$ narazí na
+  $\#$ – stroj by pak přijal i $ab\#aab$. V části b) se místo druhého průchodu dá porovnat $|x|=|y|$ (pak už
+  i $|x|_b=|x|-|x|_a=|y|-|y|_a=|y|_b$).
+
+
+.Exercise:
+  title: 'Typová úloha 1.10 [6 bodů]'
+  label: typ-1-10
+
+  Každé slovo nad abecedou $\{a,b,\#\}$ se jednoznačně rozpadá na "bloky".notion oddělené symbolem $\#$:
+  $w=w_1\#w_2\#\cdots\#w_k$, kde $w_1,\dots,w_k\in\{a,b\}^*$ (bloků je o jeden víc než symbolů $\#$, bloky
+  smí být prázdné). Uvažujte jazyk slov, ve kterých se některý blok opakuje:
+
+  .equation:
+
+    L = \{\, w_1\#w_2\#\cdots\#w_k \mid k\ge2,\ w_1,\dots,w_k\in\{a,b\}^*,\ w_i=w_j \text{ pro nějaká } i<j \,\}.
+
+  Např. $ab\#ba\#ab\in L$ ($w_1=w_3$), $a\#b\#a\in L$, $\#\in L$ ($w_1=w_2=\varepsilon$), $ab\#ba\notin L$,
+  $a\#aa\notin L$, $ab\notin L$, $\varepsilon\notin L$.
+
+  .enumerate:
+    type: a
+
+    .item:
+
+      Popište "nedeterministický dvoupáskový".notion Turingův stroj, který rozhoduje $L$ tak, že "každá".notion
+      větev jeho výpočtu na vstupu délky $n$ skončí po $O(n)$ krocích. Řekněte, kde stroj hádá, a zdůvodněte
+      správnost i odhad délky větví.
+
+    .item:
+
+      Popište "deterministický".notion Turingův stroj se vstupní páskou pouze pro čtení, který rozhoduje $L$
+      s "pracovním prostorem".notion $O(\log n)$. Zdůvodněte odhad prostoru.
+      "(Formální přechodovou funkci nepožadujeme.)".emphasize
+
+
+.Solution:
+
+  "a) Nedeterministický stroj, každá větev $O(n)$".notion
+
+
+  "Myšlenka (Guess & Verify).".notion Stroj uhodne dvojici stejných bloků $w_i$, $w_j$ s $i<j$. Hádá jen
+  "dvě místa".emphasize: na začátku každého bloku se rozhodne, zda je to $w_i$ (jinak blok přeskočí). Blok
+  $w_i$ zkopíruje na pásku 2 a hlavu 2 vrátí na začátek kopie. Pak se na začátku každého dalšího bloku
+  rozhodne, zda je to $w_j$, a ten porovná s kopií. Deterministický stroj by dvojice bloků musel zkoušet jednu
+  po druhé; nedeterministický zkouší každou dvojici ve vlastní větvi.
+
+
+  "Pásky.".notion Páska 1 nese vstup, stroj ji nepřepisuje a hlava 1 jde jen doprava (při převíjení kopie
+  stojí). Páska 2 je na začátku prázdná, pak nese kopii $w_i$.
+
+
+  "Stavy a jejich význam".notion ($x\in\{a,b\}$, $s$ libovolný symbol pod hlavou 2, $\qR$ ve všech
+  nevypsaných situacích):
+
+  .description:
+
+    .ditem:
+      bullet: '$g_1$ (počáteční, hádání $i$):'
+
+      hlava 1 stojí na začátku bloku, páska 2 je prázdná. "Nedeterministicky".notion buď blok přeskoč (udělej
+      krok jako $\mathit{skip}_1$), nebo ho vyber za $w_i$ (udělej krok jako $\mathit{copy}$).
+
+    .ditem:
+      bullet: '$\mathit{skip}_1$:'
+
+      hlava 1 jde doprava přes $x$. Na $\#$: doprava, do $g_1$ (začátek dalšího bloku). Na $\blank$: vstup
+      skončil a žádný blok $w_i$ nebyl vybrán, zamítni.
+
+    .ditem:
+      bullet: '$\mathit{copy}$:'
+
+      kopírujeme $w_i$, hlava 2 stojí za kopií. $(x,\blank)$: zapiš $x$ na pásku 2, $\Rgt,\Rgt$. $(\#,\blank)$:
+      konec $w_i$, hlava 1 stojí, hlava 2 $\Lft$, do $\mathit{rew}$. $(\blank,\blank)$: $w_i$ je poslední blok,
+      žádné $j>i$ neexistuje, zamítni.
+
+    .ditem:
+      bullet: '$\mathit{rew}$:'
+
+      hlava 1 čeká na $\#$ za $w_i$, hlava 2 couvá po kopii. $(\#,x)$: hlava 2 $\Lft$. $(\#,\blank)$: obě hlavy
+      $\Rgt$ (hlava 1 na začátek bloku $i+1$, hlava 2 na první symbol kopie, při $w_i=\varepsilon$ na $\blank$),
+      do $g_2$.
+
+    .ditem:
+      bullet: '$g_2$ (hádání $j$):'
+
+      hlava 1 stojí na začátku bloku za $w_i$, hlava 2 na začátku kopie. "Nedeterministicky".notion buď blok
+      přeskoč (krok jako $\mathit{skip}_2$), nebo ho porovnej (krok jako $\mathit{cmp}$).
+
+    .ditem:
+      bullet: '$\mathit{skip}_2$:'
+
+      jako $\mathit{skip}_1$, hlava 2 stojí na začátku kopie. Na $\#$: doprava, do $g_2$. Na $\blank$: žádný
+      blok $w_j$ nebyl vybrán, zamítni.
+
+    .ditem:
+      bullet: '$\mathit{cmp}$:'
+
+      hlava 1 stojí na $t$-tém symbolu vybraného bloku $w_j$, hlava 2 na $t$-tém symbolu kopie a předchozí
+      symboly se shodovaly. $(x,x)$: $\Rgt,\Rgt$. $(\#,\blank)$ nebo $(\blank,\blank)$: blok i kopie skončily
+      současně, $w_j=w_i$, přijmi. Jinak (neshoda, jeden z nich je delší) zamítni.
+
+
+  .centered:
+
+    !tikz:
+      filename: 17a-turinguv-stroj-13
+
+      \tikzset{cfg/.style={blokd,font=\scriptsize,minimum width=30mm},
+        lfa/.style={bloka,font=\scriptsize,text width=64mm,align=left},
+        lfr/.style={blokr,font=\scriptsize,text width=64mm,align=left}}
+      \node[cfg] (r) at (-3.9,-3.3) {$g_1$ na začátku};
+      \node[cfg] (i1) at (0,-1.1) {$i=1$, kopie $ab$};
+      \node[cfg] (i2) at (0,-3.85) {$i=2$, kopie $ba$};
+      \node[cfg] (i3) at (0,-5.5) {$i=3$, kopie $ab$};
+      \node[cfg] (i0) at (0,-6.6) {žádné $i$};
+      \node[lfr] (l1) at (6.3,0) {$j=2$: $\mathit{cmp}$ čte $(b,a)$ $\Rightarrow$ $\qR$ (7 kroků)};
+      \node[lfa] (l2) at (6.3,-1.1) {$j=3$: $ab=ab$, pak $(\blank,\blank)$ $\Rightarrow$ $\qA$ (12 kroků)};
+      \node[lfr] (l3) at (6.3,-2.2) {žádné $j$: $\mathit{skip}_2$ dojde na $\blank$ $\Rightarrow$ $\qR$ (12 kroků)};
+      \node[lfr] (l4) at (6.3,-3.3) {$j=3$: $\mathit{cmp}$ čte $(a,b)$ $\Rightarrow$ $\qR$ (10 kroků)};
+      \node[lfr] (l5) at (6.3,-4.4) {žádné $j$: $\mathit{skip}_2$ dojde na $\blank$ $\Rightarrow$ $\qR$ (12 kroků)};
+      \node[lfr] (l6) at (6.3,-5.5) {$\mathit{copy}$ čte $\blank$, další blok není $\Rightarrow$ $\qR$ (9 kroků)};
+      \node[lfr] (l7) at (6.3,-6.6) {$\mathit{skip}_1$ dojde na $\blank$ $\Rightarrow$ $\qR$ (9 kroků)};
+      \foreach \k in {i1,i2,i3,i0} \draw[flow] (r.east) -- (\k.west);
+      \foreach \k in {l1,l2,l3} \draw[flow] (i1.east) -- (\k.west);
+      \foreach \k in {l4,l5} \draw[flow] (i2.east) -- (\k.west);
+      \draw[flow] (i3) -- (l6);
+      \draw[flow] (i0) -- (l7);
+
+  Strom výpočtu stroje z části a) na vstupu $ab\#ba\#ab$ ($n=8$): první úroveň je volba bloku $w_i$
+  v $g_1$, druhá volba bloku $w_j$ v $g_2$. Přijme jediná větev ($i=1$, $j=3$), tedy $ab\#ba\#ab\in L$.
+  Nejdelší větve mají 12 kroků.
+
+
+  "Správnost.".notion Je-li $w_i=w_j$ pro nějaká $i<j$, větev, která v $g_1$ přeskočí bloky $1,\dots,i-1$,
+  vybere $w_i$, v $g_2$ přeskočí bloky $i+1,\dots,j-1$ a vybere $w_j$, porovná $w_j$ s kopií $w_i$ a přijme.
+  Naopak přijmout umí jen $\mathit{cmp}$, a to jen když se celý vybraný blok za $w_i$ shodoval s kopií
+  a skončil současně s ní; pak je $w_j=w_i$ pro nějaké $j>i$ a slovo je v $L$. Stroj tedy přijímá (aspoň jedna
+  větev přijme, definice .reference:def-ndts-acc) právě slova z $L$. Slovo bez $\#$ ($k=1$) zamítnou všechny
+  větve: $\mathit{skip}_1$ i $\mathit{copy}$ narazí na $\blank$. Pro vstup $\#$ vybere jedna větev prázdné
+  $w_1$, $\mathit{rew}$ ji hned pošle do $g_2$ a $\mathit{cmp}$ přečte $(\blank,\blank)$: přijme po 3 krocích.
+
+
+  "Délka větví.".notion Hlava 1 se posune doprava v každém kroku kromě kroku $\mathit{copy}\to\mathit{rew}$
+  a $|w_i|$ kroků, kdy hlava 2 couvá po kopii. Hlava 1 nikdy nepřejede $\blank$ za vstupem (tam každá větev
+  skončí), takže se posune nejvýše $n$-krát, a pak následuje poslední krok do $\qA$ nebo $\qR$. Protože za
+  $w_i$ je $\#$, je $|w_i|\le n-1$, a každá větev má nejvýše $n+(|w_i|+1)+1\le 2n+1$ kroků, tedy $O(n)$.
+  Všechny větve jsou konečné, stroj $L$ tedy rozhoduje.
+
+
+  "b) Deterministický stroj v logaritmickém prostoru".notion
+
+
+  "Myšlenka.".notion Projdeme deterministicky všechny dvojice, které stroj v části a) hádá, a místo kopie bloku
+  si pamatujeme jen jeho "začátek".emphasize. Pozice vstupu číslujeme $1,\dots,n$, na pozici $n+1$ je
+  $\blank$ za vstupem. Pozice $p$ je "začátek bloku".emphasize, když $p=1$ nebo je na pozici $p-1$ symbol $\#$ (takže
+  i pozice $n+1$, končí-li vstup symbolem $\#$; to je prázdný poslední blok). Blok začínající na $p$ končí
+  prvním symbolem $\#$ nebo $\blank$ od pozice $p$ doprava; oba symboly budeme brát jako „konec bloku“.
+
+
+  "Pracovní pásky".notion nesou čtyři binární čítače, každý na vlastní pracovní pásce s nejnižším bitem vlevo:
+  $p$ (začátek prvního bloku), $q$ (začátek druhého bloku), $t$ (posun uvnitř bloků) a $c$ (pracovní kopie
+  pro přesun hlavy). Přečtený symbol a fázi nese stav.
+
+
+  "Fáze výpočtu.".notion
+
+  .enumerate:
+
+    .item:
+
+      "Dvojice bloků.".notion Pro $p=1,2,\dots,n+1$, je-li $p$ začátek bloku: pro $q=p+1,\dots,n+1$, je-li
+      $q$ začátek bloku, porovnej bloky začínající na $p$ a $q$. Délku $n$ stroj ukládat nemusí: cyklus přes
+      $q$ (resp. $p$) skončí po zpracování pozice, na které vstupní hlava čte $\blank$ za vstupem, a pro
+      takové $p$ už se žádné $q$ nezkouší.
+
+    .item:
+
+      "Porovnání.".notion $t:=0$ a opakuj: přečti symbol $\sigma$ na pozici $p+t$ a zapamatuj si ho ve stavu,
+      pak symbol $\tau$ na pozici $q+t$. Jsou-li oba „konec bloku“, přijmi. Liší-li se (i když je konec
+      bloku jen jeden z nich), skonči porovnání a pokračuj dalším $q$. Jinak $t:=t+1$.
+
+    .item:
+
+      Neprošla-li žádná dvojice, zamítni.
+
+
+  "Operace s čítači a s hlavou.".notion Přičtení jedničky, odečtení jedničky a test nuly jsou jako
+  v "úloze 1 b)"#ut-1 ukázkového testu; kopie ($c:=p$, $c:=t$) je jeden společný průchod dvou pracovních hlav
+  od nejnižšího bitu. Na pozici $p+t$ se vstupní hlava dostane bez sčítání: vrátí se na levý okraj
+  ($\blank$ před vstupem), $c:=p$ a posouvá se doprava s $c:=c-1$, dokud není $c=0$; tím stojí na pozici
+  $p$. Pak $c:=t$ a stejně o dalších $t$ pozic. Zda je $p$ začátek bloku, zjistí stroj krokem doleva z pozice
+  $p$ (pro $p=1$ tam čte $\blank$ před vstupem, i to je začátek).
+
+
+  "Správnost.".notion Cykly projdou všechny dvojice začátků $p<q$, tedy všechny dvojice bloků $w_i$, $w_j$
+  s $i<j$. Porovnání přijme, právě když se bloky shodují symbol po symbolu a skončí při stejném $t$, tj.
+  právě když $w_i=w_j$. Stroj tedy přijme, právě když se některý blok opakuje. Slovo bez $\#$ má jediný
+  začátek $p=1$, druhý cyklus nenajde žádné $q$ a stroj zamítne. Pro $\#$ jsou začátky $1$ a $2$, oba bloky
+  jsou prázdné ($t=0$ dá dvakrát „konec bloku“) a stroj přijme.
+
+
+  "Prostor.".notion Vždy $p,q\le n+1$, posun $t$ nepřekročí délku bloku a $c\le\max(p,q,t)\le n+1$. Každý ze
+  čtyř čítačů tedy zabere nejvýše $\lceil\log_2(n+2)\rceil$ buněk, celkem
+  $4\lceil\log_2(n+2)\rceil+O(1)=O(\log n)$ buněk pracovních pásek. Vstupní páska se nepočítá a stroj na ni
+  nepíše; porovnávaný symbol je ve stavu. Stroj vždy zastaví: $p$ a $q$ rostou k $n+1$ a každé porovnání
+  skončí nejpozději na konci kratšího bloku (čas je polynomiální, zadání ho neomezuje).
+
+
+.Remark:
+  title: 'K typové úloze 1.10'
+
+  Na rozdíl od "typové úlohy 1.2"#typ-1-2 tu nedeterminismus opravdu šetří práci: přímočarý deterministický
+  dvoupáskový stroj by kopíroval a porovnával jednu dvojici bloků po druhé, řádově $n^2$ kroků, zatímco každá
+  větev stroje z části a) má jen $2n+1$ kroků. Část b) je tentýž algoritmus „rozbalený“: dvojici $(i,j)$,
+  kterou stroj v a) hádá, prochází deterministický stroj cyklem a místo kopie $w_i$ si pamatuje jen začátek
+  $p$. Typická chyba v a): hádat $w_i$ symbol po symbolu bez vazby na vstup; taková větev nemusí skončit.

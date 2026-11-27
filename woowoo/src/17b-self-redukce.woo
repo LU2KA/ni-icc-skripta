@@ -6,6 +6,88 @@
 (6 bodů). Postup na papíře je v oddílu .reference:ch-test-postup-self-redukce.
 
 
+.Procedure:
+  title: 'Než začneš: co budeš potřebovat'
+
+  "Definice.".notion
+
+  .itemize:
+
+    .item:
+
+      "Tři verze problému".notion (oddíl .reference:ch-ts-optimalizacni-vs-rozhodovaci-problemy, problém
+      .reference:prob-tsp): "rozhodovací".emphasize (existuje řešení s hodnotou alespoň / nejvýše $k$? odpověď
+      $\ANO$/$\NE$), "optimalizační".emphasize (jaká je hodnota optima $\mathrm{OPT}$?) a "vyhledávací".emphasize
+      (vydej konkrétní optimální řešení). Self-redukce řeší vyhledávací verzi pomocí rozhodovací.
+
+    .item:
+
+      "Orákulum".notion: černá skříňka pro rozhodovací verzi, "jeden dotaz = jeden krok".notion. Ptát se smíš jen na
+      instance "téhož".emphasize problému (upravený graf, formule, jiný práh) a každý dotaz musí mít
+      "polynomiální velikost".emphasize vzhledem ke vstupu (pozor na velká čísla, 2.4 b, 2.6). Celému postupu se
+      říká redukce s orákulem (přehled v oddílu .reference:ch-graf-redukce-s-orakulem-a-vycislitelnost).
+
+    .item:
+
+      "Krok 1 – hodnota optima".notion (důsledek .reference:cor-binsearch, redukce "hodnota optima TSP"#red-tspopt):
+      ověř, že odpověď je v $k$ "monotónní".emphasize, a binárně vyhledávej na $[lo,hi]$ s invariantem
+      $lo\le\mathrm{OPT}\le hi$; to je $\lceil\log_2(\text{počet možných hodnot})\rceil$ dotazů. Zkoušet
+      $k=1,2,3,\dots$ po jednom je polynomiální jen při polynomiálně mnoha hodnotách (např. $k\le n$); pro binárně
+      zapsaná čísla je to jen pseudopolynomiální (definice .reference:def-pseudopoly, 2.6). Nemonotónní odpověď
+      (2.4 b) binárně vyhledávat nejde. U rozhodovacích problémů (SAT, HC) krok 1 odpadá a nahradí ho úvodní dotaz
+      „existuje vůbec řešení?“.
+
+    .item:
+
+      "Krok 2 – konstrukce řešení".notion, vždy s "přesným".emphasize prahem $\mathrm{OPT}$ (rámeček u redukce
+      "nalezení optimální kružnice TSP"#red-tspsearch). Procházej prvky po jednom a orákulem hlídej, že řešení
+      hodnoty $\mathrm{OPT}$ pořád existuje.
+
+      .itemize:
+
+        .item:
+
+          "Mazání".emphasize: prvek (hranu; vrchol i s jeho hranami a s $k-1$; číslo; předmět) zkusmo smaž, při
+          $\ANO$ ho nech smazaný (2.2, 2.3, 2.4, 2.6). Funguje jen tam, kde „smazat $v$ a snížit $k$“ znamená přesně
+          „$v$ je v řešení“.
+
+        .item:
+
+          "Vynucení gadgetem".emphasize, když mazání selže (2.7, 2.9): k vrcholu přidej malý gadget, který ho do
+          řešení vynutí (list, trojúhelník – 2.7 až 2.9), a dokaž lemma „optimum upravené instance = nejmenší řešení
+          obsahující vynucenou množinu $F$“.
+
+        .item:
+
+          U formulí stejnou roli hraje "dosazení".emphasize $x_i$, resp. jednotková klauzule $(x_i)$ (2.1), u barvení
+          "přidání hrany".emphasize mezi nesousední vrcholy (2.5).
+
+    .item:
+
+      "Invariant a korektnost".notion: typicky „aktuální instance má řešení hodnoty $\mathrm{OPT}$ a každé její
+      řešení dává řešení původní instance“. Ukaž, že ho zachová větev $\ANO$ i $\NE$. Na konci sporem: kdyby
+      zůstal zbytečný prvek, dostal by při svém testu $\ANO$ (tehdejší instance byla nadmnožinou výsledné) a byl by
+      smazaný.
+
+    .item:
+
+      "Počet dotazů".notion jako konkrétní funkce $n$ ($m$, $L$): binární vyhledávání plus nejvýše jeden dotaz na
+      prvek, např. $\lceil\log_2(n+1)\rceil+n$. Dodej, že každý dotaz je polynomiálně velký a práce mezi dotazy
+      polynomiální, takže celek je polynomiální vzhledem k volání orákula.
+
+
+  "Doporučené pořadí".notion (od nejlehčí): 2.1 (SAT, bez optima) $\to$ 2.3 (mazání hran) $\to$ 2.2 (binární
+  vyhledávání a mazání vrcholů) $\to$ 2.6 (binárně zapsaná čísla) $\to$ 2.4 (mazání čísel; v b) posun čísel o $M$)
+  $\to$ 2.5 (přidávání hran) $\to$ 2.8 $\to$ 2.7 $\to$ 2.9 (gadgety). Úloha 2 ukázkového testu ("klika"#ut-2)
+  je obtížností jako 2.2.
+
+
+  "Za plné body".notion (postup .reference:ch-test-postup-self-redukce): hlavička „Redukce s orákulem: … $\to$ …“;
+  a) meze intervalu, proč je odpověď monotónní, binární vyhledávání a počet dotazů; b) algoritmus po krocích
+  i s úvodním dotazem, invariant v obou větvích, proč je výstup řešení a proč optimální; počet dotazů vzhledem
+  k $n$ a polynomiální velikost dotazů.
+
+
 .Subsection Kde to ve skriptech je
   label: ch-typove-sr-kde
 

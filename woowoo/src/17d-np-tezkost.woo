@@ -7,6 +7,182 @@ Podle hlavičky ukázkového testu lze na přednášce probrané NP-úplné prob
 v oddílu .reference:ch-test-postup-np.
 
 
+.Procedure:
+  title: 'Než začneš: co budeš potřebovat'
+
+  "Definice.".notion
+
+  .itemize:
+
+    .item:
+
+      "$\NP$".notion (definice .reference:def-verifikator, věta .reference:thm-np-eq): $Q\in\NP$, když každá
+      $\ANO$-instance má "certifikát".emphasize polynomiální délky, který ověří polynomiální
+      "verifikátor".emphasize, a $\NE$-instance žádný přijatý certifikát nemá.
+
+    .item:
+
+      "Polynomiální redukce".notion $A\redp B$ (definice .reference:def-redukce): funkce $f$ spočitatelná
+      v polynomiálním čase, pro kterou $x\in A\iff f(x)\in B$ pro "každé".emphasize $x$. "Směr:".notion
+      "ze známého".emphasize NP-úplného $A$ "na nový".emphasize problém $B$ – kdyby $B$ šlo řešit rychle, šlo by
+      i $A$ (lemma .reference:lem-redvlast).
+
+    .item:
+
+      "NP-těžký".notion: $L\redp Q$ pro všechna $L\in\NP$; díky tranzitivitě stačí jedna redukce ze známého
+      NP-těžkého problému. "NP-úplný".notion = NP-těžký a zároveň v $\NP$ (definice .reference:def-nphard,
+      důsledek .reference:cor-jaknpc).
+
+
+  "Problémy, ze kterých se redukuje".notion (NP-úplné z přednášky, smíš je použít bez důkazu):
+
+  .table:
+    columns: 'p{5.2cm}p{7.8cm}l'
+
+    .row:
+      head: true
+
+      problém
+
+      otázka
+
+      úloha
+
+    .row:
+
+      $\prob{3-SAT}$ (oddíl .reference:ch-sat-sat-3-sat)
+
+      je formule v KNF se třemi literály v každé klauzuli splnitelná?
+
+      4.1, 4.6
+
+    .row:
+
+      $\prob{NAE-3-SAT}$ / $\prob{1-in-3 SAT}$ (.reference:prob-nae, .reference:prob-1in3)
+
+      ohodnocení s pravdou i nepravdou / s právě jednou pravdou v každé klauzuli?
+
+      ~
+
+    .row:
+
+      $\prob{IS}$ / $\prob{Clique}$ (.reference:prob-is, .reference:prob-clique)
+
+      aspoň $k$ vrcholů, mezi nimiž není žádná / je každá hrana?
+
+      4.5
+
+    .row:
+
+      $\prob{VC}$ (.reference:prob-vc)
+
+      nejvýše $k$ vrcholů, které zasáhnou každou hranu?
+
+      4.4, 4.8, 4.9
+
+    .row:
+
+      $\prob{3-Coloring}$ / $\prob{Dominating Set}$ (.reference:prob-3col, .reference:cv-3-6)
+
+      3 barvy, sousedé různé / nejvýše $k$ vrcholů, každý jiný má mezi nimi souseda?
+
+      ~
+
+    .row:
+
+      hamiltonovská cesta / kružnice (.reference:prob-dhp, .reference:ch-cisla-dhp-uhp, .reference:ch-cisla-dhp-hc)
+
+      cesta / kružnice přes každý vrchol právě jednou (i neorientovaně)?
+
+      4.2
+
+    .row:
+
+      $\prob{Subset Sum}$ / $\prob{Partition}$ (.reference:prob-subsetsum, .reference:prob-partition)
+
+      binárně zapsaná kladná čísla: podmnožina se součtem $T$ / dvě skupiny se stejným součtem?
+
+      4.3, 4.7
+
+    .row:
+
+      $\prob{X3C}$ (.reference:prob-x3c)
+
+      lze z trojic vybrat $k$ tak, aby pokryly $3k$ prvků každý právě jednou?
+
+      ~
+
+
+  "Typické gadgety".notion (rigidita a gadgety v oddílu .reference:ch-is-anatomie-redukci):
+
+  .itemize:
+
+    .item:
+
+      "Přivěšený list".notion „spotřebuje“ stupeň nebo povoleného souseda vrcholu (4.2, 4.5; dva listy 4.8).
+      "Trojúhelník".notion: nový vrchol $w_{uv}$ za hranu udělá z hrany trojúhelník (4.9, .reference:cv-3-5,
+      .reference:cv-3-6).
+
+    .item:
+
+      "Rozdělení vrcholu".notion na hranu $v^{\mathrm{in}}\to v^{\mathrm{out}}$: výběr vrcholu = výběr hrany (4.4,
+      redukce "$\prob{DHP}\redp\prob{UHP}$"#red-uhp). "Vrstva za klauzuli".notion s vrcholem za každý výskyt
+      literálu a zákazem opačných literálů (4.1, "$\prob{3-SAT}\redp\prob{IS}$"#red-is); automat za klauzuli (4.6).
+
+    .item:
+
+      "Doplněk".notion: grafu ("$\prob{IS}\redp\prob{Clique}$"#red-clique) nebo množiny
+      ("$\prob{IS}\redp\prob{VC}$"#red-vc). "Přidání čísel".notion: vyrovnávací číslo $|S-2T|$ (4.3, redukce
+      "$\prob{Subset Sum}\redp\prob{Partition}$"#red-partition), posun všech čísel o 1 a přidané jedničky (4.7).
+
+    .item:
+
+      "Normalizace".notion (výměnný argument) v ($\Leftarrow$): řešení cílové instance, které používá nové prvky,
+      přestav bez zhoršení na „hezké“ (4.4, 4.5, 4.8, 4.9).
+
+
+  "Nejčastější chyby".notion (podrobně u postupu .reference:ch-test-postup-np): opačný směr ($Q\redp\prob{SAT}$
+  o těžkosti $Q$ nic neříká); chybí ($\Leftarrow$) nebo normalizace; exponenciální konstrukce nebo konstrukce,
+  která zná řešení; binární čísla vypsaná unárně (a unární $1^n$ ve 4.6 musí zůstat polynomiální); chybí
+  $Q\in\NP$ nebo triviální případ (pevná $\NE$-instance, 4.3).
+
+
+  "Doporučené pořadí".notion (od nejlehčí): 4.2 $\to$ 4.5 $\to$ 4.8 $\to$ 4.9 (listy a trojúhelníky) $\to$ 4.7
+  $\to$ 4.3 (čísla) $\to$ 4.1 $\to$ 4.4 $\to$ 4.6 (z 3-SAT a rozdělení vrcholu); nakonec úloha 4 ukázkového testu
+  ("jádro grafu"#ut-4).
+
+
+  "Za plné body".notion (šablona, kterou mají všechna řešení níže; hlavička redukce viz oddíl
+  .reference:ch-test-hlavicka-redukce):
+
+  .enumerate:
+
+    .item:
+
+      "Hlavička:".notion „Redukce: $A\redp Q$, instance $x\mapsto f(x)$.“
+
+    .item:
+
+      "$Q\in\NP$:".notion co je certifikát, jak je dlouhý, co verifikátor kontroluje a v jakém čase.
+
+    .item:
+
+      "Konstrukce".notion úplně (vrcholy, hrany, čísla, parametr $k$), ideálně s obrázkem malého příkladu.
+
+    .item:
+
+      "Polynomialita:".notion velikost $f(x)$ a čas výpočtu jako funkce velikosti $x$.
+
+    .item:
+
+      "($\Rightarrow$)".notion z řešení $x$ sestroj řešení $f(x)$; "($\Leftarrow$)".notion z "libovolného".emphasize
+      řešení $f(x)$ (po normalizaci) sestroj řešení $x$.
+
+    .item:
+
+      "Závěr:".notion $A$ je NP-úplný a $A\redp Q$, tedy $Q$ je NP-těžký; s bodem 2 NP-úplný.
+
+
 .Subsection Kde to ve skriptech je
   label: ch-typove-np-kde
 
