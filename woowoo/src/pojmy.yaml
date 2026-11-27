@@ -1321,6 +1321,60 @@
   makro: []
   text: ['[Řř]ídk\w+ množin\w*']
 
+- id: pojem-odebrani-na-stupen-2
+  title: 'Problém $\prob{Odebrání na stupeň 2}$'
+  body: |
+    **Vstup:** neorientovaný graf $G=(V,E)$ a číslo $k$.
+
+    **Otázka:** existuje $S\subseteq V$, $|S|\le k$, takové, že v $G-S$ má každý vrchol stupeň nejvýše 2?
+  odkaz: typ-4-8
+  prob: [Odebrání na stupeň 2]
+  makro: []
+  text: ['[Oo]debrání na stupeň 2']
+
+- id: pojem-rozbiti-trojuhelniku
+  title: 'Problém $\prob{Rozbití trojúhelníků}$'
+  body: |
+    **Vstup:** neorientovaný graf $G=(V,E)$ a číslo $k$.
+
+    **Otázka:** existuje $S\subseteq V$, $|S|\le k$, takové, že graf $G-S$ neobsahuje žádný trojúhelník?
+  odkaz: typ-4-9
+  prob: [Rozbití trojúhelníků]
+  makro: []
+  text: ['[Rr]ozbití trojúhelníků']
+
+- id: pojem-cvc
+  title: 'Problém $\prob{Connected Vertex Cover}$ (souvislé vrcholové pokrytí)'
+  body: |
+    **Vstup:** souvislý graf $G=(V,E)$ a číslo $k$.
+
+    **Otázka:** existuje vrcholové pokrytí $C\subseteq V$, $|C|\le k$, takové, že podgraf $G[C]$ je souvislý?
+  odkaz: typ-2-9
+  prob: [Connected Vertex Cover]
+  makro: []
+  text: ['[Ss]ouvisl\w* vrcholov\w* pokryt\w*']
+
+- id: pojem-podposloupnost
+  title: 'Podposloupnost (vybrané podslovo)'
+  body: |
+    Slovo $x$ je *podposloupnost* slova $y$, když vznikne z $y$ vynecháním některých symbolů:
+    $x=y_{j_1}y_{j_2}\cdots y_{j_k}$ pro nějaké indexy $j_1<j_2<\dots<j_k$. Na rozdíl od souvislého podslova
+    nemusí vybrané symboly ležet vedle sebe.
+  odkaz: typ-1-7
+  prob: []
+  makro: []
+  text: ['[Pp]odposloupnost\w*']
+
+- id: pojem-cyklicky-posun
+  title: 'Cyklický posun'
+  body: |
+    Slovo $x$ je *cyklický posun* slova $y$, když $y=uv$ a $x=vu$ pro nějaká slova $u,v$. Ekvivalentně
+    $|x|=|y|$ a $x$ je souvislé podslovo slova $yy$.
+  odkaz: typ-1-8
+  prob: []
+  makro: []
+  text: ['[Cc]yklick\w* posun\w*']
+
 - id: pojem-spolecne-slovo
   title: 'Problém $\prob{Společné slovo}$'
   body: |

@@ -40,7 +40,8 @@ v oddílu .reference:ch-test-postup-np.
     a cvičení 3 a 4: .reference:cv-3-2 (Subgraph Isomorphism – specializace, $H=K_k$), .reference:cv-3-3
     (Half-Clique – doplnění grafu na správnou velikost), .reference:cv-3-4 (Set Cover), .reference:cv-3-5
     (Feedback Vertex Set – hrany nahradit trojúhelníky, lokální náhrada), .reference:cv-3-6 (Dominating Set –
-    vrchol za hranu).
+    vrchol za hranu). Odebrání vrcholů z $\prob{VC}$ s výměnným argumentem: typové úlohy "4.8"#typ-4-8 (dva
+    listy ke každému vrcholu) a "4.9"#typ-4-9 (trojúhelník za hranu, stejný gadget jako .reference:cv-3-5).
 
   .ditem:
     bullet: 'Barvení, řezy:'
@@ -851,3 +852,263 @@ v oddílu .reference:ch-test-postup-np.
   posunu by zase výstup obsahoval nuly, které zadání nedovoluje. Problém je stejně jako typová úloha 4.3 jen
   "slabě".emphasize NP-úplný: dynamické programování přes dvojice (počet vybraných čísel, součet) ho vyřeší
   v pseudopolynomiálním čase.
+
+
+.Exercise:
+  title: 'Typová úloha 4.8 [12 bodů]'
+  label: typ-4-8
+
+  "Odebrání na stupeň 2.".notion Je dán neorientovaný graf $G=(V,E)$ a číslo $k$. Pro $S\subseteq V$ označme
+  $G-S$ graf, který vznikne z $G$ odebráním vrcholů $S$ i všech hran, které z nich vedou.
+
+
+  Problém $\prob{Odebrání na stupeň 2}$: existuje množina $S\subseteq V$, $|S|\le k$, taková, že v grafu $G-S$
+  má "každý vrchol stupeň nejvýše 2".notion?
+
+
+  Například hvězdě $K_{1,5}$ stačí odebrat jeden vrchol (střed), úplnému grafu $K_4$ také jeden (zbude
+  trojúhelník), kdežto úplný graf $K_5$ potřebuje odebrat dva vrcholy.
+
+
+  Dokažte, že problém $\prob{Odebrání na stupeň 2}$ je NP-úplný. "Nápověda: převádějte z problému Vrcholové pokrytí.".emphasize
+
+
+.Solution:
+  label: red-typ-4-8
+
+  "Redukce:".notion $\prob{Vertex Cover} \redp \prob{Odebrání na stupeň 2}$, instance $(G,k)$ $\mapsto$ $(G',\ k)$,
+  kde $G'$ vznikne z $G$ přivěšením "dvou".emphasize nových listů ke každému vrcholu.
+
+
+  "1. Problém je v $\NP$.".notion Certifikát je množina $S\subseteq V$. Ověříme $|S|\le k$, označíme vrcholy $S$
+  v poli příslušnosti a pro každý vrchol mimo $S$ spočítáme sousedy mimo $S$ (průchod seznamem sousedů); jsou-li
+  všechny počty nejvýše 2, přijmeme. Čas $O(|V|+|E|)$.
+
+
+  "2. Konstrukce.".notion Je dán graf $G=(V,E)$ s $n$ vrcholy a $m$ hranami a číslo $k$. Graf $G'$ má vrcholy
+  $V\cup\{v_1,v_2\mid v\in V\}$, kde $v_1,v_2$ jsou nové vrcholy ("listy vrcholu $v$".emphasize), a hrany
+  $E\cup\{\{v,v_1\},\{v,v_2\}\mid v\in V\}$. Parametr $k$ zůstává. Myšlenka: listy „spotřebují“ oba povolené
+  stupně každého vrcholu $v$, který v grafu zůstane, takže žádný jeho soused z $G$ už zůstat nesmí.
+
+
+  .centered:
+
+    !tikz:
+      filename: 17d-np-tezkost-08
+
+      \begin{scope}
+        \node[v] (a) at (0,0) {$a$}; \node[vsel] (b) at (2.2,0) {$b$};
+        \node[vsel] (c) at (1.1,1.7) {$c$}; \node[v] (d) at (3.3,1.7) {$d$};
+        \draw[e] (a)--(b) (b)--(c) (c)--(a) (c)--(d);
+        \node[font=\small] at (1.65,-1.2) {$G$: pokrytí $\{b,c\}$, $k=2$};
+      \end{scope}
+      \draw[flow] (4.3,0.85)--(5.5,0.85);
+      \begin{scope}[xshift=7.3cm]
+        \node[v] (a) at (0,0) {$a$}; \node[vbad] (b) at (2.2,0) {$b$};
+        \node[vbad] (c) at (1.1,1.7) {$c$}; \node[v] (d) at (3.3,1.7) {$d$};
+        \node[vs] (a1) at (-0.9,-0.4) {}; \node[vs] (a2) at (-0.4,-0.95) {};
+        \node[vs] (b1) at (2.6,-0.95) {}; \node[vs] (b2) at (3.1,-0.4) {};
+        \node[vs] (c1) at (0.6,2.6) {}; \node[vs] (c2) at (1.6,2.6) {};
+        \node[vs] (d1) at (4.2,2.2) {}; \node[vs] (d2) at (4.2,1.2) {};
+        \draw[efaint] (a)--(b) (b)--(c) (c)--(a) (c)--(d) (b)--(b1) (b)--(b2) (c)--(c1) (c)--(c2);
+        \draw[esel] (a)--(a1) (a)--(a2) (d)--(d1) (d)--(d2);
+        \node[font=\small] at (1.65,-1.6) {$G'-\{b,c\}$: stupně nejvýše 2, $k=2$};
+      \end{scope}
+
+
+  Obrázek: vlevo graf $G$ (trojúhelník $a,b,c$ a vrchol $d$) se zeleným vrcholovým pokrytím $\{b,c\}$. Vpravo
+  $G'$: každý vrchol má dva nové listy (malé kroužky). Odebereme-li $b$ a $c$ (červeně, jejich hrany šedě), mají
+  $a$ a $d$ stupeň přesně 2 (jen své listy, zeleně), jejich listy stupeň 1 a listy vrcholů $b$, $c$ zůstanou
+  izolované.
+
+
+  "3. Polynomialita.".notion $G'$ má $3n$ vrcholů a $m+2n$ hran, sestrojíme ho v čase $O(n+m)$; číslo $k$ jen
+  opíšeme.
+
+
+  "4. ($\Rightarrow$)".notion Nechť $C$ je vrcholové pokrytí $G$, $|C|\le k$. Položme $S=C$.
+  V $G'-S$ zůstanou vrcholy $V\setminus C$ a všechny listy:
+
+  .itemize:
+
+    .item:
+
+      Vrchol $v\notin C$: každá hrana $\{v,x\}\in E$ má konec v $C$, a protože $v\notin C$, je $x\in C$. Žádný soused
+      $v$ z grafu $G$ tedy v $G'-S$ nezůstal a $v$ má stupeň přesně 2 (listy $v_1,v_2$).
+
+    .item:
+
+      List má v $G'$ jediného souseda, v $G'-S$ má tedy stupeň nejvýše 1.
+
+  Všechny stupně v $G'-S$ jsou nejvýše 2.
+
+
+  "5. ($\Leftarrow$)".notion Nechť $S$ je množina vrcholů $G'$, $|S|\le k$, a v $G'-S$ mají všechny vrcholy
+  stupeň nejvýše 2. Množina $S$ může obsahovat i listy (např. v obrázku vyhovuje i $S=\{a,c,a_1\}$ pro $k=3$),
+  proto ji nejdřív "normalizujeme".emphasize výměnným argumentem: dokud $S$ obsahuje nějaký list $v_i$, nahradíme
+  ho jeho sousedem, $S:=(S\setminus\{v_i\})\cup\{v\}$.
+
+  .itemize:
+
+    .item:
+
+      Velikost $S$ nevzroste (je-li $v$ už v $S$, dokonce klesne).
+
+    .item:
+
+      Podmínka platí dál: odebrání vrcholu $v$ žádný stupeň nezvýší a vrácený list $v_i$ má jediného souseda $v$,
+      který je teď v $S$, takže má stupeň 0 a stupeň nikoho jiného nezvýší.
+
+  Po normalizaci je $S\subseteq V$ a $|S|\le k$. Tvrdíme, že $S$ je vrcholové pokrytí $G$. Kdyby hrana
+  $\{u,v\}\in E$ neměla konec v $S$, měl by $u$ v $G'-S$ sousedy $u_1$, $u_2$ (listy v $S$ nejsou) a navíc $v$,
+  tedy stupeň aspoň 3 – spor. Graf $G$ má tedy vrcholové pokrytí velikosti nejvýše $k$.
+
+
+  "6. Závěr.".notion $\prob{Vertex Cover}$ je NP-úplný (redukce "$\prob{IS} \redp \prob{VC}$"#red-vc) a
+  $\prob{Vertex Cover}\redp\prob{Odebrání na stupeň 2}$, tedy $\prob{Odebrání na stupeň 2}$ je NP-těžký; spolu
+  s bodem 1 NP-úplný.
+
+
+  "Proč dva listy.".notion Identita $(G,k)\mapsto(G,k)$ nefunguje: cesta $a,b,c$ má všechny stupně nejvýše 2
+  (stačí $k=0$), ale její nejmenší vrcholové pokrytí má velikost 1. Jeden list na vrchol také nestačí: v grafu
+  s jedinou hranou $\{u,v\}$ a listy $u_1$, $v_1$ mají $u$ i $v$ stupeň 2, takže opět stačí $k=0$. Teprve dva
+  listy vyčerpají celý povolený stupeň, a proto nesmí zůstat oba konce žádné hrany. Je to stejný trik jako
+  v "typové úloze 4.2"#typ-4-2 a "4.5"#typ-4-5.
+
+
+.Remark:
+  title: 'K typové úloze 4.8'
+
+  Typické chyby v tomto typu úlohy:
+
+  .itemize:
+
+    .item:
+
+      "Chybí normalizace.".notion V bodu 5 nelze rovnou napsat „$S$ je vrcholové pokrytí“: $S$ je množina vrcholů
+      $G'$ a může obsahovat listy, které v $G$ nejsou. Výměnný argument (list nahradit jeho sousedem) a důvod,
+      proč nic nepokazí, patří do řešení.
+
+    .item:
+
+      "Hrany místo vrcholů.".notion Problém „lze odebrat nejvýše $k$ "hran".emphasize tak, aby všechny stupně byly
+      nejvýše 2?“ je jiný problém: hledá se podgraf se stupni nejvýše 2 a aspoň $m-k$ hranami (tzv. 2-párování)
+      a ten se dá najít v polynomiálním čase převodem na největší párování "(nad rámec přednášky)".emphasize.
+      Redukce, která místo vrcholů odebírá hrany, proto správná být nemůže (pokud $\PP\ne\NP$).
+
+    .item:
+
+      "Opačný směr.".notion Převést $\prob{Odebrání na stupeň 2}$ na $\prob{Vertex Cover}$ ukazuje jen, že nový
+      problém není těžší než VC. Pro NP-těžkost se převádí známý problém na nový, tedy z VC.
+
+
+.Exercise:
+  title: 'Typová úloha 4.9 [12 bodů]'
+  label: typ-4-9
+
+  "Rozbití trojúhelníků.".notion Je dán neorientovaný graf $G=(V,E)$ a číslo $k$. "Trojúhelník".emphasize je
+  trojice vrcholů, z nichž každé dva jsou spojené hranou.
+
+
+  Problém $\prob{Rozbití trojúhelníků}$: existuje množina $S\subseteq V$, $|S|\le k$, taková, že graf $G-S$
+  (odebrání vrcholů $S$ a hran, které z nich vedou) "neobsahuje žádný trojúhelník".notion?
+
+
+  Například kružnice délky 5 trojúhelník nemá (stačí $k=0$), dva trojúhelníky se společným vrcholem rozbije
+  odebrání toho společného vrcholu ($k=1$) a úplný graf $K_4$ potřebuje odebrat dva vrcholy.
+
+
+  Dokažte, že problém $\prob{Rozbití trojúhelníků}$ je NP-úplný. "Nápověda: převádějte z problému Vrcholové pokrytí.".emphasize
+
+
+.Solution:
+  label: red-typ-4-9
+
+  "Redukce:".notion $\prob{Vertex Cover} \redp \prob{Rozbití trojúhelníků}$, instance $(G,k)$ $\mapsto$
+  $(G',\ k)$, kde $G'$ vznikne z $G$ tak, že ke každé hraně $\{u,v\}$ přidáme nový vrchol $w_{uv}$ spojený
+  s $u$ i $v$.
+
+
+  "1. Problém je v $\NP$.".notion Certifikát je množina $S\subseteq V$. Ověříme $|S|\le k$ a pro každou hranu
+  $\{u,v\}$ grafu $G-S$ a každý další vrchol $x$ grafu $G-S$ zkontrolujeme v matici sousednosti, zda $\{u,x\}$
+  a $\{v,x\}$ jsou hrany. Najdeme-li takové $x$, zamítneme, jinak přijmeme. Čas $O(|E|\cdot|V|)$.
+
+
+  "2. Konstrukce.".notion Je dán graf $G=(V,E)$ s $n$ vrcholy a $m$ hranami a číslo $k$. Graf $G'$ má vrcholy
+  $V\cup W$, kde $W=\{w_{uv}\mid\{u,v\}\in E\}$ jsou nové vrcholy (jeden za každou hranu), a hrany
+  $E\cup\{\{u,w_{uv}\},\{v,w_{uv}\}\mid\{u,v\}\in E\}$. Původní hrany zůstávají, každá hrana $\{u,v\}$ tedy leží
+  v trojúhelníku $u,v,w_{uv}$. Parametr $k$ zůstává.
+
+
+  .centered:
+
+    !tikz:
+      filename: 17d-np-tezkost-09
+
+      \tikzset{vw/.style={v,fill=intc!25,font=\scriptsize}}
+      \begin{scope}
+        \node[v] (a) at (0,0) {$a$}; \node[vsel] (b) at (2.4,0) {$b$};
+        \node[vsel] (c) at (1.2,1.9) {$c$}; \node[v] (d) at (3.6,1.9) {$d$};
+        \draw[e] (a)--(b) (b)--(c) (c)--(a) (c)--(d);
+        \node[font=\small] at (1.8,-1.4) {$G$: pokrytí $\{b,c\}$, $k=2$};
+      \end{scope}
+      \draw[flow] (4.4,0.95)--(5.6,0.95);
+      \begin{scope}[xshift=7.4cm]
+        \node[v] (a) at (0,0) {$a$}; \node[vbad] (b) at (2.4,0) {$b$};
+        \node[vbad] (c) at (1.2,1.9) {$c$}; \node[v] (d) at (3.6,1.9) {$d$};
+        \node[vw] (wab) at (1.2,-0.95) {$w_{ab}$}; \node[vw] (wbc) at (2.75,1.2) {$w_{bc}$};
+        \node[vw] (wca) at (-0.3,1.45) {$w_{ca}$}; \node[vw] (wcd) at (2.4,2.85) {$w_{cd}$};
+        \draw[efaint] (a)--(b) (b)--(c) (c)--(a) (c)--(d) (b)--(wab) (b)--(wbc) (c)--(wbc) (c)--(wca) (c)--(wcd);
+        \draw[esel] (a)--(wab) (a)--(wca) (d)--(wcd);
+        \node[font=\small] at (1.8,-1.8) {$G'-\{b,c\}$: bez trojúhelníků, $k=2$};
+      \end{scope}
+
+
+  Obrázek: vlevo graf $G$ se zeleným vrcholovým pokrytím $\{b,c\}$, vpravo $G'$ s oranžovými vrcholy $w_{uv}$
+  za hrany. $G'$ má pět trojúhelníků: čtyři $u,v,w_{uv}$ a původní $a,b,c$. Po odebrání $b$ a $c$ (červeně,
+  jejich hrany šedě) zbudou jen zelené hrany mezi $\{a,d\}$ a vrcholy $w_{uv}$ – žádný trojúhelník.
+
+
+  "3. Polynomialita.".notion $G'$ má $n+m$ vrcholů a $3m$ hran, sestrojíme ho v čase $O(n+m)$; číslo $k$ jen
+  opíšeme.
+
+
+  "4. ($\Rightarrow$)".notion Nechť $C$ je vrcholové pokrytí $G$, $|C|\le k$. Položme $S=C$.
+  V $G'-S$ zůstanou vrcholy $V\setminus C$ a všechny vrcholy $W$. Množina $V\setminus C$ je v $G$ nezávislá
+  (hrana mezi dvěma vrcholy mimo $C$ by nebyla pokrytá) a v $G'$ mezi jejími vrcholy žádné další hrany nepřibyly.
+  Množina $W$ je nezávislá, protože každý vrchol $w_{uv}$ sousedí jen s $u$ a $v$. Trojúhelník má tři vrcholy,
+  takže by dva z nich ležely ve stejné z těchto dvou množin a byly by spojené hranou – spor. Graf $G'-S$ trojúhelník
+  neobsahuje.
+
+
+  "5. ($\Leftarrow$)".notion Nechť $S$ je množina vrcholů $G'$, $|S|\le k$, a $G'-S$ nemá trojúhelník. Množina
+  $S$ může obsahovat vrcholy $w_{uv}$, které v $G$ nejsou, proto ji "normalizujeme".emphasize: dokud $S$ obsahuje
+  nějaký $w_{uv}$, nahradíme ho vrcholem $u$, $S:=(S\setminus\{w_{uv}\})\cup\{u\}$.
+
+  .itemize:
+
+    .item:
+
+      Velikost $S$ nevzroste (je-li $u$ už v $S$, klesne).
+
+    .item:
+
+      Podmínka platí dál: odebráním $u$ žádný trojúhelník nevznikne a vrácený vrchol $w_{uv}$ má sousedy jen $u$
+      a $v$, z nichž $u$ je teď v $S$. V $G'-S$ má tedy nejvýše jednoho souseda a v žádném trojúhelníku neleží.
+
+  Po normalizaci je $S\subseteq V$ a $|S|\le k$. Pro každou hranu $\{u,v\}\in E$ je $u,v,w_{uv}$ trojúhelník
+  v $G'$ a $w_{uv}\notin S$; protože $G'-S$ trojúhelník nemá, je $u\in S$ nebo $v\in S$. Množina $S$ tedy pokrývá
+  všechny hrany a je to vrcholové pokrytí $G$ velikosti nejvýše $k$.
+
+
+  "6. Závěr.".notion $\prob{Vertex Cover}$ je NP-úplný, $\prob{Vertex Cover}\redp\prob{Rozbití trojúhelníků}$,
+  tedy $\prob{Rozbití trojúhelníků}$ je NP-těžký a podle bodu 1 NP-úplný.
+
+
+  "Proč gadget.".notion Identita nefunguje: cesta $a,b,c$ nemá trojúhelník (stačí $k=0$), ale potřebuje
+  vrcholové pokrytí velikosti 1. Vrchol $w_{uv}$ udělá z každé hrany trojúhelník, který se dá rozbít jen
+  odebráním $u$, $v$ nebo $w_{uv}$, a výměnný argument ukáže, že $w_{uv}$ brát nemá smysl. Stejný gadget
+  používá "$\prob{VC}\redp\prob{Feedback Vertex Set}$"#red-fvs: tam se v bodu 4 ukazuje, že $G'-S$ je les,
+  tady stačí, že nemá trojúhelník. Z bodu 4 dokonce plyne, že $G'-S$ je bipartitní (části $V\setminus C$
+  a $W$), takže tatáž redukce dokazuje NP-těžkost i problému „odebrat nejvýše $k$ vrcholů, aby zbyl
+  bipartitní graf“ "(nad rámec přednášky)".emphasize.

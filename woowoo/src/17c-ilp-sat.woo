@@ -973,3 +973,347 @@ Postup na papíře je v oddílu .reference:ch-test-postup-ilp-sat.
   Zeleně místnosti se strážcem, u každé místnosti počet strážců, kteří ji hlídají; dvojitý kruh je cenná
   místnost $C$. "Všimni si:".emphasize v a) hlídá $C$ jen strážce v $B$, proto pro $W=\{C\}$ dva strážci
   nestačí; v b) hlídají $C$ strážci v $B$ a $F$.
+
+
+
+.Exercise:
+  title: 'Typová úloha 3.8 [6 bodů]'
+  label: typ-3-8
+
+  Stavební firma řídí projekt složený z úkolů $J$. Úkol $j$ trvá $p_j\in\N$, $p_j\ge1$, celých dní a po celou
+  dobu potřebuje $w_j\in\N$ dělníků; jednou začatý úkol běží bez přerušení $p_j$ po sobě jdoucích dní. Firma má
+  $W$ dělníků: v "žádném dni".notion nesmějí běžící úkoly potřebovat dohromady víc než $W$ dělníků.
+  "Návaznosti".notion $P\subseteq J\times J$: pro $(i,j)\in P$ smí úkol $j$ začít až ve dni "ostře po".notion
+  posledním dni úkolu $i$. Dny číslujeme $1,2,\dots$ Cílem je
+  "minimalizovat číslo dne, kdy skončí poslední úkol".notion (konec projektu).
+
+  .enumerate:
+    type: a
+
+    .item:
+
+      Formulujte úlohu jako ILP s binárními proměnnými „úkol $j$ začíná ve dni $t$“. Určete, kolik dní $H$ stačí
+      uvažovat, a uveďte proměnné a jejich význam, omezení (u každé skupiny, co zajišťuje), účelovou funkci
+      a velikost programu vzhledem k $|J|$, $|P|$ a $H$.
+
+    .item:
+
+      Konec projektu lze vynutit i omezeními $T\ge(t+p_j-1)\,x_{j,t}$ pro každé $j$ a $t$. Proč je to také
+      správně? Která z obou variant je lepší?
+
+    .item:
+
+      $W=3$, úkoly $A$ výkop základů (2 dny, 2 dělníci), $B$ řezání trámů (3 dny, 2 dělníci), $C$ betonování
+      patek (2 dny, 1 dělník), $D$ montáž konstrukce (2 dny, 3 dělníci), $E$ střecha (1 den, 2 dělníci);
+      návaznosti $A\to C$, $B\to D$, $C\to D$, $D\to E$. Určete optimum a velikost programu.
+
+
+.Solution:
+
+  "Horizont.".notion Stačí $H=\sum_{j\in J}p_j$ dní. Je-li $w_j\le W$ pro všechna $j$ a návaznosti netvoří
+  cyklus, je přípustný "sériový rozvrh".emphasize: úkoly po jednom v topologickém pořadí podle $P$. V každém dni
+  pak běží jediný úkol a potřebuje $w_j\le W$ dělníků; projekt skončí ve dni $\sum_jp_j$. Optimum je tedy nejvýše
+  $H$ a v optimálním rozvrhu všechny úkoly skončí do dne $H$, takže omezení na dny $1,\dots,H$ optimum neodřízne.
+  (Má-li některý úkol $w_j>W$ nebo je v $P$ cyklus, rozvrh neexistuje a program níže je nepřípustný, jak má být.)
+
+
+  "a) Proměnné.".notion
+
+  .itemize:
+
+    .item:
+
+      $x_{j,t}\in\{0,1\}$ pro $j\in J$ a $t=1,\dots,H-p_j+1$: $x_{j,t}=1$ právě když úkol $j$ začíná ve dni $t$
+      (běží tedy ve dnech $t,\dots,t+p_j-1$). Horní mez $t$ zaručuje, že úkol skončí nejpozději ve dni $H$.
+
+    .item:
+
+      $T\ge0$: pomocná proměnná, horní mez na konec každého úkolu (v optimu konec projektu).
+
+
+  Pro přehlednost označme $S_j=\sum_t t\cdot x_{j,t}$. Není to nová proměnná, jen zkratka za lineární výraz:
+  podle omezení 1 je v součtu jediný nenulový člen, takže $S_j$ je den začátku úkolu $j$ a $S_j+p_j-1$ den jeho
+  konce.
+
+
+  "Omezení.".notion
+
+  .enumerate:
+
+    .item:
+
+      "Každý úkol začne právě jednou:".notion $\displaystyle\sum_{t=1}^{H-p_j+1}x_{j,t}=1$ pro každé $j\in J$.
+
+    .item:
+
+      "Dělníci v každém dni:".notion úkol $j$ běží ve dni $d$ právě když začal v některém dni $t$ s
+      $d-p_j+1\le t\le d$, proto
+
+      .equation:
+
+        \sum_{j\in J} w_j\sum_{t=\max(1,\,d-p_j+1)}^{\min(d,\,H-p_j+1)} x_{j,t}\ \le\ W\qquad\text{pro každé } d=1,\dots,H .
+
+      Vnitřní součet je podle omezení 1 roven $0$ nebo $1$ („běží $j$ ve dni $d$?“), levá strana je tedy počet
+      dělníků potřebných ve dni $d$.
+
+    .item:
+
+      "Návaznost „ostře po“:".notion $\displaystyle\sum_t t\cdot x_{j,t}\ \ge\ \sum_t t\cdot x_{i,t}+p_i$, tj.
+      $S_j\ge S_i+p_i$, pro každé $(i,j)\in P$. Poslední den úkolu $i$ je $S_i+p_i-1$ a $j$ smí začít až den nato.
+      (Pro $p_i=1$ je to $S_j\ge S_i+1$: $j$ začne ostře později, než začalo $i$.)
+
+    .item:
+
+      "$T$ je aspoň konec každého úkolu:".notion $\displaystyle T\ \ge\ \sum_t (t+p_j-1)\,x_{j,t}$ pro každé
+      $j\in J$; pravá strana je den konce úkolu $j$.
+
+
+  "Účelová funkce:".notion $\min\ T$. Konec projektu je $\max_j(S_j+p_j-1)$, což není lineární; proto ho
+  nahrazuje proměnná $T$ omezená zdola konci všech úkolů (trik „minimalizace maxima“, viz příklad
+  v oddílu .reference:ch-resice-ilp-maximum-absolutni-hodnota-bud-anebo).
+
+
+  "Správnost.".notion ($\Rightarrow$) Rozvrh se začátky $\sigma(j)$ a koncem projektu $L\le H$: položme
+  $x_{j,\sigma(j)}=1$, ostatní $x_{j,t}=0$, a $T=L$. Omezení 1 platí zřejmě, v omezení 2 je levá strana počet
+  dělníků ve dni $d$, tedy nejvýše $W$, omezení 3 je návaznost $\sigma(j)\ge\sigma(i)+p_i$ a omezení 4 platí,
+  protože $L$ je největší konec. ($\Leftarrow$) V přípustném řešení má podle 1 každý úkol jediný začátek
+  $\sigma(j)=S_j$, podle 2 nikdy nepracuje víc než $W$ dělníků, podle 3 jsou splněny návaznosti a podle 4 je
+  $T$ aspoň konec každého úkolu, tedy aspoň konec projektu. Minimalizace stlačí $T$ přesně na konec projektu,
+  optima se tedy shodují.
+
+
+  "Velikost.".notion Proměnných $\sum_j(H-p_j+1)+1\le|J|\cdot H+1$; omezení $|J|+H+|P|+|J|=2|J|+H+|P|$
+  (bez podmínek oboru). "Pozor:".notion $H=\sum_jp_j$ je číslo, ne délka vstupu. Při binárně zapsaných
+  $p_j$ může být model exponenciálně velký vzhledem k délce vstupu; časově indexovaný model je pseudopolynomiální.
+  Proto se velikost uvádí vzhledem k $H$.
+
+
+  "b) Rozepsaný konec projektu.".notion Pro pevné $j$ je $x_{j,t}=0$ pro všechna $t$ kromě jediného $t^*=S_j$.
+  Pro $x_{j,t}=0$ zní omezení $T\ge0$, což nic neříká; pro $t^*$ zní $T\ge t^*+p_j-1$, tedy „$T$ je aspoň konec
+  úkolu $j$“. Všechna omezení pro $j$ dohromady jsou proto ekvivalentní s omezením 4 a model zůstane správný.
+  Stačí to díky tomu, že $x$ je binární: součin $t\cdot x_{j,t}$ je buď $0$, nebo číslo dne.
+
+
+  Lepší je ale omezení 4. Je jich jen $|J|$ místo $\sum_j(H-p_j+1)$ a mají silnější LP relaxaci
+  "(nad rámec zadání)".emphasize: pro zlomková $x$ je pravá strana omezení 4 vážený průměr konců, který je
+  aspoň každý jednotlivý člen $(t+p_j-1)\,x_{j,t}$ (protože $\sum_tx_{j,t}=1$ a všechny členy jsou nezáporné).
+  V instanci c) dává LP relaxace s omezením 4 dolní mez $7$, s rozepsanými omezeními jen asi $1{,}3$
+  (zlomkové řešení rozprostře každý úkol na mnoho dní s malými váhami). U návazností je to naopak: místo
+  jednoho omezení 3 lze psát $\sum_{s\le t}x_{j,s}\le\sum_{s\le t-p_i}x_{i,s}$ pro každé $t$ („začal-li
+  $j$ do dne $t$, začal $i$ do dne $t-p_i$“). Je to až $H$ omezení na dvojici, ale LP relaxace je silnější
+  (v instanci c) $7{,}5$). Na test stačí agregovaná podoba 3 a 4.
+
+
+  "c) Instance.".notion $H=2+3+2+2+1=10$, proměnných $9+8+9+9+10+1=46$, omezení $5+10+4+5=24$.
+
+  .itemize:
+
+    .item:
+
+      "Dolní mez bez dělníků:".notion řetěz $A\to C\to D\to E$ trvá $2+2+2+1=7$ dní ($B\to D\to E$ jen $6$),
+      tedy optimum je aspoň $7$.
+
+    .item:
+
+      "Dělníci přidají den:".notion $A$ a $B$ potřebují $2+2>3$ dělníků, takže se nepřekrývají a dohromady
+      zaberou $5$ různých dní; pozdější z nich skončí nejdřív ve dni $5$. Skončí-li později $B$, začne $D$
+      nejdřív v den $6$ a $E$ v den $8$. Skončí-li později $A$, skončí $C$ nejdřív v den $7$, $D$ v den $9$ a $E$
+      v den $10$. "Optimum je tedy aspoň 8.".notion
+
+    .item:
+
+      "Rozvrh s koncem 8:".notion $A$ ve dnech 1–2, $B$ 3–5, $C$ 3–4 (s $B$ dohromady $3$ dělníci), $D$ 6–7
+      ($3$ dělníci), $E$ den 8. Tedy $x_{A,1}=x_{B,3}=x_{C,3}=x_{D,6}=x_{E,8}=1$ a $T=8$. "Optimum je 8".notion;
+      druhé optimum má $C$ ve dnech 4–5. Při $W\ge4$ by bylo optimum $7$.
+
+
+  .centered:
+
+    !tikz:
+      filename: 17c-ilp-sat-07
+      options: 'x=0.8cm,y=0.7cm'
+
+      \tikzset{jb/.style={draw,minimum height=5mm,inner sep=0pt,font=\scriptsize,anchor=west}}
+      \foreach \j/\s/\p/\w/\c/\y in {A/1/2/2/defc/4,B/3/3/2/exc/3,C/3/2/1/intc/2,D/6/2/3/warnc/1,E/8/1/2/acc/0} {
+        \node[font=\scriptsize,anchor=east] at (-0.2,\y) {$\j$};
+        \draw[black!15] (0,\y)--(8,\y);
+        \node[jb,fill=\c!20,draw=\c!80!black,minimum width=\p*0.8cm] at (\s-1,\y) {$\w$};}
+      \draw[black!40] (0,-0.6)--(8,-0.6);
+      \foreach \d in {0,...,8} \draw[black!25] (\d,-0.5)--(\d,4.4);
+      \node[font=\scriptsize,anchor=east] at (-0.2,-1.0) {den};
+      \node[font=\scriptsize,anchor=east] at (-0.2,-1.7) {dělníků};
+      \foreach \d/\k in {1/2,2/2,3/3,4/3,5/2,6/3,7/3,8/2} {
+        \node[font=\scriptsize] at (\d-0.5,-1.0) {\d};
+        \node[font=\scriptsize] at (\d-0.5,-1.7) {$\k$};}
+      \node[font=\scriptsize,anchor=west,text=black!70] at (8.2,-1.7) {$\le W=3$};
+
+  Optimální rozvrh instance c): v pruhu úkolu je počet jeho dělníků, dole součet dělníků po dnech.
+  "Všimni si:".emphasize $A$ a $B$ by bez omezení dělníků běžely souběžně od dne 1 a projekt by skončil v den 7; se
+  $W=3$ musí $B$ počkat, až $A$ skončí, a $C$ využije třetího dělníka vedle $B$.
+
+
+.Exercise:
+  title: 'Typová úloha 3.9 [6 bodů]'
+  label: typ-3-9
+
+  Studijní oddělení plánuje zkouškové období o dnech $1,\dots,m$. Je dána množina zkoušek $Z$ a množina
+  studentů $S$; student $s$ je zapsán na zkoušky $Z_s\subseteq Z$. Na každou zkoušku je zapsán aspoň jeden
+  student, $n_z\ge1$ je počet studentů zapsaných na zkoušku $z$. Každá zkouška se koná v "právě jednom".notion dni
+  a všichni její studenti ji píší najednou v posluchárně s $R$ místy: zkoušky jednoho dne smějí mít dohromady
+  nejvýše $R$ studentů. Žádný student nesmí mít dvě zkoušky ve stejném dni
+  "ani ve dvou po sobě jdoucích dnech".notion (mezi zkouškami má aspoň den volna). Cílem je
+  "minimalizovat číslo posledního dne".notion, ve kterém se koná nějaká zkouška.
+
+  .enumerate:
+    type: a
+
+    .item:
+
+      Formulujte úlohu jako ILP s proměnnými $x_{z,d}$ („zkouška $z$ je v den $d$“) a $u_d$ („den $d$ patří do
+      zkouškového“). Uveďte proměnné a jejich význam, omezení (u každé skupiny, co zajišťuje), účelovou funkci
+      a velikost vzhledem k $|Z|$, $|S|$ a $m$.
+
+    .item:
+
+      Jak se model změní, má-li se místo posledního dne minimalizovat "počet dní".emphasize, ve kterých se koná
+      aspoň jedna zkouška? Zapište účelovou funkci „poslední den“ i jinak, jedinou proměnnou $T$.
+
+    .item:
+
+      Zkoušky $A,\dots,E$, $m=7$, $R=3$; studenti Petr $\{A,B,C\}$, Jana $\{C,D\}$, Ota $\{B,D\}$, Lucie
+      $\{A,E\}$, Marek $\{D,E\}$. Určete optimum a srovnejte ho s nejmenším počtem dní se zkouškou.
+
+
+.Solution:
+
+  "a) Proměnné.".notion
+
+  .itemize:
+
+    .item:
+
+      $x_{z,d}\in\{0,1\}$ pro $z\in Z$, $d=1,\dots,m$: $x_{z,d}=1$ právě když se zkouška $z$ koná v den $d$.
+
+    .item:
+
+      $u_d\in\{0,1\}$ pro $d=1,\dots,m$: $u_d=1$ právě když den $d$ patří do zkouškového, tj. $d$ je nejvýše
+      poslední den se zkouškou. Pozor, $u_d=1$ může mít i den, kdy se nic nekoná (viz c).
+
+
+  "Omezení.".notion
+
+  .enumerate:
+
+    .item:
+
+      "Každá zkouška právě jednou:".notion $\displaystyle\sum_{d=1}^{m}x_{z,d}=1$ pro každé $z\in Z$.
+
+    .item:
+
+      "Kapacita posluchárny a jen dny zkouškového:".notion $\displaystyle\sum_{z\in Z}n_z\,x_{z,d}\le R\,u_d$ pro
+      každé $d$. Pro $u_d=1$ je to kapacita, pro $u_d=0$ se v den $d$ nekoná nic (protože $n_z\ge1$). Jedno omezení
+      tak nahrazuje kapacitu i propojení $x_{z,d}\le u_d$.
+
+    .item:
+
+      "Den volna:".notion $\displaystyle\sum_{z\in Z_s}\bigl(x_{z,d}+x_{z,d+1}\bigr)\le1$ pro každé $s\in S$
+      a $d=1,\dots,m$ (pro $d=m$ jen první člen). Ve dvou po sobě jdoucích dnech $d,d+1$ má student nejvýše jednu
+      zkoušku.
+
+    .item:
+
+      "Zkouškové bez mezer:".notion $u_{d+1}\le u_d$ pro $d=1,\dots,m-1$. Jedničky v $u$ tvoří začátek
+      $1,\dots,L$.
+
+
+  "Účelová funkce:".notion $\min\ \sum_{d=1}^{m}u_d$.
+
+
+  "Proč omezení 3 stačí.".notion Má-li student $s$ zkoušky $z\ne z'$ ve dnech $d\le d'$ s $d'-d\le1$, obsahuje
+  okno začínající dnem $d$ obě a levá strana je aspoň $2$. Jsou-li naopak všechny zkoušky $s$ po dvou vzdálené
+  aspoň o $2$ dny, padne do každého okna $\{d,d+1\}$ nejvýše jedna z nich a podle omezení 1 se započítá jednou.
+  Stejné by zajistilo „párové“ omezení $x_{z,d}+x_{z',d'}\le1$ pro všechny $z\ne z'\in Z_s$ a $|d-d'|\le1$; oken je
+  ale jen $|S|\cdot m$ a každé okno implikuje všechna párová omezení, která obsahuje (silnější LP relaxace).
+
+
+  "Proč účelová funkce počítá poslední den.".notion Podle omezení 4 je $u=(1,\dots,1,0,\dots,0)$ s $L=\sum_du_d$
+  jedničkami, takže $u_d=1$ právě pro $d\le L$. Podle omezení 2 se zkoušky konají jen ve dnech s $u_d=1$, tedy
+  nejpozději v den $L$. Účelová funkce je proto horní mez na poslední den se zkouškou a minimalizace ji na něj
+  stlačí.
+
+
+  "Správnost.".notion ($\Rightarrow$) Rozvrh s posledním dnem $L$: $x_{z,d}=1$ podle rozvrhu, $u_d=1$ právě pro
+  $d\le L$. Omezení 1 a 3 jsou pravidla rozvrhu, omezení 2 platí pro $d\le L$ díky kapacitě a pro $d>L$, protože
+  se tam nic nekoná, a 4 platí zřejmě. Hodnota je $L$. ($\Leftarrow$) Přípustné řešení s hodnotou $L$ dává
+  rozvrh: každá zkouška má jeden den (1), kapacita platí (2), den volna (3) a poslední den je nejvýše $L$
+  (předchozí odstavec). Optima se tedy shodují; nemá-li úloha rozvrh v $m$ dnech, je program nepřípustný.
+
+
+  "Velikost.".notion Proměnných $|Z|\cdot m+m$; omezení $|Z|+m+|S|\cdot m+(m-1)$.
+
+
+  "b) Počet dní se zkouškou.".notion Stačí vynechat omezení 4. Pak je $u_d=1$ vynucené jen ve dnech, kdy se
+  něco koná, a minimalizace $\sum_du_d$ nastaví $u_d=1$ přesně v nich. Účelová funkce tak počítá použité dny;
+  to je model úlohy .reference:ut-3. Rozdíl mezi „kolik dní“ a „do kterého dne“ je tedy právě omezení 4.
+
+
+  "Jedinou proměnnou $T$.".notion Proměnné $u_d$ vynecháme, omezení 2 zní $\sum_zn_z\,x_{z,d}\le R$ a přidáme
+  celočíselnou $T\ge0$ s omezeními
+
+  .equation:
+
+    T\ \ge\ d\cdot x_{z,d}\qquad\text{pro každé } z\in Z,\ d=1,\dots,m ,
+
+  účelová funkce $\min T$. Pro $x_{z,d}=0$ zní omezení $T\ge0$ (nic neříká), pro jediné $d$ s $x_{z,d}=1$ zní
+  $T\ge d$. Dohromady tedy $T\ge$ poslední den se zkouškou a minimalizace dá rovnost. Je to $|Z|\cdot m$ omezení;
+  úspornější je agregovaná podoba $T\ge\sum_dd\cdot x_{z,d}$ pro každé $z$ (jen $|Z|$ omezení, pravá strana je
+  podle omezení 1 den zkoušky $z$), viz typová úloha .reference:typ-3-8 b).
+
+
+  "c) Instance.".notion Počty studentů: $n_A=n_B=n_C=n_E=2$, $n_D=3$. Model má $5\cdot7+7=42$ proměnných
+  a $5+7+5\cdot7+6=53$ omezení.
+
+  .itemize:
+
+    .item:
+
+      "Jedna zkouška denně:".notion každé dvě zkoušky mají dohromady aspoň $4>R$ studentů, takže se v jednom
+      dni koná nejvýše jedna. Dní se zkouškou je tedy aspoň $5$ a "nejmenší počet dní je 5".notion.
+
+    .item:
+
+      "Poslední den 5 nejde:".notion pak by se ve dnech $1,\dots,5$ konalo po jedné zkoušce a zkoušky ve dvou po
+      sobě jdoucích dnech by nesměly mít společného studenta. Společného studenta mají dvojice $AB,AC,BC$ (Petr),
+      $CD$, $BD$, $AE$, $DE$; bez společného studenta jsou jen $AD$, $BE$, $CE$. Pořadí pěti zkoušek by
+      potřebovalo čtyři takové sousední dvojice, které spojí všech pět zkoušek do řetězce, ale k dispozici jsou
+      jen tři. Optimum je tedy aspoň $6$.
+
+    .item:
+
+      "Rozvrh do dne 6:".notion $A$ den 1, $D$ den 2, den 3 volný, $B$ den 4, $E$ den 5, $C$ den 6. Sousední dny
+      mají dvojice $AD$, $BE$, $EC$ bez společného studenta, každý student má zkoušky aspoň dva dny od sebe.
+      $u=(1,1,1,1,1,1,0)$, hodnota $6$. "Optimum je 6".notion, o den víc než nejmenší počet dní se
+      zkouškou; bez pravidla o dni volna by stačilo $5$ dní.
+
+
+  .centered:
+
+    !tikz:
+      filename: 17c-ilp-sat-08
+      options: 'x=0.8cm,y=0.6cm'
+
+      \tikzset{gc/.style={draw=black!30,minimum width=7mm,minimum height=5mm,inner sep=0pt,font=\scriptsize},
+        zk/.style={gc,fill=intc!25,draw=intc!80!black}}
+      \node[font=\scriptsize,anchor=east] at (0.3,1) {den};
+      \foreach \d in {1,...,7} \node[font=\scriptsize] at (\d,1) {\d};
+      \foreach \s/\r in {Petr/0,Jana/1,Ota/2,Lucie/3,Marek/4} {
+        \node[font=\scriptsize,anchor=east] at (0.3,-\r) {\s};
+        \foreach \d in {1,...,7} \node[gc] at (\d,-\r) {};}
+      \foreach \d/\r/\z in {1/0/A,4/0/B,6/0/C,2/1/D,6/1/C,2/2/D,4/2/B,1/3/A,5/3/E,2/4/D,5/4/E}
+        \node[zk] at (\d,-\r) {$\z$};
+      \draw[black!40] (0.4,-4.6)--(7.5,-4.6);
+      \node[font=\scriptsize,anchor=east] at (0.3,-5.2) {$u_d$};
+      \foreach \d/\u in {1/1,2/1,3/1,4/1,5/1,6/1,7/0} \node[font=\scriptsize] at (\d,-5.2) {$\u$};
+
+  Optimální rozvrh instance c): řádek studenta ukazuje dny jeho zkoušek. "Všimni si:".emphasize každý student
+  má mezi zkouškami aspoň den volna a den 3 je prázdný, přesto $u_3=1$ – patří do zkouškového, které končí dnem 6.

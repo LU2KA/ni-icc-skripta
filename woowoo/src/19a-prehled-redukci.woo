@@ -1311,3 +1311,19 @@ s voláním orákula (oddíl .reference:ch-graf-redukce-s-orakulem-a-vycisliteln
     ke každému číslu přičti 1 a přidej $n$ jedniček – vyrovnají počty
 
     B 4.7
+
+  .row:
+
+    "$\prob{Vertex Cover}\redp\prob{Odebrání na stupeň 2}$"#red-typ-4-8
+
+    ke každému vrcholu dva nové listy, $k$ beze změny; odebraný list nahraď jeho sousedem
+
+    B 4.8
+
+  .row:
+
+    "$\prob{Vertex Cover}\redp\prob{Rozbití trojúhelníků}$"#red-typ-4-9
+
+    ke každé hraně $uv$ nový vrchol $w_{uv}$ spojený s $u$ i $v$, $k$ beze změny
+
+    B 4.9

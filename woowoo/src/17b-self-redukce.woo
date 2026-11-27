@@ -1146,3 +1146,341 @@
   Výsledný graf $G_F$ pro $F=\{b,e\}$: zeleně listy, které zůstaly (vrchol zafixovaný v množině), červeně
   čárkovaně listy zkoušené s odpovědí $\NE$ (do dalšího dotazu se nepřenesou). Čísla jsou pořadí dotazů ve
   smyčce. "Všimni si:".emphasize u vrcholu $f$ se už neptáme, protože $|F|=\gamma$.
+
+
+.Exercise:
+  title: 'Typová úloha 2.8 [6 bodů]'
+  label: typ-2-8
+
+  Množina $X\subseteq V$ je "zpětnovazební množina vrcholů".notion grafu $G=(V,E)$, pokud graf $G-X$ (vrcholy $X$
+  smažeme i s jejich hranami) neobsahuje žádnou kružnici, tj. je to les (problém $\prob{Feedback Vertex Set}$
+  z .reference:cv-3-5); $\mathrm{fvs}(G)$ je velikost nejmenší takové množiny. Máte k dispozici orákulum, které pro
+  zadaný neorientovaný jednoduchý graf $G$ a číslo $k$ v jednom kroku odpoví, zda $G$ má "zpětnovazební množinu vrcholů velikosti nejvýše $k$".notion.
+
+  .enumerate:
+    type: a
+
+    .item:
+
+      Pomocí orákula spočtěte $\mathrm{fvs}(G)$.
+
+    .item:
+
+      Pomocí orákula "najděte".notion nejmenší zpětnovazební množinu vrcholů grafu $G$.
+
+  U obou částí odhadněte počet dotazů vzhledem k $n=|V|$ a zdůvodněte, proč je výstup správný.
+  "Nápověda: k vrcholu $v$ přidejte dva nové vrcholy $v',v''$ a hrany $vv'$, $v'v''$, $v''v$. Kdy má upravený graf zpětnovazební množinu velikosti nejvýše $k$?".emphasize
+
+
+.Solution:
+
+  "Redukce s orákulem:".notion $\prob{Feedback Vertex Set}$ – nejmenší zpětnovazební množina $\to$
+  $\prob{Feedback Vertex Set}$ – rozhodovací verze. Jak: $\mathrm{fvs}(G)$ binárním vyhledáváním, pak vrcholy po
+  jednom vynucujeme do množiny přidaným trojúhelníkem a orákulem hlídáme, že velikost $\mathrm{fvs}(G)$ pořád stačí.
+
+
+  Značení: $O(H,k)$ je odpověď orákula. Pro $F\subseteq V$ nechť $G_F$ vznikne z $G$ tak, že ke každému $v\in F$
+  přidáme dva nové vrcholy $v',v''$ a hrany $vv'$, $v'v''$, $v''v$; vznikne trojúhelník $T_v=\{v,v',v''\}$. Graf
+  $G_F$ je zase jednoduchý. Dále $\mathrm{fvs}_F(G)$ je nejmenší velikost zpětnovazební množiny grafu $G$, která
+  obsahuje celé $F$.
+
+
+  "a) Hodnota $\mathrm{fvs}(G)$.".notion Odpověď je "monotónní".emphasize v $k$ (otázka zní „nejvýše $k$“). Dále
+  $0\le\mathrm{fvs}(G)\le n$: po smazání celého $V$ zbude prázdný graf, a to je les. Binární vyhledávání na
+  $[lo,hi]=[0,n]$ s invariantem $lo\le\mathrm{fvs}(G)\le hi$: pro $mid=\lfloor(lo+hi)/2\rfloor$ se zeptej $O(G,mid)$;
+  při $\ANO$ polož $hi:=mid$, při $\NE$ polož $lo:=mid+1$; při $lo=hi$ je to $\mathrm{fvs}(G)$. Interval má $n+1$
+  hodnot: nejvýše $\lceil\log_2(n+1)\rceil$ dotazů.
+
+
+  "b) Pozorování o gadgetu.".notion Každá kružnice v $G_F$ je buď kružnice v $G$, nebo jeden z trojúhelníků $T_v$.
+  Vrchol $v'$ má jen sousedy $v$ a $v''$, vrchol $v''$ jen $v$ a $v'$. Kružnice procházející $v'$ musí použít obě jeho
+  hrany, tedy jde $v\to v'\to v''$, a z $v''$ může pokračovat jen hranou do $v$ – uzavře se $T_v$. Totéž pro $v''$.
+  Kružnice bez nových vrcholů leží celá v $G$.
+
+
+  "Lemma (odpověď na nápovědu):".notion $\mathrm{fvs}(G_F)=\mathrm{fvs}_F(G)$. Tedy $O(G_F,k)=\ANO$, právě když
+  $G$ má zpětnovazební množinu velikosti nejvýše $k$ obsahující celé $F$.
+
+  .itemize:
+
+    .item:
+
+      $\le$: nechť $X\supseteq F$ je zpětnovazební množina $G$. Kružnice z $G$ obsahuje vrchol z $X$ a trojúhelník
+      $T_v$ obsahuje $v\in F\subseteq X$. Podle pozorování jiné kružnice v $G_F$ nejsou, takže $X$ je zpětnovazební
+      i v $G_F$.
+
+    .item:
+
+      $\ge$: nechť $X'$ je zpětnovazební množina $G_F$. Každý $T_v$ je kružnice, takže $X'$ obsahuje $v$, $v'$
+      nebo $v''$. Polož $X'':=(X'\cap V)\cup F$, tj. nové vrcholy vyhodíme a místo nich přidáme $v$. Velikost
+      neroste: $v$ přidáváme jen tehdy, když $v\notin X'$, a pak $X'$ obsahoval $v'$ nebo $v''$, které ubíráme. Každá
+      kružnice $G$ nové vrcholy neobsahuje, takže ji $X'$ zasáhl ve vrcholu z $V$ a ten v $X''$ zůstal. Tedy $X''$
+      je zpětnovazební množina $G$ s $F\subseteq X''$ a $|X''|\le|X'|$.
+
+
+  "Algoritmus:".notion
+
+  .enumerate:
+
+    .item:
+
+      Spočti $g:=\mathrm{fvs}(G)$ podle a) a polož $F:=\emptyset$.
+
+    .item:
+
+      Pro každý vrchol $v\in V$ (v pevném pořadí), dokud $|F|<g$: zeptej se $O(G_{F\cup\{v\}},\,g)$. Při $\ANO$
+      polož $F:=F\cup\{v\}$ (trojúhelník u $v$ v grafu zůstane), při $\NE$ nic neměň.
+
+    .item:
+
+      Vydej $F$.
+
+
+  "Invariant:".notion $\mathrm{fvs}_F(G)=g$, tj. některá nejmenší zpětnovazební množina obsahuje $F$. Na začátku
+  platí ($F=\emptyset$). Krok $\ANO$: podle lemmatu je $\mathrm{fvs}_{F\cup\{v\}}(G)\le g$ a méně než
+  $\mathrm{fvs}(G)=g$ být nemůže. Krok $\NE$ nic nemění.
+
+
+  "Proč je výstup nejmenší zpětnovazební množina.".notion Nechť $X$ je nejmenší zpětnovazební množina s
+  $F\subseteq X$ (invariant). Skončil-li cyklus při $|F|=g=|X|$, je $F=X$. Jinak se otestovaly všechny vrcholy;
+  kdyby existoval $v\in X\setminus F$, pak v okamžiku testu $v$ byla tehdejší $F'\subseteq F$, takže
+  $F'\cup\{v\}\subseteq X$, podle lemmatu $\mathrm{fvs}(G_{F'\cup\{v\}})\le|X|=g$ a orákulum by odpovědělo $\ANO$ –
+  spor. Tedy $X\subseteq F$, a proto $F=X$.
+
+
+  "Počet dotazů:".notion v b) nejvýše $n$ (jeden na vrchol), celkem s a) nejvýše $\lceil\log_2(n+1)\rceil+n=O(n)$.
+  Každý dotazovaný graf má nejvýše $n+2g\le 3n$ vrcholů a $|E|+3g$ hran a sestrojí se v polynomiálním čase, takže
+  algoritmus je polynomiální vzhledem k volání orákula.
+
+
+  "Pozor:".notion gadget musí být "kružnice".emphasize. Jediný přidaný list $v'$ (jako u dominující množiny,
+  "typová úloha 2.7"#typ-2-7) na žádné kružnici neleží, takže $\mathrm{fvs}$ nezmění a nic nevynutí. Dvojitá hrana
+  $vv'$ by kružnici tvořila, ale orákulum bere jednoduché grafy – proto trojúhelník.
+
+
+  "Příklad.".notion „Motýlek“: trojúhelníky $abc$ a $cde$ se společným vrcholem $c$ ($n=5$). Binární vyhledávání na
+  $[0,5]$: $O(G,2)=\ANO$, $O(G,1)=\ANO$, $O(G,0)=\NE$ (graf má kružnici), tedy $g=1$. Vrchol $a$: graf
+  $G_{\{a\}}$ obsahuje dva disjunktní trojúhelníky $T_a$ a $cde$, na ně jeden vrchol nestačí, $\NE$. Vrchol $b$:
+  stejně ($T_b$ a $cde$), $\NE$. Vrchol $c$: $\{c\}$ zasáhne $abc$, $cde$ i $T_c$, $\ANO$; $|F|=1=g$, konec. Výstup
+  $\{c\}$ po $3+3=6$ dotazech.
+
+
+  .centered:
+
+    !tikz:
+      filename: 17b-self-redukce-06
+      options: 'x=1cm,y=1cm'
+
+      \begin{scope}
+        \draw[black!40,thick,rounded corners=12pt,fill=black!3] (-2.6,-1.9) rectangle (0.4,1.0);
+        \node[font=\small,black!60] at (-2.1,0.65) {$G$};
+        \node[v] (v) at (0,-0.45) {$v$};
+        \node[v] (n1) at (-1.2,0.25) {}; \node[v] (n2) at (-1.4,-0.9) {}; \node[v] (n3) at (-0.6,-1.45) {};
+        \draw[e] (v)--(n1) (v)--(n2) (v)--(n3) (n1)--(n2);
+        \node[v,draw=acc!80!black,very thick,dashed] (vp) at (1.5,0.35) {$v'$};
+        \node[v,draw=acc!80!black,very thick,dashed] (vpp) at (1.5,-1.25) {$v''$};
+        \draw[esel] (v)--(vp) (vp)--(vpp) (vpp)--(v);
+        \node[font=\scriptsize,align=center] at (0.3,-2.5) {trojúhelník $T_v$: zasáhne ho jen $v$, $v'$, $v''$;\\ $v'$, $v''$ vyměníme za $v$};
+      \end{scope}
+      \begin{scope}[xshift=6.4cm]
+        \node[v] (c) at (0,0) {$c$};
+        \node[v] (a) at (-1.3,0.8) {$a$}; \node[v] (b) at (-1.3,-0.8) {$b$};
+        \node[v] (d) at (1.3,0.8) {$d$}; \node[v] (e) at (1.3,-0.8) {$e$};
+        \node[v,draw=rej,dashed] (ap) at (-2.0,2.0) {$a'$}; \node[v,draw=rej,dashed] (app) at (-2.75,0.95) {$a''$};
+        \draw[e] (a)--(b) (b)--(c) (c)--(a);
+        \draw[ebad] (a)--(ap) (ap)--(app) (app)--(a) (c)--(d) (d)--(e) (e)--(c);
+        \node[font=\scriptsize,align=center] at (0,-1.75) {$G_{\{a\}}$: $T_a$ a $cde$ jsou disjunktní\\ $\Rightarrow$ $\mathrm{fvs}=2>1$, \NE};
+      \end{scope}
+      \begin{scope}[xshift=11.6cm]
+        \node[vsel] (c) at (0,0) {$c$};
+        \node[v] (a) at (-1.3,0.8) {$a$}; \node[v] (b) at (-1.3,-0.8) {$b$};
+        \node[v] (d) at (1.3,0.8) {$d$}; \node[v] (e) at (1.3,-0.8) {$e$};
+        \node[v,draw=acc!80!black,very thick] (cp) at (-0.5,1.6) {$c'$}; \node[v,draw=acc!80!black,very thick] (cpp) at (0.5,1.6) {$c''$};
+        \draw[e] (a)--(b) (b)--(c) (c)--(a) (c)--(d) (d)--(e) (e)--(c);
+        \draw[esel] (c)--(cp) (cp)--(cpp) (cpp)--(c);
+        \node[font=\scriptsize,align=center] at (0,-1.75) {$G_{\{c\}}$: $\{c\}$ zasáhne $abc$, $cde$, $T_c$\\ $\Rightarrow$ \ANO};
+      \end{scope}
+
+  Vlevo gadget: trojúhelník $T_v$ připojený jen ve vrcholu $v$. Uprostřed a vpravo dotazy z příkladu.
+  "Všimni si:".emphasize trojúhelník u $a$ je s kružnicí $cde$ disjunktní, takže vynucené $a$ stojí jeden vrchol
+  navíc; trojúhelník u $c$ sdílí $c$ se vším a nic nestojí.
+
+
+  "Jinak (bez gadgetu):".notion u zpětnovazební množiny funguje i mazání jako u vrcholového pokrytí ("typová úloha 2.2"#typ-2-2): $X$ je zpětnovazební množina $G$ obsahující $v$, právě když $X\setminus\{v\}$ je zpětnovazební
+  množina $G-v$ (kružnice přes $v$ zasáhne $v$, ostatní kružnice leží v $G-v$). Stačí se tedy ptát na
+  $(G-v,\ k-1)$. Obě řešení jsou správná; vynucení gadgetem je ale postup, který funguje i tam, kde mazání selže
+  ("typová úloha 2.7"#typ-2-7 a "2.9"#typ-2-9).
+
+
+.Exercise:
+  title: 'Typová úloha 2.9 [6 bodů]'
+  label: typ-2-9
+
+  Nechť $G=(V,E)$ je souvislý graf s aspoň jednou hranou a $n=|V|$. Množina $C\subseteq V$ je "souvislé vrcholové pokrytí".notion, pokud je vrcholovým pokrytím (každá hrana má aspoň jeden konec v $C$) a podgraf $G[C]$ indukovaný
+  na $C$ je souvislý; $\tau_c(G)$ je velikost nejmenšího souvislého vrcholového pokrytí. Máte k dispozici orákulum,
+  které pro zadaný graf $H$ a číslo $k$ v jednom kroku odpoví, zda $H$ má "souvislé vrcholové pokrytí velikosti nejvýše $k$".notion.
+
+  .enumerate:
+    type: a
+
+    .item:
+
+      Pomocí orákula spočtěte $\tau_c(G)$.
+
+    .item:
+
+      Ukažte na cestě $a-b-c-d$, že postup z vrcholového pokrytí ("typová úloha 2.2"#typ-2-2: zeptat se na
+      $(G-v,\ k-1)$ a při $\ANO$ dát $v$ do pokrytí) souvislé pokrytí najít nemusí.
+
+    .item:
+
+      Pomocí orákula "najděte".notion nejmenší souvislé vrcholové pokrytí grafu $G$.
+
+  U částí a) a c) odhadněte počet dotazů vzhledem k $n$ a zdůvodněte, proč je výstup správný.
+  "Nápověda: k vrcholu $v$ přidejte nový vrchol $v'$ spojený jen s $v$. Kdy má upravený graf souvislé vrcholové pokrytí velikosti nejvýše $k$?".emphasize
+
+
+.Solution:
+
+  "Redukce s orákulem:".notion souvislé vrcholové pokrytí – nejmenší pokrytí $\to$ souvislé vrcholové pokrytí –
+  rozhodovací verze. Jak: $\tau_c(G)$ binárním vyhledáváním, pak vrcholy po jednom vynucujeme do pokrytí přidaným
+  listem a orákulem hlídáme, že velikost $\tau_c(G)$ pořád stačí.
+
+
+  Značení: $O(H,k)$ je odpověď orákula. Pro $F\subseteq V$ nechť $G_F$ vznikne z $G$ přidáním nového vrcholu $v'$
+  a hrany $vv'$ pro každé $v\in F$ (list u $v$). Dále $\tau_{c,F}(G)$ je nejmenší velikost souvislého vrcholového
+  pokrytí $G$, které obsahuje celé $F$.
+
+
+  "a) Hodnota $\tau_c(G)$.".notion Odpověď je "monotónní".emphasize v $k$ (otázka zní „nejvýše $k$“). Meze
+  $1\le\tau_c(G)\le n-1$: pokrytí musí obsahovat konec nějaké hrany; shora vezmi kostru $G$ a její list $x$ –
+  množina $V\setminus\{x\}$ pokrývá všechny hrany (smyčky nejsou, takže hrana u $x$ má druhý konec jinde) a kostra
+  bez listu je strom na $V\setminus\{x\}$, takže $G[V\setminus\{x\}]$ je souvislý. Binární vyhledávání na
+  $[lo,hi]=[1,n-1]$: pro $mid=\lfloor(lo+hi)/2\rfloor$ se zeptej $O(G,mid)$; při $\ANO$ polož $hi:=mid$, při $\NE$
+  polož $lo:=mid+1$; při $lo=hi$ je to $\tau_c(G)$. Nejvýše $\lceil\log_2(n-1)\rceil$ dotazů.
+
+
+  "b) Proč nestačí mazat vrcholy.".notion Cesta $a-b-c-d$ má $\tau_c=2$ a jediné nejmenší souvislé pokrytí
+  $\{b,c\}$ ($\{a,c\}$ ani $\{b,d\}$ nejsou souvislé, $\{a,b\}$ a $\{c,d\}$ nepokryjí $cd$, resp. $ab$). Postup
+  z vrcholového pokrytí s $k=2$:
+
+  .itemize:
+
+    .item:
+
+      $O(G-a,\,1)$: $G-a$ je cesta $b-c-d$ s pokrytím $\{c\}$, odpověď $\ANO$ – vybere se $a$, ačkoli v žádném
+      nejmenším souvislém pokrytí není. Dál $G'=b-c-d$, $k'=1$.
+
+    .item:
+
+      $O(G'-b,\,0)$: zbyla hrana $cd$, $\NE$.
+
+    .item:
+
+      $O(G'-c,\,0)$: zbyly izolované vrcholy $b,d$. Bere-li orákulum prázdnou množinu jako souvislé pokrytí,
+      odpoví $\ANO$ a výstup je $\{a,c\}$ – pokrytí, ale nesouvislé. Nebere-li, odpoví $\NE$, pak i $O(G'-d,\,0)$
+      ($\NE$, zbyla hrana $bc$) a výstup $\{a\}$ nepokryje ani $cd$.
+
+  Výstup je špatně v obou případech. Příčina: z pokrytí $D'$ grafu $G-v$ přidáním $v$ vznikne pokrytí $G$, ale
+  $D'\cup\{v\}$ nemusí být souvislé, protože $v$ nemusí sousedit s $D'$ (zde $\{c\}$ a $a$). Smazáním $v$
+  zapomeneme, že $v$ musí být s ostatními vybranými vrcholy propojený.
+
+
+  .centered:
+
+    !tikz:
+      filename: 17b-self-redukce-07
+      options: 'x=1cm,y=1cm'
+
+      \begin{scope}
+        \node[v,draw=black!35,dashed,text=black!45] (a) at (0,0) {$a$};
+        \node[v] (b) at (1.2,0) {$b$}; \node[vsel] (c) at (2.4,0) {$c$}; \node[v] (d) at (3.6,0) {$d$};
+        \draw[efaint,dashed] (a)--(b);
+        \draw[e] (b)--(c) (c)--(d);
+        \node[font=\scriptsize,align=center] at (1.8,-1.0) {$G-a$: pokrytí $\{c\}$ $\Rightarrow$ \ANO,\\ ale $\{a,c\}$ není souvislé};
+      \end{scope}
+      \begin{scope}[xshift=5.2cm]
+        \node[vbad] (a) at (0,0) {$a$}; \node[vbad] (b) at (1.2,0) {$b$};
+        \node[vbad] (c) at (2.4,0) {$c$}; \node[v] (d) at (3.6,0) {$d$};
+        \node[v,draw=rej,dashed] (ap) at (0,1.3) {$a'$};
+        \draw[e] (a)--(b) (b)--(c) (c)--(d);
+        \draw[ebad] (a)--(ap);
+        \node[font=\scriptsize,align=center] at (1.8,-1.0) {$G_{\{a\}}$: nejmenší je $\{a,b,c\}$\\ $3>2$ $\Rightarrow$ \NE};
+      \end{scope}
+      \begin{scope}[xshift=10.4cm]
+        \node[v] (a) at (0,0) {$a$}; \node[vsel] (b) at (1.2,0) {$b$};
+        \node[vsel] (c) at (2.4,0) {$c$}; \node[v] (d) at (3.6,0) {$d$};
+        \node[v,draw=acc!80!black,very thick] (bp) at (1.2,1.3) {$b'$};
+        \node[v,draw=acc!80!black,very thick] (cp) at (2.4,1.3) {$c'$};
+        \draw[e] (a)--(b) (b)--(c) (c)--(d);
+        \draw[esel] (b)--(bp) (c)--(cp);
+        \node[font=\scriptsize,align=center] at (1.8,-1.0) {$G_{\{b,c\}}$: $\{b,c\}$ pokryje\\ i $bb'$, $cc'$ $\Rightarrow$ \ANO};
+      \end{scope}
+
+  Vlevo krok mazání z části b), který vybere špatný vrchol $a$. Uprostřed a vpravo dotazy s gadgetem z části c)
+  (příklad níže). "Všimni si:".emphasize list $a'$ vynutí $a$, a tím i spojení $a$ s hranou $cd$ přes $b$ a $c$.
+
+
+  "c) Lemma (odpověď na nápovědu):".notion pro každé $F\subseteq V$ je $\tau_c(G_F)=\tau_{c,F}(G)$. Tedy
+  $O(G_F,k)=\ANO$, právě když $G$ má souvislé vrcholové pokrytí velikosti nejvýše $k$ obsahující celé $F$.
+
+  .itemize:
+
+    .item:
+
+      $\le$: nechť $C\supseteq F$ je souvislé vrcholové pokrytí $G$. Hranu $vv'$ pokryje $v\in F\subseteq C$ a
+      $G_F[C]=G[C]$ je souvislý (nové vrcholy v $C$ nejsou). Tedy $C$ je souvislé pokrytí i v $G_F$.
+
+    .item:
+
+      $\ge$: nechť $C'$ je souvislé vrcholové pokrytí $G_F$. Graf $G$ má hranu a tu pokryje vrchol z $V$, takže
+      $C'\cap V\ne\emptyset$. Hranu $vv'$ pro $v\in F$ pokryje $v$ nebo $v'$. Kdyby $v'\in C'$ a $v\notin C'$, byl
+      by $v'$ v $G_F[C']$ izolovaný (jeho jediný soused $v$ v $C'$ není), ale $G_F[C']$ obsahuje i vrchol z $V$ –
+      spor se souvislostí. Tedy $F\subseteq C'$. Polož $C:=C'\cap V$. Hrany $G$ nové vrcholy neobsahují, takže
+      je $C$ pokryje. $G[C]$ je souvislý: vrchol $v'\in C'$ má v $G_F[C']$ jediného souseda $v$, takže žádná cesta
+      mezi dvěma vrcholy $V$ přes něj nevede, a smazáním takových listů souvislost zůstane. Tedy $C$ je souvislé
+      pokrytí $G$ s $F\subseteq C$ a $|C|\le|C'|$.
+
+
+  Na rozdíl od dominující množiny ("typová úloha 2.7"#typ-2-7) list v řešení vůbec být nemusí: tam se $v'$
+  vyměnil za $v$, tady se $v'$ bez $v$ nedá spojit se zbytkem pokrytí.
+
+
+  "Algoritmus:".notion
+
+  .enumerate:
+
+    .item:
+
+      Spočti $g:=\tau_c(G)$ podle a) a polož $F:=\emptyset$.
+
+    .item:
+
+      Pro každý vrchol $v\in V$ (v pevném pořadí), dokud $|F|<g$: zeptej se $O(G_{F\cup\{v\}},\,g)$. Při $\ANO$
+      polož $F:=F\cup\{v\}$ (list u $v$ v grafu zůstane), při $\NE$ nic neměň.
+
+    .item:
+
+      Vydej $F$.
+
+
+  "Invariant:".notion $\tau_{c,F}(G)=g$, tj. některé nejmenší souvislé pokrytí obsahuje $F$. Na začátku platí
+  ($F=\emptyset$). Krok $\ANO$: podle lemmatu je $\tau_{c,F\cup\{v\}}(G)\le g$ a méně než $\tau_c(G)=g$ být nemůže.
+  Krok $\NE$ nic nemění.
+
+
+  "Proč je výstup nejmenší souvislé pokrytí.".notion Nechť $C$ je nejmenší souvislé pokrytí s $F\subseteq C$
+  (invariant). Skončil-li cyklus při $|F|=g=|C|$, je $F=C$. Jinak se otestovaly všechny vrcholy; kdyby existoval
+  $v\in C\setminus F$, pak v okamžiku testu $v$ byla tehdejší $F'\subseteq F$, takže $F'\cup\{v\}\subseteq C$,
+  podle lemmatu $\tau_c(G_{F'\cup\{v\}})\le|C|=g$ a orákulum by odpovědělo $\ANO$ – spor. Tedy $C\subseteq F$,
+  a proto $F=C$.
+
+
+  "Počet dotazů:".notion v c) nejvýše $n$, celkem s a) nejvýše $\lceil\log_2(n-1)\rceil+n=O(n)$. Každý dotazovaný
+  graf má nejvýše $n+g\le 2n$ vrcholů a $|E|+g$ hran, takže algoritmus je polynomiální vzhledem k volání orákula.
+
+
+  "Příklad.".notion Cesta $a-b-c-d$ z části b). Binární vyhledávání na $[1,3]$: $O(G,2)=\ANO$, $O(G,1)=\NE$
+  (jeden vrchol nepokryje tři hrany), tedy $g=2$. Vrchol $a$: souvislé pokrytí obsahující $a$ musí pokrýt $cd$
+  a s $c$ nebo $d$ se spojit přes $b$, nejmenší je $\{a,b,c\}$, $\NE$. Vrchol $b$: $\ANO$ ($\{b,c\}$), list $b'$
+  zůstane. Vrchol $c$: $\ANO$, $|F|=2=g$, konec. Výstup $\{b,c\}$ po $2+3=5$ dotazech.
